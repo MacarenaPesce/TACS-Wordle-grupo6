@@ -1,1 +1,3 @@
-# TACS-Wordle-grupo6
+# Proyecto WORDLE
+
+## TACS - UTN 2022
