@@ -3,6 +3,7 @@ package utn.frba.wordle.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import utn.frba.wordle.dto.JoinDto;
 import utn.frba.wordle.dto.MemberDto;
 import utn.frba.wordle.dto.TournamentDto;
 
@@ -34,4 +35,15 @@ public class TournamentsController {
                 .build();
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
+
+    @PostMapping("/{id}/join")
+    public ResponseEntity<JoinDto> join(@PathVariable Number id) {
+        JoinDto dto = JoinDto.builder()
+                .tournamentID(id)
+                .userID(2)
+                .build();
+        //Si no se pudo agregar: {“error”:String}
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
 }

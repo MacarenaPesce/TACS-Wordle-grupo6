@@ -14,7 +14,7 @@ import java.util.Arrays;
 @CrossOrigin
 public class HelpController {
 
-    @PostMapping("/{language}")
+    @GetMapping("/{language}")
     public ResponseEntity<HelpSolutionDto> solution(@RequestBody HelpRequestDto helpRequestDto, @PathVariable String language) {
         HelpSolutionDto dto = HelpSolutionDto.builder()
                 .possibleWords(Arrays.asList("ALLOW", "AGLOW", "APLOW", language, language, language, language))
