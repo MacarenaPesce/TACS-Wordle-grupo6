@@ -1,5 +1,6 @@
 package utn.frba.wordle.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.SessionDto;
@@ -13,8 +14,8 @@ import java.util.Date;
 public class TournamentsController {
 
     @PostMapping
-    public ResponseEntity<SessionDto> create(@RequestBody TournamentDto tournamentDto) {
-        TournamentDto.builder()
+    public ResponseEntity<TournamentDto> create(@RequestBody TournamentDto tournamentDto) {
+        TournamentDto dto = TournamentDto.builder()
                 .name("Pepita")
                 .language("ES")
                 .tourneyId(1)
@@ -22,6 +23,6 @@ public class TournamentsController {
                 .finish(new Date())
                 .start(new Date())
                 .build();
-        return null;
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }
