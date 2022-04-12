@@ -65,5 +65,15 @@ public class TournamentsController {
 
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
+    
+    @PostMapping("submitResults")
+    public ResponseEntity<ResultDto> submitResults(@RequestBody ResultDto resultDto) {
+        ResultDto dto =  ResultDto.builder()
+                .result(2)
+                .languaje("EN")
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
 
 }
