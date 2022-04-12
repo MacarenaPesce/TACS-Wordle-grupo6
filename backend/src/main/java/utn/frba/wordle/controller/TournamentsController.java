@@ -3,10 +3,7 @@ package utn.frba.wordle.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.dto.JoinDto;
-import utn.frba.wordle.dto.MemberDto;
-import utn.frba.wordle.dto.TournamentDto;
-import utn.frba.wordle.dto.TourneysDto;
+import utn.frba.wordle.dto.*;
 
 import java.util.Collections;
 import java.util.Date;
