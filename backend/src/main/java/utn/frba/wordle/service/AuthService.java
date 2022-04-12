@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.dto.LoginDto;
 import utn.frba.wordle.dto.SessionDto;
-import utn.frba.wordle.exception.BusinessException;
 
 import java.util.Date;
 
@@ -21,7 +20,7 @@ public class AuthService {
     @Value("${jwt.access.expiration}")
     private Long jwtAccessExpiration;
 
-    public SessionDto login(LoginDto loginDto) throws BusinessException {
+    public SessionDto login(LoginDto loginDto) {
         // dummy login
         return getSessionDtoHardcodeado(loginDto);
 
