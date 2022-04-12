@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.JoinDto;
 import utn.frba.wordle.dto.MemberDto;
+import utn.frba.wordle.dto.ResultDto;
 import utn.frba.wordle.dto.TournamentDto;
 import utn.frba.wordle.dto.TourneysDto;
 
@@ -61,6 +62,16 @@ public class TournamentsController {
 
         TourneysDto dto = TourneysDto.builder()
                 .tourneys(Collections.singletonList(tournamentDto))
+                .build();
+
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @PostMapping("submitResults")
+    public ResponseEntity<ResultDto> submitResults(@RequestBody ResultDto resultDto) {
+        ResultDto dto =  ResultDto.builder()
+                .result(2)
+                .languaje("EN")
                 .build();
 
         return new ResponseEntity<>(dto, HttpStatus.OK);
