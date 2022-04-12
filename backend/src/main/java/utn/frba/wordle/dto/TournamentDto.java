@@ -18,7 +18,4 @@ public class TournamentDto {
     String type;
     Date start;
     Date finish;
-
-
-    private ArrayList<String> possibleWords;
 }

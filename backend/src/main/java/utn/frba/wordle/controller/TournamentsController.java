@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.JoinDto;
 import utn.frba.wordle.dto.MemberDto;
 import utn.frba.wordle.dto.TournamentDto;
+import utn.frba.wordle.dto.TourneysDto;
 
+import java.util.Collections;
 import java.util.Date;
 
 @RestController
@@ -43,6 +45,24 @@ public class TournamentsController {
                 .userID(2)
                 .build();
         //Si no se pudo agregar: {“error”:String}
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping("public")
+    public ResponseEntity<TourneysDto> listPublicTournaments(){
+        TournamentDto tournamentDto = TournamentDto.builder()
+                .name("Pepita")
+                .language("ES")
+                .tourneyId(1)
+                .type("Public")
+                .finish(new Date())
+                .start(new Date())
+                .build();
+
+        TourneysDto dto = TourneysDto.builder()
+                .tourneys(Collections.singletonList(tournamentDto))
+                .build();
+
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
