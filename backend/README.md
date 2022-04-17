@@ -2,11 +2,14 @@
 
 ## TACS - UTN 2022
 
-crear una imagen:
+
+### Docker
+
+Crear una imagen:
 
 docker build -t grupo6/backend .
 
-correr la imagen:
+Correr la imagen:
 
 -P ejecuta la imagen y mapeale puertos random a todo lo expuesto del docker
 docker run -d -p8080:8080 grupo6/backend:latest
