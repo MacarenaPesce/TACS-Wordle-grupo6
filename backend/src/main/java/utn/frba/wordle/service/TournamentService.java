@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import utn.frba.wordle.dto.JoinDto;
 import utn.frba.wordle.dto.MemberDto;
 import utn.frba.wordle.dto.TournamentDto;
+import utn.frba.wordle.dto.TourneysDto;
 
+import java.util.Collections;
 import java.util.Date;
 
 @Service
@@ -35,6 +37,21 @@ public class TournamentService {
         return JoinDto.builder()
                 .tournamentID(id)
                 .userID(2)
+                .build();
+    }
+
+    public TourneysDto listPublicTournaments() {
+        TournamentDto tournamentDto = TournamentDto.builder()
+                .name("Pepita")
+                .language("ES")
+                .tourneyId(1)
+                .type("Public")
+                .finish(new Date())
+                .start(new Date())
+                .build();
+
+        return TourneysDto.builder()
+                .tourneys(Collections.singletonList(tournamentDto))
                 .build();
     }
 }

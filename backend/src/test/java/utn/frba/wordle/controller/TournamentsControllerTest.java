@@ -12,6 +12,7 @@ import utn.frba.wordle.dto.TournamentDto;
 import utn.frba.wordle.service.TournamentService;
 
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static utn.frba.wordle.utils.TestUtils.RANDOM;
@@ -71,5 +72,17 @@ public class TournamentsControllerTest {
                 .andExpect(status().isOk());
 
         verify(tournamentService).join(id);
+    }
+
+    @SneakyThrows
+    @Test
+    public void puedoListarLosTorneosPublicos() {
+
+        String urlController = "/api/tournaments/public";
+        mvc.perform(get(urlController)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).listPublicTournaments();
     }
 }
