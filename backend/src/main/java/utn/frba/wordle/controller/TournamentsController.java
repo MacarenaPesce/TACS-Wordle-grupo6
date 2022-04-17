@@ -25,11 +25,8 @@ public class TournamentsController {
     }
 
     @PostMapping("addmember")
-    public ResponseEntity<MemberDto> addmember(@RequestBody MemberDto memberDto) {
-        MemberDto dto = MemberDto.builder()
-                .tournamentId(2)
-                .username("Jorge")
-                .build();
+    public ResponseEntity<MemberDto> addMember(@RequestBody MemberDto memberDto) {
+        MemberDto dto = tournamentService.addMember(memberDto);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
