@@ -25,7 +25,7 @@ public class DictionaryControllerTest {
 
     @SneakyThrows
     @Test
-    public void puedoLoguearmeCorrectamente() {
+    public void puedoObtenerLaDefinicionDeUnaPalabra() {
 
         String palabra = "prueba";
         String urlController = "/api/dictionary/" + palabra;
