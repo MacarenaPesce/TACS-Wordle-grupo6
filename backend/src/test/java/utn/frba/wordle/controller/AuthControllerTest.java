@@ -39,4 +39,17 @@ public class AuthControllerTest {
                 .andExpect(status().isOk());
         verify(authService).login(request);
     }
+
+    @SneakyThrows
+    @Test
+    public void puedoRegistrarmeCorrectamente() {
+        LoginDto request = RANDOM.nextObject(dtoClass);
+
+        String urlController = "/api/auth/register";
+        mvc.perform(post(urlController)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(request)))
+                .andExpect(status().isCreated());
+        verify(authService).register(request);
+    }
 }
