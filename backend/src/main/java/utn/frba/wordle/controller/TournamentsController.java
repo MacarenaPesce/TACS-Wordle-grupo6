@@ -31,12 +31,9 @@ public class TournamentsController {
     }
 
     @PostMapping("/{id}/join")
-    public ResponseEntity<JoinDto> join(@PathVariable Number id) {
-        JoinDto dto = JoinDto.builder()
-                .tournamentID(id)
-                .userID(2)
-                .build();
-        //Si no se pudo agregar: {“error”:String}
+    public ResponseEntity<JoinDto> join(@PathVariable Integer id) {
+        JoinDto dto = tournamentService.join(id);
+
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

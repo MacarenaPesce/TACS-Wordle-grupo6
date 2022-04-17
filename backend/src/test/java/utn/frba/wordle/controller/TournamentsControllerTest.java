@@ -57,4 +57,19 @@ public class TournamentsControllerTest {
 
         verify(tournamentService).addMember(request);
     }
+
+    @SneakyThrows
+    @Test
+    public void puedoUnirmeAUnTorneo() {
+        MemberDto request = RANDOM.nextObject(MemberDto.class);
+
+        int id = 123;
+        String urlController = "/api/tournaments/" + id + "/join";
+        mvc.perform(post(urlController)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(request)))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).join(id);
+    }
 }

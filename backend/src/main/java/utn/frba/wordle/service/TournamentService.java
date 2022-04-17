@@ -2,6 +2,7 @@ package utn.frba.wordle.service;
 
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
+import utn.frba.wordle.dto.JoinDto;
 import utn.frba.wordle.dto.MemberDto;
 import utn.frba.wordle.dto.TournamentDto;
 
@@ -27,6 +28,13 @@ public class TournamentService {
         return MemberDto.builder()
                 .tournamentId(2)
                 .username("Jorge")
+                .build();
+    }
+
+    public JoinDto join(Integer id) {
+        return JoinDto.builder()
+                .tournamentID(id)
+                .userID(2)
                 .build();
     }
 }
