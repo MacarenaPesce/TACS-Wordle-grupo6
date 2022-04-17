@@ -45,11 +45,7 @@ public class TournamentsController {
     
     @PostMapping("submitResults")
     public ResponseEntity<ResultDto> submitResults(@RequestBody ResultDto resultDto) {
-        ResultDto dto =  ResultDto.builder()
-                .result(2)
-                .languaje("EN")
-                .build();
-
+        ResultDto dto = tournamentService.submitResults(resultDto);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

@@ -8,6 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import utn.frba.wordle.dto.MemberDto;
+import utn.frba.wordle.dto.ResultDto;
 import utn.frba.wordle.dto.TournamentDto;
 import utn.frba.wordle.service.TournamentService;
 
@@ -84,5 +85,19 @@ public class TournamentsControllerTest {
                 .andExpect(status().isOk());
 
         verify(tournamentService).listPublicTournaments();
+    }
+
+    @SneakyThrows
+    @Test
+    public void puedoPublicarLosResultados() {
+        ResultDto request = RANDOM.nextObject(ResultDto.class);
+
+        String urlController = "/api/tournaments/submitResults";
+        mvc.perform(post(urlController)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(request)))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).submitResults(request);
     }
 }

@@ -2,10 +2,7 @@ package utn.frba.wordle.service;
 
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.dto.JoinDto;
-import utn.frba.wordle.dto.MemberDto;
-import utn.frba.wordle.dto.TournamentDto;
-import utn.frba.wordle.dto.TourneysDto;
+import utn.frba.wordle.dto.*;
 
 import java.util.Collections;
 import java.util.Date;
@@ -52,6 +49,13 @@ public class TournamentService {
 
         return TourneysDto.builder()
                 .tourneys(Collections.singletonList(tournamentDto))
+                .build();
+    }
+
+    public ResultDto submitResults(ResultDto resultDto) {
+        return ResultDto.builder()
+                .result(2)
+                .languaje("EN")
                 .build();
     }
 }
