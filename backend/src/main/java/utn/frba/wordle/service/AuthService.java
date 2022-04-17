@@ -20,6 +20,10 @@ public class AuthService {
     @Value("${jwt.access.expiration}")
     private Long jwtAccessExpiration;
 
+    public SessionDto register(LoginDto loginDto) {
+        return getSessionDtoHardcodeado(loginDto);
+    }
+
     public SessionDto login(LoginDto loginDto) {
         // dummy login
         return getSessionDtoHardcodeado(loginDto);
