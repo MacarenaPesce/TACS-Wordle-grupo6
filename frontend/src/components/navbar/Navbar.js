@@ -3,9 +3,10 @@ import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Container from 'react-bootstrap/Container'
 import './Navbar.css';
+import { Link } from 'react-router-dom';
 
 
-function Header() {
+function NavbarAut() {
     const login = () =>{
       console.log("Log in")
     };
@@ -24,13 +25,13 @@ function Header() {
         <Navbar className='navBut' bg="dark" variant="dark" clas >
           <Container>
           <Nav className="me-auto" >
-            <Nav.Link href="#home" >Ayuda</Nav.Link>
-            <Nav.Link href="#features">Diccionario</Nav.Link>
-            <Nav.Link href="#pricing">Torneo</Nav.Link>
+            <Nav.Link href="#help" >Ayuda</Nav.Link>
+            <Nav.Link href="#diccionary">Diccionario</Nav.Link>
+            <Nav.Link href="#tourney">Torneo</Nav.Link>
           </Nav>
           </Container>
   
-          <Button onClick={login} variant="outline-success" className="but-log" >Iniciar Sesión</Button>
+          <Link to='login'><Button className="but-log">Iniciar Sesión</Button></Link>
           <Button onClick={logout} variant="outline-success" className="but-log">Cerrar Sesión</Button>
           <Button onClick={register} variant="outline-success" className="but-log">Registrarse</Button>
         </Navbar>
@@ -55,4 +56,4 @@ function Header() {
     );
   }
   
-export default Header;
+export default NavbarAut;

@@ -1,0 +1,13 @@
+
+
+.login{
+    background: #6aaa64;
+    background: -moz-linear-gradient(45deg, #49D35E 0%, #2c7d93 100%);
+    background: -webkit-linear-gradient(45deg, #49D35E 0%,#2c7d93 100%);
+    background: linear-gradient(10deg, #3bb94e44 0%,#6aaa64 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#571a89', endColorstr='#2c7d93',GradientType=1 );
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    text-align: center;
+
+}

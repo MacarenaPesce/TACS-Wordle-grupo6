@@ -1,15 +1,22 @@
 import './Home.css';
 import React from 'react';
-import Navbar from '../components/navbar/Navbar';
+import NavbarAut from '../components/navbar/Navbar';
+import Footer from '../components/footer/Footer';
+
 
 function Home() {
-  
-  
   return (  
-    <header className='Home'>
-    <Navbar />
-    </header>
+    <div>
+      <div className='Home'>
+        <body >
+          <header>
+            <NavbarAut />
+          </header>
+        </body>
+      </div>
 
+      <Footer />
+    </div>
   );
 }
 
