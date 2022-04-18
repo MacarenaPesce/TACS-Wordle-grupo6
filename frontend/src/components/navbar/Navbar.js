@@ -31,9 +31,9 @@ function NavbarAut() {
           </Nav>
           </Container>
   
-          <Link to='login'><Button className="but-log">Iniciar Sesión</Button></Link>
+          <Link to='login'><Button onClick={login} variant="outline-success" className="but-log">Iniciar Sesión</Button></Link>
           <Button onClick={logout} variant="outline-success" className="but-log">Cerrar Sesión</Button>
-          <Button onClick={register} variant="outline-success" className="but-log">Registrarse</Button>
+          <Link to='register'><Button onClick={register} variant="outline-success" className="but-log">Registrarse</Button></Link>
         </Navbar>
         
         {/*
