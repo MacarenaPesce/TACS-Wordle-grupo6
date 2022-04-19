@@ -8,6 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import utn.frba.wordle.dto.HelpRequestDto;
+import utn.frba.wordle.model.Language;
 import utn.frba.wordle.service.HelpService;
 
 import static org.mockito.Mockito.verify;
@@ -32,14 +33,14 @@ public class HelpControllerTest {
     public void puedoObtenerAyudarAPartirDeUnaSerieDeLetras() {
         HelpRequestDto request = RANDOM.nextObject(dtoClass);
 
-        String lenguaje = "ES";
-        String urlController = "/api/help/" + lenguaje;
+        Language language = Language.ES;
+        String urlController = "/api/help/" + language.toString();
         mvc.perform(post(urlController)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(helpService).solution(request, lenguaje);
+        verify(helpService).solution(request, language);
     }
 
 }

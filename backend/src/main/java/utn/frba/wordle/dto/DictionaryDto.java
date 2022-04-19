@@ -1,6 +1,7 @@
 package utn.frba.wordle.dto;
 
 import lombok.*;
+import utn.frba.wordle.model.Language;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class DictionaryDto {
     String word;
-    String language;   //todo: acomodar esto
+    Language language;
     List <String> definition;
 }
 
