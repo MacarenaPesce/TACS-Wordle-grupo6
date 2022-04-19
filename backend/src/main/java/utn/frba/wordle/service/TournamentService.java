@@ -3,6 +3,7 @@ package utn.frba.wordle.service;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.dto.*;
+import utn.frba.wordle.model.Language;
 
 import java.util.Collections;
 import java.util.Date;
@@ -15,7 +16,7 @@ public class TournamentService {
 
         return TournamentDto.builder()
                 .name("Pepita")
-                .language("ES")
+                .language(Language.ES)
                 .tourneyId(1)
                 .type("Public")
                 .finish(new Date())
@@ -40,7 +41,7 @@ public class TournamentService {
     public TourneysDto listPublicTournaments() {
         TournamentDto tournamentDto = TournamentDto.builder()
                 .name("Pepita")
-                .language("ES")
+                .language(Language.ES)
                 .tourneyId(1)
                 .type("Public")
                 .finish(new Date())
@@ -55,7 +56,7 @@ public class TournamentService {
     public ResultDto submitResults(ResultDto resultDto) {
         return ResultDto.builder()
                 .result(2)
-                .languaje("EN")
+                .language(Language.EN)
                 .build();
     }
 }

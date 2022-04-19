@@ -1,6 +1,7 @@
 package utn.frba.wordle.dto;
 
 import lombok.*;
+import utn.frba.wordle.model.Language;
 
 @Getter
 @Setter
@@ -9,5 +10,5 @@ import lombok.*;
 @AllArgsConstructor
 public class ResultDto {
     Integer  result;
-    String languaje;
+    Language language;
 }

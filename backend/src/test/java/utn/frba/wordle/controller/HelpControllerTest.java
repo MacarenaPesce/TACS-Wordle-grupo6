@@ -34,7 +34,7 @@ public class HelpControllerTest {
         HelpRequestDto request = RANDOM.nextObject(dtoClass);
 
         Language language = Language.ES;
-        String urlController = "/api/help/" + language.toString();
+        String urlController = "/api/help/" + language;
         mvc.perform(post(urlController)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)))
