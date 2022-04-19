@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.dto.LoginDto;
 import utn.frba.wordle.dto.SessionDto;
+import utn.frba.wordle.dto.UserDto;
 import utn.frba.wordle.entity.UserEntity;
 
 import java.util.Date;
@@ -29,7 +30,8 @@ public class AuthService {
     UserService userService;
 
     public SessionDto register(LoginDto loginDto) {
-        return getSessionDtoHardcodeado(loginDto);
+        UserDto userDto = userService.createUser(loginDto);
+        return getSessionDto(userDto);
     }
 
     public SessionDto login(LoginDto loginDto) {
@@ -46,15 +48,20 @@ public class AuthService {
         }
     }
 
-    private SessionDto getSessionDto(UserEntity userEntity) {
-        String accessToken = getJWTToken(userEntity.getUsername(), userEntity.getEmail(), userEntity.getId(), jwtAccessExpiration);
+
+    private SessionDto getSessionDto(UserDto userDto) {
+        String accessToken = getJWTToken(userDto.getUsername(), userDto.getEmail(), userDto.getId(), jwtAccessExpiration);
 
         return SessionDto.builder()
-                .username(userEntity.getUsername())
-                .email(userEntity.getEmail())
-                .userId(userEntity.getId())
+                .username(userDto.getUsername())
+                .email(userDto.getEmail())
+                .userId(userDto.getId())
                 .token(accessToken)
                 .build();
+    }
+
+    private SessionDto getSessionDto(UserEntity userEntity) {
+        return getSessionDto(UserService.mapToDto(userEntity));
     }
 
     private SessionDto getSessionDtoHardcodeado(LoginDto loginDto) {

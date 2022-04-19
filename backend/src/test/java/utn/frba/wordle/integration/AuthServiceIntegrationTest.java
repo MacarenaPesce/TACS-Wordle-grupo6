@@ -58,7 +58,18 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
         assertThat(login).hasNoNullFieldsOrProperties();
         assertThat(tokenUsername).isEqualTo(ADMIN_USER);
         assertThat(tokenEmail).isEqualTo(ADMIN_EMAIL);
+    }
 
+    @Test
+    public void getsJWTOnRegister() {
+        LoginDto loginDto = new LoginDto();
+        loginDto.setEmail("mail@prueba.com");
+        loginDto.setUsername("usernamePrueba");
+        loginDto.setPassword("lamePassword");
+
+        SessionDto login = authService.register(loginDto);
+
+        assertThat(login).hasNoNullFieldsOrProperties();
     }
 
     private Claims getClaims(String jwtToken) {
