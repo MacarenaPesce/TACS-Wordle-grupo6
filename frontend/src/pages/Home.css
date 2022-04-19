@@ -1,0 +1,9 @@
+.Home {
+  text-align: center;
+  background-image: url("../img/logo.png");
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+

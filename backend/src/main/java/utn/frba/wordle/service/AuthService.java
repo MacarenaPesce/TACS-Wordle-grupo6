@@ -69,6 +69,9 @@ public class AuthService {
 
         return SessionDto.builder()
                 .token(accessToken)
+                .username(ADMIN_USER)
+                .email(ADMIN_EMAIL)
+                .userId(0L)
                 .build();
     }
 
