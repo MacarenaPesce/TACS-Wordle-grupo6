@@ -42,13 +42,13 @@ public class AuthService {
     }
 
     private SessionDto getSessionDtoHardcodeado(LoginDto loginDto) {
-        String accessToken = getJWTToken(USUARIO_DEFAULT_HARDCODEADO, EMAIL_HARDCODEADO, jwtAccessExpiration);
+        //String accessToken = getJWTToken(USUARIO_DEFAULT_HARDCODEADO, EMAIL_HARDCODEADO, jwtAccessExpiration);
+        String accessToken = getJWTToken(loginDto.getUsername(), loginDto.getPassword(), jwtAccessExpiration);
 
         return SessionDto.builder()
                 .token(accessToken)
                 .build();
     }
-
     public String getJWTToken(String username, String email, Long jwtExpiration) {
 
         String secretKey = "mySecretKey";

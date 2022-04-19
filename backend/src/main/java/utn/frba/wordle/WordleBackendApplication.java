@@ -20,7 +20,7 @@ import java.util.Collections;
 import static org.springframework.web.cors.CorsConfiguration.ALL;
 
 @SpringBootApplication
-public class WordleB ackendApplication {
+public class WordleBackendApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(WordleBackendApplication.class, args);
