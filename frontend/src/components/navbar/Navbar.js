@@ -25,15 +25,15 @@ function NavbarAut() {
         <Navbar className='navBut' bg="dark" variant="dark" clas >
           <Container>
           <Nav className="me-auto" >
-            <Nav.Link href="#help" >Ayuda</Nav.Link>
+            <Nav.Link href="/help" >Ayuda</Nav.Link>
             <Nav.Link href="#diccionary">Diccionario</Nav.Link>
             <Nav.Link href="#tourney">Torneo</Nav.Link>
           </Nav>
           </Container>
   
-          <Link to='login'><Button onClick={login} variant="outline-success" className="but-log">Iniciar Sesión</Button></Link>
+          <Link to='/login'><Button onClick={login} variant="outline-success" className="but-log">Iniciar Sesión</Button></Link>
           <Button onClick={logout} variant="outline-success" className="but-log">Cerrar Sesión</Button>
-          <Link to='register'><Button onClick={register} variant="outline-success" className="but-log">Registrarse</Button></Link>
+          <Link to='/register'><Button onClick={register} variant="outline-success" className="but-log">Registrarse</Button></Link>
         </Navbar>
         
         {/*

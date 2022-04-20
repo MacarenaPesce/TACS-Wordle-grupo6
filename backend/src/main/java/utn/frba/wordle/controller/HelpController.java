@@ -9,6 +9,8 @@ import utn.frba.wordle.dto.HelpSolutionDto;
 import utn.frba.wordle.model.Language;
 import utn.frba.wordle.service.HelpService;
 
+import java.io.IOException;
+
 
 @RestController
 @RequestMapping("/api/help")
@@ -19,7 +21,10 @@ public class HelpController {
     HelpService helpService;
 
     @PostMapping("/{language}")
-    public ResponseEntity<HelpSolutionDto> solution(@RequestBody HelpRequestDto helpRequestDto, @PathVariable Language language) {
+    public ResponseEntity<HelpSolutionDto> solution(@RequestBody HelpRequestDto helpRequestDto, @PathVariable Language language) throws IOException {
+
+        //TODO verificar que los campos de entrada contengan solo letras
+        //TODO el campo solution tambien tiene '_' y solo longitud 5
 
         HelpSolutionDto dto = helpService.solution(helpRequestDto, language);
 
