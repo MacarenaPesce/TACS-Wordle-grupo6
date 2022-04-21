@@ -23,8 +23,7 @@ public class HelpController {
     @PostMapping("/{language}")
     public ResponseEntity<HelpSolutionDto> solution(@RequestBody HelpRequestDto helpRequestDto, @PathVariable Language language) throws IOException {
 
-        //TODO verificar que los campos de entrada contengan solo letras
-        //TODO el campo solution tambien tiene '_' y solo longitud 5
+        helpRequestDto.normalizeInput();
 
         HelpSolutionDto dto = helpService.solution(helpRequestDto, language);
 
