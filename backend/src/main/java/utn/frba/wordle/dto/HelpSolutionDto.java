@@ -2,8 +2,7 @@ package utn.frba.wordle.dto;
 
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -12,5 +11,5 @@ import java.util.List;
 @Builder
 public class HelpSolutionDto {
 
-    List<String> possibleWords = new ArrayList<>();
+    Set<String> possibleWords;
 }

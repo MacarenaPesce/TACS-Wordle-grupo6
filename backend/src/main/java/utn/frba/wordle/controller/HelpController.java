@@ -6,7 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.HelpRequestDto;
 import utn.frba.wordle.dto.HelpSolutionDto;
+import utn.frba.wordle.model.Language;
 import utn.frba.wordle.service.HelpService;
+
+import java.io.IOException;
 
 
 @RestController
@@ -18,7 +21,9 @@ public class HelpController {
     HelpService helpService;
 
     @PostMapping("/{language}")
-    public ResponseEntity<HelpSolutionDto> solution(@RequestBody HelpRequestDto helpRequestDto, @PathVariable String language) {
+    public ResponseEntity<HelpSolutionDto> solution(@RequestBody HelpRequestDto helpRequestDto, @PathVariable Language language) throws IOException {
+
+        helpRequestDto.normalizeInput();
 
         HelpSolutionDto dto = helpService.solution(helpRequestDto, language);
 
