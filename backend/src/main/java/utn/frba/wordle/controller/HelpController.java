@@ -1,12 +1,15 @@
 package utn.frba.wordle.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.HelpRequestDto;
 import utn.frba.wordle.dto.HelpSolutionDto;
+import utn.frba.wordle.model.Language;
+import utn.frba.wordle.service.HelpService;
 
-import java.util.Arrays;
+import java.io.IOException;
 
 
 @RestController
@@ -14,11 +17,15 @@ import java.util.Arrays;
 @CrossOrigin
 public class HelpController {
 
-    @GetMapping("/{language}")
-    public ResponseEntity<HelpSolutionDto> solution(@RequestBody HelpRequestDto helpRequestDto, @PathVariable String language) {
-        HelpSolutionDto dto = HelpSolutionDto.builder()
-                .possibleWords(Arrays.asList("ALLOW", "AGLOW", "APLOW", language, language, language, language))
-                .build();
+    @Autowired
+    HelpService helpService;
+
+    @PostMapping("/{language}")
+    public ResponseEntity<HelpSolutionDto> solution(@RequestBody HelpRequestDto helpRequestDto, @PathVariable Language language) throws IOException {
+
+        helpRequestDto.normalizeInput();
+
+        HelpSolutionDto dto = helpService.solution(helpRequestDto, language);
 
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }

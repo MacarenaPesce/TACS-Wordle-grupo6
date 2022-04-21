@@ -1,0 +1,55 @@
+.bg1{
+    width: 25%;
+    background-color: #fface5;
+}
+
+.help {
+    background-image: url("../img/wordle_fondo.jpg");
+    text-align: center;
+    min-height: 100vh;  
+}
+
+.instrucciones{
+    width: 50%;
+    float: left;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.resultados{
+    width: 50%;
+    height: auto;
+    float: right;
+    padding: 0%;
+    background-color: #f808ac;
+}
+
+.forms{
+    padding: 0%;
+    background-color: aquamarine;
+}
+
+.opciones{
+    margin: 5%;
+    padding: 5%;
+    padding-left: 15%;
+    padding-right: 15%;
+    background-color: rgba(129, 126, 126, 0.815);;
+    text-align: center;
+    color: black;
+    width: 100%;
+}
+
+label{
+    color:rgb(3, 3, 3);
+    text-decoration: underline;
+    text-transform: uppercase;
+}
+
+img{
+    display: block;
+    margin: 5%;
+    width: 500px;
+    height: 600px;
+}

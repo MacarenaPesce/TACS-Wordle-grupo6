@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 public class MemberDto {
-    String username;
-    Number tournamentId;
+
+    private String username;
+    private Integer tournamentId;
 }

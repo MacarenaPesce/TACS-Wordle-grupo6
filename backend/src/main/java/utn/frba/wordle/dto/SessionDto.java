@@ -9,20 +9,12 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class SessionDto {
 
     private String token;
+    private String username;
+    private String email;
+    private Long userId;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SessionDto)) return false;
-        SessionDto that = (SessionDto) o;
-        return Objects.equals(token, that.token);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(token);
-    }
 }
