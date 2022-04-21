@@ -22,6 +22,7 @@ function NavbarAut() {
     return ( 
       
       <div>
+        {/*todo: hacer el navbar responsive y editar los botones para ver cuando se tienen que mostrar y cuando no*/}
         <Navbar className='navBut' bg="dark" variant="dark" clas >
           <Container>
           <Nav className="me-auto" >

@@ -49,56 +49,70 @@ export default class Help extends Component{
 
         return (
 
-            <body>
-            <div className="login">
-                <header>
-                    <NavbarAut />
-                </header>
+            <body className="help">
+                    <header>
+                        <NavbarAut />
+                    </header>
 
-                <div className="forms">
-                    <form onSubmit={this.submitHandler}>
-                        <h1>WordleCheats.exe</h1>
-                        <img src={require('../img/comojugar.png')} alt="Como jugar" width="500" height="600" />
+                    <div className="instrucciones">
+                        {/*<h1>WordleCheats.exe</h1>*/}
+                        {/*todo: alinear verticalmente img, lo puse con margin pero no queda centrado*/}
+                        <img src={require('../img/comojugar.png')} alt="Como jugar" />
                         <p></p>
+                    </div>
 
-                        <div className="form-group">
-                            <div><label>Idioma</label></div>
-                            <select name="language" onChange={this.changeHandler}>
-                                <option value="ES">Español</option>
-                                <option value="EN">English</option>
-                            </select>
+                    <div className="forms"> 
+                        <div className="resultados">
+                        
+                            <form onSubmit={this.submitHandler}>
+                                
+                                <div className="opciones">
+                                    <div className="form-group">
+                                        <div><label><h5>Idioma</h5></label></div>
+                                        <select name="language" onChange={this.changeHandler}>
+                                            <option value="ES">Español</option>
+                                            <option value="EN">English</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="opciones">
+                                    <div className="form-group">
+                                        <label><h5>Amarillas</h5></label>
+                                        <input type="text" pattern="[A-Za-z]*" title="Solo letras" className="form-control" placeholder="AO" name="yellow" onChange={this.changeHandler} />
+                                    </div>
+                                </div>
+                                
+                                <div className="opciones">
+                                    <div className="form-group">
+                                        <label><h5>Grises</h5></label>
+                                        <input type="text" pattern="[A-Za-z]*" title="Solo letras" className="form-control" placeholder="HRS" name="grey" onChange={this.changeHandler} />
+                                    </div>
+                                </div>
+
+                                <div className="opciones">
+                                    <div className="form-group">
+                                        <label><h5>Solucion actual incompleta</h5></label>
+                                        <input type="text" pattern="[A-Za-z_]{5}" title="5 letras o _" className="form-control" placeholder="_L_W_" name="solution" onChange={this.changeHandler} />
+                                    </div>
+                                </div>
+
+                                <p></p>
+                                <button type="submit" className="btn btn-primary"><h5>Ayuda 🥺👉👈</h5></button>
+                                <p></p>
+
+                                {/*todo: cambiar como se muestran las posibles soluciones, podria ser a la derecha o abajo con un selector*/}
+                                <h5><label><h5>Soluciones posibles</h5></label></h5>
+                                <div className="bg1">
+                                    {listWords}
+                                </div>
+                            </form>
                         </div>
+                    </div>
+                    
+                
+                    <Footer />
 
-                        <div className="form-group">
-                            <label>Amarillas</label>
-                            <input type="text" pattern="[A-Za-z]*" title="Solo letras" className="form-control" placeholder="AO" name="yellow" onChange={this.changeHandler} />
-                        </div>
-
-                        <div className="form-group">
-                            <label>Grises</label>
-                            <input type="text" pattern="[A-Za-z]*" title="Solo letras" className="form-control" placeholder="HRS" name="grey" onChange={this.changeHandler} />
-                        </div>
-
-                        <div className="form-group">
-                            <label>Solucion actual incompleta</label>
-                            <input type="text" pattern="[A-Za-z_]{5}" title="5 letras o _" className="form-control" placeholder="_L_W_" name="solution" onChange={this.changeHandler} />
-                        </div>
-
-                        <p></p>
-                        <button type="submit" className="btn btn-dark btn-lg btn-block">Ayuda 🥺👉👈</button>
-                        <p></p>
-
-
-                        <h5><label>Soluciones posibles</label></h5>
-                        <div className="bg1">
-                            {listWords}
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-
-            <Footer />
             </body>
         );
     }
