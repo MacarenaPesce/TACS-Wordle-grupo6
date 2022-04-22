@@ -6,17 +6,15 @@ import Footer from '../components/footer/Footer';
 
 function Home() {
   return (  
-    <div>
-      <div className='Home'>
-        <body >
-          <header>
-            <NavbarAut />
-          </header>
-        </body>
-      </div>
-
+    <body className='Home' >
+      <header>
+        <NavbarAut />
+      </header>
+    
       <Footer />
-    </div>
+
+    </body>
+
   );
 }
 

@@ -23,13 +23,13 @@ function NavbarAut() {
       
       <div>
         {/*todo: hacer el navbar responsive y editar los botones para ver cuando se tienen que mostrar y cuando no*/}
-        <Navbar className='navBut' bg="dark" variant="dark" clas >
+        <Navbar className='navBut' bg="dark" variant="dark" >
           <Container>
-          <Nav className="me-auto" >
-            <Nav.Link href="/help" >Ayuda</Nav.Link>
-            <Nav.Link href="#diccionary">Diccionario</Nav.Link>
-            <Nav.Link href="#tourney">Torneo</Nav.Link>
-          </Nav>
+            <Nav className="me-auto" >
+              <Nav.Link href="/help" >Ayuda</Nav.Link>
+              <Nav.Link href="#diccionary">Diccionario</Nav.Link>
+              <Nav.Link href="#tourney">Torneo</Nav.Link>
+            </Nav>
           </Container>
   
           <Link to='/login'><Button onClick={login} variant="outline-success" className="but-log">Iniciar Sesión</Button></Link>
