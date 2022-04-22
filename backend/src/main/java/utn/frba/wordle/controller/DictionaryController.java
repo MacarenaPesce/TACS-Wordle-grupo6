@@ -20,7 +20,7 @@ public class DictionaryController {
     DictionaryService dictionaryService;
 
     @GetMapping("/{language}/{word}")
-    public ResponseEntity<DictionaryDto> ask(@PathVariable Language language, @PathVariable String word) {
+    public ResponseEntity<DictionaryDto> getDefinitions(@PathVariable Language language, @PathVariable String word) {
 
         DictionaryDto dto = dictionaryService.getDefinitions(language, word);
 

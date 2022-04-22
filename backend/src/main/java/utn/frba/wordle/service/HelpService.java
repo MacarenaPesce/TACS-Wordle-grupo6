@@ -19,6 +19,8 @@ public class HelpService {
 
     public HelpSolutionDto solution(HelpRequestDto helpRequestDto, Language language) throws IOException {
 
+        helpRequestDto = normalizeInput(helpRequestDto);
+
         Set<String> posibleSolutions = findPossibleSolutions(language, helpRequestDto.getYellow(), helpRequestDto.getGrey(), helpRequestDto.getSolution());
 
         return HelpSolutionDto.builder()
@@ -40,6 +42,31 @@ public class HelpService {
         posibleSolutions = removeWithGray(posibleSolutions, grey);
 
         return posibleSolutions;
+    }
+
+    public HelpRequestDto normalizeInput(HelpRequestDto helpRequestDto){
+        //remove non letters and make lowercase
+        String yellow = helpRequestDto.getYellow().replaceAll("[^A-Za-z]+", "").toLowerCase();
+        String grey = helpRequestDto.getGrey().replaceAll("[^A-Za-z]+", "").toLowerCase();
+        String solution = helpRequestDto.getSolution().replaceAll("[^A-Za-z_]+", "").toLowerCase();
+
+        if( !(solution.length() == 5 || solution.length() == 0)){
+            throw new RuntimeException("solution can not have a lenght of "+solution.length());
+        }
+
+        //remove duplicates
+        yellow = Arrays.stream(yellow.split(""))
+                .distinct()
+                .collect(Collectors.joining());
+        grey = Arrays.stream(grey.split(""))
+                .distinct()
+                .collect(Collectors.joining());
+
+        helpRequestDto.setGrey(grey);
+        helpRequestDto.setYellow(yellow);
+        helpRequestDto.setSolution(solution);
+
+        return helpRequestDto;
     }
 
     private Set<String> removeWithGray(Set<String> wordList, String grey){
