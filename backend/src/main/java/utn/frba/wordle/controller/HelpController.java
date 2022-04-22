@@ -23,8 +23,6 @@ public class HelpController {
     @PostMapping("/{language}")
     public ResponseEntity<HelpSolutionDto> solution(@RequestBody HelpRequestDto helpRequestDto, @PathVariable Language language) throws IOException {
 
-        helpRequestDto.normalizeInput();
-
         HelpSolutionDto dto = helpService.solution(helpRequestDto, language);
 
         return new ResponseEntity<>(dto, HttpStatus.OK);
