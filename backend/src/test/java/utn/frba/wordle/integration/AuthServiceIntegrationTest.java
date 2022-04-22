@@ -76,42 +76,5 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
         jwtToken = jwtToken.replace("Bearer", "");
         return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
     }
-/*
-    @Test
-    public void alRealizarElLoginConElAdminDeboPoderLoguearme() {
-        LoginDto loginDto = RANDOM.nextObject(LoginDto.class);
-        loginDto.setUsername(USUARIO_ADMIN);
-        loginDto.setPassword(PASS_ADMIN);
-
-        SessionDto login = authService.login(loginDto);
-
-        assertThat(login).hasNoNullFieldsOrProperties();
-    }
-
-    @Test
-    public void alRealizarElLoginConUnUsuarioNoAdminDeboPoderLoguearme() {
-        UsuarioDto usuarioDto = RANDOM.nextObject(UsuarioDto.class);
-        usuarioDto.setIdsGrupos(null);
-        usuarioDto.setEmail(TestUtils.MAIL_TESTING);
-        usuarioDto = usuarioService.create(usuarioDto);
-        String password = usuarioService.generarPasswordDefault(usuarioDto.getLegajo());
-        LoginDto loginDto = new LoginDto();
-        loginDto.setUsername(usuarioDto.getUsuario());
-        loginDto.setPassword(password);
-
-        SessionDto login = authService.login(loginDto);
-
-        assertThat(login).hasNoNullFieldsOrProperties();
-    }
-
-    @Test()
-    public void alRealizarElLoginConUnUsuarioNoValidoObtengoUnError() {
-        assertThrows(BusinessException.class, () -> {
-            LoginDto loginDto = RANDOM.nextObject(LoginDto.class);
-
-            authService.login(loginDto);
-        });
-    }
-    */
 }
 

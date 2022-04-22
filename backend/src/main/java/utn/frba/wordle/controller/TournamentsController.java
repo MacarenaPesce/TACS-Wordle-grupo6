@@ -4,20 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import utn.frba.wordle.dto.JoinDto;
-import utn.frba.wordle.dto.MemberDto;
-import utn.frba.wordle.dto.ResultDto;
-import utn.frba.wordle.dto.TournamentDto;
-import utn.frba.wordle.dto.TourneysDto;
-
 import utn.frba.wordle.dto.*;
-import utn.frba.wordle.model.Language;
 import utn.frba.wordle.service.TournamentService;
-
-
-import java.util.Collections;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/api/tournaments")
