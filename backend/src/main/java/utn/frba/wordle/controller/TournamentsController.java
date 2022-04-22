@@ -12,6 +12,7 @@ import utn.frba.wordle.dto.TournamentDto;
 import utn.frba.wordle.dto.TourneysDto;
 
 import utn.frba.wordle.dto.*;
+import utn.frba.wordle.model.Language;
 import utn.frba.wordle.service.TournamentService;
 
 
@@ -56,15 +57,4 @@ public class TournamentsController {
         ResultDto dto = tournamentService.submitResults(resultDto);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-
-    @PostMapping("submitResults")
-    public ResponseEntity<ResultDto> submitResults(@RequestBody ResultDto resultDto) {
-        ResultDto dto =  ResultDto.builder()
-                .result(2)
-                .languaje("EN")
-                .build();
-
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
-
 }
