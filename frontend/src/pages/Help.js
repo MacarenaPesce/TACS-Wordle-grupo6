@@ -59,14 +59,18 @@ export default class Help extends Component{
 
                     <div class="container">
                         <div class="row">
-                            <div class="col">                              
-                                <div className="instrucciones">
+                            <div class="col-4">                              
+                                <div class="instrucciones">
                                     {/*<h1>WordleCheats.exe</h1>*/}
                                     {/*todo: alinear verticalmente img, lo puse con margin pero no queda centrado*/}
-                                    <img src={require('../img/comojugar.png')} alt="Como jugar" />
+                                    <img src={require('../img/comojugar.png')} alt="Como jugar"  />
                                     <p></p>
                                 </div>
                             </div>
+
+                    
+
+
                             
                             <div class="col">                
                                 <form onSubmit={this.submitHandler}>    
