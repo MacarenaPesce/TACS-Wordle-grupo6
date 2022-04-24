@@ -27,7 +27,7 @@ function NavbarAut() {
           <Container>
           <Nav className="me-auto" >
             <Nav.Link href="/help" >Ayuda</Nav.Link>
-            <Nav.Link href="#diccionary">Diccionario</Nav.Link>
+            <Nav.Link href="/dictionary">Diccionario</Nav.Link>
             <Nav.Link href="#tourney">Torneo</Nav.Link>
           </Nav>
           </Container>

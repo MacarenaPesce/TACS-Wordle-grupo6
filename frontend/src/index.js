@@ -13,6 +13,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import Dictionary from './pages/Dictionary';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -22,6 +23,7 @@ root.render(
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="help" element={<Help />} />
+      <Route path="dictionary" element={<Dictionary />} />
     </Routes>  
   </BrowserRouter>
   
