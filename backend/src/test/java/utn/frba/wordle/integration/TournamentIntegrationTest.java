@@ -68,11 +68,37 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         assertThrows(BusinessException.class, () -> tournamentService.addMember(newMember, userOwner.getId()));
 
     }
-/*
     @Test
     public void aUserCantAddAnotherUserToATournamentThatDontOwn(){
+        String name = "TorneoPrueba";
+        LoginDto owner = LoginDto.builder()
+                .email("mail@mail.com")
+                .username("usernameTest")
+                .build();
+        UserDto ownerUser =userService.createUser(owner);
+        LoginDto user = LoginDto.builder()
+                .email("mail@mail.com2")
+                .username("usernameTest2")
+                .build();
+        UserDto magicUser = userService.createUser(user);
+        MemberDto newMember = MemberDto.builder()
+                .username("Richard")
+                .tournamentId(32167L)
+                .build();
+        TournamentDto dto = TournamentDto.builder()
+                .type(TounamentType.PRIVATE)
+                .start(new Date())
+                .finish(new Date())
+                .name(name)
+                .language(Language.ES)
+                .owner(magicUser)
+                .build();
+        tournamentService.create(dto, ownerUser.getId());
+
+        assertThrows(BusinessException.class, () -> tournamentService.addMember(newMember, ownerUser.getId()));
 
     }
+/*
 
     @Test
     public void aUserCanAddAnotherUserToATournamentThatOwns(){
