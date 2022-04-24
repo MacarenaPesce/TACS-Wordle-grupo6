@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.UserEntity;
+import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.repository.UserRepository;
 
 import java.util.Collections;
@@ -49,15 +50,28 @@ public class UserService {
         return mapToDto(newUser);
     }
 
-    public static UserDto mapToDto(UserEntity newUser) {
+    public static UserDto mapToDto(UserEntity user) {
         return UserDto.builder()
-                .email(newUser.getEmail())
-                .username(newUser.getUsername())
-                .id(newUser.getId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .id(user.getId())
+                .build();
+    }
+
+
+    public static UserEntity mapToEntity(UserDto user) {
+        return UserEntity.builder()
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .id(user.getId())
                 .build();
     }
 
     public UserEntity findUserByUsernameAndPassword(String username, String password) {
         return userRepository.findByUsernameAndPassword(username, password);
+    }
+
+    public UserDto findUser(Long userId) {
+        return mapToDto(userRepository.findById(userId).orElseThrow());
     }
 }

@@ -1,5 +1,7 @@
 package utn.frba.wordle.service;
 
+import com.google.gson.Gson;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,7 @@ import utn.frba.wordle.dto.SessionDto;
 import utn.frba.wordle.dto.UserDto;
 import utn.frba.wordle.entity.UserEntity;
 
+import java.util.Base64;
 import java.util.Date;
 
 @Service
@@ -28,6 +31,18 @@ public class AuthService {
 
     @Autowired
     UserService userService;
+
+    public static SessionDto getSession(String token) {
+        token = token.replace("Bearer", "");
+
+        String[] chunks = token.split("\\.");
+
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+
+        String payload = new String(decoder.decode(chunks[1]));
+
+        return new Gson().fromJson(payload, SessionDto.class);
+    }
 
     public SessionDto register(LoginDto loginDto) {
         UserDto userDto = userService.createUser(loginDto);
@@ -90,5 +105,10 @@ public class AuthService {
                         SECRET.getBytes()).compact();
 
         return "Bearer " + token;
+    }
+
+    public static Claims getClaims(String jwtToken) {
+        jwtToken = jwtToken.replace("Bearer", "");
+        return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
     }
 }
