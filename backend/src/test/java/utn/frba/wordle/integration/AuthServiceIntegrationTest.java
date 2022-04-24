@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.dto.LoginDto;
 import utn.frba.wordle.dto.SessionDto;
 import utn.frba.wordle.dto.UserDto;
+import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.UserService;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static utn.frba.wordle.service.AuthService.*;
 import static utn.frba.wordle.utils.TestUtils.RANDOM;
 
@@ -40,6 +42,17 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
         assertThat(login).hasNoNullFieldsOrProperties();
         assertThat(tokenUsername).isEqualTo(user.getUsername());
         assertThat(tokenEmail).isEqualTo(user.getEmail());
+    }
+
+    @Test
+    public void getsErrorOnLoginWithInvalidCredentials() {
+        LoginDto wrongLogin = LoginDto.builder()
+                .email("falseEmail@false.com")
+                .password("falsePassword")
+                .username("notRealUser")
+                .build();
+
+        assertThrows(BusinessException.class, () -> authService.login(wrongLogin));
     }
 
     @Test
