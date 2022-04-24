@@ -20,4 +20,5 @@ public class TournamentDto {
     TounamentType type;
     Date start;
     Date finish;
+    UserDto owner;
 }

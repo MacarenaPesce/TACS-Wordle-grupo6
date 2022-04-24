@@ -34,4 +34,7 @@ public class TournamentEntity {
 
     @Column
     Date finish;
+
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    UserEntity owner;
 }

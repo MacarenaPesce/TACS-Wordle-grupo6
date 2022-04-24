@@ -20,8 +20,13 @@ public class TournamentService {
     @Autowired
     TournamentRepository tournamentRepository;
 
-    public TournamentDto create(TournamentDto dto) {
+    @Autowired
+    UserService userService;
 
+    public TournamentDto create(TournamentDto dto, Long userId) {
+
+        UserDto owner = userService.findUser(userId);
+        dto.setOwner(owner);
         TournamentEntity newTournament = mapToEntity(dto);
 
         newTournament = tournamentRepository.save(newTournament);
@@ -36,6 +41,7 @@ public class TournamentService {
                 .language(dto.getLanguage())
                 .name(dto.getName())
                 .type(dto.getType())
+                .owner(UserService.mapToEntity(dto.getOwner()))
                 .build();
     }
 
@@ -47,6 +53,7 @@ public class TournamentService {
                 .start(entity.getStart())
                 .tourneyId(entity.getId())
                 .type(entity.getType())
+                .owner(UserService.mapToDto(entity.getOwner()))
                 .build();
     }
 
