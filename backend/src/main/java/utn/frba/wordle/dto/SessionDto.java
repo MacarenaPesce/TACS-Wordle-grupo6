@@ -10,6 +10,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
+@ToString
 public class SessionDto {
 
     private String token;
