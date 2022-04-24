@@ -14,7 +14,7 @@ import java.util.Date;
 @Builder
 public class TournamentDto {
 
-    Integer tourneyId;
+    Long tourneyId;
     String name;
     Language language;
     TounamentType type;

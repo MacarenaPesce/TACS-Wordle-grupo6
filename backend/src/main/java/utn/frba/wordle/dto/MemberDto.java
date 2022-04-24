@@ -10,5 +10,5 @@ import lombok.*;
 public class MemberDto {
 
     private String username;
-    private Integer tournamentId;
+    private Long tournamentId;
 }
