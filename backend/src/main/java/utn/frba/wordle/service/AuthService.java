@@ -12,6 +12,7 @@ import utn.frba.wordle.dto.LoginDto;
 import utn.frba.wordle.dto.SessionDto;
 import utn.frba.wordle.dto.UserDto;
 import utn.frba.wordle.entity.UserEntity;
+import utn.frba.wordle.exception.BusinessException;
 
 import java.util.Base64;
 import java.util.Date;
@@ -55,9 +56,9 @@ public class AuthService {
             return getSessionDtoHardcodeado(loginDto);
         } else {
             UserEntity userEntity = userService.findUserByUsernameAndPassword(loginDto.getUsername(), loginDto.getPassword());
-            /*if (userEntity == null) {
-                throw new BusinessException("Usuario inválido");
-            }*/
+            if (userEntity == null) {
+                throw new BusinessException("Invalid Username and Password");
+            }
             //userService.updateLoginDate(userEntity);
             return getSessionDto(userEntity);
         }
