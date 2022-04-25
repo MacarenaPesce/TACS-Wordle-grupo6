@@ -1,6 +1,5 @@
-.bg1{
-    width: 25%;
-    background-color: #fface5;
+.row{
+    margin:0;
 }
 
 .help {
@@ -10,24 +9,10 @@
 }
 
 .instrucciones{
-    width: 50%;
     float: left;
     text-align: center;
     display: flex;
     justify-content: center;
-}
-
-.resultados{
-    width: 50%;
-    height: auto;
-    float: right;
-    padding: 0%;
-    background-color: #f808ac;
-}
-
-.forms{
-    padding: 0%;
-    background-color: aquamarine;
 }
 
 .opciones{
@@ -41,6 +26,17 @@
     width: 100%;
 }
 
+.solucion{
+    top: 35%;
+    width: auto;
+}
+
+form{
+    top: 35%;
+    width: 25%;
+    height: auto;
+}
+
 label{
     color:rgb(3, 3, 3);
     text-decoration: underline;
@@ -48,8 +44,51 @@ label{
 }
 
 img{
+    margin-top: 15%;
     display: block;
-    margin: 5%;
-    width: 500px;
-    height: 600px;
+    height: auto;
+    max-width: 300%;
+    width: 100%;
+}
+
+
+
+
+* {box-sizing: border-box;}
+
+
+
+ul {
+  position: absolute;
+  overflow: scroll;
+  top: 20%;
+  max-height: 70%;
+  width: 20%;
+  border: 2px solid #ccc;
+  
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  
+  -webkit-overflow-scrolling: touch;
+
+margin-left:-3%;
+
+  text-align: center;
+  color: black;
+
+  background-color: white;
+}
+
+li {
+  padding: 10px 20px;
+  
+  border-bottom: 1px solid #ccc;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:nth-child(even) {
+    background: #f8f8f8;
+  }
 }

@@ -5,9 +5,9 @@ import Home from './pages/Home';
 import Help from './pages/Help';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
-/*import Footer from './components/footer/Footer';*/
 import Login from './pages/sesion/Login';
 import Register from './pages/sesion/Register';
+import Not from './components/Not'
 import {
   BrowserRouter,
   Routes,
@@ -24,6 +24,13 @@ root.render(
       <Route path="register" element={<Register />} />
       <Route path="help" element={<Help />} />
       <Route path="dictionary" element={<Dictionary />} />
+      {/*
+      <Route path="tourney" element={<Tourney />} /> 
+      */}
+      <Route path="*" element={<Not />} />
+
+
+
     </Routes>  
   </BrowserRouter>
   

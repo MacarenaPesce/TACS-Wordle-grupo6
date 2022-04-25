@@ -1,7 +1,5 @@
 package utn.frba.wordle.controller;
 
-import com.google.gson.Gson;
-import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.*;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.TournamentService;
-
-import java.util.Base64;
 
 @RestController
 @RequestMapping("/api/tournaments")
@@ -30,14 +26,18 @@ public class TournamentsController {
     }
 
     @PostMapping("addmember")
-    public ResponseEntity<MemberDto> addMember(@RequestBody MemberDto memberDto) {
-        MemberDto dto = tournamentService.addMember(memberDto);
+    public ResponseEntity<MemberDto> addMember(@RequestHeader("Authorization") String token, @RequestBody MemberDto memberDto) {
+
+        SessionDto session = AuthService.getSession(token);
+
+        MemberDto dto = tournamentService.addMember(memberDto, session.getUserId());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/join")
-    public ResponseEntity<JoinDto> join(@PathVariable Integer id) {
-        JoinDto dto = tournamentService.join(id);
+    @PostMapping("/{tournamentId}/join")
+    public ResponseEntity<JoinDto> join(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
+        SessionDto session = AuthService.getSession(token);
+        JoinDto dto = tournamentService.join(session.getUserId(), tournamentId);
 
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
@@ -49,8 +49,9 @@ public class TournamentsController {
     }
     
     @PostMapping("submitResults")
-    public ResponseEntity<ResultDto> submitResults(@RequestBody ResultDto resultDto) {
-        ResultDto dto = tournamentService.submitResults(resultDto);
+    public ResponseEntity<ResultDto> submitResults(@RequestHeader("Authorization") String token, @RequestBody ResultDto resultDto) {
+        SessionDto session = AuthService.getSession(token);
+        ResultDto dto = tournamentService.submitResults(session.getUserId(), resultDto);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }

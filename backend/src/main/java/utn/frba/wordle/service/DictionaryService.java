@@ -21,6 +21,7 @@ import java.util.Collections;
 public class DictionaryService {
 
     public DictionaryDto getDefinitions(Language language, String word) {
+
         String url = "https://api.dictionaryapi.dev/api/v2/entries/" + language +"/" + word ;
 
         String definition = "";

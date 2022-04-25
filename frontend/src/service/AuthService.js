@@ -10,7 +10,7 @@ const register = (username, email, password) => {
   });
 };
 
-const login = (username, password) => {
+const loginService = (username, password) => {
   return axios
     .post(API_URL + "login", {
       username,
@@ -28,6 +28,6 @@ const logout = () => {
 };
 export default {
   register,
-  login,
+  loginService,
   logout,
 };
