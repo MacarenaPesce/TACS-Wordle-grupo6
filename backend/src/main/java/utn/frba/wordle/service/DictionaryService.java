@@ -27,6 +27,7 @@ public class DictionaryService {
     SpanishDictionaryPage spanishDictionary;
 
     public DictionaryDto getDefinitions(Language language, String word) {
+
         if(language.equals(Language.ES)){
             //spanishDictionary = new SpanishDictionary();
             List<String> definitions = spanishDictionary.getDefinitions(word.toLowerCase());
@@ -38,6 +39,7 @@ public class DictionaryService {
         }
 
         String url = "https://api.dictionaryapi.dev/api/v2/entries/" + language +"/" + word ;
+
 
         String definition = "";
         try {
