@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import LogoCancel from '../img/icons8-cancel-30.svg'; 
+import Home from '../pages/Home'
 
 /*import "https://fonts.googleapis.com/css?family=Roboto|Varela+Round";
 import "https://fonts.googleapis.com/icon?family=Material+Icons";
@@ -38,18 +39,23 @@ function Not (){
 export default Not;*/
 
 function Not() {
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(true);
   
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
   
     return (
       <div>
+        <Home />
+
+        {/*
         <Button variant="primary" onClick={handleShow}>
           Launch demo modal - tiene que ser un modal error sin boton
-        </Button>
+        </Button>        
+        */}
+
   
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleShow}>
           <Modal.Header closeButton>                          
             <Modal.Title>Sorry!</Modal.Title>
             <div class="icon-box">
