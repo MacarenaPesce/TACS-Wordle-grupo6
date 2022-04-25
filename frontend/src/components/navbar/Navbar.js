@@ -53,7 +53,6 @@ function NavbarAut() {
         <Link to='/register'><Button onClick={register} variant="outline-success" className="but-log">Registrarse</Button></Link>
         <Button onClick={logout} variant="outline-success" className="but-log">Salir</Button>
       </Navbar>
-      
 
     </div>
   );

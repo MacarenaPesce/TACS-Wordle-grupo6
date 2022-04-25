@@ -4,8 +4,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import utn.frba.wordle.entity.UserEntity;
 
+import java.util.List;
+
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     @Query(value = "SELECT * FROM user u WHERE u.username = :username and u.password = :password", nativeQuery = true)
     UserEntity findByUsernameAndPassword(String username, String password);
+
+    @Query(value = "SELECT * FROM user u WHERE u.username = :username", nativeQuery = true)
+    UserEntity findByUsername(String username);
+
+    @Query(value = "select u.* from user u, tournament_User tu \n" +
+            "where tu.Id_Tournament = :tourneyId \n" +
+            "and tu.Id_User = u.id", nativeQuery = true)
+    List<UserEntity> getTournamentMembers(Long tourneyId);
 }

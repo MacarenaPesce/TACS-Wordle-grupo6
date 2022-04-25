@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import utn.frba.wordle.service.AuthService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,7 +23,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     private final List<String> excludeUrlPatterns = new ArrayList<>();
 
     private Claims validateToken(HttpServletRequest request) {
-        String SECRET = "mySecretKey";
+        String SECRET = AuthService.SECRET;
         String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
         return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
     }

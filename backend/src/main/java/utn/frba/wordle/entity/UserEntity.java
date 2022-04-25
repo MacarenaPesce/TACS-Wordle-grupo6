@@ -1,8 +1,10 @@
 package utn.frba.wordle.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -25,4 +27,8 @@ public class UserEntity {
 
     @Column
     private String password;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
+    private Set<TournamentEntity> tournaments;
 }

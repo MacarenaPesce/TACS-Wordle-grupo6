@@ -19,8 +19,8 @@ public class DictionaryController {
     @Autowired
     DictionaryService dictionaryService;
 
-    @GetMapping("/{language}/{word}")
-    public ResponseEntity<DictionaryDto> ask(@PathVariable Language language, @PathVariable String word) {
+    @PostMapping("/{language}/{word}")
+    public ResponseEntity<DictionaryDto> getDefinitions(@PathVariable Language language, @PathVariable String word) {
 
         DictionaryDto dto = dictionaryService.getDefinitions(language, word);
 

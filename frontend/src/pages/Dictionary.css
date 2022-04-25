@@ -1,0 +1,64 @@
+
+.form-groupo{
+    display: flex;
+    flex-wrap: wrap;  
+    width: 600px;
+    min-height: 500px;
+    background-color: #d0d0d5;
+    padding: 25px;
+    margin: 10px;
+    border-radius: 26px;
+}
+
+.contenedor-busqueda {
+    width: 50%;
+    background-color: #fff;
+    padding: 8px 15px 8px 20px;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 15px; 
+    border: 2px solid #003047;   
+}
+
+.buscar-input {
+    margin-top:19px ;
+}
+
+.contenedor-idioma {
+    width: 50%;
+    padding: 16px;
+    font-size: 18px;
+    font-family: Roboto, sans-serif;
+    border: none;
+    border-radius: 15px;
+    outline: none;
+    background: #fff;
+    color: #fff;
+    text-transform: capitalize;
+    border: 2px solid #003047;
+}
+
+.boton-busqueda{
+    width: 50%;
+    padding: 16px;
+    font-size: 12px;
+    font-family: Roboto, sans-serif;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    outline: none;
+    background: #040a49;
+    color: #fff;
+    text-transform: capitalize;
+    margin: 20px 0;
+}
+
+.contenedor-respuesta {
+    width: 100%;
+    font-size: 25px;
+    background-color: white;
+    padding: 14px 32px 14px 16px;
+    border-radius: 15px;
+    border: 2px solid #003047;
+    outline: none;   
+}

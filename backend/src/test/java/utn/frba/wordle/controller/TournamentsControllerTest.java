@@ -9,8 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import utn.frba.wordle.dto.MemberDto;
 import utn.frba.wordle.dto.ResultDto;
+import utn.frba.wordle.dto.SessionDto;
 import utn.frba.wordle.dto.TournamentDto;
 import utn.frba.wordle.service.TournamentService;
+import utn.frba.wordle.utils.TestUtils;
 
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,6 +24,7 @@ import static utn.frba.wordle.utils.TestUtils.toJson;
 @WebMvcTest(TournamentsController.class)
 public class TournamentsControllerTest {
 
+    public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     private final Class<TournamentDto> dtoClass = TournamentDto.class;
 
     @MockBean
@@ -37,27 +40,31 @@ public class TournamentsControllerTest {
         request.setFinish(null);
         request.setStart(null);
 
+        SessionDto sessionDto = TestUtils.getValidSession();
         String urlController = "/api/tournaments/";
         mvc.perform(post(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).create(request);
+        verify(tournamentService).create(request, sessionDto.getUserId());
     }
 
     @SneakyThrows
     @Test
     public void puedoAgregarUnMiembroAUnTorneo() {
         MemberDto request = RANDOM.nextObject(MemberDto.class);
+        SessionDto sessionDto = TestUtils.getValidSession();
 
         String urlController = "/api/tournaments/addmember";
         mvc.perform(post(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).addMember(request);
+        verify(tournamentService).addMember(request, sessionDto.getUserId());
     }
 
     @SneakyThrows

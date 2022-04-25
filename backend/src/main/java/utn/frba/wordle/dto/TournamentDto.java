@@ -2,6 +2,7 @@ package utn.frba.wordle.dto;
 
 import lombok.*;
 import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.TounamentType;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,10 +14,11 @@ import java.util.Date;
 @Builder
 public class TournamentDto {
 
-    Integer tourneyId;
+    Long tourneyId;
     String name;
     Language language;
-    String type;
+    TounamentType type;
     Date start;
     Date finish;
+    UserDto owner;
 }

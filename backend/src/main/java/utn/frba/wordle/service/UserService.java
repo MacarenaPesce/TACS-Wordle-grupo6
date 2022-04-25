@@ -8,6 +8,9 @@ import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.repository.UserRepository;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @NoArgsConstructor
@@ -49,15 +52,43 @@ public class UserService {
         return mapToDto(newUser);
     }
 
-    public static UserDto mapToDto(UserEntity newUser) {
+    public static UserDto mapToDto(UserEntity user) {
         return UserDto.builder()
-                .email(newUser.getEmail())
-                .username(newUser.getUsername())
-                .id(newUser.getId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .id(user.getId())
+                .build();
+    }
+
+    public static UserEntity mapToEntity(UserDto user) {
+        return UserEntity.builder()
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .id(user.getId())
                 .build();
     }
 
     public UserEntity findUserByUsernameAndPassword(String username, String password) {
         return userRepository.findByUsernameAndPassword(username, password);
+    }
+
+    public UserDto findUser(Long userId) {
+        return mapToDto(userRepository.findById(userId).orElseThrow());
+    }
+
+    public UserEntity findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public Set<UserDto> getTournamentMembers(Long tournamentId) {
+        return mapToDto(userRepository.getTournamentMembers(tournamentId));
+    }
+
+    private Set<UserDto> mapToDto(List<UserEntity> entities) {
+        Set<UserDto> dtos = new HashSet<>(Collections.emptySet());
+        for(UserEntity user:entities){
+            dtos.add(UserService.mapToDto(user));
+        }
+        return dtos;
     }
 }

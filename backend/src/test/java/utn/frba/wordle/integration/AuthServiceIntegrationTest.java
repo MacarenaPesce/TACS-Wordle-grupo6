@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.dto.LoginDto;
 import utn.frba.wordle.dto.SessionDto;
 import utn.frba.wordle.dto.UserDto;
+import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.UserService;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static utn.frba.wordle.service.AuthService.*;
 import static utn.frba.wordle.utils.TestUtils.RANDOM;
 
@@ -40,6 +42,17 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
         assertThat(login).hasNoNullFieldsOrProperties();
         assertThat(tokenUsername).isEqualTo(user.getUsername());
         assertThat(tokenEmail).isEqualTo(user.getEmail());
+    }
+
+    @Test
+    public void getsErrorOnLoginWithInvalidCredentials() {
+        LoginDto wrongLogin = LoginDto.builder()
+                .email("falseEmail@false.com")
+                .password("falsePassword")
+                .username("notRealUser")
+                .build();
+
+        assertThrows(BusinessException.class, () -> authService.login(wrongLogin));
     }
 
     @Test
@@ -76,42 +89,5 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
         jwtToken = jwtToken.replace("Bearer", "");
         return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
     }
-/*
-    @Test
-    public void alRealizarElLoginConElAdminDeboPoderLoguearme() {
-        LoginDto loginDto = RANDOM.nextObject(LoginDto.class);
-        loginDto.setUsername(USUARIO_ADMIN);
-        loginDto.setPassword(PASS_ADMIN);
-
-        SessionDto login = authService.login(loginDto);
-
-        assertThat(login).hasNoNullFieldsOrProperties();
-    }
-
-    @Test
-    public void alRealizarElLoginConUnUsuarioNoAdminDeboPoderLoguearme() {
-        UsuarioDto usuarioDto = RANDOM.nextObject(UsuarioDto.class);
-        usuarioDto.setIdsGrupos(null);
-        usuarioDto.setEmail(TestUtils.MAIL_TESTING);
-        usuarioDto = usuarioService.create(usuarioDto);
-        String password = usuarioService.generarPasswordDefault(usuarioDto.getLegajo());
-        LoginDto loginDto = new LoginDto();
-        loginDto.setUsername(usuarioDto.getUsuario());
-        loginDto.setPassword(password);
-
-        SessionDto login = authService.login(loginDto);
-
-        assertThat(login).hasNoNullFieldsOrProperties();
-    }
-
-    @Test()
-    public void alRealizarElLoginConUnUsuarioNoValidoObtengoUnError() {
-        assertThrows(BusinessException.class, () -> {
-            LoginDto loginDto = RANDOM.nextObject(LoginDto.class);
-
-            authService.login(loginDto);
-        });
-    }
-    */
 }
 
