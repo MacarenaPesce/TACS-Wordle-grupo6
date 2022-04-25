@@ -1,7 +1,5 @@
 package utn.frba.wordle.controller;
 
-import com.google.gson.Gson;
-import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.*;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.TournamentService;
-
-import java.util.Base64;
 
 @RestController
 @RequestMapping("/api/tournaments")
@@ -38,9 +34,10 @@ public class TournamentsController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/join")
-    public ResponseEntity<JoinDto> join(@PathVariable Integer id) {
-        JoinDto dto = tournamentService.join(id);
+    @PostMapping("/{tournamentId}/join")
+    public ResponseEntity<JoinDto> join(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
+        SessionDto session = AuthService.getSession(token);
+        JoinDto dto = tournamentService.join(session.getUserId(), tournamentId);
 
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
