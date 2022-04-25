@@ -60,10 +60,19 @@ public class TournamentService {
                 .build();
     }
 
-    public JoinDto join(Integer id) {
+    @Transactional
+    public JoinDto join(Long userId, Long tournamentId) {
+        TournamentEntity tournamentEntity = tournamentRepository.findById(tournamentId).orElse(null);
+
+        if (tournamentEntity == null) {
+            throw new BusinessException("The specified Tournament doesn't exist.");
+        }
+
+        tournamentRepository.addMember(tournamentEntity.getId(), userId);
+
         return JoinDto.builder()
-                .tournamentID(id)
-                .userID(2)
+                .tournamentID(tournamentId)
+                .userID(userId)
                 .build();
     }
 

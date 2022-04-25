@@ -2,26 +2,21 @@ package utn.frba.wordle.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import utn.frba.wordle.dto.LoginDto;
-import utn.frba.wordle.dto.MemberDto;
-import utn.frba.wordle.dto.TournamentDto;
-import utn.frba.wordle.dto.UserDto;
-import utn.frba.wordle.entity.UserEntity;
+import utn.frba.wordle.dto.*;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.Language;
 import utn.frba.wordle.model.TounamentType;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.service.UserService;
+import utn.frba.wordle.utils.TestUtils;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
 
 
 public class TournamentIntegrationTest extends AbstractIntegrationTest {
@@ -38,11 +33,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanCreateATournament(){
         String name = "TorneoPrueba";
-        LoginDto user = LoginDto.builder()
-                .email("mail@mail.com")
-                .username("usernameTest")
-                .build();
-        UserDto owner = userService.createUser(user);
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
         TournamentDto dto = TournamentDto.builder()
                 .type(TounamentType.PRIVATE)
                 .start(new Date())
@@ -59,11 +50,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void aUserCantAddAnotherUserToANonexistentTournament(){
-        LoginDto owner = LoginDto.builder()
-                .email("mail@mail.com")
-                .username("usernameTest")
-                .build();
-        UserDto userOwner = userService.createUser(owner);
+        UserDto userOwner = getUserDto("mail@mail.com", "usernameTest");
         LoginDto user = LoginDto.builder()
                 .email("mail@mail.com2")
                 .username("usernameTest2")
@@ -80,16 +67,8 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCantAddAnotherUserToATournamentThatDontOwn(){
         String name = "TorneoPrueba";
-        LoginDto owner = LoginDto.builder()
-                .email("mail@mail.com")
-                .username("usernameTest")
-                .build();
-        UserDto ownerUser =userService.createUser(owner);
-        LoginDto user = LoginDto.builder()
-                .email("mail@mail.com2")
-                .username("usernameTest2")
-                .build();
-        UserDto magicUser = userService.createUser(user);
+        UserDto ownerUser = getUserDto("mail@mail.com", "usernameTest");
+        UserDto magicUser = getUserDto("mail@mail.com2", "usernameTest2");
         MemberDto newMember = MemberDto.builder()
                 .username("Richard")
                 .tournamentId(32167L)
@@ -111,16 +90,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanAddAnotherUserToATournamentThatOwns(){
         String name = "TorneoPrueba";
-        LoginDto owner = LoginDto.builder()
-                .email("mail@mail.com")
-                .username("usernameTest")
-                .build();
-        UserDto ownerUser = userService.createUser(owner);
-        LoginDto user = LoginDto.builder()
-                .email("mail@mail.com2")
-                .username("usernameTest2")
-                .build();
-        UserDto player = userService.createUser(user);
+        UserDto ownerUser = getUserDto("mail@mail.com", "usernameTest");
         TournamentDto dto = TournamentDto.builder()
                 .type(TounamentType.PRIVATE)
                 .start(new Date())
@@ -130,6 +100,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
                 .owner(ownerUser)
                 .build();
         dto = tournamentService.create(dto, ownerUser.getId());
+        UserDto player = getUserDto("mail@mail.com2", "usernameTest2");
         MemberDto newMember = MemberDto.builder()
                 .username(player.getUsername())
                 .tournamentId(dto.getTourneyId())
@@ -139,6 +110,40 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
 
         Set<UserDto> members = userService.getTournamentMembers(dto.getTourneyId());
         assertThat(members).contains(player);
+    }
+
+    @Test
+    public void aUserCanJoinAPublicTournament() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        TournamentDto tournamentDto = getTournamentDto(owner);
+
+        UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
+
+        SessionDto sessionDto = TestUtils.getValidSessionFromUser(user);
+
+        tournamentService.join(sessionDto.getUserId(), tournamentDto.getTourneyId());
+    }
+
+    private UserDto getUserDto(String s, String usernameTest2) {
+        LoginDto user = LoginDto.builder()
+                .email(s)
+                .username(usernameTest2)
+                .build();
+        return userService.createUser(user);
+    }
+
+    private TournamentDto getTournamentDto(UserDto ownerUser) {
+        String tournamentName = "TorneoPrueba";
+        TournamentDto tournamentDto = TournamentDto.builder()
+                .type(TounamentType.PRIVATE)
+                .start(new Date())
+                .finish(new Date())
+                .name(tournamentName)
+                .language(Language.ES)
+                .owner(ownerUser)
+                .build();
+        tournamentDto = tournamentService.create(tournamentDto, ownerUser.getId());
+        return tournamentDto;
     }
 }
 

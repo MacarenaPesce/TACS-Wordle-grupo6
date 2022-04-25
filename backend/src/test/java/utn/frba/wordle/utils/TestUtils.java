@@ -5,15 +5,22 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import utn.frba.wordle.dto.LoginDto;
 import utn.frba.wordle.dto.SessionDto;
+import utn.frba.wordle.dto.UserDto;
 import utn.frba.wordle.service.AuthService;
+import utn.frba.wordle.service.UserService;
 
 import java.util.Date;
 
 public class TestUtils {
 
     public static final EasyRandom RANDOM = TestUtils.newEasyRandom();
+
+    @Autowired
+    UserService userService;
 
     private static EasyRandom newEasyRandom() {
         final EasyRandomParameters parameters = new EasyRandomParameters();
@@ -26,14 +33,28 @@ public class TestUtils {
         return gson.toJson(object);
     }
 
-    public static SessionDto getValidSession() {
-        String accessToken = getJWTToken("ADMIN_USER", "ADMIN_EMAIL", 35L, 100L);
+    public static SessionDto getMockSession() {
+        String username = "mockUser";
+        String email = "mockMail@mail.com";
+        Long userId = 100L;
+        String accessToken = getJWTToken(username, email, userId, 100L);
 
         return SessionDto.builder()
                 .token(accessToken)
-                .username("ADMIN_USER")
-                .email("ADMIN_EMAIL")
-                .userId(35L)
+                .username(username)
+                .email(email)
+                .userId(userId)
+                .build();
+    }
+
+    public static SessionDto getValidSessionFromUser(UserDto user) {
+        String accessToken = getJWTToken(user.getUsername(), user.getEmail(), user.getId(), 100L);
+
+        return SessionDto.builder()
+                .token(accessToken)
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .userId(user.getId())
                 .build();
     }
 
