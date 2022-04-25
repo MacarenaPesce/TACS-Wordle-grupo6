@@ -28,7 +28,7 @@ submitCambio = e => {
       .then(response => {
           console.log('Response obtenida: ')
           console.log(response.data)
-          this.setState({signifacdo: response.data.translate})
+          this.setState({signifacdo: response.data.definition})
       })
       .catch(error => {
           console.log(error)
@@ -42,7 +42,7 @@ render(){
           <NavbarAut />
         </header>
         <form onSubmit={this.submitCambio}  >
-           <div className="form-group"  >
+           <div className="form-groupo"  >
              <div className='contenedor-busqueda' >
                 <input 
                   type="text" 
@@ -63,7 +63,9 @@ render(){
                 <option value="ES">Español</option>
                 <option value="EN">English</option>
               </select> 
-              </div>   
+              </div> 
+              <div className='contenedor-respuesta'>{ 
+              this.state.signifacdo}</div>  
            </div>
         </form>
         <Footer />
