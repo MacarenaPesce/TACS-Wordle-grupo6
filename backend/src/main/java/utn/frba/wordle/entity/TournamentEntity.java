@@ -2,7 +2,7 @@ package utn.frba.wordle.entity;
 
 import lombok.*;
 import utn.frba.wordle.model.Language;
-import utn.frba.wordle.model.TounamentType;
+import utn.frba.wordle.model.TournamentType;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class TournamentEntity {
     Language language;
 
     @Enumerated(EnumType.STRING)
-    TounamentType type;
+    TournamentType type;
 
     @Column
     Date start;

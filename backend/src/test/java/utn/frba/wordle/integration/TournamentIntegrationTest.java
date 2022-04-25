@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.dto.*;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.Language;
-import utn.frba.wordle.model.TounamentType;
+import utn.frba.wordle.model.TournamentType;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.service.UserService;
@@ -35,7 +35,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         String name = "TorneoPrueba";
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
         TournamentDto dto = TournamentDto.builder()
-                .type(TounamentType.PRIVATE)
+                .type(TournamentType.PRIVATE)
                 .start(new Date())
                 .finish(new Date())
                 .name(name)
@@ -74,7 +74,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
                 .tournamentId(32167L)
                 .build();
         TournamentDto dto = TournamentDto.builder()
-                .type(TounamentType.PRIVATE)
+                .type(TournamentType.PRIVATE)
                 .start(new Date())
                 .finish(new Date())
                 .name(name)
@@ -92,7 +92,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         String name = "TorneoPrueba";
         UserDto ownerUser = getUserDto("mail@mail.com", "usernameTest");
         TournamentDto dto = TournamentDto.builder()
-                .type(TounamentType.PRIVATE)
+                .type(TournamentType.PRIVATE)
                 .start(new Date())
                 .finish(new Date())
                 .name(name)
@@ -115,13 +115,25 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanJoinAPublicTournament() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournamentDto = getTournamentDto(owner);
-
+        TournamentDto tournamentDto = getPrivateTournamentDto(owner);
         UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
-
         SessionDto sessionDto = TestUtils.getValidSessionFromUser(user);
 
         tournamentService.join(sessionDto.getUserId(), tournamentDto.getTourneyId());
+
+        Set<UserDto> members = userService.getTournamentMembers(tournamentDto.getTourneyId());
+        assertThat(members).contains(user);
+    }
+
+    @Test
+    public void aUserCanListAllPublicTournaments() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1");
+        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament2");
+
+        TourneysDto tournaments = tournamentService.listPublicTournaments();
+
+        assertThat(tournaments.getTourneys()).containsExactlyInAnyOrder(tournament1, tournament2);
     }
 
     private UserDto getUserDto(String s, String usernameTest2) {
@@ -132,18 +144,33 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         return userService.createUser(user);
     }
 
-    private TournamentDto getTournamentDto(UserDto ownerUser) {
-        String tournamentName = "TorneoPrueba";
+    private TournamentDto getPublicTournamentDto(UserDto ownerUser, String tournamentName) {
         TournamentDto tournamentDto = TournamentDto.builder()
-                .type(TounamentType.PRIVATE)
+                .type(TournamentType.PUBLIC)
                 .start(new Date())
                 .finish(new Date())
                 .name(tournamentName)
                 .language(Language.ES)
                 .owner(ownerUser)
                 .build();
-        tournamentDto = tournamentService.create(tournamentDto, ownerUser.getId());
-        return tournamentDto;
+        return tournamentService.create(tournamentDto, ownerUser.getId());
+    }
+
+    private TournamentDto getPrivateTournamentDto(UserDto ownerUser, String tournamentName) {
+        TournamentDto tournamentDto = TournamentDto.builder()
+                .type(TournamentType.PRIVATE)
+                .start(new Date())
+                .finish(new Date())
+                .name(tournamentName)
+                .language(Language.ES)
+                .owner(ownerUser)
+                .build();
+        return tournamentService.create(tournamentDto, ownerUser.getId());
+    }
+
+    private TournamentDto getPrivateTournamentDto(UserDto ownerUser) {
+        String tournamentName = "TorneoPrueba";
+        return getPrivateTournamentDto(ownerUser, tournamentName);
     }
 }
 

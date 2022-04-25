@@ -9,7 +9,6 @@ import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.Language;
-import utn.frba.wordle.model.TounamentType;
 import utn.frba.wordle.repository.TournamentRepository;
 
 import java.util.*;
@@ -77,17 +76,10 @@ public class TournamentService {
     }
 
     public TourneysDto listPublicTournaments() {
-        TournamentDto tournamentDto = TournamentDto.builder()
-                .name("Pepita")
-                .language(Language.ES)
-                .tourneyId(1L)
-                .type(TounamentType.PUBLIC)
-                .finish(new Date())
-                .start(new Date())
-                .build();
+        List<TournamentEntity> tournaments = tournamentRepository.getPublicTournaments();
 
         return TourneysDto.builder()
-                .tourneys(Collections.singletonList(tournamentDto))
+                .tourneys(mapToDto(tournaments))
                 .build();
     }
 
@@ -97,7 +89,6 @@ public class TournamentService {
                 .language(Language.EN)
                 .build();
     }
-
 
     private TournamentEntity mapToEntity(TournamentDto dto) {
         return TournamentEntity.builder()
@@ -120,5 +111,13 @@ public class TournamentService {
                 .type(entity.getType())
                 .owner(UserService.mapToDto(entity.getOwner()))
                 .build();
+    }
+
+    private List<TournamentDto> mapToDto(List<TournamentEntity> entities) {
+        List<TournamentDto> dtos = new ArrayList<>(Collections.emptySet());
+        for(TournamentEntity tournament:entities){
+            dtos.add(mapToDto(tournament));
+        }
+        return dtos;
     }
 }
