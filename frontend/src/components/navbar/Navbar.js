@@ -23,7 +23,47 @@ import {useRoute} from 'wouter'
 
 */
 
+/*Opcion 1: sin control de logueo  */
+function NavbarAut() {
+  const login = () =>{
+    console.log("Log in")
+  };
 
+  const logout = () =>{
+    console.log("Log out")
+  };
+
+  const register = () =>{
+    console.log("Register")
+  };
+  
+  return ( 
+    
+    <div>
+      <Navbar className='navBut' bg="dark" variant="dark" clas >
+        <Container>
+        <Nav className="me-auto" >
+          <Nav.Link href="/help" >Ayuda</Nav.Link>
+          <Nav.Link href="/dictionary">Diccionario</Nav.Link>
+          <Nav.Link href="#tourney">Torneo</Nav.Link>
+        </Nav>
+        </Container>
+
+        <Link to='/login'><Button onClick={login} variant="outline-success" className="but-log">Ingresar</Button></Link>
+        <Link to='/register'><Button onClick={register} variant="outline-success" className="but-log">Registrarse</Button></Link>
+        <Button onClick={logout} variant="outline-success" className="but-log">Salir</Button>
+      </Navbar>
+      
+
+    </div>
+  );
+}
+
+export default NavbarAut;
+
+
+/*Opcion 2: con control de logueo  */
+/*
 export default function NavbarAut() {
     
     const clickLogin = () =>{
@@ -37,7 +77,7 @@ export default function NavbarAut() {
     const { isLogged, logout} = useUser()
     const [match] = useRoute("/login");
 
-    const handleClick = e => {
+    const clickLogout = e => {
       console.log("Log out")
       e.preventDefault()
       logout()
@@ -55,7 +95,7 @@ export default function NavbarAut() {
                   <Nav.Link href="#tourney">Torneo</Nav.Link>
                 </Nav>
               </Container>
-              <Button href="/" onClick={handleClick} variant="outline-success" className="but-log">Salir</Button>
+              <Button href="/" onClick={clickLogout} variant="outline-success" className="but-log">Salir</Button>
             </Navbar>
           </div>
         : <div>
@@ -74,52 +114,14 @@ export default function NavbarAut() {
           </div>
     }
   
-    const content = match
-      ? null
-      : renderLoginButtons({isLogged})
+  const content = match
+    ? null
+    : renderLoginButtons({isLogged})
   
-    return (
-      <header>
-        {content}
-      </header>
-    )
-  }  
-
-    /*
-    if(this.state.logueado){
-      return ( 
-        <div>
-          <Navbar className='navBut' bg="dark" variant="dark" >
-            <Container>
-              <Nav className="me-auto" >
-                <Nav.Link href="/" >Inicio</Nav.Link>
-                <Nav.Link href="/help" >Ayuda</Nav.Link>
-                <Nav.Link href="#diccionary">Diccionario</Nav.Link>
-                <Nav.Link href="#tourney">Torneo</Nav.Link>
-              </Nav>
-            </Container>
-    
-            <Button onClick={logout} variant="outline-success" className="but-log">Salir</Button>
-          </Navbar>          
-        </div>
-      );
-    }else{
-      return ( 
-        <div>
-          <Navbar className='navBut' bg="dark" variant="dark" >
-            <Container>
-              <Nav className="me-auto" >
-                <Nav.Link href="/" >Inicio</Nav.Link>
-                <Nav.Link href="/help" >Ayuda</Nav.Link>
-                <Nav.Link href="#diccionary">Diccionario</Nav.Link>
-              </Nav>
-            </Container>
-    
-            <Button href="/login" onClick={login} variant="outline-success" className="but-log">Ingresar</Button>
-            <Button href="/register" onClick={register} variant="outline-success" className="but-log">Registrarse</Button>
-          </Navbar>
-          
-        </div>
-      );
-    }*/
-
+  return (
+    <header>
+      {content}
+    </header>
+  )
+}  
+*/
