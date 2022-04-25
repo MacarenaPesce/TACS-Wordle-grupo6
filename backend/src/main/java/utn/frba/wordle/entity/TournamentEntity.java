@@ -6,6 +6,7 @@ import utn.frba.wordle.model.TounamentType;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -37,4 +38,11 @@ public class TournamentEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     UserEntity owner;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable( name = "Tournament_User",
+            joinColumns = @JoinColumn(name = "Id_Tournament"),
+            inverseJoinColumns = @JoinColumn(name = "Id_User"))
+    private Set<UserEntity> members;
+
 }

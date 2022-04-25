@@ -3,6 +3,7 @@ package utn.frba.wordle.service;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.entity.UserEntity;
@@ -11,8 +12,7 @@ import utn.frba.wordle.model.Language;
 import utn.frba.wordle.model.TounamentType;
 import utn.frba.wordle.repository.TournamentRepository;
 
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 @Service
 @NoArgsConstructor
@@ -35,20 +35,28 @@ public class TournamentService {
         return mapToDto(newTournament);
     }
 
+    @Transactional
     public MemberDto addMember(MemberDto memberDto, Long ownerUserId) {
 
         TournamentEntity tournamentEntity = tournamentRepository.findById(memberDto.getTournamentId()).orElse(null);
 
-        if(tournamentEntity == null) {
+        if (tournamentEntity == null) {
             throw new BusinessException("The specified Tournament doesn't exist.");
         }
-        if(!tournamentEntity.getOwner().getId().equals(ownerUserId)){
+        if (!tournamentEntity.getOwner().getId().equals(ownerUserId)) {
             throw new BusinessException("The user doesn't own the specified Tournament.");
         }
 
+        UserEntity userEntity = userService.findUserByUsername(memberDto.getUsername());
+        //TODO validar existencia de usuario a agregar
+        //TODO validar que el usuario a agregar ya no este incluido en el torneo
+//        Set<UserDto> members = userService.getTournamentMembers(tournamentEntity.getId());
+
+        tournamentRepository.addMember(tournamentEntity.getId(), userEntity.getId());
+
         return MemberDto.builder()
-                .tournamentId(2L)
-                .username("Jorge")
+                .tournamentId(tournamentEntity.getId())
+                .username(userEntity.getUsername())
                 .build();
     }
 
@@ -104,5 +112,4 @@ public class TournamentService {
                 .owner(UserService.mapToDto(entity.getOwner()))
                 .build();
     }
-
 }
