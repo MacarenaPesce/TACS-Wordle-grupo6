@@ -5,22 +5,37 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.dto.DictionaryDto;
 import utn.frba.wordle.model.Language;
+import utn.frba.wordle.client.SpanishDictionaryPage;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
+import java.util.List;
 
 
 @Service
 @NoArgsConstructor
 public class DictionaryService {
 
+    @Autowired
+    SpanishDictionaryPage spanishDictionary;
+
     public DictionaryDto getDefinitions(Language language, String word) {
+        if(language.equals(Language.ES)){
+            //spanishDictionary = new SpanishDictionary();
+            List<String> definitions = spanishDictionary.getDefinitions(word.toLowerCase());
+            return DictionaryDto.builder()
+                    .definition(definitions)
+                    .language(language)
+                    .word(word)
+                    .build();
+        }
 
         String url = "https://api.dictionaryapi.dev/api/v2/entries/" + language +"/" + word ;
 

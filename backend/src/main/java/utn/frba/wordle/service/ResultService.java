@@ -3,13 +3,12 @@ package utn.frba.wordle.service;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.dto.*;
+import utn.frba.wordle.dto.ResultDto;
+import utn.frba.wordle.dto.UserDto;
 import utn.frba.wordle.entity.ResultEntity;
-import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.repository.ResultRepository;
-import utn.frba.wordle.repository.UserRepository;
 
-import java.util.*;
+import java.util.Date;
 
 @Service
 @NoArgsConstructor
