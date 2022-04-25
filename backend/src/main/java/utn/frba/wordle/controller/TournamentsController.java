@@ -49,8 +49,9 @@ public class TournamentsController {
     }
     
     @PostMapping("submitResults")
-    public ResponseEntity<ResultDto> submitResults(@RequestBody ResultDto resultDto) {
-        ResultDto dto = tournamentService.submitResults(resultDto);
+    public ResponseEntity<ResultDto> submitResults(@RequestHeader("Authorization") String token, @RequestBody ResultDto resultDto) {
+        SessionDto session = AuthService.getSession(token);
+        ResultDto dto = tournamentService.submitResults(session.getUserId(), resultDto);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }

@@ -100,13 +100,15 @@ public class TournamentsControllerTest {
     @Test
     public void puedoPublicarLosResultados() {
         ResultDto request = RANDOM.nextObject(ResultDto.class);
+        SessionDto sessionDto = TestUtils.getMockSession();
 
         String urlController = "/api/tournaments/submitResults";
         mvc.perform(post(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).submitResults(request);
+        verify(tournamentService).submitResults(sessionDto.getUserId(), request);
     }
 }
