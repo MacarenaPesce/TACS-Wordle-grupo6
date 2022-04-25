@@ -30,8 +30,11 @@ public class TournamentsController {
     }
 
     @PostMapping("addmember")
-    public ResponseEntity<MemberDto> addMember(@RequestBody MemberDto memberDto) {
-        MemberDto dto = tournamentService.addMember(memberDto);
+    public ResponseEntity<MemberDto> addMember(@RequestHeader("Authorization") String token, @RequestBody MemberDto memberDto) {
+
+        SessionDto session = AuthService.getSession(token);
+
+        MemberDto dto = tournamentService.addMember(memberDto, session.getUserId());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

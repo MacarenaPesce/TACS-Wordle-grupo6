@@ -55,14 +55,16 @@ public class TournamentsControllerTest {
     @Test
     public void puedoAgregarUnMiembroAUnTorneo() {
         MemberDto request = RANDOM.nextObject(MemberDto.class);
+        SessionDto sessionDto = TestUtils.getValidSession();
 
         String urlController = "/api/tournaments/addmember";
         mvc.perform(post(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).addMember(request);
+        verify(tournamentService).addMember(request, sessionDto.getUserId());
     }
 
     @SneakyThrows
