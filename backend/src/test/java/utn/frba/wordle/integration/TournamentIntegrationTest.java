@@ -117,9 +117,9 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
         TournamentDto tournamentDto = getPrivateTournamentDto(owner);
         UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
-        SessionDto sessionDto = TestUtils.getValidSessionFromUser(user);
+        //SessionDto sessionDto = TestUtils.getValidSessionFromUser(user);
 
-        tournamentService.join(sessionDto.getUserId(), tournamentDto.getTourneyId());
+        tournamentService.join(user.getId(), tournamentDto.getTourneyId());
 
         Set<UserDto> members = userService.getTournamentMembers(tournamentDto.getTourneyId());
         assertThat(members).contains(user);
@@ -134,6 +134,20 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         TourneysDto tournaments = tournamentService.listPublicTournaments();
 
         assertThat(tournaments.getTourneys()).containsExactlyInAnyOrder(tournament1, tournament2);
+    }
+
+
+    @Test
+    public void aUserCanSubmitHisResult() {
+        UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
+        ResultDto resultDto = ResultDto.builder()
+                .result(2L)
+                .language(Language.ES)
+                .build();
+
+        resultDto = tournamentService.submitResults(user.getId(), resultDto);
+
+        assertThat(resultDto).hasNoNullFieldsOrProperties();
     }
 
     private UserDto getUserDto(String s, String usernameTest2) {

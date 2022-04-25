@@ -8,7 +8,6 @@ import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.Language;
 import utn.frba.wordle.repository.TournamentRepository;
 
 import java.util.*;
@@ -22,6 +21,9 @@ public class TournamentService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ResultService resultsService;
 
     public TournamentDto create(TournamentDto dto, Long userId) {
 
@@ -83,11 +85,9 @@ public class TournamentService {
                 .build();
     }
 
-    public ResultDto submitResults(ResultDto resultDto) {
-        return ResultDto.builder()
-                .result(2)
-                .language(Language.EN)
-                .build();
+    public ResultDto submitResults(Long userId, ResultDto resultDto) {
+
+        return resultsService.submitResults(userId, resultDto);
     }
 
     private TournamentEntity mapToEntity(TournamentDto dto) {
