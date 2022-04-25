@@ -105,7 +105,7 @@ export default class Help extends Component{
                                         </div>
                                     </div>
 
-                                    <button type="submit" className="btn btn-primary"><h5>Ayuda 🥺👉👈</h5></button>
+                                    <button type="submit" className="btn btn-success"><h5>Ayuda 🥺👉👈</h5></button>
 
                                 </form>
                             </div>
