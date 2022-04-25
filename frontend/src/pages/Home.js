@@ -4,18 +4,28 @@ import NavbarAut from '../components/navbar/Navbar';
 import Footer from '../components/footer/Footer';
 
 
-function Home() {
-  return (  
-    <body className='Home' >
-      <header>
-        <NavbarAut />
-      </header>
-    
-      <Footer />
+export default class Home extends React.Component{
+  constructor(props){
+    super(props);
+    this.state={
+      logueado: false,
+      username: ''
+    }
+  };
 
-    </body>
+  render(){
+    return (  
+      <div className='Home' >
+        <div className='header'>
+          <NavbarAut />
+        </div>
+      
+        <Footer />
 
-  );
+      </div>
+
+    );
+  }
 }
 
-export default Home;
+

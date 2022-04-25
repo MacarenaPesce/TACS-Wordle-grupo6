@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import './sesion/Login.css';
+import './sesion/Sesion.css'; /*todo: resolver esta dependencia sin usar ese *.css */
 import NavbarAut from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
 import HelpService from "../service/HelpService";
@@ -52,7 +52,7 @@ export default class Help extends Component{
 
         return (
 
-            <body className="help">
+            <div className="help">
                     <header>
                         <NavbarAut />
                     </header>
@@ -126,7 +126,7 @@ export default class Help extends Component{
                 
                     <Footer />
 
-            </body>
+            </div>
         );
     }
 }
