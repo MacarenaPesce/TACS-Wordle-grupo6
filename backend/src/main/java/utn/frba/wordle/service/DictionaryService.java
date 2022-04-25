@@ -21,14 +21,16 @@ import java.util.Collections;
 public class DictionaryService {
 
     public DictionaryDto getDefinitions(Language language, String word) {
-//        String url = "https://api.dictionaryapi.dev/api/v2/entries/" + language +"/" + word ;
-        String url = "https://dle.rae.es/srv/" + "search?w="+word
+        String url = "https://api.dictionaryapi.dev/api/v2/entries/" + language +"/" + word ;
+
         String definition = "";
         try {
             definition = peticionHttpGet(url);
         } catch (Exception e) {
             // Manejar excepción
             e.printStackTrace();
+            System.out.print("No existe definicion");
+            definition="No existe definicion";
         }
 
         return DictionaryDto.builder()
