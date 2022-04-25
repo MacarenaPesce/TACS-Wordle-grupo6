@@ -50,7 +50,6 @@ class Login extends Component{
             })
     } */
 
-    /* todo: faltan los errores de logueo, usuario o clave incorrecta, y si no esta registrado */
 /*
     render(){
         return (
