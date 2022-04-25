@@ -1,12 +1,12 @@
 package utn.frba.wordle.model;
 
-public enum TounamentType {
+public enum TournamentType {
     PRIVATE("Private"),
     PUBLIC("Public");
 
     String type;
 
-    TounamentType(String type){
+    TournamentType(String type){
         this.type = type;
     }
 

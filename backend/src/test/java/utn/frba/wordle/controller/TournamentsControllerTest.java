@@ -40,7 +40,7 @@ public class TournamentsControllerTest {
         request.setFinish(null);
         request.setStart(null);
 
-        SessionDto sessionDto = TestUtils.getValidSession();
+        SessionDto sessionDto = TestUtils.getMockSession();
         String urlController = "/api/tournaments/";
         mvc.perform(post(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
@@ -55,7 +55,7 @@ public class TournamentsControllerTest {
     @Test
     public void puedoAgregarUnMiembroAUnTorneo() {
         MemberDto request = RANDOM.nextObject(MemberDto.class);
-        SessionDto sessionDto = TestUtils.getValidSession();
+        SessionDto sessionDto = TestUtils.getMockSession();
 
         String urlController = "/api/tournaments/addmember";
         mvc.perform(post(urlController)
@@ -71,15 +71,17 @@ public class TournamentsControllerTest {
     @Test
     public void puedoUnirmeAUnTorneo() {
         MemberDto request = RANDOM.nextObject(MemberDto.class);
+        SessionDto sessionDto = TestUtils.getMockSession();
 
-        int id = 123;
-        String urlController = "/api/tournaments/" + id + "/join";
+        Long tournamentId = 123L;
+        String urlController = "/api/tournaments/" + tournamentId + "/join";
         mvc.perform(post(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).join(id);
+        verify(tournamentService).join(sessionDto.getUserId(), tournamentId);
     }
 
     @SneakyThrows
@@ -98,13 +100,15 @@ public class TournamentsControllerTest {
     @Test
     public void puedoPublicarLosResultados() {
         ResultDto request = RANDOM.nextObject(ResultDto.class);
+        SessionDto sessionDto = TestUtils.getMockSession();
 
         String urlController = "/api/tournaments/submitResults";
         mvc.perform(post(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).submitResults(request);
+        verify(tournamentService).submitResults(sessionDto.getUserId(), request);
     }
 }

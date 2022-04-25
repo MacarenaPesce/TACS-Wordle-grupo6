@@ -8,8 +8,6 @@ import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.Language;
-import utn.frba.wordle.model.TounamentType;
 import utn.frba.wordle.repository.TournamentRepository;
 
 import java.util.*;
@@ -23,6 +21,9 @@ public class TournamentService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ResultService resultsService;
 
     public TournamentDto create(TournamentDto dto, Long userId) {
 
@@ -60,35 +61,34 @@ public class TournamentService {
                 .build();
     }
 
-    public JoinDto join(Integer id) {
+    @Transactional
+    public JoinDto join(Long userId, Long tournamentId) {
+        TournamentEntity tournamentEntity = tournamentRepository.findById(tournamentId).orElse(null);
+
+        if (tournamentEntity == null) {
+            throw new BusinessException("The specified Tournament doesn't exist.");
+        }
+
+        tournamentRepository.addMember(tournamentEntity.getId(), userId);
+
         return JoinDto.builder()
-                .tournamentID(id)
-                .userID(2)
+                .tournamentID(tournamentId)
+                .userID(userId)
                 .build();
     }
 
     public TourneysDto listPublicTournaments() {
-        TournamentDto tournamentDto = TournamentDto.builder()
-                .name("Pepita")
-                .language(Language.ES)
-                .tourneyId(1L)
-                .type(TounamentType.PUBLIC)
-                .finish(new Date())
-                .start(new Date())
-                .build();
+        List<TournamentEntity> tournaments = tournamentRepository.getPublicTournaments();
 
         return TourneysDto.builder()
-                .tourneys(Collections.singletonList(tournamentDto))
+                .tourneys(mapToDto(tournaments))
                 .build();
     }
 
-    public ResultDto submitResults(ResultDto resultDto) {
-        return ResultDto.builder()
-                .result(2)
-                .language(Language.EN)
-                .build();
-    }
+    public ResultDto submitResults(Long userId, ResultDto resultDto) {
 
+        return resultsService.submitResults(userId, resultDto);
+    }
 
     private TournamentEntity mapToEntity(TournamentDto dto) {
         return TournamentEntity.builder()
@@ -111,5 +111,13 @@ public class TournamentService {
                 .type(entity.getType())
                 .owner(UserService.mapToDto(entity.getOwner()))
                 .build();
+    }
+
+    private List<TournamentDto> mapToDto(List<TournamentEntity> entities) {
+        List<TournamentDto> dtos = new ArrayList<>(Collections.emptySet());
+        for(TournamentEntity tournament:entities){
+            dtos.add(mapToDto(tournament));
+        }
+        return dtos;
     }
 }

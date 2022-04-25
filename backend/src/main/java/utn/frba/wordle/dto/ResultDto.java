@@ -9,7 +9,8 @@ import utn.frba.wordle.model.Language;
 @Builder
 @AllArgsConstructor
 public class ResultDto {
-    Integer  result;
+    Long id;
+    Long  result;
     Language language;
 }
 
