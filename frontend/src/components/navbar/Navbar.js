@@ -43,6 +43,7 @@ function NavbarAut() {
       <Navbar className='navBut' bg="dark" variant="dark" clas >
         <Container>
         <Nav className="me-auto" >
+          <Nav.Link href="/" >Inicio</Nav.Link>
           <Nav.Link href="/help" >Ayuda</Nav.Link>
           <Nav.Link href="/dictionary">Diccionario</Nav.Link>
           <Nav.Link href="#tourney">Torneo</Nav.Link>

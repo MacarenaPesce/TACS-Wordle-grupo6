@@ -37,11 +37,11 @@ submitCambio = e => {
 
 render(){
     return (
-      <body className="dictionary" >
+      <body className='body-diccionario'>
         <header>
           <NavbarAut />
         </header>
-        <form onSubmit={this.submitCambio}  >
+        <form onSubmit={this.submitCambio} >
            <div className="form-groupo"  >
              <div className='contenedor-busqueda' >
                 <input 
@@ -54,12 +54,12 @@ render(){
                   onChange={this.manejarCambio}
                 />
                 <button className='boton-busqueda' type="submit" >
-                  SEARH
+                  Buscar
                 </button>
               </div>
               <div className='contenedor-idioma'>
               <div><label><h5>Idioma</h5></label></div>
-              <select name="language" onChange={this.manejarCambio} >
+              <select className="language" onChange={this.manejarCambio} >
                 <option value="ES">Español</option>
                 <option value="EN">English</option>
               </select> 

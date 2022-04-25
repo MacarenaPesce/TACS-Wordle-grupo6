@@ -16,8 +16,8 @@
 }
 
 .opciones{
-    margin: 5%;
-    padding: 5%;
+    margin: 3%;
+    padding: 3%;
     padding-left: 15%;
     padding-right: 15%;
     background-color: rgba(129, 126, 126, 0.815);;
@@ -27,12 +27,12 @@
 }
 
 .solucion{
-    top: 35%;
+    top: 40%;
     width: auto;
 }
 
 form{
-    top: 35%;
+    top: 40%;
     width: 25%;
     height: auto;
 }
