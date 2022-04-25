@@ -22,7 +22,7 @@ public class DictionaryService {
 
     public DictionaryDto getDefinitions(Language language, String word) {
 //        String url = "https://api.dictionaryapi.dev/api/v2/entries/" + language +"/" + word ;
-        String url = "https://dle.rae.es/srv/" + "search?w="+word
+        String url = "https://dle.rae.es/srv/" + "search?w="+word;
         String definition = "";
         try {
             definition = peticionHttpGet(url);
