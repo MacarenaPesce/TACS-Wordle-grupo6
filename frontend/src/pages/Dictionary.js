@@ -41,7 +41,7 @@ render(){
         <header>
           <NavbarAut />
         </header>
-        <form onSubmit={this.submitCambio} >
+        <form onSubmit={this.submitCambio}>
            <div className="form-groupo"  >
              <div className='contenedor-busqueda' >
                 <input 
