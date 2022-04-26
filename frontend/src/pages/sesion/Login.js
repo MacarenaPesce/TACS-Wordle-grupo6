@@ -266,7 +266,6 @@ export default function Login() {
 */
 
 /* Opcion 4: solo con funcion, igual al tutorial - con control de usuario */
-/* no funciona porque es tal cual el tutorial  */
 /* repo del tutorial: https://github.com/midudev/react-live-coding */
 
 /*
