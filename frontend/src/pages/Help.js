@@ -15,7 +15,8 @@ export default class Help extends Component{
             yellow: '',
             grey: '',
             solution: '',
-            wordsResponse: []
+            wordsResponse: [],
+            visibility: "none"
         }
     }
 
@@ -77,7 +78,7 @@ export default class Help extends Component{
                                     <div className="opciones">
                                         <div className="form-group">
                                             <div><label><h5>Idioma</h5></label></div>
-                                            <select name="language" onChange={this.changeHandler}>
+                                            <select className="form-select" name="language" onChange={this.changeHandler}>
                                                 <option value="ES">Español</option>
                                                 <option value="EN">English</option>
                                             </select>
@@ -105,13 +106,13 @@ export default class Help extends Component{
                                         </div>
                                     </div>
 
-                                    <button type="submit" className="btn btn-success"><h5>Ayuda 🥺👉👈</h5></button>
+                                    <button type="submit" className="btn btn-success" onClick={() => this.setState({visibility: "block"})}><h5>Ayuda 🥺👉👈</h5></button>
 
                                 </form>
                             </div>
 
                             <div class="col">
-                                <div className="solucion">
+                                <div className="solucion" style={{display: this.state.visibility}}>
                                     <div className="opciones">
                                         {/* todo: que no aparezca el titulo ni la seccion hasta que no aprete el boton */}
                                         <label><h5>Soluciones posibles</h5></label>

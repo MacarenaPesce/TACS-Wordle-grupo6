@@ -59,7 +59,7 @@ render(){
               </div>
               <div className='contenedor-idioma'>
               <div><label><h5>Idioma</h5></label></div>
-              <select className="language" onChange={this.manejarCambio} >
+              <select className="form-select" name="language" onChange={this.manejarCambio} >
                 <option value="ES">Español</option>
                 <option value="EN">English</option>
               </select> 
