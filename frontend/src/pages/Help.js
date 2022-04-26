@@ -76,11 +76,12 @@ export default class Help extends Component{
                                     <div className="opciones">
                                         <div className="form-group">
                                             <div><label><h5>Idioma</h5></label></div>
-                                            <select className="form-select" name="language" onChange={this.changeHandler}>
+                                            <select className="selectidioma" name="language" onChange={this.changeHandler}>
                                                 <option value="ES">Español</option>
                                                 <option value="EN">English</option>
                                             </select>
                                         </div>
+                                    </div>    
 
                                         <div className="opciones">
                                             <div className="form-group">
@@ -102,24 +103,20 @@ export default class Help extends Component{
                                                 <input type="text" pattern="[A-Za-z_]{5}" title="5 letras o _" className="form-control" placeholder="_L_W_" name="solution" onChange={this.changeHandler} />
                                             </div>
                                         </div>
-                                    </div>
 
                                     <button type="submit" className="btn btn-success" onClick={() => this.setState({visibility: "block"})}><h5>Ayuda 🥺👉👈</h5></button>
                                 </form>
                             </div>
 
                             <div class="col">
-
-                                <div className="solucion" style={{display: this.state.visibility}}>
-                                    {/* todo: que no aparezca el titulo ni la seccion hasta que no aprete el boton */}
-                                    <label><h5>Soluciones posibles</h5></label>                              
-                                        <ul>
-                                            {listWords}
-                                        </ul>
+                                <div style={{display: this.state.visibility}}>
+                                    <div className="solucion" >
+                                        <label><h5>Soluciones posibles</h5></label>                              
+                                    </div>
+                                    <ul className="list-group">
+                                        {listWords}
+                                    </ul>
                                 </div>
-                                <ul class="list-group">
-                                    {listWords}
-                                </ul>
                             </div>
                         </div>
                     </div>
