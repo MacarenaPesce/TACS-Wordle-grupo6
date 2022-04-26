@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import './sesion/Sesion.css'; /*todo: resolver esta dependencia sin usar ese *.css */
 import NavbarAut from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
 import HelpService from "../service/HelpService";
@@ -45,7 +44,7 @@ export default class Help extends Component{
 
     render(){
         let listWords = this.state.wordsResponse.map((word) =>
-            <li key={word}> {word}</li>
+            <li class="list-group-item disabled" key={word}> {word}</li>
         );
 
         
@@ -59,7 +58,7 @@ export default class Help extends Component{
 
                     <div class="container">
                         <div class="row">
-                            <div class="col-4">                              
+                            <div class="col">                              
                                 <div class="instrucciones">
                                     {/*<h1>WordleCheats.exe</h1>*/}
                                     {/*todo: alinear verticalmente img, lo puse con margin pero no queda centrado*/}
@@ -73,53 +72,50 @@ export default class Help extends Component{
 
                             
                             <div class="col">                
-                                <form onSubmit={this.submitHandler}>    
-                                    <div className="opciones">
-                                        <div className="form-group">
-                                            <div><label><h5>Idioma</h5></label></div>
-                                            <select name="language" onChange={this.changeHandler}>
-                                                <option value="ES">Español</option>
-                                                <option value="EN">English</option>
-                                            </select>
+                                <form onSubmit={this.submitHandler} className="form-help">    
+                                        <div className="opciones">
+                                            <div className="form-group">
+                                                <div><label><h5>Idioma</h5></label></div>
+                                                <select name="language" onChange={this.changeHandler}>
+                                                    <option value="ES">Español</option>
+                                                    <option value="EN">English</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="opciones">
-                                        <div className="form-group">
-                                            <label><h5>Amarillas</h5></label>
-                                            <input type="text" pattern="[A-Za-z]*" title="Solo letras" className="form-control" placeholder="AO" name="yellow" onChange={this.changeHandler} />
+                                        <div className="opciones">
+                                            <div className="form-group">
+                                                <label><h5>Amarillas</h5></label>
+                                                <input type="text" pattern="[A-Za-z]*" title="Solo letras" className="form-control" placeholder="AO" name="yellow" onChange={this.changeHandler} />
+                                            </div>
                                         </div>
-                                    </div>
                                     
-                                    <div className="opciones">
-                                        <div className="form-group">
-                                            <label><h5>Grises</h5></label>
-                                            <input type="text" pattern="[A-Za-z]*" title="Solo letras" className="form-control" placeholder="HRS" name="grey" onChange={this.changeHandler} />
+                                        <div className="opciones">
+                                            <div className="form-group">
+                                                <label><h5>Grises</h5></label>
+                                                <input type="text" pattern="[A-Za-z]*" title="Solo letras" className="form-control" placeholder="HRS" name="grey" onChange={this.changeHandler} />
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="opciones">
-                                        <div className="form-group">
-                                            <label><h5>Solucion actual incompleta</h5></label>
-                                            <input type="text" pattern="[A-Za-z_]{5}" title="5 letras o _" className="form-control" placeholder="_L_W_" name="solution" onChange={this.changeHandler} />
+                                        <div className="opciones">
+                                            <div className="form-group">
+                                                <label><h5>Solucion actual incompleta</h5></label>
+                                                <input type="text" pattern="[A-Za-z_]{5}" title="5 letras o _" className="form-control" placeholder="_L_W_" name="solution" onChange={this.changeHandler} />
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <button type="submit" className="btn btn-success"><h5>Ayuda 🥺👉👈</h5></button>
-
+                                        <button type="submit" className="btn btn-success"><h5>Ayuda 🥺👉👈</h5></button>
                                 </form>
                             </div>
 
                             <div class="col">
                                 <div className="solucion">
-                                    <div className="opciones">
-                                        {/* todo: que no aparezca el titulo ni la seccion hasta que no aprete el boton */}
-                                        <label><h5>Soluciones posibles</h5></label>
-                                        <ul>
-                                            {listWords}
-                                        </ul>
-                                    </div>
+                                    {/* todo: que no aparezca el titulo ni la seccion hasta que no aprete el boton */}
+                                    <label><h5>Soluciones posibles</h5></label>
                                 </div>
+                                <ul class="list-group">
+                                    {listWords}
+                                </ul>
                             </div>
                         </div>
                     </div>
