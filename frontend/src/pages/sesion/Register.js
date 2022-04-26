@@ -43,7 +43,7 @@ export default class Register extends Component{
                     </header>                
 
                     <div className="forms">
-                        <form onSubmit={this.submitHandler}>
+                        <form onSubmit={this.submitHandler} className="form-sesion">
                             <h1>Register</h1>
 
                             <div className="form-group">

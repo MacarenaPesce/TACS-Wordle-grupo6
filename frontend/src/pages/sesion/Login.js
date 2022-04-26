@@ -47,7 +47,7 @@ export default class Login extends Component{
                     </header>                
 
                     <div className="forms">
-                        <form onSubmit={this.submitHandler}>
+                        <form onSubmit={this.submitHandler} className="form-sesion">
                             <h1>Log in</h1>
 
                             <div className="form-group">
