@@ -8,6 +8,7 @@ export default function useUser () {
 
     const login = useCallback(({username, password}) => {
         setState({loading: true, error: false })
+        console.log({username,password})
         loginService({username, password})
           .then(jwt => {
             window.sessionStorage.setItem('jwt', jwt)

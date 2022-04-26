@@ -9,6 +9,7 @@ import useUser from '../../hooks/useUser'
 
 /* Opcion 1: con class (era la inicial) - sin control de usuario */
 
+/*
 export default class Login extends Component{
 
     constructor(){
@@ -24,7 +25,7 @@ export default class Login extends Component{
     }
 
     submitHandler = e => {
-        e.preventDefault() // que hace esta linea?
+        e.preventDefault() 
         console.log('Boton login presionado con los datos: ')
         console.log(this.state)
         AuthService.login(this.state.username, this.state.password)
@@ -79,7 +80,7 @@ export default class Login extends Component{
             </body>
         );
     }
-}
+}*/
 
 
 
@@ -273,7 +274,7 @@ import React, { useState } from "react";
 import {useLocation} from "wouter"
 import useUser from 'hooks/useUser'
 import { useEffect } from "react";
-import './Login.css'
+import './Login.css'*/
 
 export default function Login({onLogin}) {
   const [username, setUsername] = useState("");
@@ -290,41 +291,87 @@ export default function Login({onLogin}) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('Boton login presionado con los datos: ')
+
     login({ username, password })
+
+    AuthService.loginService(username, password)
+    .then(response => {
+        console.log('Response obtenida: ')
+        console.log(response)
+    })
+    .catch(error => {
+        console.log(error)
+    })
   };
+
+
+
 
   return (
     <>
+    <body>
+        <div className="login">
+            <header>
+                <NavbarAut />
+            </header>
       {isLoginLoading && <strong>Checking credentials...</strong>}
       {!isLoginLoading &&
-        <form className='form' onSubmit={handleSubmit}>
-          <label>
-            username
-            <input
-            placeholder="username"
-            onChange={(e) => setUsername(e.target.value)}
-            value={username}
-          />
-          </label>
 
-          <label>
-            password
-            <input
-              type="password"
-              placeholder="password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-            />
-          </label>
 
-          <button className='btn'>Login</button>
-        </form>
+
+        <div className="forms">
+            <form className="form-sesion" onSubmit={handleSubmit}>
+                <h1>Log in</h1>
+            
+                <div className="form-group">
+                    <label>Username</label>
+                    <input className="form-control"
+                    placeholder="Enter username"
+                    onChange={(e) => setUsername(e.target.value)}
+                    value={username}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Password</label>
+                        <input className="form-control"
+                        type="Enter password"
+                        placeholder="password"
+                        onChange={(e) => setPassword(e.target.value)}
+                        value={password}
+                        />
+                    </div>
+                    
+
+                <button type="submit" className="btn btn-dark btn-lg btn-block">Sign in</button>
+
+            </form>
+        </div>    
       }
       {
         hasLoginError && <strong>Credentials are invalid</strong>
       }
+
+        </div>
+
+        <Footer />
+
+      </body>
     </>
   );
 }
 
-*/
+
+
+
+
+
+
+
+
+    
+
+
+
+

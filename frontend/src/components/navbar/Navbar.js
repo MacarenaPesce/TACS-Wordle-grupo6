@@ -24,6 +24,7 @@ import {useRoute} from 'wouter'
 */
 
 /*Opcion 1: sin control de logueo  */
+/*
 function NavbarAut() {
   const login = () =>{
     console.log("Log in")
@@ -60,10 +61,10 @@ function NavbarAut() {
 }
 
 export default NavbarAut;
-
+*/
 
 /*Opcion 2: con control de logueo  */
-/*
+
 export default function NavbarAut() {
     
     const clickLogin = () =>{
@@ -75,7 +76,7 @@ export default function NavbarAut() {
     };
 
     const { isLogged, logout} = useUser()
-    const [match] = useRoute("/login");
+    /*const [match] = useRoute("/login");*/
 
     const clickLogout = e => {
       console.log("Log out")
@@ -113,15 +114,15 @@ export default function NavbarAut() {
             </Navbar>
           </div>
     }
-  
+  /*
   const content = match
     ? null
-    : renderLoginButtons({isLogged})
+    : renderLoginButtons({isLogged})*/
   
   return (
     <header>
-      {content}
+      {renderLoginButtons({isLogged})}
     </header>
   )
 }  
-*/
+
