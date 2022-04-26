@@ -11,7 +11,7 @@ constructor(){
     this.state = {
         language: 'ES',
         word: '',
-        signifacdo: ''
+        significado: ''
     }
 }
 
@@ -28,7 +28,7 @@ submitCambio = e => {
       .then(response => {
           console.log('Response obtenida: ')
           console.log(response.data)
-          this.setState({signifacdo: response.data.definition})
+          this.setState({significado: response.data.definition})
       })
       .catch(error => {
           console.log(error)
@@ -64,8 +64,8 @@ render(){
                 <option value="EN">English</option>
               </select> 
               </div> 
-              <div className='contenedor-respuesta'>{ 
-              this.state.signifacdo}</div>  
+              <div className='contenedor-respuesta'>
+                {this.state.significado}</div>  
            </div>
         </form>
         <Footer />

@@ -10,8 +10,8 @@
 
 .form-groupo{
     position: absolute;
-    top: 50%;
-    left: 20%;           
+    top: 40%;
+    left: 45%;           
     margin-top: -40%;
     margin-left: -50%;
     display: flex;
@@ -21,9 +21,11 @@
     /*background-color: #d0d0d5;*/
     /*background-color: #aed87df1;*/
     background-color: #f8adad;
-    padding: 5%;
+    padding: 1%;
     border-radius: 26px;
     text-align: center;   
+    margin: 5% ;
+    transform: translate(-50%, -50%);    
 }
 
 .contenedor-busqueda {
@@ -41,6 +43,8 @@
 .buscar-input {
     margin-top:19px ;
     margin-left:-4%;
+    width: 100%;
+    font-size: 15px;
 }
 
 
@@ -91,7 +95,7 @@
     width: 100%;
     min-height: 50%;
     margin:1%;
-    font-size: 25px;
+    font-size: 15px;
     background-color: white;
     padding: 14px 32px 14px 16px;
     border-radius: 15px;
