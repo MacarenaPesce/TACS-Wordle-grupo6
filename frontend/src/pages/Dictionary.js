@@ -24,7 +24,7 @@ submitCambio = e => {
   console.log('Boton Search presionado con los datos: ')
   console.log(this.state.word , this.state.language)
 
-  DictionaryService.postDictionary(this.state.word, this.state.language)
+  DictionaryService.getDictionary(this.state.word, this.state.language)
       .then(response => {
           console.log('Response obtenida: ')
           console.log(response.data)

@@ -10,4 +10,10 @@ export default class DictionaryService {
         return axios.post(API_URL + lang + '/' + word);
 
     }
+
+    static getDictionary(word, lang) {
+
+        return axios.get(API_URL + lang + '/' + word);
+
+    }
 }
