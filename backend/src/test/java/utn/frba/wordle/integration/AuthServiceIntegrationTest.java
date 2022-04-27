@@ -36,9 +36,8 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
         SessionDto login = authService.login(loginDto);
 
         Claims claims = getClaims(login.getToken());
-        String tokenUsername = (String) claims.get("usuario");
+        String tokenUsername = (String) claims.get("username");
         String tokenEmail = (String) claims.get("email");
-
         assertThat(login).hasNoNullFieldsOrProperties();
         assertThat(tokenUsername).isEqualTo(user.getUsername());
         assertThat(tokenEmail).isEqualTo(user.getEmail());
@@ -65,7 +64,7 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
         SessionDto login = authService.login(loginDto);
 
         Claims claims = getClaims(login.getToken());
-        String tokenUsername = (String) claims.get("usuario");
+        String tokenUsername = (String) claims.get("username");
         String tokenEmail = (String) claims.get("email");
 
         assertThat(login).hasNoNullFieldsOrProperties();
