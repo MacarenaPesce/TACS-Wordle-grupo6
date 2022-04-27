@@ -15,14 +15,20 @@ public class DictionaryIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     DictionaryService service;
 
-    @Autowired
-    SpanishDictionary repository;
-
     @Test
     public void aUserCanGetTheDefinitionOfSpanishWord(){
         String word = "Caja";
 
         DictionaryDto dto = service.getDefinitions(Language.ES, word);
+
+        assertThat(dto).hasNoNullFieldsOrProperties();
+    }
+
+    @Test
+    public void aUserCanGetTheDefinitionOfEnglishWord(){
+        String word = "Box";
+
+        DictionaryDto dto = service.getDefinitions(Language.EN, word);
 
         assertThat(dto).hasNoNullFieldsOrProperties();
     }
