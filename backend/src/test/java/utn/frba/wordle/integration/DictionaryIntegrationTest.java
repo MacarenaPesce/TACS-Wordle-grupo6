@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.dto.DictionaryDto;
 import utn.frba.wordle.model.Language;
-import utn.frba.wordle.client.SpanishDictionary;
 import utn.frba.wordle.service.DictionaryService;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;

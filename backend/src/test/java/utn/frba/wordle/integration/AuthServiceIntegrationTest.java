@@ -84,6 +84,44 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
         assertThat(login).hasNoNullFieldsOrProperties();
     }
 
+    @Test
+    public void whenRegisterUserWithRepeatedUsernameThrowsBusinessException() {
+        LoginDto loginDto = LoginDto.builder()
+                    .email("mail@prueba.com")
+                    .username("username")
+                    .password("lamePassword")
+                    .build();
+
+        authService.register(loginDto);
+
+        LoginDto loginDto2 = LoginDto.builder()
+                .email("mail2@prueba2.com")
+                .username("username")
+                .password("lamePassword123")
+                .build();
+
+        assertThrows(BusinessException.class, () -> authService.register(loginDto2));
+    }
+
+    @Test
+    public void whenRegisterUserWithRepeatedEmailThrowsBusinessException() {
+        LoginDto loginDto = LoginDto.builder()
+                .email("mail@prueba.com")
+                .username("username1")
+                .password("lamePassword")
+                .build();
+
+        authService.register(loginDto);
+
+        LoginDto loginDto2 = LoginDto.builder()
+                .email("mail@prueba.com")
+                .username("username2")
+                .password("lamePassword123")
+                .build();
+
+        assertThrows(BusinessException.class, () -> authService.register(loginDto2));
+    }
+
     private Claims getClaims(String jwtToken) {
         jwtToken = jwtToken.replace("Bearer", "");
         return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
