@@ -42,10 +42,10 @@ public class TournamentService {
         TournamentEntity tournamentEntity = tournamentRepository.findById(memberDto.getTournamentId()).orElse(null);
 
         if (tournamentEntity == null) {
-            throw new BusinessException("The specified Tournament doesn't exist.");
+            throw new BusinessException("El torneo especificado no existe.");
         }
         if (!tournamentEntity.getOwner().getId().equals(ownerUserId)) {
-            throw new BusinessException("The user doesn't own the specified Tournament.");
+            throw new BusinessException("Solo puedes agregar miembros a un torneo que tu hayas creado.");
         }
 
         UserEntity userEntity = userService.findUserByUsername(memberDto.getUsername());
