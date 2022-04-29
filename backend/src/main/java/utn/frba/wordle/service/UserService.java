@@ -80,6 +80,10 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    public UserEntity findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     public Set<UserDto> getTournamentMembers(Long tournamentId) {
         return mapToDto(userRepository.getTournamentMembers(tournamentId));
     }

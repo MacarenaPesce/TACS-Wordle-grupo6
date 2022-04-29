@@ -46,6 +46,18 @@ public class AuthService {
     }
 
     public SessionDto register(LoginDto loginDto) {
+        UserEntity userEntity = null;
+
+        userEntity = userService.findUserByUsername(loginDto.getUsername());
+        if(userEntity != null){
+            throw new BusinessException(String.format("El usuario %s ya se encuentra registrado", loginDto.getUsername()));
+        }
+
+        userEntity = userService.findUserByEmail(loginDto.getEmail());
+        if(userEntity != null){
+            throw new BusinessException("El mail ingresado ya se ecuentra en uso");
+        }
+
         UserDto userDto = userService.createUser(loginDto);
         return getSessionDto(userDto);
     }
