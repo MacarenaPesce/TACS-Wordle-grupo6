@@ -96,7 +96,7 @@ export default function NavbarAut() {
                 <Nav className="me-auto" >
                   <Nav.Link href="/" >Inicio</Nav.Link>
                   <Nav.Link href="/help" >Ayuda</Nav.Link>
-                  <Nav.Link href="/diccionary">Diccionario</Nav.Link>
+                  <Nav.Link href="/dictionary">Diccionario</Nav.Link>
                   <Nav.Link href="/tourney">Torneo</Nav.Link>
                 </Nav>
               </Container>
@@ -110,7 +110,7 @@ export default function NavbarAut() {
                 <Nav className="me-auto" >
                   <Nav.Link href="/" >Inicio</Nav.Link>
                   <Nav.Link href="/help" >Ayuda</Nav.Link>
-                  <Nav.Link href="/diccionary">Diccionario</Nav.Link>
+                  <Nav.Link href="/dictionary">Diccionario</Nav.Link>
                 </Nav>
               </Container>
               <Button href="/login" onClick={clickLogin} variant="outline-success" className="but-log">Ingresar</Button>
