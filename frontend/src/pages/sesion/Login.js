@@ -4,8 +4,9 @@ import './Sesion.css';
 import NavbarAut from "../../components/navbar/Navbar";
 import Footer from "../../components/footer/Footer";
 import AuthService from "../../service/AuthService";
-import {useLocation} from "wouter"
-import useUser from '../../hooks/useUser'
+import {useLocation} from "wouter";
+import useUser from '../../hooks/useUser';
+
 
 /* Opcion 1: con class (era la inicial) - sin control de usuario */
 
@@ -294,7 +295,7 @@ export default function Login({onLogin}) {
 
     login({ username, password })
 
-    AuthService.loginService(username, password)
+    AuthService.loginService({username, password})
     .then(response => {
         console.log('Response obtenida: ')
         console.log(response)
@@ -308,7 +309,6 @@ export default function Login({onLogin}) {
 
 
   return (
-    <>
     <body>
         <div className="login">
             <header>
@@ -357,7 +357,6 @@ export default function Login({onLogin}) {
         <Footer />
 
       </body>
-    </>
   );
 }
 

@@ -7,6 +7,10 @@ import { Link } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 import {useRoute} from 'wouter'
 
+
+import IconButton from '@mui/material/IconButton'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+
 /* todo: casos del navbar
 
   si NO esta logueado:
@@ -92,11 +96,12 @@ export default function NavbarAut() {
                 <Nav className="me-auto" >
                   <Nav.Link href="/" >Inicio</Nav.Link>
                   <Nav.Link href="/help" >Ayuda</Nav.Link>
-                  <Nav.Link href="#diccionary">Diccionario</Nav.Link>
-                  <Nav.Link href="#tourney">Torneo</Nav.Link>
+                  <Nav.Link href="/diccionary">Diccionario</Nav.Link>
+                  <Nav.Link href="/tourney">Torneo</Nav.Link>
                 </Nav>
               </Container>
               <Button href="/" onClick={clickLogout} variant="outline-success" className="but-log">Salir</Button>
+              <IconButton> <ExitToAppIcon /></IconButton>{ /*para hacerla responsive podemos poner el icono de exit */}
             </Navbar>
           </div>
         : <div>
@@ -105,10 +110,9 @@ export default function NavbarAut() {
                 <Nav className="me-auto" >
                   <Nav.Link href="/" >Inicio</Nav.Link>
                   <Nav.Link href="/help" >Ayuda</Nav.Link>
-                  <Nav.Link href="#diccionary">Diccionario</Nav.Link>
+                  <Nav.Link href="/diccionary">Diccionario</Nav.Link>
                 </Nav>
               </Container>
-        
               <Button href="/login" onClick={clickLogin} variant="outline-success" className="but-log">Ingresar</Button>
               <Button href="/register" onClick={clickRegister} variant="outline-success" className="but-log">Registrarse</Button>
             </Navbar>

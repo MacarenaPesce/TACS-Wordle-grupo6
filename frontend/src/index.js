@@ -14,6 +14,8 @@ import {
   Route,
 } from "react-router-dom";
 import Dictionary from './pages/Dictionary';
+import Tourney from './pages/Tourney';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -24,13 +26,8 @@ root.render(
       <Route path="register" element={<Register />} />
       <Route path="help" element={<Help />} />
       <Route path="dictionary" element={<Dictionary />} />
-      {/*
       <Route path="tourney" element={<Tourney />} /> 
-      */}
       <Route path="*" element={<Not />} />
-
-
-
     </Routes>  
   </BrowserRouter>
   
