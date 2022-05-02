@@ -74,12 +74,8 @@ export default function Login({onLogin}) {
         </div>
 
         <Footer />
-<<<<<<< Updated upstream
-      </body>
-=======
 
       </div>
->>>>>>> Stashed changes
   );
 }
 
