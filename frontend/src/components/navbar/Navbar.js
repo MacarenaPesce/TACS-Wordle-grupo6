@@ -3,18 +3,14 @@ import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Container from 'react-bootstrap/Container'
 import './Navbar.css';
-import { Link } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
-import {useRoute} from 'wouter'
-
-
 import IconButton from '@mui/material/IconButton'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 /* todo: hacer el navbar responsive */
 
 export default function NavbarAut() {
-    
+   
     const clickLogin = () =>{
       console.log("Log in")
     };

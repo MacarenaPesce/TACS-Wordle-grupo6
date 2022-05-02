@@ -1,19 +1,15 @@
-import React, { Component , useState, useEffect, Observer } from "react";
-
+import React, { useState, useEffect } from "react";
 import './Sesion.css';
 import NavbarAut from "../../components/navbar/Navbar";
 import Footer from "../../components/footer/Footer";
 import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 
-
-
 export default function Login({onLogin}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const {isLoginLoading, hasLoginError, login, isLogged} = useUser()
   const navigate = useNavigate();
-
 
   useEffect(() => {
     if (isLogged) {
@@ -27,54 +23,49 @@ export default function Login({onLogin}) {
     login(username, password)
   };
 
-
-
-
   return (
     <body>
         <div className="login">
             <header className="navGeneral">
                 <NavbarAut />
             </header>
-      {isLoginLoading && <strong>Checking credentials...{/*todo: tiene que ser un modal */}</strong>}
-      {!isLoginLoading &&
-
-        <div className="forms">
-            <form className="form-sesion" onSubmit={handleSubmit}>
-                <h1>Log in</h1>
             
-                <div className="form-group">
-                    <label>Username</label>
-                    <input className="form-control"
-                    placeholder="Enter username"
-                    onChange={(e) => setUsername(e.target.value)}
-                    value={username}
-                    />
-                </div>
+            {isLoginLoading && <strong>Checking credentials...{/*todo: tiene que ser un modal */}</strong>}
+            {!isLoginLoading &&
 
-                <div className="form-group">
-                    <label>Password</label>
+            <div className="forms">
+                <form className="form-sesion" onSubmit={handleSubmit}>
+                    <h1>Log in</h1>
+                
+                    <div className="form-group">
+                        <label>Username</label>
                         <input className="form-control"
-                        type="Enter password"
-                        placeholder="password"
-                        onChange={(e) => setPassword(e.target.value)}
-                        value={password}
+                        placeholder="Enter username"
+                        onChange={(e) => setUsername(e.target.value)}
+                        value={username}
                         />
-                    </div>     
+                    </div>
 
-                <button type="submit" className="btn btn-dark btn-lg btn-block">Sign in</button>
+                    <div className="form-group">
+                        <label>Password</label>
+                            <input className="form-control"
+                            type="Enter password"
+                            placeholder="password"
+                            onChange={(e) => setPassword(e.target.value)}
+                            value={password}
+                            />
+                        </div>     
 
-            </form>
-        </div>    
-      }
-      {
-        hasLoginError && <strong>Credentials are invalid{/*todo: tiene que ser un modal */}</strong> 
-      }
+                    <button type="submit" className="btn btn-dark btn-lg btn-block">Sign in</button>
+
+                </form>
+            </div>    
+            }
+            {   hasLoginError && <strong>Credentials are invalid{/*todo: tiene que ser un modal */}</strong> }
 
         </div>
-
         <Footer />
-      </body>
+    </body>
   );
 }
 

@@ -20,42 +20,12 @@ export default class Tourney extends Component{
         }
     }
 
-
     render(){
-
         return(
             <body className='tourney'>
                 <header className='NavTourney'>
                     <NavbarAut />
                 </header>
-                {/*
-                <div>
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link active" role="tab" data-bs-toggle="tab" href="#tabMyTour"> Mis Torneos</a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" role="tab" data-bs-toggle="tab" href="#tabPublicTour"> Publicos</a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" role="tab" data-bs-toggle="tab" href="#tabFinTour"> Finalizados</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div id="tabMyTour" class="tab-pane active" role="tabpanel">
-                            <p> Contenido de mis torneos</p>
-                        </div>
-                        <div id="tabPublicTour" class="tab-pane active" role="tabpanel">
-                            <p> Contenido de torneos publicos</p>
-                        </div>
-                        <div id="tabFinTour" class="tab-pane active" role="tabpanel">
-                            <p> Contenido de torneos finalizados</p>
-                        </div>
-                    </div>
-                </div>
-                */}
-
-
 
                 <Tabs defaultActiveKey="myTourney" id="uncontrolled-tab-example" className="mb-3">
                     <Tab eventKey="myTourney" title="Mis torneos">
@@ -140,9 +110,6 @@ export default class Tourney extends Component{
                         <p>Torneos finalizados</p>
                     </Tab>
                 </Tabs>
-
-
-
 
                 <Footer />
             </body>
