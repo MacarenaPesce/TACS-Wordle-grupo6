@@ -23,7 +23,7 @@ function Not() {
             <Modal.Title>Sorry!</Modal.Title>				
           </Modal.Header>
           <Modal.Body>Página no encontrada.</Modal.Body>
-          <Modal.Footer class="modal-footer">
+          <Modal.Footer className="modal-footer">
             {/*
             <Button variant="primary" href="/">
               Inicio

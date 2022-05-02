@@ -37,7 +37,7 @@ submitCambio = e => {
 
 render(){
     return (
-      <body className='body-diccionario'>
+      <div className='body-diccionario'>
         <header className="navGeneral">
           <NavbarAut />
         </header>
@@ -69,7 +69,7 @@ render(){
            </div>
         </form>
         <Footer />
-      </body>
+      </div>
     );
   }
 }
