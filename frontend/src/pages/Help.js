@@ -53,7 +53,7 @@ export default class Help extends Component{
         return (
 
             <div className="help">
-                    <header>
+                    <header className="navGeneral">
                         <NavbarAut />
                     </header>
 

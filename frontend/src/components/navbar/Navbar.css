@@ -1,9 +1,35 @@
-
 .but-log{
     margin: 10px;
-
+    height: auto;
+    width: auto;
+    padding: 15px;
+    text-align: center;
+    opacity: 0.8;
 }
 
 .navBut{
-    opacity: 0.9;
+    background-color: inherit;
+    opacity: 0.8;
 }
+
+.but-log:active:focus{
+    box-shadow: 0 0 0 .25rem rgba(11, 132, 224, 0.5);
+    opacity: 1;
+}
+
+.but-log:hover {
+    color: #fff;
+    background-color: #23272b;
+    border-color: #1d2124;
+    opacity: 1;
+}
+
+.but-log:active{
+    color: #fff;
+    background-color: #1a1e21;
+    border-color: #191c1f;
+}
+  
+  
+  
+  

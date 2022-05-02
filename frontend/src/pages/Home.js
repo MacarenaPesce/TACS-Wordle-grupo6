@@ -16,7 +16,7 @@ export default class Home extends React.Component{
   render(){
     return (  
       <div className='Home' >
-        <div className='header'>
+        <div className="navGeneral">
           <NavbarAut />
         </div>
       

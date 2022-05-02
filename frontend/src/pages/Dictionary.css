@@ -93,13 +93,14 @@
 
 .contenedor-respuesta {
     overflow: scroll;
+    height: auto;
+    min-height: 6em;
+    max-height: 9em;
     width: 100%;
-    min-height: 50%;
     margin:1%;
     font-size: 15px;
     background-color: white;
     padding: 14px 32px 14px 16px;
-   
     border: 2px solid #003047;
     outline: none;   
 }
