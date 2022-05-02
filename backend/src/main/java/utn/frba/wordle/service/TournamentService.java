@@ -69,6 +69,11 @@ public class TournamentService {
             throw new BusinessException("The specified Tournament doesn't exist.");
         }
 
+        boolean userAlreadyJoined = tournamentEntity.getMembers().stream().anyMatch(m -> m.getId().equals(userId));
+        if(userAlreadyJoined){
+            throw new BusinessException("The user already joined the Tournament.");
+        }
+
         tournamentRepository.addMember(tournamentEntity.getId(), userId);
 
         return JoinDto.builder()

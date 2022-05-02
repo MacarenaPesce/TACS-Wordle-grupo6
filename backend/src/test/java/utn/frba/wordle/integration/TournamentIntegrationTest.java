@@ -113,6 +113,17 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void aUserCantBeAddedToATournamentTwice(){
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        TournamentDto tournamentDto = getPrivateTournamentDto(owner);
+        UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
+
+        tournamentService.join(user.getId(), tournamentDto.getTourneyId());
+
+        assertThrows(BusinessException.class, () -> tournamentService.join(user.getId(), tournamentDto.getTourneyId()));
+    }
+
+    @Test
     public void aUserCanJoinAPublicTournament() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
         TournamentDto tournamentDto = getPrivateTournamentDto(owner);
