@@ -301,7 +301,7 @@ export default function Login({onLogin}) {
   return (
     <body>
         <div className="login">
-            <header>
+            <header className="navGeneral">
                 <NavbarAut />
             </header>
       {isLoginLoading && <strong>Checking credentials...</strong>}

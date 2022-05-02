@@ -38,7 +38,7 @@ submitCambio = e => {
 render(){
     return (
       <body className='body-diccionario'>
-        <header>
+        <header className="navGeneral">
           <NavbarAut />
         </header>
         <form onSubmit={this.submitCambio}>

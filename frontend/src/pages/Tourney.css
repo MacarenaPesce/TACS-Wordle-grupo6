@@ -1,0 +1,18 @@
+.tourney{
+    
+}
+
+.NavTourney{
+    opacity: 0.9;
+    background: linear-gradient(120deg, #1d2a5c, #1df20a);
+}
+
+button{
+    margin-left: 5px;
+}
+
+tfoot{
+    border-color: inherit;
+    border-style: solid;
+    border-width: 0;
+}

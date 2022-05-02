@@ -38,7 +38,7 @@ export default class Register extends Component{
 
             <body>
                 <div className="login"> {/* todo: rename classname and *.css */}
-                    <header>
+                    <header className="navGeneral">
                         <NavbarAut />
                     </header>                
 
