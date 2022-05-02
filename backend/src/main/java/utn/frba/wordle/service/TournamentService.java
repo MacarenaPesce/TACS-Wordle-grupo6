@@ -1,7 +1,9 @@
 package utn.frba.wordle.service;
 
 import lombok.NoArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utn.frba.wordle.dto.*;
@@ -10,7 +12,9 @@ import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.repository.TournamentRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @NoArgsConstructor
@@ -31,7 +35,12 @@ public class TournamentService {
         dto.setOwner(owner);
         TournamentEntity newTournament = mapToEntity(dto);
 
-        newTournament = tournamentRepository.save(newTournament);
+        try {
+            newTournament = tournamentRepository.save(newTournament);
+        }
+        catch(DataIntegrityViolationException e){
+            throw new BusinessException("There is already an active Tournament with this name.");
+        }
 
         return mapToDto(newTournament);
     }

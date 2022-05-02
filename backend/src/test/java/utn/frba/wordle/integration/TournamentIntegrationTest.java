@@ -178,6 +178,14 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         assertThat(resultDto).hasNoNullFieldsOrProperties();
     }
 
+    @Test
+    public void anActiveTournamentWithDuplicatedNameCantBeCreated() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        getPublicTournamentDto(owner, "Tournament1");
+
+        assertThrows(BusinessException.class, () -> getPublicTournamentDto(owner, "Tournament1"));
+    }
+
     private UserDto getUserDto(String s, String usernameTest2) {
         LoginDto user = LoginDto.builder()
                 .email(s)
