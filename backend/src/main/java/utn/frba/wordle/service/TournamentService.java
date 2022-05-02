@@ -1,9 +1,7 @@
 package utn.frba.wordle.service;
 
 import lombok.NoArgsConstructor;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utn.frba.wordle.dto.*;
@@ -35,12 +33,11 @@ public class TournamentService {
         dto.setOwner(owner);
         TournamentEntity newTournament = mapToEntity(dto);
 
-        try {
-            newTournament = tournamentRepository.save(newTournament);
-        }
-        catch(DataIntegrityViolationException e){
+        TournamentEntity existingActiveTournament = tournamentRepository.findByName(dto.getName());
+        if(existingActiveTournament != null){
             throw new BusinessException("There is already an active Tournament with this name.");
         }
+        newTournament = tournamentRepository.save(newTournament);
 
         return mapToDto(newTournament);
     }
@@ -110,6 +107,7 @@ public class TournamentService {
                 .start(dto.getStart())
                 .language(dto.getLanguage())
                 .name(dto.getName())
+                .state(dto.getState())
                 .type(dto.getType())
                 .owner(UserService.mapToEntity(dto.getOwner()))
                 .build();
@@ -121,6 +119,7 @@ public class TournamentService {
                 .name(entity.getName())
                 .finish(entity.getFinish())
                 .start(entity.getStart())
+                .state(entity.getState())
                 .tourneyId(entity.getId())
                 .type(entity.getType())
                 .owner(UserService.mapToDto(entity.getOwner()))

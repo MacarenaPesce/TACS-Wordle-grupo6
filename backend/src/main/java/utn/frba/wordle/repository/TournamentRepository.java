@@ -17,4 +17,7 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
 
     @Query(value = "select * from Tournament where type = 'PUBLIC'", nativeQuery = true)
     List<TournamentEntity> getPublicTournaments();
+
+    @Query(value = "select * from Tournament where name = :name and state = 'ACTIVE'", nativeQuery = true)
+    TournamentEntity findByName(String name);
 }
