@@ -7,6 +7,10 @@ import { Link } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 import {useRoute} from 'wouter'
 
+
+import IconButton from '@mui/material/IconButton'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+
 /* todo: casos del navbar
 
   si NO esta logueado:
@@ -24,6 +28,7 @@ import {useRoute} from 'wouter'
 */
 
 /*Opcion 1: sin control de logueo  */
+/*
 function NavbarAut() {
   const login = () =>{
     console.log("Log in")
@@ -60,10 +65,10 @@ function NavbarAut() {
 }
 
 export default NavbarAut;
-
+*/
 
 /*Opcion 2: con control de logueo  */
-/*
+
 export default function NavbarAut() {
     
     const clickLogin = () =>{
@@ -75,7 +80,7 @@ export default function NavbarAut() {
     };
 
     const { isLogged, logout} = useUser()
-    const [match] = useRoute("/login");
+    /*const [match] = useRoute("/login");*/
 
     const clickLogout = e => {
       console.log("Log out")
@@ -91,11 +96,12 @@ export default function NavbarAut() {
                 <Nav className="me-auto" >
                   <Nav.Link href="/" >Inicio</Nav.Link>
                   <Nav.Link href="/help" >Ayuda</Nav.Link>
-                  <Nav.Link href="#diccionary">Diccionario</Nav.Link>
-                  <Nav.Link href="#tourney">Torneo</Nav.Link>
+                  <Nav.Link href="/dictionary">Diccionario</Nav.Link>
+                  <Nav.Link href="/tourney">Torneo</Nav.Link>
                 </Nav>
               </Container>
               <Button href="/" onClick={clickLogout} variant="outline-success" className="but-log">Salir</Button>
+              <IconButton> <ExitToAppIcon /></IconButton>{ /*para hacerla responsive podemos poner el icono de exit */}
             </Navbar>
           </div>
         : <div>
@@ -104,24 +110,23 @@ export default function NavbarAut() {
                 <Nav className="me-auto" >
                   <Nav.Link href="/" >Inicio</Nav.Link>
                   <Nav.Link href="/help" >Ayuda</Nav.Link>
-                  <Nav.Link href="#diccionary">Diccionario</Nav.Link>
+                  <Nav.Link href="/dictionary">Diccionario</Nav.Link>
                 </Nav>
               </Container>
-        
               <Button href="/login" onClick={clickLogin} variant="outline-success" className="but-log">Ingresar</Button>
               <Button href="/register" onClick={clickRegister} variant="outline-success" className="but-log">Registrarse</Button>
             </Navbar>
           </div>
     }
-  
+  /*
   const content = match
     ? null
-    : renderLoginButtons({isLogged})
+    : renderLoginButtons({isLogged})*/
   
   return (
     <header>
-      {content}
+      {renderLoginButtons({isLogged})}
     </header>
   )
 }  
-*/
+
