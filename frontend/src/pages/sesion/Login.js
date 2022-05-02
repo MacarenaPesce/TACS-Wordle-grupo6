@@ -291,18 +291,8 @@ export default function Login({onLogin}) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Boton login presionado con los datos: ')
 
-    login({ username, password })
-
-    AuthService.loginService({username, password})
-    .then(response => {
-        console.log('Response obtenida: ')
-        console.log(response)
-    })
-    .catch(error => {
-        console.log(error)
-    })
+    login(username, password)
   };
 
 
