@@ -3,8 +3,7 @@ import React, { Component , useState, useEffect, Observer } from "react";
 import './Sesion.css';
 import NavbarAut from "../../components/navbar/Navbar";
 import Footer from "../../components/footer/Footer";
-import AuthService from "../../service/AuthService";
-import {useLocation} from "wouter";
+import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 
 
@@ -12,13 +11,14 @@ import useUser from '../../hooks/useUser';
 export default function Login({onLogin}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [, navigate] = useLocation()
   const {isLoginLoading, hasLoginError, login, isLogged} = useUser()
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     if (isLogged) {
-      navigate('/');
-      onLogin && onLogin()
+        navigate('/');
+       // onLogin && onLogin()
     }
   }, [isLogged, navigate, onLogin])
 
