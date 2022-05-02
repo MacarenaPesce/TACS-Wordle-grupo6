@@ -28,7 +28,7 @@ export default function useUser () {
       }
     
       return {
-        isLogged: Boolean(localStorage.getItem('tokenData')),
+        isLogged: localStorage.getItem("tokenData"),
         isLoginLoading: state.loading,
         hasLoginError: state.error,
         login,
