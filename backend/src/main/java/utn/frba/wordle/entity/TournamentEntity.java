@@ -2,6 +2,7 @@ package utn.frba.wordle.entity;
 
 import lombok.*;
 import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.State;
 import utn.frba.wordle.model.TournamentType;
 
 import javax.persistence.*;
@@ -21,7 +22,7 @@ public class TournamentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(unique = true)
+    @Column
     String name;
 
     @Enumerated(EnumType.STRING)
@@ -29,6 +30,9 @@ public class TournamentEntity {
 
     @Enumerated(EnumType.STRING)
     TournamentType type;
+
+    @Enumerated(EnumType.STRING)
+    State state;
 
     @Column
     Date start;

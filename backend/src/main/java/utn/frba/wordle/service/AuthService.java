@@ -69,7 +69,7 @@ public class AuthService {
         } else {
             UserEntity userEntity = userService.findUserByUsernameAndPassword(loginDto.getUsername(), loginDto.getPassword());
             if (userEntity == null) {
-                throw new BusinessException("Combinación de usuario y contraseña invállidos");
+                throw new BusinessException("Combinación de usuario y contraseña inválidos");
             }
             //userService.updateLoginDate(userEntity);
             return getSessionDto(userEntity);

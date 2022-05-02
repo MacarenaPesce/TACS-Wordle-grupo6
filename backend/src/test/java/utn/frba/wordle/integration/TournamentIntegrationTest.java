@@ -5,18 +5,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.dto.*;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.State;
 import utn.frba.wordle.model.TournamentType;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.service.UserService;
-import utn.frba.wordle.utils.TestUtils;
 
 import java.util.Date;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TournamentIntegrationTest extends AbstractIntegrationTest {
@@ -38,6 +37,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
                 .type(TournamentType.PRIVATE)
                 .start(new Date())
                 .finish(new Date())
+                .state(State.ACTIVE)
                 .name(name)
                 .language(Language.ES)
                 .build();
@@ -113,6 +113,34 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void aUserCantBeAddedToATournamentTwice(){
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        TournamentDto tournamentDto = getPrivateTournamentDto(owner);
+        UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
+
+        tournamentService.join(user.getId(), tournamentDto.getTourneyId());
+
+        assertThrows(BusinessException.class, () -> tournamentService.join(user.getId(), tournamentDto.getTourneyId()));
+    }
+
+    @Test
+    public void aUserCantSubmitHisResultsOfTheSameLanguageTwiceInADay(){
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        TournamentDto tournamentDto = getPrivateTournamentDto(owner);
+        UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
+        tournamentService.join(user.getId(), tournamentDto.getTourneyId());
+        ResultDto dto = ResultDto.builder()
+                .result(5L)
+                .language(Language.ES)
+                .build();
+
+        tournamentService.submitResults(user.getId(), dto);
+
+        assertThrows(BusinessException.class, () -> tournamentService.submitResults(user.getId(), dto));
+
+    }
+
+    @Test
     public void aUserCanJoinAPublicTournament() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
         TournamentDto tournamentDto = getPrivateTournamentDto(owner);
@@ -150,6 +178,23 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         assertThat(resultDto).hasNoNullFieldsOrProperties();
     }
 
+    @Test
+    public void anActiveTournamentWithDuplicatedNameCantBeCreated() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        getPublicTournamentDto(owner, "Tournament1");
+
+        assertThrows(BusinessException.class, () -> getPublicTournamentDto(owner, "Tournament1"));
+    }
+
+    @Test
+    public void anActiveTournamentWithDuplicatedNameCanBeCreatedIfTheDuplicatedIsNotActive() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1", State.INACTIVE);
+        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament1", State.ACTIVE);
+
+        assertNotEquals(tournament1.getTourneyId(), tournament2.getTourneyId());
+    }
+
     private UserDto getUserDto(String s, String usernameTest2) {
         LoginDto user = LoginDto.builder()
                 .email(s)
@@ -158,16 +203,21 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         return userService.createUser(user);
     }
 
-    private TournamentDto getPublicTournamentDto(UserDto ownerUser, String tournamentName) {
+    private TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state) {
         TournamentDto tournamentDto = TournamentDto.builder()
                 .type(TournamentType.PUBLIC)
                 .start(new Date())
                 .finish(new Date())
                 .name(tournamentName)
                 .language(Language.ES)
-                .owner(ownerUser)
+                .state(state)
+                .owner(owner)
                 .build();
-        return tournamentService.create(tournamentDto, ownerUser.getId());
+        return tournamentService.create(tournamentDto, owner.getId());
+    }
+
+    private TournamentDto getPublicTournamentDto(UserDto ownerUser, String tournamentName) {
+        return getPublicTournamentDto(ownerUser, tournamentName, State.ACTIVE);
     }
 
     private TournamentDto getPrivateTournamentDto(UserDto ownerUser, String tournamentName) {
