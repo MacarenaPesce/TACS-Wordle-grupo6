@@ -4,10 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.dto.DictionaryDto;
 import utn.frba.wordle.model.Language;
 import utn.frba.wordle.client.SpanishDictionaryPage;
 
@@ -26,16 +25,12 @@ public class DictionaryService {
     @Autowired
     SpanishDictionaryPage spanishDictionary;
 
-    public DictionaryDto getDefinitions(Language language, String word) {
+    public List <String> getDefinitions(Language language, String word) {
 
         if(language.equals(Language.ES)){
             //spanishDictionary = new SpanishDictionary();
             List<String> definitions = spanishDictionary.getDefinitions(word.toLowerCase());
-            return DictionaryDto.builder()
-                    .definition(definitions)
-                    .language(language)
-                    .word(word)
-                    .build();
+            return definitions;
         }
 
         String url = "https://api.dictionaryapi.dev/api/v2/entries/" + language +"/" + word ;
@@ -51,11 +46,7 @@ public class DictionaryService {
             definition="No existe definicion";
         }
 
-        return DictionaryDto.builder()
-                .word(word)
-                .language(language)
-                .definition(Collections.singletonList(definition))
-                .build();
+        return Collections.singletonList(definition);
     }
 
     public static String peticionHttpGet(String urlParaVisitar) throws Exception {
@@ -88,7 +79,7 @@ public class DictionaryService {
             JsonObject definicionItem = definiciones.get(0).getAsJsonObject();
             String definition = definicionItem.get("definition").getAsString();
 
-
+            System.out.println("definition: " + definition);
          StringBuilder significado = new StringBuilder();
          significado.append(tipoPalabra);
          significado.append(": ");
@@ -96,6 +87,7 @@ public class DictionaryService {
 
         rd.close();
         // Regresar resultado, pero como cadena, no como StringBuilder
+        System.out.println("significado: " + significado.toString());
         return significado.toString();
     }
 }

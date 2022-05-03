@@ -20,15 +20,22 @@ public class SpanishDictionaryPage {
     public List<String> getDefinitions(String word) {
         List<String> definitions = new ArrayList<>();
 
-        String url = apiHost + String.valueOf(word.charAt(0)).toUpperCase() + "/" + word + "-1.html";
-
+//        String url = apiHost + String.valueOf(word.charAt(0)).toUpperCase() + "/" + word + "-1.html";
+        String url = "https://es.wiktionary.org/wiki/" + word;
+        System.out.println(url);
         Document doc = Jsoup.connect(url)
                 .ignoreContentType(true)
                 .get();
 
-        for (Element line : doc.select(".definicionPalabra")) {
+        for (Element line : doc.select("dl")) {
+            System.out.println(line.text());
             definitions.add(line.text());
         }
+        if (definitions.isEmpty()) {
+            definitions.add("NoDefinition");
+            System.out.println("No existe definicion");
+        }
+        System.out.println(definitions);
     return definitions;
     }
 }

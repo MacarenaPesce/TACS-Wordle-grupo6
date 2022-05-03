@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import utn.frba.wordle.controller.HelpController;
 import utn.frba.wordle.dto.HelpRequestDto;
 import utn.frba.wordle.dto.HelpSolutionDto;
 import utn.frba.wordle.exception.BusinessException;
@@ -12,6 +13,7 @@ import utn.frba.wordle.model.Language;
 import utn.frba.wordle.service.HelpService;
 
 import java.io.IOException;
+import java.util.Set;
 
 
 public class HelpIntegrationTest extends AbstractIntegrationTest{
@@ -19,6 +21,17 @@ public class HelpIntegrationTest extends AbstractIntegrationTest{
     @Autowired
     HelpService helpService;
 
+    //TODO acá en que parte son test de integración, si llaman solo al service?
+    //al controller no lo llaman, si no que copian al controller con su propio código de manejo de DTOs
+
+    public HelpSolutionDto buildSolutionDto(String yellow, String grey, String solution, Language lang) throws IOException {
+
+        Set<String> helpSolution = helpService.solution(yellow, grey, solution, lang);
+
+        return HelpSolutionDto.builder()
+                .possibleWords(helpSolution)
+                .build();
+    }
 
     @Test
     public void canFindWordsWith() throws IOException {
@@ -28,10 +41,10 @@ public class HelpIntegrationTest extends AbstractIntegrationTest{
                 .solution("")
                 .build();
 
-        HelpSolutionDto helpSolution = helpService.solution(helpRequest, Language.ES);
+        HelpSolutionDto responseDto = buildSolutionDto(helpRequest.getYellow(), helpRequest.getGrey(), helpRequest.getSolution(), Language.ES);
 
-        assertThat(helpSolution).hasNoNullFieldsOrProperties();
-        assertThat(helpSolution.getPossibleWords()).contains("ilesa", "sepia");
+        assertThat(responseDto).hasNoNullFieldsOrProperties();
+        assertThat(responseDto.getPossibleWords()).contains("ilesa", "sepia");
     }
 
     @Test
@@ -42,7 +55,7 @@ public class HelpIntegrationTest extends AbstractIntegrationTest{
                 .solution("_____")
                 .build();
 
-        HelpSolutionDto helpSolution = helpService.solution(helpRequest, Language.EN);
+        HelpSolutionDto helpSolution = buildSolutionDto(helpRequest.getYellow(), helpRequest.getGrey(), helpRequest.getSolution(), Language.EN);
 
         assertThat(helpSolution).hasNoNullFieldsOrProperties();
         assertThat(helpSolution.getPossibleWords()).doesNotContain("voice", "oxide");
@@ -56,7 +69,7 @@ public class HelpIntegrationTest extends AbstractIntegrationTest{
                 .solution("a_a_a")
                 .build();
 
-        HelpSolutionDto helpSolution = helpService.solution(helpRequest, Language.ES);
+        HelpSolutionDto helpSolution = buildSolutionDto(helpRequest.getYellow(), helpRequest.getGrey(), helpRequest.getSolution(), Language.ES);
 
         assertThat(helpSolution).hasNoNullFieldsOrProperties();
         assertThat(helpSolution.getPossibleWords()).contains("asada", "amada");
@@ -70,7 +83,7 @@ public class HelpIntegrationTest extends AbstractIntegrationTest{
                 .solution("o____")
                 .build();
 
-        HelpSolutionDto helpSolution = helpService.solution(helpRequest, Language.EN);
+        HelpSolutionDto helpSolution = buildSolutionDto(helpRequest.getYellow(), helpRequest.getGrey(), helpRequest.getSolution(), Language.EN);
 
         assertThat(helpSolution).hasNoNullFieldsOrProperties();
         assertThat(helpSolution.getPossibleWords()).contains("opium", "ouija");
@@ -84,7 +97,9 @@ public class HelpIntegrationTest extends AbstractIntegrationTest{
                 .solution("_u___∴༼ つ ◕‿◕ ༽つ\uD83E\uDD2A")
                 .build();
 
-        HelpSolutionDto helpSolution = helpService.solution(helpRequest, Language.ES);
+
+        HelpRequestDto normalized = new HelpController().normalizeInput(helpRequest); //TODO por que repetir el codigo del controller, no puedo llamar directo al controller?
+        HelpSolutionDto helpSolution = buildSolutionDto(normalized.getYellow(), normalized.getGrey(), normalized.getSolution(), Language.ES);
 
         assertThat(helpSolution).hasNoNullFieldsOrProperties();
         assertThat(helpSolution.getPossibleWords()).contains("funda");
@@ -98,7 +113,7 @@ public class HelpIntegrationTest extends AbstractIntegrationTest{
                 .solution("o____largo")
                 .build();
 
-        assertThrows(BusinessException.class, () -> helpService.solution(helpRequest, Language.EN));
+        assertThrows(BusinessException.class, () -> new HelpController().solution(helpRequest, Language.EN)); //TODO aca si puedo llamar directo al controller, ya que no necesito el dto respuesta
     }
 
 }

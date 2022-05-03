@@ -24,8 +24,7 @@ export default function Login({onLogin}) {
   };
 
   return (
-    <body>
-        <div className="login">
+      <body className="login">
             <header className="navGeneral">
                 <NavbarAut />
             </header>

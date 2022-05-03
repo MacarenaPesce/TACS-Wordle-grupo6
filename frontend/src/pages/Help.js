@@ -45,7 +45,7 @@ export default class Help extends Component{
 
     render(){
         let listWords = this.state.wordsResponse.map((word) =>
-            <li class="list-group-item disabled" key={word}> {word}</li>
+            <li className="list-group-item disabled" key={word}> {word}</li>
         );
 
         
@@ -57,10 +57,10 @@ export default class Help extends Component{
                         <NavbarAut />
                     </header>
 
-                    <div class="container">
-                        <div class="row">
-                            <div class="col">                              
-                                <div class="instrucciones">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col">                              
+                                <div className="instrucciones">
                                     {/*<h1>WordleCheats.exe</h1>*/}
                                     {/*todo: alinear verticalmente img, lo puse con margin pero no queda centrado*/}
                                     <img src={require('../img/comojugar.png')} alt="Como jugar"  />
@@ -71,7 +71,7 @@ export default class Help extends Component{
                
 
                             
-                            <div class="col">                
+                            <div className="col">                
                                 <form onSubmit={this.submitHandler} className="form-help">    
                                     <div className="opciones">
                                         <div className="form-group">
@@ -108,7 +108,7 @@ export default class Help extends Component{
                                 </form>
                             </div>
 
-                            <div class="col">
+                            <div className="col">
                                 <div style={{display: this.state.visibility}}>
                                     <div className="solucion" >
                                         <label><h5>Soluciones posibles</h5></label>                              

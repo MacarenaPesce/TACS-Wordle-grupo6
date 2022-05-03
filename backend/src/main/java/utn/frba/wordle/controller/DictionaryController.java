@@ -8,6 +8,8 @@ import utn.frba.wordle.dto.DictionaryDto;
 import utn.frba.wordle.model.Language;
 import utn.frba.wordle.service.DictionaryService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/dictionary")
@@ -20,7 +22,13 @@ public class DictionaryController {
     @GetMapping("/{language}/{word}")
     public ResponseEntity<DictionaryDto> getDefinitions(@PathVariable Language language, @PathVariable String word) {
 
-        DictionaryDto dto = dictionaryService.getDefinitions(language, word);
+        List<String> definitions = dictionaryService.getDefinitions(language, word);
+
+        DictionaryDto dto = DictionaryDto.builder()
+                .definition(definitions)
+                .language(language)
+                .word(word)
+                .build();
 
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
