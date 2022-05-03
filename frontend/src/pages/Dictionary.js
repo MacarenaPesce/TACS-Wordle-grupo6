@@ -4,14 +4,15 @@ import Footer from '../components/footer/Footer';
 import './Dictionary.css'
 import DictionaryService from '../service/DictionaryService';
 
-class Dictionary extends React.Component {
+export default class Dictionary extends React.Component {
 
 constructor(){
   super()
     this.state = {
         language: 'ES',
         word: '',
-        significado: ''
+        significado: [],
+        visibility: "none"
     }
 }
 
@@ -35,7 +36,11 @@ submitCambio = e => {
       })
 }
 
-render(){
+render(){ 
+
+    let listDef = this.state.significado.map((defi) => 
+    <li class="list-group-item disabled" key={defi}> {defi}</li>)
+
     return (
       <body className='body-diccionario'>
         <header>
@@ -46,14 +51,14 @@ render(){
              <div className='contenedor-busqueda' >
                 <input 
                   type="text" 
-                  pattern="[A-Za-z]*" 
+                  pattern="[A-ZÑa-zñáéíóú]*" 
                   title="Solo letras" 
                   className="buscar-input" 
                   placeholder="Ingrese palabra a buscar"
                   name='word'
                   onChange={this.manejarCambio}
                 />
-                <button className='boton-busqueda' type="submit" >
+                <button className='boton-busqueda' type="submit" onClick={() => this.setState({significado: []})}>
                   Buscar
                 </button>
               </div>
@@ -65,7 +70,8 @@ render(){
               </select> 
               </div> 
               <div className='contenedor-respuesta'>
-                {this.state.significado}</div>  
+                    {listDef}
+              </div>  
            </div>
         </form>
         <Footer />
@@ -74,5 +80,3 @@ render(){
   }
 }
 
-
-export default Dictionary;

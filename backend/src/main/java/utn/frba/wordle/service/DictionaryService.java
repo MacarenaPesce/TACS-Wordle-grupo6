@@ -88,7 +88,7 @@ public class DictionaryService {
             JsonObject definicionItem = definiciones.get(0).getAsJsonObject();
             String definition = definicionItem.get("definition").getAsString();
 
-
+            System.out.println("definition: " + definition);
          StringBuilder significado = new StringBuilder();
          significado.append(tipoPalabra);
          significado.append(": ");
@@ -96,6 +96,7 @@ public class DictionaryService {
 
         rd.close();
         // Regresar resultado, pero como cadena, no como StringBuilder
+        System.out.println("significado: " + significado.toString());
         return significado.toString();
     }
 }

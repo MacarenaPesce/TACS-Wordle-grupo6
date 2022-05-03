@@ -35,7 +35,6 @@ public class SpanishDictionary {
                 if (entity != null) {
                     // return it as a String
                     result = EntityUtils.toString(entity);
-                    System.out.println(result);
                 }
             }
         }
