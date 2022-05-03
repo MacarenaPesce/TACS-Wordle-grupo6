@@ -3,7 +3,6 @@ package utn.frba.wordle.dto;
 import lombok.*;
 import utn.frba.wordle.model.Language;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

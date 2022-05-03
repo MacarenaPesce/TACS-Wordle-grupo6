@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.dto.HelpRequestDto;
 import utn.frba.wordle.dto.HelpSolutionDto;
+import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.Language;
 import utn.frba.wordle.utils.WordFileReader;
 
@@ -17,6 +18,13 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class HelpService {
 
+    /**
+     * Finds possible solutions in DTO form.
+     * @param helpRequestDto desired filters to match possible solutions
+     * @param language desired language
+     * @return returns the HelpSolutionDto with the possible solutions
+     * @throws IOException inherited from the contained method findPossibleSolutions
+     */
     public HelpSolutionDto solution(HelpRequestDto helpRequestDto, Language language) throws IOException {
 
         helpRequestDto = normalizeInput(helpRequestDto);
@@ -28,6 +36,15 @@ public class HelpService {
                 .build();
     }
 
+    /**
+     * Executes the word finder with specific data.
+     * @param lang desired language
+     * @param yellow known letters to be used in unknown locations
+     * @param grey known letters to not be used
+     * @param solutionSoFar green letters, contains each known-so-far letter in each of the 5 positions
+     * @return set with the possible solutions, all words matching the filters
+     * @throws IOException if the word list file can not be read, should never happen being in a static location
+     */
     public Set<String> findPossibleSolutions(Language lang, String yellow, String grey, String solutionSoFar) throws IOException {
 
         Set<String> posibleSolutions = null;
@@ -44,6 +61,12 @@ public class HelpService {
         return posibleSolutions;
     }
 
+    /**
+     * Normalizes the input data to ensure it's processed correctly in lowercase,
+     * avoid processing the same letter multiple times, avoid hackers, etc...
+     * @param helpRequestDto DTO with the data captured from the wild world wide web
+     * @return now safe DTO
+     */
     public HelpRequestDto normalizeInput(HelpRequestDto helpRequestDto){
         //remove non letters and make lowercase
         String yellow = helpRequestDto.getYellow().replaceAll("[^A-Za-z]+", "").toLowerCase();
@@ -51,7 +74,7 @@ public class HelpService {
         String solution = helpRequestDto.getSolution().replaceAll("[^A-Za-z_]+", "").toLowerCase();
 
         if( !(solution.length() == 5 || solution.length() == 0)){
-            throw new RuntimeException("solution can not have a lenght of "+solution.length());
+            throw new BusinessException("solution '"+solution+"' can not have a lenght of "+solution.length());
         }
 
         //remove duplicates
@@ -69,6 +92,12 @@ public class HelpService {
         return helpRequestDto;
     }
 
+    /**
+     * Removes all words from the set which contain any of the letters included in the grey field.
+     * @param wordList set of strings which can contain or not the letters in the grey field
+     * @param grey letters that will be removed in the resulting set
+     * @return set of strings where now, none of the strings contain any of the letters in the grey field
+     */
     private Set<String> removeWithGray(Set<String> wordList, String grey){
 
         List<Character> greyLetters = grey.chars().mapToObj(e->(char)e).collect(Collectors.toList());
@@ -81,7 +110,12 @@ public class HelpService {
         return wordList;
     }
 
-
+    /**
+     * Removes all words from the set which do not contain every letter included in the yellow field.
+     * @param wordList set of strings which can contain or not the letters in the yellow field
+     * @param yellow letters that have to be included in the resulting set
+     * @return set of strings where now, every string contains every letter in the yellow field
+     */
     private Set<String> removeWithoutYellow(Set<String> wordList, String yellow){
 
         List<Character> yellowLetters = yellow.chars().mapToObj(e->(char)e).collect(Collectors.toList());
@@ -94,6 +128,13 @@ public class HelpService {
         return wordList;
     }
 
+    /**
+     * Filters a set of words, using the solutionSoFar as a wildcard.
+     * @param wordList set of words which may or may not, be contained in the wildcard
+     *                 (most of them should not, for our single intended use case)
+     * @param solutionSoFar 5 letter wildcard "A_G_O"
+     * @return set of words which now are contained in the wildcard
+     */
     private Set<String> matchWith(Set<String> wordList, String solutionSoFar){
 
         if(solutionSoFar.length() == 0){

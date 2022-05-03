@@ -46,6 +46,18 @@ public class AuthService {
     }
 
     public SessionDto register(LoginDto loginDto) {
+        UserEntity userEntity = null;
+
+        userEntity = userService.findUserByUsername(loginDto.getUsername());
+        if(userEntity != null){
+            throw new BusinessException(String.format("El usuario %s ya se encuentra registrado", loginDto.getUsername()));
+        }
+
+        userEntity = userService.findUserByEmail(loginDto.getEmail());
+        if(userEntity != null){
+            throw new BusinessException("El mail ingresado ya se ecuentra en uso");
+        }
+
         UserDto userDto = userService.createUser(loginDto);
         return getSessionDto(userDto);
     }
@@ -57,7 +69,7 @@ public class AuthService {
         } else {
             UserEntity userEntity = userService.findUserByUsernameAndPassword(loginDto.getUsername(), loginDto.getPassword());
             if (userEntity == null) {
-                throw new BusinessException("Invalid Username and Password");
+                throw new BusinessException("Combinación de usuario y contraseña inválidos");
             }
             //userService.updateLoginDate(userEntity);
             return getSessionDto(userEntity);
@@ -97,8 +109,8 @@ public class AuthService {
                 .builder()
                 .setId("WordleJWT")
                 .setSubject(username)
-                .claim("idUsuario", userId)
-                .claim("usuario", username)
+                .claim("userId", userId)
+                .claim("username", username)
                 .claim("email", email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration * 1000))

@@ -1,9 +1,6 @@
 package utn.frba.wordle.dto;
 
-import jdk.jshell.Snippet;
 import lombok.*;
-
-import java.util.ArrayList;
 
 @Getter
 @Setter

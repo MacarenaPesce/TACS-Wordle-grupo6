@@ -42,8 +42,8 @@ render(){
     <li class="list-group-item disabled" key={defi}> {defi}</li>)
 
     return (
-      <body className='body-diccionario'>
-        <header>
+      <div className='body-diccionario'>
+        <header className="navGeneral">
           <NavbarAut />
         </header>
         <form onSubmit={this.submitCambio}>
@@ -75,7 +75,7 @@ render(){
            </div>
         </form>
         <Footer />
-      </body>
+      </div>
     );
   }
 }

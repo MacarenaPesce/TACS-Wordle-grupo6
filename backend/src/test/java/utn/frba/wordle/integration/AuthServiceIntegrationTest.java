@@ -36,9 +36,8 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
         SessionDto login = authService.login(loginDto);
 
         Claims claims = getClaims(login.getToken());
-        String tokenUsername = (String) claims.get("usuario");
+        String tokenUsername = (String) claims.get("username");
         String tokenEmail = (String) claims.get("email");
-
         assertThat(login).hasNoNullFieldsOrProperties();
         assertThat(tokenUsername).isEqualTo(user.getUsername());
         assertThat(tokenEmail).isEqualTo(user.getEmail());
@@ -65,7 +64,7 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
         SessionDto login = authService.login(loginDto);
 
         Claims claims = getClaims(login.getToken());
-        String tokenUsername = (String) claims.get("usuario");
+        String tokenUsername = (String) claims.get("username");
         String tokenEmail = (String) claims.get("email");
 
         assertThat(login).hasNoNullFieldsOrProperties();
@@ -83,6 +82,44 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
         SessionDto login = authService.register(loginDto);
 
         assertThat(login).hasNoNullFieldsOrProperties();
+    }
+
+    @Test
+    public void whenRegisterUserWithRepeatedUsernameThrowsBusinessException() {
+        LoginDto loginDto = LoginDto.builder()
+                    .email("mail@prueba.com")
+                    .username("username")
+                    .password("lamePassword")
+                    .build();
+
+        authService.register(loginDto);
+
+        LoginDto loginDto2 = LoginDto.builder()
+                .email("mail2@prueba2.com")
+                .username("username")
+                .password("lamePassword123")
+                .build();
+
+        assertThrows(BusinessException.class, () -> authService.register(loginDto2));
+    }
+
+    @Test
+    public void whenRegisterUserWithRepeatedEmailThrowsBusinessException() {
+        LoginDto loginDto = LoginDto.builder()
+                .email("mail@prueba.com")
+                .username("username1")
+                .password("lamePassword")
+                .build();
+
+        authService.register(loginDto);
+
+        LoginDto loginDto2 = LoginDto.builder()
+                .email("mail@prueba.com")
+                .username("username2")
+                .password("lamePassword123")
+                .build();
+
+        assertThrows(BusinessException.class, () -> authService.register(loginDto2));
     }
 
     private Claims getClaims(String jwtToken) {

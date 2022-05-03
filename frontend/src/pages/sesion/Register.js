@@ -36,9 +36,9 @@ export default class Register extends Component{
     render(){
         return (
 
-            <body>
+            <div>
                 <div className="login"> {/* todo: rename classname and *.css */}
-                    <header>
+                    <header className="navGeneral">
                         <NavbarAut />
                     </header>                
 
@@ -83,7 +83,7 @@ export default class Register extends Component{
                 </div>
 
                 <Footer />
-            </body>
+            </div>
         );
     }
 }

@@ -4,6 +4,7 @@ import lombok.*;
 import utn.frba.wordle.model.Language;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -26,8 +27,8 @@ public class ResultEntity {
     Language language;
 
     @Column
-    Date date;
+    LocalDate date;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    UserEntity owner;
+    UserEntity user;
 }

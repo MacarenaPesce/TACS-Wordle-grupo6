@@ -2,9 +2,6 @@ package utn.frba.wordle.dto;
 
 import lombok.*;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 @Getter
 @Setter
 @EqualsAndHashCode

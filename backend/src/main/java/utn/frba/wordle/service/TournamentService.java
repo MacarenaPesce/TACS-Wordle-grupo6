@@ -10,7 +10,9 @@ import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.repository.TournamentRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @NoArgsConstructor
@@ -31,6 +33,10 @@ public class TournamentService {
         dto.setOwner(owner);
         TournamentEntity newTournament = mapToEntity(dto);
 
+        TournamentEntity existingActiveTournament = tournamentRepository.findByName(dto.getName());
+        if(existingActiveTournament != null){
+            throw new BusinessException("There is already an active Tournament with this name.");
+        }
         newTournament = tournamentRepository.save(newTournament);
 
         return mapToDto(newTournament);
@@ -42,10 +48,10 @@ public class TournamentService {
         TournamentEntity tournamentEntity = tournamentRepository.findById(memberDto.getTournamentId()).orElse(null);
 
         if (tournamentEntity == null) {
-            throw new BusinessException("The specified Tournament doesn't exist.");
+            throw new BusinessException("El torneo especificado no existe.");
         }
         if (!tournamentEntity.getOwner().getId().equals(ownerUserId)) {
-            throw new BusinessException("The user doesn't own the specified Tournament.");
+            throw new BusinessException("Solo puedes agregar miembros a un torneo que tu hayas creado.");
         }
 
         UserEntity userEntity = userService.findUserByUsername(memberDto.getUsername());
@@ -67,6 +73,11 @@ public class TournamentService {
 
         if (tournamentEntity == null) {
             throw new BusinessException("The specified Tournament doesn't exist.");
+        }
+
+        boolean userAlreadyJoined = tournamentEntity.getMembers().stream().anyMatch(m -> m.getId().equals(userId));
+        if(userAlreadyJoined){
+            throw new BusinessException("The user already joined the Tournament.");
         }
 
         tournamentRepository.addMember(tournamentEntity.getId(), userId);
@@ -96,6 +107,7 @@ public class TournamentService {
                 .start(dto.getStart())
                 .language(dto.getLanguage())
                 .name(dto.getName())
+                .state(dto.getState())
                 .type(dto.getType())
                 .owner(UserService.mapToEntity(dto.getOwner()))
                 .build();
@@ -107,6 +119,7 @@ public class TournamentService {
                 .name(entity.getName())
                 .finish(entity.getFinish())
                 .start(entity.getStart())
+                .state(entity.getState())
                 .tourneyId(entity.getId())
                 .type(entity.getType())
                 .owner(UserService.mapToDto(entity.getOwner()))
