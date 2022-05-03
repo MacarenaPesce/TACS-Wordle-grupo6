@@ -22,7 +22,7 @@ export default class Tourney extends Component{
 
     render(){
         return(
-            <div className='tourney'>
+            <div className='tourney'> {/* todo: ver si es div o body  */}
                 <header className='NavTourney'>
                     <NavbarAut />
                 </header>
