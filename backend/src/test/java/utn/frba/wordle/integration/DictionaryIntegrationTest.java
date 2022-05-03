@@ -6,6 +6,8 @@ import utn.frba.wordle.dto.DictionaryDto;
 import utn.frba.wordle.model.Language;
 import utn.frba.wordle.service.DictionaryService;
 
+import java.util.List;
+
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 
@@ -17,8 +19,15 @@ public class DictionaryIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanGetTheDefinitionOfSpanishWord(){
         String word = "Caja";
+        Language lang = Language.ES;
 
-        DictionaryDto dto = service.getDefinitions(Language.ES, word);
+        List<String> definitions = service.getDefinitions(lang, word);
+
+        DictionaryDto dto = DictionaryDto.builder()
+                .definition(definitions)
+                .language(lang)
+                .word(word)
+                .build();
 
         assertThat(dto).hasNoNullFieldsOrProperties();
     }
@@ -26,8 +35,15 @@ public class DictionaryIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanGetTheDefinitionOfEnglishWord(){
         String word = "Box";
+        Language lang = Language.EN;
 
-        DictionaryDto dto = service.getDefinitions(Language.EN, word);
+        List<String> definitions = service.getDefinitions(lang, word);
+
+        DictionaryDto dto = DictionaryDto.builder()
+                .definition(definitions)
+                .language(lang)
+                .word(word)
+                .build();
 
         assertThat(dto).hasNoNullFieldsOrProperties();
     }

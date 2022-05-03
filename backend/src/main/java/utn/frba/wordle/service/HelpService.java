@@ -2,9 +2,6 @@ package utn.frba.wordle.service;
 
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.dto.HelpRequestDto;
-import utn.frba.wordle.dto.HelpSolutionDto;
-import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.Language;
 import utn.frba.wordle.utils.WordFileReader;
 
@@ -19,21 +16,19 @@ import java.util.stream.Collectors;
 public class HelpService {
 
     /**
-     * Finds possible solutions in DTO form.
-     * @param helpRequestDto desired filters to match possible solutions
+     * Finds possible solutions.
+     * @param yellow desired yellow filter to match possible solutions
+     * @param grey desired grey filter
+     * @param solution desired solution filter
      * @param language desired language
-     * @return returns the HelpSolutionDto with the possible solutions
+     * @return returns a set of strings with the possible solutions
      * @throws IOException inherited from the contained method findPossibleSolutions
      */
-    public HelpSolutionDto solution(HelpRequestDto helpRequestDto, Language language) throws IOException {
+    public Set<String> solution(String yellow, String grey, String solution, Language language) throws IOException {
 
-        helpRequestDto = normalizeInput(helpRequestDto);
+        Set<String> posibleSolutions = findPossibleSolutions(language, yellow, grey, solution);
 
-        Set<String> posibleSolutions = findPossibleSolutions(language, helpRequestDto.getYellow(), helpRequestDto.getGrey(), helpRequestDto.getSolution());
-
-        return HelpSolutionDto.builder()
-                .possibleWords(posibleSolutions)
-                .build();
+        return posibleSolutions;
     }
 
     /**
@@ -61,36 +56,7 @@ public class HelpService {
         return posibleSolutions;
     }
 
-    /**
-     * Normalizes the input data to ensure it's processed correctly in lowercase,
-     * avoid processing the same letter multiple times, avoid hackers, etc...
-     * @param helpRequestDto DTO with the data captured from the wild world wide web
-     * @return now safe DTO
-     */
-    public HelpRequestDto normalizeInput(HelpRequestDto helpRequestDto){
-        //remove non letters and make lowercase
-        String yellow = helpRequestDto.getYellow().replaceAll("[^A-Za-z]+", "").toLowerCase();
-        String grey = helpRequestDto.getGrey().replaceAll("[^A-Za-z]+", "").toLowerCase();
-        String solution = helpRequestDto.getSolution().replaceAll("[^A-Za-z_]+", "").toLowerCase();
 
-        if( !(solution.length() == 5 || solution.length() == 0)){
-            throw new BusinessException("solution '"+solution+"' can not have a lenght of "+solution.length());
-        }
-
-        //remove duplicates
-        yellow = Arrays.stream(yellow.split(""))
-                .distinct()
-                .collect(Collectors.joining());
-        grey = Arrays.stream(grey.split(""))
-                .distinct()
-                .collect(Collectors.joining());
-
-        helpRequestDto.setGrey(grey);
-        helpRequestDto.setYellow(yellow);
-        helpRequestDto.setSolution(solution);
-
-        return helpRequestDto;
-    }
 
     /**
      * Removes all words from the set which contain any of the letters included in the grey field.
