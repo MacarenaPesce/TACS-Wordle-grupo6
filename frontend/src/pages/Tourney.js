@@ -20,43 +20,13 @@ export default class Tourney extends Component{
         }
     }
 
-
     render(){
-
         return(
             <div className='tourney'>
                 <header className='NavTourney'>
                     <NavbarAut />
                 </header>
-                {/*
-                <div>
-                    <ul className="nav nav-tabs" role="tablist">
-                        <li className="nav-item" role="presentation">
-                            <a className="nav-link active" role="tab" data-bs-toggle="tab" href="#tabMyTour"> Mis Torneos</a>
-                        </li>
-                        <li className="nav-item" role="presentation">
-                            <a className="nav-link" role="tab" data-bs-toggle="tab" href="#tabPublicTour"> Publicos</a>
-                        </li>
-                        <li className="nav-item" role="presentation">
-                            <a className="nav-link" role="tab" data-bs-toggle="tab" href="#tabFinTour"> Finalizados</a>
-                        </li>
-                    </ul>
-                    <div className="tab-content">
-                        <div id="tabMyTour" className="tab-pane active" role="tabpanel">
-                            <p> Contenido de mis torneos</p>
-                        </div>
-                        <div id="tabPublicTour" className="tab-pane active" role="tabpanel">
-                            <p> Contenido de torneos publicos</p>
-                        </div>
-                        <div id="tabFinTour" className="tab-pane active" role="tabpanel">
-                            <p> Contenido de torneos finalizados</p>
-                        </div>
-                    </div>
-                </div>
-                */}
-
-
-
+          
                 <Tabs defaultActiveKey="myTourney" id="uncontrolled-tab-example" className="mb-3">
                     <Tab eventKey="myTourney" title="Mis torneos">
                         {/*<p>Mis torneos</p>*/}
@@ -140,9 +110,6 @@ export default class Tourney extends Component{
                         <p>Torneos finalizados</p>
                     </Tab>
                 </Tabs>
-
-
-
 
                 <Footer />
             </div>
