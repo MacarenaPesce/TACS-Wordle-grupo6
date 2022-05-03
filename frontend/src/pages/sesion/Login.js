@@ -62,7 +62,6 @@ export default function Login({onLogin}) {
             }
             {   hasLoginError && <strong>Credentials are invalid{/*todo: tiene que ser un modal */}</strong> }
 
-        </div>
         <Footer />
     </body>
   );

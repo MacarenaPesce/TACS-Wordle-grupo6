@@ -41,7 +41,7 @@ export default function NavbarAut() {
                 </Nav>
               </Container>
               <Button href="/" onClick={clickLogout} variant="outline-success" className="but-log">Salir</Button>
-              <IconButton> <ExitToAppIcon /></IconButton>{ /*para hacerla responsive podemos poner el icono de exit */}
+              {/*<IconButton> <ExitToAppIcon /></IconButton>{ /*para hacerla responsive podemos poner el icono de exit */}
             </Navbar>
           </div>
         : <div>
