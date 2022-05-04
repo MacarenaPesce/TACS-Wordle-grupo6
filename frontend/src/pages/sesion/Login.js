@@ -23,13 +23,17 @@ export default function Login({onLogin}) {
     login(username, password)
   };
 
+    let spinner = (<div className="spinner-border text-light" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>);
+
   return (
       <body className="login">
             <header className="navGeneral">
                 <NavbarAut />
             </header>
             
-            {isLoginLoading && <strong>Checking credentials...{/*todo: tiene que ser un modal */}</strong>}
+            {isLoginLoading && <div>{spinner}<strong>Checking credentials...{/*todo: tiene que ser un modal */}</strong>{spinner}</div>}
             {!isLoginLoading &&
 
             <div className="forms">

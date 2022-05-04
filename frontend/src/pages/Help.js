@@ -15,7 +15,9 @@ export default class Help extends Component{
             grey: '',
             solution: '',
             wordsResponse: [],
-            visibility: "none"
+            visibility: "none",
+            loading: false,
+            error: false
         }
     }
 
@@ -25,6 +27,7 @@ export default class Help extends Component{
 
     submitHandler = e => {
         e.preventDefault()
+        this.setState({loading: true, error: false})
         console.log('Boton ayuda presionado con los datos: ')
         let body = {
             yellow: this.state.yellow,
@@ -36,9 +39,10 @@ export default class Help extends Component{
             .then(response => {
                 console.log('Response obtenida: ')
                 console.log(response.data)
-                this.setState({wordsResponse: response.data.possibleWords})
+                this.setState({wordsResponse: response.data.possibleWords, loading: false})
             })
             .catch(error => {
+                this.setState({loading: false, error: true})
                 console.log(error)
             })
     }
@@ -47,8 +51,46 @@ export default class Help extends Component{
         let listWords = this.state.wordsResponse.map((word) =>
             <li className="list-group-item disabled" key={word}> {word}</li>
         );
+        let redSpinner = (<div className="spinner-border text-danger" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>);
+        let greenSpinner = (<div className="spinner-border text-success" role="status">
+            <span className="visually-hidden">Loading...</span>
+        </div>);
+        let loadButton = (<button className="btn btn-primary" type="button" disabled>
+                            <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>);
 
-        
+        let result;
+        let display;
+        if (listWords.length > 0) {
+            result =    <ul className="list-group scrollbar-sunny-morning">
+                            {listWords}
+                        </ul>;
+        } else {
+            result =    <div className="alert alert-danger" role="alert">
+                            ⚠️No existen coincidencias⚠️
+                         </div>;
+        }
+
+        if (this.state.loading) {
+            display =   <div className="alert alert-secondary" role="alert">
+                            {greenSpinner}
+                            {redSpinner}
+                            {loadButton}
+                            {redSpinner}
+                            {greenSpinner}
+                        </div>;
+        } else {
+            display = result;
+        }
+
+        if(this.state.error){
+            display = <div className="alert alert-danger" role="alert">
+                        ⚠️Error encontrado, contacte al programador⚠️
+                    </div>;
+        }
 
         return (
 
@@ -67,8 +109,6 @@ export default class Help extends Component{
                                     <p></p>
                                 </div>
                             </div>
-
-               
 
                             
                             <div className="col">                
@@ -113,9 +153,26 @@ export default class Help extends Component{
                                     <div className="solucion" >
                                         <label><h5>Soluciones posibles</h5></label>                              
                                     </div>
-                                    <ul className="list-group">
-                                        {listWords}
-                                    </ul>
+
+                                    {display}
+
+                                    {/* comment here
+                                    {this.state.loading &&
+                                                <div className="alert alert-secondary" role="alert">
+                                                     Cargando
+                                                </div>}
+
+                                    {listWords.length > 0 ? (
+                                        <ul className="list-group scrollbar-sunny-morning">
+                                            {listWords}
+                                        </ul>
+                                    ) : (
+                                        <div className="alert alert-danger" role="alert">
+                                            ⚠️No existen coincidencias⚠️
+                                        </div>
+                                    )}
+                                    */}
+
                                 </div>
                             </div>
                         </div>

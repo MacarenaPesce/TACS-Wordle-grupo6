@@ -9,26 +9,33 @@ export default function useUser () {
       AuthService.loginService(username, password)
       .then((response) => {
         if (response.data.token) {
-          localStorage.setItem("tokenData", JSON.stringify(response.data));
+          localStorage.setItem("token", JSON.stringify(response.data.token));
+          localStorage.setItem("username", JSON.stringify(response.data.username));
+          {/*
+           localStorage.setItem("email", JSON.stringify(response.data.email));
+           localStorage.setItem("userId", JSON.stringify(response.data.userId));
+           */}
           setState({loading: false, error: false })
         }
       })
       .catch((error) => {
         //TODO ponemos una toast aca?
         //console.log(error.response.data.message);
-        localStorage.removeItem('tokenData')
+        localStorage.removeItem('token')
+        localStorage.removeItem('username')
         setState({loading: false, error: true })
       });
     })
       
       const logout = () => {
         console.log('logout')
-        localStorage.removeItem('tokenData')
+        localStorage.removeItem('token')
+        localStorage.removeItem('username')
         setState({loading: false, error: false })
       }
     
       return {
-        isLogged: localStorage.getItem("tokenData"),
+        isLogged: localStorage.getItem("token"),
         isLoginLoading: state.loading,
         hasLoginError: state.error,
         login,

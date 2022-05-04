@@ -92,7 +92,7 @@
 }
 
 .contenedor-respuesta {
-    overflow: scroll;
+    overflow-y: scroll;
     height: auto;
     min-height: 6em;
     max-height: 9em;
@@ -103,4 +103,28 @@
     padding: 14px 32px 14px 16px;
     border: 2px solid #003047;
     outline: none;   
+}
+
+.scrollbar-lady-lips::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: #F5F5F5;
+    border-radius: 10px;
+}
+
+.scrollbar-lady-lips::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar-lady-lips::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-image: -webkit-gradient(linear, left bottom, left top, from(#ff9a9e), color-stop(99%, #fecfef),
+    to(#fecfef));
+    background-image: -webkit-linear-gradient(bottom, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+    background-image: linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+}
+
+.scrollbar-lady-lips {
+    scrollbar-color: #ff9a9e #F5F5F5;
 }
