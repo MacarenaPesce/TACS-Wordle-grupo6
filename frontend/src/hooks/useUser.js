@@ -11,9 +11,9 @@ export default function useUser () {
         if (response.data.token) {
           localStorage.setItem("token", JSON.stringify(response.data.token));
           localStorage.setItem("username", JSON.stringify(response.data.username));
+          localStorage.setItem("userId", JSON.stringify(response.data.userId));
           {/*
            localStorage.setItem("email", JSON.stringify(response.data.email));
-           localStorage.setItem("userId", JSON.stringify(response.data.userId));
            */}
           setState({loading: false, error: false })
         }
@@ -23,6 +23,7 @@ export default function useUser () {
         //console.log(error.response.data.message);
         localStorage.removeItem('token')
         localStorage.removeItem('username')
+        localStorage.removeItem('userId')
         setState({loading: false, error: true })
       });
     })
@@ -31,6 +32,7 @@ export default function useUser () {
         console.log('logout')
         localStorage.removeItem('token')
         localStorage.removeItem('username')
+        localStorage.removeItem('userId')
         setState({loading: false, error: false })
       }
     

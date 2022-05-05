@@ -76,11 +76,7 @@ export default class Help extends Component{
 
         if (this.state.loading) {
             display =   <div className="alert alert-secondary" role="alert">
-                            {greenSpinner}
-                            {redSpinner}
-                            {loadButton}
-                            {redSpinner}
-                            {greenSpinner}
+                            {greenSpinner}{redSpinner}{loadButton}{redSpinner}{greenSpinner}
                         </div>;
         } else {
             display = result;
