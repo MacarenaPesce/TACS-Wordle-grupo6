@@ -4,7 +4,6 @@ import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,8 +12,8 @@ import java.util.List;
 @Service
 public class SpanishDictionaryPage {
 
-    @Value("${api.dictionary.spanish}")
-    String apiHost;
+//    @Value("${api.dictionary.spanish}")
+//    String apiHost;
 
     @SneakyThrows
     public List<String> getDefinitions(String word) {
