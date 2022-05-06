@@ -1,8 +1,10 @@
 import {useCallback, useState} from 'react'
 import AuthService from '../service/AuthService'
+import { useNavigate } from 'react-router-dom';
 
 export default function useUser () {
     const [state, setState] = useState({ loading: false, error: false })
+    const navigate = useNavigate();
 
     const login = useCallback((username, password) => {
       setState({loading: true, error: false })
@@ -46,6 +48,7 @@ export default function useUser () {
       console.log('logout')
       localStorage.removeItem('tokenData')
       setState({loading: false, error: false })
+      navigate('/')
     }
     
       return {
