@@ -7,7 +7,7 @@ import useUser from '../../hooks/useUser';
 import {Formulario, ContenedorBotonCentrado, MensajeError, MensajeExito } from "./Formulario";
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Input from './../../components/Input'
+import Input from '../../components/input/Input'
 
 /*
 export default function Register() {

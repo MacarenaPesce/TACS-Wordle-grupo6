@@ -6,7 +6,7 @@ import './Navbar.css';
 import useUser from '../../hooks/useUser';
 import IconButton from '@mui/material/IconButton'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import Home from './../../pages/Home'
+import Home from '../../pages/Home'
 
 /* todo: hacer el navbar responsive */
 

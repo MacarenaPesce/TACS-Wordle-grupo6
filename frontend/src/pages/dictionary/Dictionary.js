@@ -1,8 +1,8 @@
 import React from 'react';
-import NavbarAut from '../components/navbar/Navbar';
-import Footer from '../components/footer/Footer';
+import NavbarAut from '../../components/navbar/Navbar';
+import Footer from '../../components/footer/Footer';
 import './Dictionary.css'
-import DictionaryService from '../service/DictionaryService';
+import DictionaryService from '../../service/DictionaryService';
 
 export default class Dictionary extends React.Component {
 

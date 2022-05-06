@@ -3,8 +3,8 @@ import './Not.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import LogoCancel from '../img/icons8-cancel-30.svg'; 
-import Home from '../pages/Home'
+import LogoCancel from './../../img/icons8-cancel-30.svg'; 
+import Home from './../../pages/Home'
 
 
 function Not() {

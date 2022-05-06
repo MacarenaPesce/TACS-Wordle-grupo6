@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import NavbarAut from '../components/navbar/Navbar';
-import Footer from '../components/footer/Footer';
+import NavbarAut from '../../components/navbar/Navbar';
+import Footer from '../../components/footer/Footer';
 import './Tourney.css'
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';

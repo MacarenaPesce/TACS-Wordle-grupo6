@@ -3,7 +3,7 @@
 }
 
 .help {
-    background-image: url("../img/wordle_fondo.jpg");
+    background-image: url("./../../img/wordle_fondo.jpg");
     text-align: center;
     min-height: 100vh;  
 }

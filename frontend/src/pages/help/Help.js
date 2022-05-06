@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import NavbarAut from "../components/navbar/Navbar";
-import Footer from "../components/footer/Footer";
-import HelpService from "../service/HelpService";
+import NavbarAut from "../../components/navbar/Navbar";
+import Footer from "../../components/footer/Footer";
+import HelpService from "../../service/HelpService";
 import './Help.css';
 import { ListGroup } from "react-bootstrap";
 
@@ -63,7 +63,7 @@ export default class Help extends Component{
                                 <div className="instrucciones">
                                     {/*<h1>WordleCheats.exe</h1>*/}
                                     {/*todo: alinear verticalmente img, lo puse con margin pero no queda centrado*/}
-                                    <img src={require('../img/comojugar.png')} alt="Como jugar"  />
+                                    <img src={require('./../../img/comojugar.png')} alt="Como jugar"  />
                                     <p></p>
                                 </div>
                             </div>
