@@ -50,5 +50,3 @@ public class DictionaryIntegrationTest extends AbstractIntegrationTest {
         assertThat(dto.getDefinition().get(0)).contains("object or space");
     }
 }
-
-g

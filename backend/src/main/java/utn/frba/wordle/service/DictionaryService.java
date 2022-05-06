@@ -3,7 +3,7 @@ package utn.frba.wordle.service;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.client.EnglishDictionaryPage;
+import utn.frba.wordle.client.EnglishDictionaryClient;
 import utn.frba.wordle.client.SpanishDictionaryPage;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.Language;
@@ -19,7 +19,7 @@ public class DictionaryService {
     SpanishDictionaryPage spanishDictionary;
 
     @Autowired
-    EnglishDictionaryPage englishDictionary;
+    EnglishDictionaryClient englishDictionary;
 
     public List<String> getDefinitions(Language language, String word)   {
 
