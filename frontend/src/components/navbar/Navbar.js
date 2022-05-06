@@ -54,8 +54,7 @@ export default function NavbarAut() {
                 </Nav>
               </Container>
               <Button href="/login" onClick={clickLogin} className="btn-dark but-log" variant="outline-success">Ingresar</Button>
-              {/*<Button href="/login" onClick={clickLogin} variant="outline-success" className="but-log">Ingresar</Button>*/}
-              <Button href="/register" onClick={clickRegister} variant="outline-success" className="but-log">Registrarse</Button>
+              <Button href="/register" onClick={clickRegister} className="btn-dark but-log" variant="outline-success">Registrarse</Button>
             </Navbar>
           </div>
     }
