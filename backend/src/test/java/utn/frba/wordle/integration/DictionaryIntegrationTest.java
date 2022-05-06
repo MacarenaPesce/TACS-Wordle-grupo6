@@ -30,6 +30,7 @@ public class DictionaryIntegrationTest extends AbstractIntegrationTest {
                 .build();
 
         assertThat(dto).hasNoNullFieldsOrProperties();
+        assertThat(dto.getDefinition().get(0)).contains("Recipiente rectangular");
     }
 
     @Test
@@ -46,6 +47,7 @@ public class DictionaryIntegrationTest extends AbstractIntegrationTest {
                 .build();
 
         assertThat(dto).hasNoNullFieldsOrProperties();
+        assertThat(dto.getDefinition().get(0)).contains("object or space");
     }
 }
 
