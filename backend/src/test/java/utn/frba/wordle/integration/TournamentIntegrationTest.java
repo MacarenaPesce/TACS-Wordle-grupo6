@@ -3,6 +3,7 @@ package utn.frba.wordle.integration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.dto.*;
+import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.Language;
 import utn.frba.wordle.model.State;
@@ -189,8 +190,9 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void anActiveTournamentWithDuplicatedNameCanBeCreatedIfTheDuplicatedIsNotActive() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1", State.INACTIVE);
-        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament1", State.ACTIVE);
+        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1");
+        inabilityTournament(tournament1, State.INACTIVE);
+        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament1");
 
         assertNotEquals(tournament1.getTourneyId(), tournament2.getTourneyId());
     }
@@ -203,21 +205,23 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         return userService.createUser(user);
     }
 
-    private TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state) {
+    private void inabilityTournament(TournamentDto tournament1, State state) {
+        TournamentEntity entity = tournamentRepository.findById(tournament1.getTourneyId()).orElseThrow();
+        entity.setState(state);
+
+        tournamentRepository.save(entity);
+    }
+
+    private TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName) {
         TournamentDto tournamentDto = TournamentDto.builder()
                 .type(TournamentType.PUBLIC)
                 .start(new Date())
                 .finish(new Date())
                 .name(tournamentName)
                 .language(Language.ES)
-                .state(state)
                 .owner(owner)
                 .build();
         return tournamentService.create(tournamentDto, owner.getId());
-    }
-
-    private TournamentDto getPublicTournamentDto(UserDto ownerUser, String tournamentName) {
-        return getPublicTournamentDto(ownerUser, tournamentName, State.ACTIVE);
     }
 
     private TournamentDto getPrivateTournamentDto(UserDto ownerUser, String tournamentName) {
