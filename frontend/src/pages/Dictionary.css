@@ -4,6 +4,10 @@
 
 }
 
+label{
+    padding: 0;
+}
+
 .language{
     margin-top: 6%;
 }
