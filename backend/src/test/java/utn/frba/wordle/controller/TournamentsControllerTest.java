@@ -14,9 +14,11 @@ import utn.frba.wordle.dto.TournamentDto;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 
+import java.math.BigInteger;
+
+import static org.aspectj.runtime.internal.Conversions.longValue;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static utn.frba.wordle.utils.TestUtils.RANDOM;
 import static utn.frba.wordle.utils.TestUtils.toJson;
@@ -55,16 +57,17 @@ public class TournamentsControllerTest {
     @Test
     public void puedoAgregarUnMiembroAUnTorneo() {
         MemberDto request = RANDOM.nextObject(MemberDto.class);
+        Long tourneyID = 40L;
         SessionDto sessionDto = TestUtils.getMockSession();
 
-        String urlController = "/api/tournaments/addmember";
+        String urlController = "/api/tournaments/"+tourneyID+"/members";
         mvc.perform(post(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).addMember(request, sessionDto.getUserId());
+        verify(tournamentService).addMember(request, tourneyID, sessionDto.getUserId());
     }
 
     @SneakyThrows
@@ -75,7 +78,7 @@ public class TournamentsControllerTest {
 
         Long tournamentId = 123L;
         String urlController = "/api/tournaments/" + tournamentId + "/join";
-        mvc.perform(post(urlController)
+        mvc.perform(patch(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)))

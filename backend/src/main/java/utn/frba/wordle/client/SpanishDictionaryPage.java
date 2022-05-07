@@ -1,6 +1,7 @@
 package utn.frba.wordle.client;
 
 import lombok.SneakyThrows;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,15 +18,19 @@ public class SpanishDictionaryPage {
         List<String> definitions = new ArrayList<>();
 
         String url = "https://es.wiktionary.org/wiki/" + word;
-        Document doc = Jsoup.connect(url)
-                .ignoreContentType(true)
-                .get();
+        try {
+            Document doc = Jsoup.connect(url)
+                    .ignoreContentType(true)
+                    .get();
 
         for (Element line : doc.select("dl")) {
             definitions.add(line.text());
         }
         if (definitions.isEmpty()) {
-            definitions.add("NoDefinition");
+            definitions.add("No existe Defincion");
+        }
+        } catch ( HttpStatusException e) {
+            definitions.add("No existe Defincion");
         }
     return definitions;
     }

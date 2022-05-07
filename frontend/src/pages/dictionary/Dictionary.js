@@ -58,7 +58,7 @@ render(){
              <div className='contenedor-busqueda' >
                 <input 
                   type="text" 
-                  pattern="[A-ZÑa-zñáéíóú]*" 
+                  pattern="[A-ZÑa-źñáéíóú]*"
                   title="Solo letras" 
                   className="buscar-input" 
                   placeholder="Ingrese palabra a buscar"

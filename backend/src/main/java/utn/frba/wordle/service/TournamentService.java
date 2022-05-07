@@ -11,9 +11,7 @@ import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.State;
 import utn.frba.wordle.repository.TournamentRepository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 @NoArgsConstructor
@@ -30,12 +28,17 @@ public class TournamentService {
 
     public TournamentDto create(TournamentDto dto, Long userId) {
 
-        UserDto owner = userService.findUser(userId);
+        UserDto owner;
+        try {
+            owner = userService.findUser(userId);
+        } catch (NoSuchElementException e) {
+            throw new BusinessException("El token de sesion jwt enviado, no coincide con usuarios existentes"); //TODO cambiar a SecurityException
+        }
         dto.setOwner(owner);
         TournamentEntity newTournament = mapToEntity(dto);
 
         TournamentEntity existingActiveTournament = tournamentRepository.findByName(dto.getName());
-        if(existingActiveTournament != null){
+        if (existingActiveTournament != null) {
             throw new BusinessException("There is already an active Tournament with this name.");
         }
         newTournament.setState(State.ACTIVE);
@@ -45,9 +48,9 @@ public class TournamentService {
     }
 
     @Transactional
-    public MemberDto addMember(MemberDto memberDto, Long ownerUserId) {
+    public MemberNewDto addMember(MemberDto memberDto, Long tourneyID, Long ownerUserId) {
 
-        TournamentEntity tournamentEntity = tournamentRepository.findById(memberDto.getTournamentId()).orElse(null);
+        TournamentEntity tournamentEntity = tournamentRepository.findById(tourneyID).orElse(null);
 
         if (tournamentEntity == null) {
             throw new BusinessException("El torneo especificado no existe.");
@@ -57,13 +60,19 @@ public class TournamentService {
         }
 
         UserEntity userEntity = userService.findUserByUsername(memberDto.getUsername());
-        //TODO validar existencia de usuario a agregar
-        //TODO validar que el usuario a agregar ya no este incluido en el torneo
-//        Set<UserDto> members = userService.getTournamentMembers(tournamentEntity.getId());
+        if(userEntity == null){
+            throw new BusinessException("El usuario '"+memberDto.getUsername()+"', no se encuentra registrado en el sistema");
+        }
+
+        Set<UserDto> members = userService.getTournamentMembers(tournamentEntity.getId());
+        UserDto existingUser = members.stream().filter(member -> member.getUsername().equals(memberDto.getUsername())).findAny().orElse(null);; //TODO hacer la busqueda directo en la query a la base de datos?
+        if (existingUser != null) {
+            throw new BusinessException("The user '"+userEntity.getUsername()+"' is already a member of the tournament "+tournamentEntity.getName());
+        }
 
         tournamentRepository.addMember(tournamentEntity.getId(), userEntity.getId());
 
-        return MemberDto.builder()
+        return MemberNewDto.builder()
                 .tournamentId(tournamentEntity.getId())
                 .username(userEntity.getUsername())
                 .build();
@@ -72,7 +81,7 @@ public class TournamentService {
     @Transactional
     public JoinDto join(Long userId, Long tournamentId) {
         TournamentEntity tournamentEntity = tournamentRepository.findById(tournamentId).orElse(null);
-
+        //TODO verificar que solo pueda entrar a torneos publicos
         if (tournamentEntity == null) {
             throw new BusinessException("The specified Tournament doesn't exist.");
         }

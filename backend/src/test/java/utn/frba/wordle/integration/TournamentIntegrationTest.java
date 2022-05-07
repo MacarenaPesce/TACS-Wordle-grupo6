@@ -59,10 +59,9 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         userService.createUser(user);
         MemberDto newMember = MemberDto.builder()
                 .username("Richard")
-                .tournamentId(32167L)
                 .build();
 
-        assertThrows(BusinessException.class, () -> tournamentService.addMember(newMember, userOwner.getId()));
+        assertThrows(BusinessException.class, () -> tournamentService.addMember(newMember, 32167L, userOwner.getId()));
 
     }
     @Test
@@ -72,7 +71,6 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         UserDto magicUser = getUserDto("mail@mail.com2", "usernameTest2");
         MemberDto newMember = MemberDto.builder()
                 .username("Richard")
-                .tournamentId(32167L)
                 .build();
         TournamentDto dto = TournamentDto.builder()
                 .type(TournamentType.PRIVATE)
@@ -84,7 +82,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
                 .build();
         tournamentService.create(dto, ownerUser.getId());
 
-        assertThrows(BusinessException.class, () -> tournamentService.addMember(newMember, ownerUser.getId()));
+        assertThrows(BusinessException.class, () -> tournamentService.addMember(newMember, 32167L, ownerUser.getId()));
 
     }
 
@@ -104,10 +102,9 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         UserDto player = getUserDto("mail@mail.com2", "usernameTest2");
         MemberDto newMember = MemberDto.builder()
                 .username(player.getUsername())
-                .tournamentId(dto.getTourneyId())
                 .build();
 
-        tournamentService.addMember(newMember, ownerUser.getId());
+        tournamentService.addMember(newMember, dto.getTourneyId(), ownerUser.getId());
 
         Set<UserDto> members = userService.getTournamentMembers(dto.getTourneyId());
         assertThat(members).contains(player);

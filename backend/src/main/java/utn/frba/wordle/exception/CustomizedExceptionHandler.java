@@ -26,7 +26,7 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest req, HttpSession session) {
 
-        ExceptionResponse response = new ExceptionResponse(new Date(), "An unexpected error has occurred.", req.getDescription(false));
+        ExceptionResponse response = new ExceptionResponse(new Date(), ex.getMessage(), req.getDescription(false));
         response.setErrorCode(500);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
