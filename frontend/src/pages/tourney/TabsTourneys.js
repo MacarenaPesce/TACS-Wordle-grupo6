@@ -93,7 +93,7 @@ const TabsTourneys = ({nombreTabla}) => {
                                                 </div>
                                             </td>
                                         </tr>
-                                    </tfoot>*/}
+                                    </tfoot>
                     </table>
                 </div>
             </div>
