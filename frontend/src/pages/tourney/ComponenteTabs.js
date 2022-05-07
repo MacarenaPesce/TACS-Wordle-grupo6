@@ -16,17 +16,17 @@ const ComponenteTabs = () => {
     return(
         <Tabs defaultActiveKey="myTourney" id="uncontrolled-tab-example" className="mb-3">
             <Tab eventKey="myTourney" title={nombres.misTorneos}>
-                <TabIntro />
+                {/*<TabIntro />*/}
                 <TabsTourneys 
                 nombreTabla={nombres.misTorneos}
                 />         
             </Tab>
             <Tab eventKey="publicTourney" title={nombres.torneosPublicos}>
-                <TabIntro />
+                {/*<TabIntro />*/}
                 <TabsTourneys />
             </Tab>
             <Tab eventKey="finishTourney" title={nombres.finalizados} >
-                <TabIntro />
+                {/*<TabIntro />*/}
                 <TabsTourneys />
             </Tab>
             
