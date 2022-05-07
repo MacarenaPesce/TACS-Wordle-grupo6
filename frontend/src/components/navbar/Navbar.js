@@ -6,6 +6,7 @@ import './Navbar.css';
 import useUser from '../../hooks/useUser';
 import IconButton from '@mui/material/IconButton'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import Home from '../../pages/Home'
 
 /* todo: hacer el navbar responsive */
 
@@ -31,7 +32,7 @@ export default function NavbarAut() {
     const renderLoginButtons = ({isLogged}) => {
       return isLogged
         ? <div>
-            <Navbar className='navBut' bg="dark" variant="dark" >
+            <Navbar className='navBut'  variant="dark" >
               <Container>
                 <Nav className="me-auto" >
                   <Nav.Link href="/" >Inicio{/*<img src = "Wlogo.svg" alt="W logo" className="logo"/>*/}</Nav.Link>
@@ -40,12 +41,12 @@ export default function NavbarAut() {
                   <Nav.Link href="/tourney">Torneo</Nav.Link>
                 </Nav>
               </Container>
-              <Button href="/" onClick={clickLogout} variant="outline-success" className="but-log">Salir</Button>
+              <Button href="/" onClick={clickLogout} variant="outline-success" className="btn-dark but-log">Salir</Button>
               {/*<IconButton> <ExitToAppIcon /></IconButton>{ /*para hacerla responsive podemos poner el icono de exit */}
             </Navbar>
           </div>
         : <div>
-            <Navbar className='navBut' variant="dark" >
+            <Navbar className='navBut'  variant="dark" >
               <Container>
                 <Nav className="me-auto" >
                   <Nav.Link href="/" >Inicio{/*<img src = "Wlogo.svg" alt="W logo" className="logo"/>*/}</Nav.Link>
@@ -54,8 +55,7 @@ export default function NavbarAut() {
                 </Nav>
               </Container>
               <Button href="/login" onClick={clickLogin} className="btn-dark but-log" variant="outline-success">Ingresar</Button>
-              {/*<Button href="/login" onClick={clickLogin} variant="outline-success" className="but-log">Ingresar</Button>*/}
-              <Button href="/register" onClick={clickRegister} variant="outline-success" className="but-log">Registrarse</Button>
+              <Button href="/register" onClick={clickRegister} className="btn-dark but-log" variant="outline-success">Registrarse</Button>
             </Navbar>
           </div>
     }
