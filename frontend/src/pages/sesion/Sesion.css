@@ -7,9 +7,9 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#571a89', endColorstr='#2c7d93',GradientType=1 );
     background-repeat: no-repeat;
     min-height: 100vh;
-    text-align: center;
-    
+    text-align: center; 
 }
+
 
 .form-sesion{
     width: 30%;
@@ -23,9 +23,28 @@
 }
 
 .forms{
-    padding: 10%;
-    display: flex;
+    padding: 5% 10% 0% 10%;
     justify-content: center;
     align-items: center;
     position: relative;
+}
+
+.form-register{
+    display: grid; /*en columnas*/
+    grid-template-columns: 1fr 1fr; /*cuanto ocupe cada columna*/
+    gap: 20px; /*separacion entre columnas*/
+    margin: 2%;
+
+    @media screen (max-width: 800px;) {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+label{
+    display: block;
+	font-weight: 700;
+	padding: 10px;
+	min-height: 40px;
+	cursor: pointer;
 }

@@ -28,7 +28,7 @@ export default function Login({onLogin}) {
                 </div>);
 
   return (
-      <body className="login">
+      <div className="login">
             <header className="navGeneral">
                 <NavbarAut />
             </header>
@@ -52,12 +52,12 @@ export default function Login({onLogin}) {
                     <div className="form-group">
                         <label>Password</label>
                             <input className="form-control"
-                            type="Enter password"
-                            placeholder="password"
+                            type="password"
+                            placeholder="Enter password"
                             onChange={(e) => setPassword(e.target.value)}
                             value={password}
                             />
-                        </div>     
+                    </div>      
 
                     <button type="submit" className="btn btn-dark btn-lg btn-block">Sign in</button>
 
@@ -67,7 +67,7 @@ export default function Login({onLogin}) {
             {   hasLoginError && <strong>Credentials are invalid{/*todo: tiene que ser un modal */}</strong> }
 
         <Footer />
-    </body>
+    </div>
   );
 }
 
