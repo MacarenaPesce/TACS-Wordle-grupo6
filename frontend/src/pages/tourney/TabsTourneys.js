@@ -1,6 +1,8 @@
 import React, {Component, useState} from 'react'
 import Tab from 'react-bootstrap/Tab';
-import { BsTrashFill, BsInfoLg, BsCheckLg } from "react-icons/bs";
+import { BsTrashFill, BsInfoLg, BsCheckLg, BsPersonPlusFill } from "react-icons/bs";
+import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
+
 import UserService from "./../../service/UserService"
 import TourneyCreate from './TourneyCreate'
 import './Tourney.css'
@@ -150,12 +152,12 @@ export default class TabsTourneys extends Component{
                             <button className="btn btn-primary" type="submit">
                                 <BsInfoLg/> {/*en info puede ir el creador, el puntaje, el puesto */}
                             </button>
-                    <button className="btn btn-primary" type="submit">
-                        <BsInfoLg/> {/*AiOutlineUsergroupAdd -> agregar personas */}
-                    </button>
-                    <button className="btn btn-primary" type="submit">
-                        <BsInfoLg/> {/* AiOutlineUserAdd -> agregarte (verificar que no es tu torneo , solo en publicos iria) */}
-                    </button>
+                            <button className="btn btn-dark" type="submit">
+                                <AiOutlineUsergroupAdd/> {/*AiOutlineUsergroupAdd -> agregar personas */}
+                            </button>
+                            <button className="btn btn-dark" type="submit">
+                                <AiOutlineUserAdd/> {/* AiOutlineUserAdd -> agregarte (verificar que no es tu torneo , solo en publicos iria) */}
+                            </button>
                         </td>
                     </tr>
                 );
@@ -195,11 +197,11 @@ export default class TabsTourneys extends Component{
                             <th id="trs-hd-1" className="col-lg-1"> N°</th>
                             <th id="trs-hd-2" className="col-lg-2"> Nombre</th>
                             <th id="trs-hd-3" className="col-lg-1"> Tipo</th>
-                            <th id="trs-hd-4" className="col-lg-2"> Lenguaje</th>
+                            <th id="trs-hd-4" className="col-lg-1"> Lenguaje</th>
                             <th id="trs-hd-5" className="col-lg-1"> Inicio</th>
                             <th id="trs-hd-6" className="col-lg-1"> Fin</th>
                             <th id="trs-hd-7" className="col-lg-2"> Creador</th>
-                            <th id="trs-hd-8" className="col-lg-2"> Acciones</th>
+                            <th id="trs-hd-8" className="col-lg-3"> Acciones</th>
                         </tr>
                         </thead>
 
