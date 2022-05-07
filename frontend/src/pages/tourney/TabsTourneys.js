@@ -2,6 +2,8 @@ import React, {useState} from 'react'
 import Tab from 'react-bootstrap/Tab';
 import { BsTrashFill, BsInfoLg, BsCheckLg } from "react-icons/bs";
 import UserService from "./../../service/UserService"
+import TourneyCreate from './TourneyCreate'
+
 
 const TabsTourneys = ({nombreTabla}) => {
 
@@ -51,6 +53,8 @@ const TabsTourneys = ({nombreTabla}) => {
                             <div className="col-lg-3 col-md-offset-3"> {/* todo: esta columna tiene que ir a la derecha */}
                                 <input className="search form-control" type="text" placeholder="Search by typing here.." />
                             </div>
+
+                            <TourneyCreate />
 
                             <div className="table-responsive table table-hover table-bordered results">
                                 <table className="table table-hover table-bordered">

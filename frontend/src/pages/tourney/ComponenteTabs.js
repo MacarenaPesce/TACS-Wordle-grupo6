@@ -25,8 +25,7 @@ const ComponenteTabs = () => {
             <Tab eventKey="finishTourney" title={nombres.finalizados} >
                 <TabsTourneys />
             </Tab>
-
-            {/*<TourneyCreate />*/}
+            
         </Tabs>
     )
 }
