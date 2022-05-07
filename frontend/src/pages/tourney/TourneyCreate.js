@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactModal from 'react-modal-resizable-draggable';
 import './TourneyCreate.css'
-import TourneyService from "../service/TourneyService";
+import TourneyService from "../../service/TourneyService";
 
 export default class TourneyCreate extends Component{
 
