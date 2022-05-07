@@ -2,7 +2,6 @@ import React, {Component, useState} from 'react'
 import Tab from 'react-bootstrap/Tab';
 import { BsTrashFill, BsInfoLg, BsCheckLg, BsPersonPlusFill } from "react-icons/bs";
 import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
-
 import UserService from "./../../service/UserService"
 import TourneyCreate from './TourneyCreate'
 import './Tourney.css'
@@ -140,7 +139,6 @@ export default class TabsTourneys extends Component{
                         <td> {tourney.start}</td>
                         <td> {tourney.finish}</td>
                         <td> {tourney.owner.username}</td>
-                        {/*el creador tiene que ser un usuario, lo pongo aca o en info?*/}
 
                         <td>
                             <button className="btn btn-success" type="submit">
@@ -150,7 +148,7 @@ export default class TabsTourneys extends Component{
                                 <BsTrashFill/>
                             </button>
                             <button className="btn btn-primary" type="submit">
-                                <BsInfoLg/> {/*en info puede ir el creador, el puntaje, el puesto */}
+                                <BsInfoLg/> {/*en info puede ir el creador, el puntaje, el puesto, miembros, ranking, tu puntaje actual y puesto */}
                             </button>
                             <button className="btn btn-dark" type="submit">
                                 <AiOutlineUsergroupAdd/> {/*AiOutlineUsergroupAdd -> agregar personas */}
@@ -169,20 +167,30 @@ export default class TabsTourneys extends Component{
                 {/*todo: sacar este container y habilitar el TabIntro.js*/}
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                             <form className="form-inline">
-                                <input className="form-control " type="search" placeholder="Search"
+                                <input className="form-control " type="search" placeholder="Ingrese nombre del torneo"
                                        aria-label="Search"/>
                             </form>
                         </div>
-                        <div className="col-md-4">
-                            <form className="form-inline" onSubmit={this.submitHandler}>
+                        <div className="col-md-3">
+                            <form className="form-inline" >
                                 <button className="btn btn-outline-success my-2 my-sm-0"
-                                        type="submit">Actualizar/Buscar
+                                        type="submit">Buscar
                                 </button>
                             </form>
                         </div>
-                        <div className="col-md-4"> {/*todo: poner esta columna a la derecha */}
+                        <div className="col-md-3">
+                            <form className="form-inline" onSubmit={this.submitHandler}>
+                                <button className="btn btn-outline-success my-2 my-sm-0"
+                                        type="submit">Actualizar
+                                </button>
+                            </form>
+                        </div>
+                        <div className="col-md-1"> {/*sirve para que el btn de crear torneo este a la derecha */}
+                            
+                        </div>
+                        <div className="col-md-2"> 
                             <TourneyCreate/>
                         </div>
                     </div>
