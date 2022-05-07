@@ -3,6 +3,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import { BsTrashFill, BsInfoLg, BsCheckLg } from "react-icons/bs";
 import TabsTourneys from './TabsTourneys';
+import TourneyCreate from './TourneyCreate'
 
 
 const ComponenteTabs = () => {
@@ -26,6 +27,8 @@ const ComponenteTabs = () => {
             <Tab eventKey="finishTourney" title={nombres.finalizados} >
                 <TabsTourneys />
             </Tab>
+
+            <TourneyCreate />
         </Tabs>
     )
 }

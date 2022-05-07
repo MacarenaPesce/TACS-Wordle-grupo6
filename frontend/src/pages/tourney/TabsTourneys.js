@@ -6,15 +6,16 @@ import UserService from "./../../service/UserService"
 const TabsTourneys = ({nombreTabla}) => {
 
     const tourneys= []; 
+    /*
     const tourney = useState({
                                 id:'',
                                 name:'',
-                                tipo:'',
+                                type:'',
                                 lenguage:'',
-                                init:'',
+                                start:'',
                                 finish:'',
                                 owner:''
-                            })
+                            })*/
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -34,9 +35,9 @@ const TabsTourneys = ({nombreTabla}) => {
         <tr>
             <td> {tourney.id}</td>
             <td> {tourney.name}</td>
-            <td> {tourney.tipo}</td>
+            <td> {tourney.type}</td>
             <td> {tourney.lenguage}</td>
-            <td> {tourney.init}</td>
+            <td> {tourney.start}</td>
             <td> {tourney.finish}</td>
             <td> {tourney.owner.username}</td> {/*el creador tiene que ser un usuario, lo pongo aca o en info?*/}
 
