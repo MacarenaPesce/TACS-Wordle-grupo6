@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.*;
+import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.TournamentService;
 
@@ -25,16 +26,20 @@ public class TournamentsController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PostMapping("addmember")
-    public ResponseEntity<MemberDto> addMember(@RequestHeader("Authorization") String token, @RequestBody MemberDto memberDto) {
+    @PostMapping("/{tournamentId}/members")
+    public ResponseEntity<MemberNewDto> addMember(@RequestHeader("Authorization") String token, @RequestBody MemberDto memberDto, @PathVariable Long tournamentId) {
+
+       /* if(true){
+            throw new BusinessException("Llegue aqui");
+        }*/
 
         SessionDto session = AuthService.getSession(token);
 
-        MemberDto dto = tournamentService.addMember(memberDto, session.getUserId());
+        MemberNewDto dto = tournamentService.addMember(memberDto, tournamentId, session.getUserId());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PostMapping("/{tournamentId}/join")
+    @PatchMapping ("/{tournamentId}/join")
     public ResponseEntity<JoinDto> join(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
         SessionDto session = AuthService.getSession(token);
         JoinDto dto = tournamentService.join(session.getUserId(), tournamentId);
