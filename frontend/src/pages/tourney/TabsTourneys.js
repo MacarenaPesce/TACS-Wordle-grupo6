@@ -50,11 +50,47 @@ const TabsTourneys = ({nombreTabla}) => {
 
     return(
         <div className="col-md-12 search-table-col">
-                            <div className="col-lg-3 col-md-offset-3"> {/* todo: esta columna tiene que ir a la derecha */}
-                                <input className="search form-control" type="text" placeholder="Search by typing here.." />
-                            </div>
+            <div className="col-lg-3 col-md-offset-3"> {/* todo: esta columna tiene que ir a la derecha */}
+                
+                
+            </div>
 
-                            <TourneyCreate />
+
+            <div class="container">
+                <div class="row no-gutters">
+                    <div class="col-12 col-sm-4 col-md-4">
+                        <form className="form-inline" >
+                            <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+                        </form>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <form className="form-inline" >
+                            <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Actualizar/Buscar</button>
+                        </form>
+                    </div>
+                    <div class="col-12 col-md-4"> {/*todo: poner esta columna a la derecha */}
+                        <TourneyCreate />
+                    </div>
+                </div>
+            </div>
+
+
+            {
+                /* codigo de nico para el
+                <nav className="navbar navbar-light navbar-expand">
+                <form className="form-inline navbar-nav" onSubmit={this.submitHandler}>
+                    <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"></input>
+                    <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Actualizar/Buscar</button>
+                </form>
+                </nav>
+                
+                */
+            }
+
+                            
+
+
+
 
                             <div className="table-responsive table table-hover table-bordered results">
                                 <table className="table table-hover table-bordered">
