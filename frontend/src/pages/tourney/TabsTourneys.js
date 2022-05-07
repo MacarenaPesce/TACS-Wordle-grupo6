@@ -3,21 +3,26 @@ import Tab from 'react-bootstrap/Tab';
 import { BsTrashFill, BsInfoLg, BsCheckLg } from "react-icons/bs";
 import UserService from "./../../service/UserService"
 import TourneyCreate from './TourneyCreate'
+import './Tourney.css'
 
 /*
 const TabsTourneys = ({nombreTabla}) => {
 
-    const tourneys= []; 
+    constructor(){
+        super()
+        this.state = {
+            myTourneys: []
+        }
+    }
 
-    const handleSubmit = (e) => {
+    submitHandler = e => {
         e.preventDefault()
-        console.log('mostrando torneos')
-        
+        console.log('mostrando torneos')       
         UserService.getMyTourneys() /*mandar aca el tipo de torneos 
             .then(response => {
                 console.log('Response obtenida: ')
                 console.log(response.data)
-                tourneys.setState({tourneys: response.data.tourneys})
+                this.setState({myTourneys: response.data.tourneys})
             })
             .catch(error => {
                 console.log(error)
@@ -73,6 +78,7 @@ const TabsTourneys = ({nombreTabla}) => {
                                         {listTourneys}
                                     </tbody>
                                     {/*}
+
                                     <tfoot>
                                         <tr>
                                             <td colSpan="1">
@@ -87,15 +93,16 @@ const TabsTourneys = ({nombreTabla}) => {
                                                 </div>
                                             </td>
                                         </tr>
-                                    </tfoot>*}
-                                </table>
-                            </div>
-                        </div>
-    )
-
+                                    </tfoot>*/}
+                    </table>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default TabsTourneys;*/
+
 
 export default class TabsTourneys extends Component{
 
@@ -121,36 +128,37 @@ export default class TabsTourneys extends Component{
     }
 
     render() {
-
+      
         let listTourneys = this.state.myTourneys.map((tourney) =>
-            <tr key={tourney.tourneyId}>
-                <td> {tourney.tourneyId}</td>
-                <td> {tourney.name}</td>
-                <td> {tourney.type}</td>
-                <td> {tourney.language}</td>
-                <td> {tourney.start}</td>
-                <td> {tourney.finish}</td>
-                <td> {tourney.owner.username}</td>
+                    <tr key={tourney.tourneyId}>
+                        <td> {tourney.tourneyId}</td>
+                        <td> {tourney.name}</td>
+                        <td> {tourney.type}</td>
+                        <td> {tourney.language}</td>
+                        <td> {tourney.start}</td>
+                        <td> {tourney.finish}</td>
+                        <td> {tourney.owner.username}</td>
+                        {/*el creador tiene que ser un usuario, lo pongo aca o en info?*/}
 
-                <td> {/*todo: agregar una leyenda cuando posas el cursor sobre el icono de que es lo que hace */}
-                    <button className="btn btn-success" type="submit">
-                        <BsCheckLg/>
-                    </button>
-                    <button className="btn btn-danger" type="submit">
-                        <BsTrashFill/>
-                    </button>
-                    <button className="btn btn-primary" type="submit">
-                        <BsInfoLg/> 
-                    </button>
+                        <td>
+                            <button className="btn btn-success" type="submit">
+                                <BsCheckLg/>
+                            </button>
+                            <button className="btn btn-danger" type="submit">
+                                <BsTrashFill/>
+                            </button>
+                            <button className="btn btn-primary" type="submit">
+                                <BsInfoLg/> {/*en info puede ir el creador, el puntaje, el puesto */}
+                            </button>
                     <button className="btn btn-primary" type="submit">
                         <BsInfoLg/> {/*AiOutlineUsergroupAdd -> agregar personas */}
                     </button>
                     <button className="btn btn-primary" type="submit">
                         <BsInfoLg/> {/* AiOutlineUserAdd -> agregarte (verificar que no es tu torneo , solo en publicos iria) */}
                     </button>
-                </td>
-            </tr>
-        );
+                        </td>
+                    </tr>
+                );
 
         return (
             <div className="col-md-12 search-table-col">
@@ -198,7 +206,7 @@ export default class TabsTourneys extends Component{
                         {/*------------------------------------------------------------------ */}
 
                         {<tbody>
-                            {listTourneys}
+                          {listTourneys}
                         </tbody>}
                     </table>
                 </div>
@@ -206,3 +214,9 @@ export default class TabsTourneys extends Component{
         );
     }
 }
+
+
+
+
+
+                        

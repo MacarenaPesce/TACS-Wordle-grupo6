@@ -20,6 +20,7 @@ export default function TabIntro(){
                         <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Actualizar</button>
                     </form>
                 </div>
+                
                 <div class="col-md-3"> {/*todo: poner esta columna a la derecha */}
                     <TourneyCreate />
                 </div>
