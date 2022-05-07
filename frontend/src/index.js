@@ -2,19 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Home from './pages/Home';
-import Help from './pages/Help';
+import Help from './pages/help/Help';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './pages/sesion/Login';
 import Register from './pages/sesion/Register';
-import Not from './components/Not'
+import Not from './components/not/Not'
 import {
   BrowserRouter,
   Routes,
   Route,
 } from "react-router-dom";
-import Dictionary from './pages/Dictionary';
-import Tourney from './pages/Tourney';
+import Dictionary from './pages/dictionary/Dictionary';
+import Tourney from './pages/tourney/Tourney';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
