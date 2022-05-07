@@ -6,21 +6,12 @@ import UserService from "./../../service/UserService"
 const TabsTourneys = ({nombreTabla}) => {
 
     const tourneys= []; 
-    /*
-    const tourney = useState({
-                                id:'',
-                                name:'',
-                                type:'',
-                                lenguage:'',
-                                start:'',
-                                finish:'',
-                                owner:''
-                            })*/
 
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log('mostrando torneos')
-        UserService.getMyTourneys() /*me falta copiar esto del de nico */
+        
+        UserService.getMyTourneys() /*mandar aca el tipo de torneos */
             .then(response => {
                 console.log('Response obtenida: ')
                 console.log(response.data)

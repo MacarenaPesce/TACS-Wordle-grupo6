@@ -3,6 +3,7 @@ import authHeader from "./AuthHeader";
 
 const API_URL = "http://localhost:8080/api/test/";
 const API_USERS = "http://localhost:8080/api/users/";
+const API = "http://localhost:8080/api/";
 
 const getPublicContent = () => {
   return axios.get(API_URL + "all");
@@ -26,7 +27,7 @@ const getMyTourneys = () => {
 };
 
 const getTourneysPublic = () => {
-  return axios.get(API_URL + "/tournaments/public", { headers: authHeader() });
+  return axios.get(API + "/tournaments/public", { headers: authHeader() });
 };
 
 export default {

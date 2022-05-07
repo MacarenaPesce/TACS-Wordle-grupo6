@@ -3,8 +3,6 @@ import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import { BsTrashFill, BsInfoLg, BsCheckLg } from "react-icons/bs";
 import TabsTourneys from './TabsTourneys';
-import TourneyCreate from './TourneyCreate'
-
 
 const ComponenteTabs = () => {
 
@@ -28,7 +26,7 @@ const ComponenteTabs = () => {
                 <TabsTourneys />
             </Tab>
 
-            <TourneyCreate />
+            {/*<TourneyCreate />*/}
         </Tabs>
     )
 }

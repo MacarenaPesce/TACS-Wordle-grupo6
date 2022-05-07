@@ -44,6 +44,11 @@ public class TournamentsController {
 
     @GetMapping("public")
     public ResponseEntity<TourneysDto> listPublicTournaments(){
+        List <Torneos> torneos
+        TourneysDto dto2 = TourneysDto.builder()
+                .tourneys(torneos)
+                                    .build()
+
         TourneysDto dto = tournamentService.listPublicTournaments();
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
