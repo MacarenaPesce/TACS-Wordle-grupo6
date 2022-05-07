@@ -24,6 +24,7 @@ public class DictionaryController {
 
         List<String> definitions = dictionaryService.getDefinitions(language, word);
 
+        System.out.println(definitions);
         DictionaryDto dto = DictionaryDto.builder()
                 .definition(definitions)
                 .language(language)

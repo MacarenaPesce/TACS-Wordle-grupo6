@@ -49,4 +49,38 @@ public class DictionaryIntegrationTest extends AbstractIntegrationTest {
         assertThat(dto).hasNoNullFieldsOrProperties();
         assertThat(dto.getDefinition().get(0)).contains("object or space");
     }
+
+    @Test
+    public void aUserCantGetTheDefinitionOfNotExistsSpanishWord(){
+        String word = "dfafdadf";
+        Language lang = Language.ES;
+
+        List<String> definitions = service.getDefinitions(lang, word);
+
+        DictionaryDto dto = DictionaryDto.builder()
+                .definition(definitions)
+                .language(lang)
+                .word(word)
+                .build();
+
+        assertThat(dto).hasNoNullFieldsOrProperties();
+        assertThat(dto.getDefinition().get(0)).contains("No existe Defincion");
+    }
+
+    @Test
+    public void aUserCantGetTheDefinitionOfNotExistsEnglishWord(){
+        String word = "fruta";
+        Language lang = Language.EN;
+
+        List<String> definitions = service.getDefinitions(lang, word);
+
+        DictionaryDto dto = DictionaryDto.builder()
+                .definition(definitions)
+                .language(lang)
+                .word(word)
+                .build();
+
+        assertThat(dto).hasNoNullFieldsOrProperties();
+        assertThat(dto.getDefinition().get(0)).contains("Not Definitions");
+    }
 }

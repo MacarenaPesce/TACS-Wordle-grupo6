@@ -1,6 +1,7 @@
 package utn.frba.wordle.client;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import lombok.SneakyThrows;
 import org.apache.http.HttpEntity;
@@ -30,16 +31,21 @@ public class EnglishDictionaryClient {
         List<String> definitions = new ArrayList<>();
 
         Gson gson = new Gson();
-        Type userListType = new TypeToken<ArrayList<EnglishDictionaryResponse>>(){}.getType();
-        ArrayList<EnglishDictionaryResponse> responses = gson.fromJson(result, userListType);
-        AtomicReference<String> partialDefinition = new AtomicReference<>("");
-        responses.stream()
-                .flatMap(response -> response.meanings.stream())
-                .flatMap(meaning -> {
-                                partialDefinition.set(meaning.partOfSpeech + ":");
-                                return meaning.definitions.stream();
-                })
-                .forEach(definition -> definitions.add(partialDefinition + definition.definition));
+        try {
+            Type userListType = new TypeToken<ArrayList<EnglishDictionaryResponse>>() {
+            }.getType();
+            ArrayList<EnglishDictionaryResponse> responses = gson.fromJson(result, userListType);
+            AtomicReference<String> partialDefinition = new AtomicReference<>("");
+            responses.stream()
+                    .flatMap(response -> response.meanings.stream())
+                    .flatMap(meaning -> {
+                        partialDefinition.set(meaning.partOfSpeech + ":");
+                        return meaning.definitions.stream();
+                    })
+                    .forEach(definition -> definitions.add(partialDefinition + definition.definition));
+        } catch ( JsonSyntaxException e) {
+            definitions.add("Not Definitions");
+        }
 
         return definitions;
     }
