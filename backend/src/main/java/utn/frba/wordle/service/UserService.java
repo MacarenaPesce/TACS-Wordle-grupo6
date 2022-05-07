@@ -4,7 +4,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.dto.*;
+import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.entity.UserEntity;
+import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.repository.UserRepository;
 
 import java.util.Collections;
@@ -18,6 +20,8 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    TournamentRepository tournamentRepository;
 
     public PositionsResponseDto getPositions() {
         PositionDto positionsDto = PositionDto
@@ -38,6 +42,11 @@ public class UserService {
                 .builder()
                 .tourneys(Collections.singletonList(ladderboardDtos))
                 .build();
+    }
+
+    public List<TournamentEntity> getMyTournamets(Long userId){
+        List<TournamentEntity> tournaments = tournamentRepository.findByUserName(userId);
+        return tournaments;
     }
 
     public UserDto createUser(LoginDto loginDto) {

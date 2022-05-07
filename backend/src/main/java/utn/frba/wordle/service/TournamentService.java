@@ -8,6 +8,7 @@ import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.model.State;
 import utn.frba.wordle.repository.TournamentRepository;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class TournamentService {
         if(existingActiveTournament != null){
             throw new BusinessException("There is already an active Tournament with this name.");
         }
+        newTournament.setState(State.ACTIVE);
         newTournament = tournamentRepository.save(newTournament);
 
         return mapToDto(newTournament);

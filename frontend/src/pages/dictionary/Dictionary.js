@@ -12,7 +12,8 @@ constructor(){
         language: 'ES',
         word: '',
         significado: [],
-        visibility: "none"
+        visibility: "none",
+        loading: false
     }
 }
 
@@ -22,6 +23,7 @@ manejarCambio = (e)  => {
 
 submitCambio = e => {
   e.preventDefault()
+  this.setState({loading: true})
   console.log('Boton Search presionado con los datos: ')
   console.log(this.state.word , this.state.language)
 
@@ -29,9 +31,11 @@ submitCambio = e => {
       .then(response => {
           console.log('Response obtenida: ')
           console.log(response.data)
-          this.setState({significado: response.data.definition})
+          this.setState({significado: response.data.definition, loading:false})
       })
       .catch(error => {
+          this.setState({loading: false})
+          {/*todo: informar errores modal */}
           console.log(error)
       })
 }
@@ -40,6 +44,9 @@ render(){
 
     let listDef = this.state.significado.map((defi) => 
     <li class="list-group-item disabled" key={defi}> {defi}</li>)
+    let spinner = (<div className="spinner-border text-info" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>);
 
     return (
       <div className='body-diccionario'>
@@ -69,9 +76,15 @@ render(){
                 <option value="EN">English</option>
               </select> 
               </div> 
-              <div className='contenedor-respuesta'>
-                    {listDef}
-              </div>  
+               {this.state.loading ? (
+                   <div className='contenedor-respuesta scrollbar-lady-lips'>
+                       {spinner}{spinner}{spinner}{spinner}{spinner}
+                   </div>
+               ) : (
+                   <div className='contenedor-respuesta scrollbar-lady-lips'>
+                       {listDef}
+                   </div>
+               )}
            </div>
         </form>
         <Footer />

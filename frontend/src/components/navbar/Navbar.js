@@ -35,7 +35,7 @@ export default function NavbarAut() {
             <Navbar className='navBut'  variant="dark" >
               <Container>
                 <Nav className="me-auto" >
-                  <Nav.Link href="/" >Inicio</Nav.Link>
+                  <Nav.Link href="/" >Inicio{/*<img src = "Wlogo.svg" alt="W logo" className="logo"/>*/}</Nav.Link>
                   <Nav.Link href="/help" >Ayuda</Nav.Link>
                   <Nav.Link href="/dictionary">Diccionario</Nav.Link>
                   <Nav.Link href="/tourney">Torneo</Nav.Link>
@@ -49,7 +49,7 @@ export default function NavbarAut() {
             <Navbar className='navBut'  variant="dark" >
               <Container>
                 <Nav className="me-auto" >
-                  <Nav.Link href="/" >Inicio</Nav.Link>
+                  <Nav.Link href="/" >Inicio{/*<img src = "Wlogo.svg" alt="W logo" className="logo"/>*/}</Nav.Link>
                   <Nav.Link href="/help" >Ayuda</Nav.Link>
                   <Nav.Link href="/dictionary">Diccionario</Nav.Link>
                 </Nav>

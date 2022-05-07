@@ -41,6 +41,7 @@ public class TournamentEntity {
     Date finish;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id", nullable = false)
     UserEntity owner;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
