@@ -16,7 +16,9 @@ const ComponenteTabs = () => {
     return(
         <Tabs defaultActiveKey="myTourney" id="uncontrolled-tab-example" className="mb-3">
             <Tab eventKey="myTourney" title={nombres.misTorneos}>
-                <TabsTourneys />            
+                <TabsTourneys 
+                nombreTabla={nombres.misTorneos}
+                />            
             </Tab>
             <Tab eventKey="publicTourney" title={nombres.torneosPublicos}>
                 <TabsTourneys />

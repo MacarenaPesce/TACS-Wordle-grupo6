@@ -1,8 +1,58 @@
-import React from 'react';
+import React, {useState} from 'react'
 import Tab from 'react-bootstrap/Tab';
 import { BsTrashFill, BsInfoLg, BsCheckLg } from "react-icons/bs";
+import UserService from "./../../service/UserService"
 
-const TabsTourneys = () => {
+const TabsTourneys = ({nombreTabla}) => {
+
+    const tourneys= []; 
+    const tourney = useState({
+                                id:'',
+                                name:'',
+                                tipo:'',
+                                lenguage:'',
+                                init:'',
+                                finish:'',
+                                owner:''
+                            })
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        console.log('mostrando torneos')
+        UserService.getMyTourneys() /*me falta copiar esto del de nico */
+            .then(response => {
+                console.log('Response obtenida: ')
+                console.log(response.data)
+                tourneys.setState({tourneys: response.data.tourneys})
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
+    let listTourneys = tourneys.map((tourney) =>
+        <tr>
+            <td> {tourney.id}</td>
+            <td> {tourney.name}</td>
+            <td> {tourney.tipo}</td>
+            <td> {tourney.lenguage}</td>
+            <td> {tourney.init}</td>
+            <td> {tourney.finish}</td>
+            <td> {tourney.owner.username}</td> {/*el creador tiene que ser un usuario, lo pongo aca o en info?*/}
+
+            <td> 
+                <button className="btn btn-success"  type="submit">
+                    <BsCheckLg />
+                </button>
+                <button className="btn btn-danger"  type="submit">
+                    <BsTrashFill />
+                </button>
+                <button className="btn btn-primary"  type="submit">
+                    <BsInfoLg /> {/*en info puede ir el creador, el puntaje, el puesto */}
+                </button>
+            </td>
+        </tr>
+    );
 
     return(
         <div className="col-md-12 search-table-col">
@@ -25,30 +75,7 @@ const TabsTourneys = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-
-                                        <tr>
-                                            <td> 01</td>
-                                            <td> 01</td>
-                                            <td> 01</td>
-                                            <td> 01</td>
-                                            <td> 01</td>
-                                            <td> 01</td>
-                                            <td> 01</td>
-                                            <td> 
-                                                <button className="btn btn-success"  type="submit">
-                                                    {/*<i className="fa fa-check" ></i>*/}
-                                                    <BsCheckLg />
-                                                </button>
-                                                <button className="btn btn-danger"  type="submit">
-                                                    {/*<i className="fa fa-trash" ></i>*/}
-                                                    <BsTrashFill />
-                                                </button>
-                                                <button className="btn btn-primary"  type="submit">
-                                                    {/*<i className="fa fa-trash" ></i>*/}
-                                                    <BsInfoLg /> {/*en info puede ir el creador, el puntaje, el puesto */}
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        {listTourneys}
                                     </tbody>
                                     {/*}
                                     <tfoot>

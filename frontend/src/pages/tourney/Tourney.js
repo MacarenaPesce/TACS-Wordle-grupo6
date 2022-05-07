@@ -4,6 +4,7 @@ import Footer from '../../components/footer/Footer';
 import './Tourney.css'
 import ComponenteTabs from './ComponenteTabs';
 
+
 export default function Tourney(){
     return(
         <div className='tourney'> 
@@ -17,3 +18,30 @@ export default function Tourney(){
         </div>
     );
 }
+
+/*export default class Tourney extends Component(){
+    
+    constructor(){
+        super()
+        this.state = {
+            myTourneys: []
+        }
+    }
+
+
+    
+    return(
+        <div className='tourney'> 
+            <header className='NavTourney'>
+                <NavbarAut />
+            </header>
+        
+            <ComponenteTabs />
+
+            <Footer />
+        </div>
+    );
+}
+*/
+
+
