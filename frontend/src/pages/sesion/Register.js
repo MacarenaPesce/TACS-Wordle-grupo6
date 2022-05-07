@@ -19,8 +19,8 @@ export default function Register() {
     const navigate = useNavigate();
 
     const expresiones = {
-        username: /^[a-zA-Z0-9_-]{4,16}$/, // Letras, numeros, guion y guion_bajo
-        password: /^.{4,12}$/, // 4 a 12 digitos.
+        username: /^[a-zA-Z0-9_-]{3,16}$/, // Letras, numeros, guion y guion_bajo
+        password: /^.{3,12}$/, // 3 a 12 digitos.
         email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
     }
 
@@ -82,7 +82,7 @@ export default function Register() {
                             /*placeholder="Ingrese su nombre de usuario"*/
                             placeholder="john123"
                             name="nombre"
-                            leyendaError="El usuario tiene que ser de 4 a 16 dígitos y solo puede contener numeros, letras y guion bajo."
+                            leyendaError="El usuario tiene que ser de 3 a 16 dígitos y solo puede contener numeros, letras y guion bajo."
                             expresionRegular={expresiones.username}
                             />
                         
@@ -102,7 +102,7 @@ export default function Register() {
 					        tipo="password"
 					        label="Contraseña"
 					        name="password1"
-					        leyendaError="La contraseña tiene que ser de 4 a 12 dígitos."
+					        leyendaError="La contraseña tiene que ser de 3 a 12 dígitos."
 					        expresionRegular={expresiones.password}
 				        />
 				
