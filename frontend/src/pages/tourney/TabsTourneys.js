@@ -132,7 +132,7 @@ export default class TabsTourneys extends Component{
                 <td> {tourney.finish}</td>
                 <td> {tourney.owner.username}</td>
 
-                <td>
+                <td> {/*todo: agregar una leyenda cuando posas el cursor sobre el icono de que es lo que hace */}
                     <button className="btn btn-success" type="submit">
                         <BsCheckLg/>
                     </button>
@@ -141,6 +141,12 @@ export default class TabsTourneys extends Component{
                     </button>
                     <button className="btn btn-primary" type="submit">
                         <BsInfoLg/> 
+                    </button>
+                    <button className="btn btn-primary" type="submit">
+                        <BsInfoLg/> {/*AiOutlineUsergroupAdd -> agregar personas */}
+                    </button>
+                    <button className="btn btn-primary" type="submit">
+                        <BsInfoLg/> {/* AiOutlineUserAdd -> agregarte (verificar que no es tu torneo , solo en publicos iria) */}
                     </button>
                 </td>
             </tr>
@@ -171,7 +177,9 @@ export default class TabsTourneys extends Component{
                         </div>
                     </div>
                 </div>
+                
                 {/*------------------------------------------------------------------ */}
+                
                 <div className="table-responsive table table-hover table-bordered results">
                     <table className="table table-hover table-bordered">
                         <thead className="bill-header cs">
@@ -187,8 +195,10 @@ export default class TabsTourneys extends Component{
                         </tr>
                         </thead>
 
+                        {/*------------------------------------------------------------------ */}
+
                         {<tbody>
-                        {listTourneys}
+                            {listTourneys}
                         </tbody>}
                     </table>
                 </div>

@@ -2,7 +2,6 @@ import TourneyCreate from './TourneyCreate'
 import React from 'react';
 
 export default function TabIntro(){
-
     return(
         <div class="container">
             <div class="row">

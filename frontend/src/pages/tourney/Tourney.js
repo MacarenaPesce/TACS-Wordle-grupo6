@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import NavbarAut from '../../components/navbar/Navbar';
 import Footer from '../../components/footer/Footer';
 import './Tourney.css'
@@ -18,30 +18,5 @@ export default function Tourney(){
         </div>
     );
 }
-
-/*export default class Tourney extends Component(){
-    
-    constructor(){
-        super()
-        this.state = {
-            myTourneys: []
-        }
-    }
-
-
-    
-    return(
-        <div className='tourney'> 
-            <header className='NavTourney'>
-                <NavbarAut />
-            </header>
-        
-            <ComponenteTabs />
-
-            <Footer />
-        </div>
-    );
-}
-*/
 
 

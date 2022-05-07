@@ -70,7 +70,7 @@ export default class TourneyCreate extends Component{
             <button type="submit" className="btn btn-outline-success my-2 my-sm-0" onClick={this.openModal}><h6>Crear torneo</h6></button>
             <ReactModal
                 initWidth={400}
-                initHeight={780}
+                initHeight={830}
                 top={100}
                 left={200}
                 onFocus={() => console.log("Modal is clicked")}
