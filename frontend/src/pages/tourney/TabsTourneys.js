@@ -4,6 +4,7 @@ import { BsTrashFill, BsInfoLg, BsCheckLg } from "react-icons/bs";
 import UserService from "./../../service/UserService"
 import TourneyCreate from './TourneyCreate'
 import './Tourney.css'
+import SessionCheck from "../sesion/SessionCheck";
 
 /*
 const TabsTourneys = ({nombreTabla}) => {
@@ -124,6 +125,7 @@ export default class TabsTourneys extends Component{
             })
             .catch(error => {
                 console.log(error)
+                SessionCheck(JSON.stringify(error.response.status),JSON.stringify(error.response.data.message));
             })
     }
 

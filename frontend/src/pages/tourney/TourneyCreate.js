@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactModal from 'react-modal-resizable-draggable';
 import './TourneyCreate.css'
 import TourneyService from "../../service/TourneyService";
+import SessionCheck from "../sesion/SessionCheck";
 
 export default class TourneyCreate extends Component{
 
@@ -58,6 +59,7 @@ export default class TourneyCreate extends Component{
             .catch(error => {
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
+                SessionCheck(JSON.stringify(error.response.status),JSON.stringify(error.response.data.message));
             })
     }
 
