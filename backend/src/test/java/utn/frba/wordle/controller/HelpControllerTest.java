@@ -31,7 +31,11 @@ public class HelpControllerTest {
     @SneakyThrows
     @Test
     public void puedoObtenerAyudarAPartirDeUnaSerieDeLetras() {
-        HelpRequestDto request = RANDOM.nextObject(dtoClass); //TODO hacer que el random en el campo solution tenga longitud 5
+        HelpRequestDto request = HelpRequestDto.builder()
+                .solution("santo")
+                .grey("ur")
+                .yellow("oas")
+                .build();
 
         Language language = Language.ES;
         String urlController = "/api/help/" + language;
@@ -40,7 +44,7 @@ public class HelpControllerTest {
                 .content(toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(helpService).solution(request.getYellow(), request.getGrey(), request.getSolution(), language);
+        verify(helpService).solution(request.getYellow(), request.getGrey(), request.getSolution().toLowerCase(), language);
     }
 
 }
