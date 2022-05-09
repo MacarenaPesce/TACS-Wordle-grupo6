@@ -1,7 +1,6 @@
 import React from 'react';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-import { BsTrashFill, BsInfoLg, BsCheckLg } from "react-icons/bs";
 import TabsTourneys from './TabsTourneys';
 import TabIntro from './TabIntro'
 
@@ -18,16 +17,20 @@ const ComponenteTabs = () => {
             <Tab eventKey="myTourney" title={nombres.misTorneos}>
                 {/*<TabIntro />*/}
                 <TabsTourneys 
-                nombreTabla={nombres.misTorneos}
+                    nombreTabla={nombres.misTorneos}
                 />         
             </Tab>
             <Tab eventKey="publicTourney" title={nombres.torneosPublicos}>
                 {/*<TabIntro />*/}
-                <TabsTourneys />
+                <TabsTourneys 
+                    nombreTabla={nombres.torneosPublicos}
+                />
             </Tab>
             <Tab eventKey="finishTourney" title={nombres.finalizados} >
                 {/*<TabIntro />*/}
-                <TabsTourneys />
+                <TabsTourneys 
+                    nombreTabla={nombres.finalizados}
+                />
             </Tab>
             
         </Tabs>
