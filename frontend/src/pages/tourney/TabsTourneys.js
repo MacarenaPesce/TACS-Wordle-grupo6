@@ -5,6 +5,7 @@ import TourneyCreate from './TourneyCreate'
 import './Tourney.css'
 import SessionCheck from "../sesion/SessionCheck";
 import BotonesTorneos from './BotonesTorneos.js'
+import Not from "../../components/not/Not";
 
 /*
 const TabsTourneys = ({nombreTabla}) => {
@@ -106,7 +107,9 @@ export default class TabsTourneys extends Component{
     constructor(props){
         super(props)
         this.state = {
-            myTourneys: []
+            myTourneys: [],
+            sessionError: false,
+            errorMessage: ''
         }
     }
 
@@ -135,7 +138,7 @@ export default class TabsTourneys extends Component{
 
     submitTourneys() {
         console.log("submit tourneys")
-        UserService.getMyTourneys(this.props.nombreTabla) /*todo: como lo mando si no recibe parametros ._. mandar aca el tipo de torneos */
+        UserService.getMyTourneys(this.props.nombreTabla) /*todo: como lo mando si no recibe parametros ._. mandar aca el tipo de torneos */ //mis torneos es el nombre del metodo, para otra tabla es otro metodo
             .then(response => {
                 console.log('Response obtenida: ')
                 console.log(response.data)
@@ -143,7 +146,11 @@ export default class TabsTourneys extends Component{
             })
             .catch(error => {
                 console.log(error)
-                SessionCheck(JSON.stringify(error.response.status),JSON.stringify(error.response.data.message));
+                const status = JSON.stringify(error.response.status)
+                const message = SessionCheck(status,JSON.stringify(error.response.data.message));
+                if(status === "401" || status === "403" || status === "400"){
+                    this.setState({sessionError: true, errorMessage: message})
+                }
             })
     }
 
@@ -169,6 +176,9 @@ export default class TabsTourneys extends Component{
 
         return (
             <div className="col-md-12 search-table-col">
+
+                {this.state.sessionError &&
+                    <Not message={this.state.errorMessage}/>}
 
                 {/*------------------------------------------------------------------ */}
                 {/*todo: sacar este container y habilitar el TabIntro.js*/}

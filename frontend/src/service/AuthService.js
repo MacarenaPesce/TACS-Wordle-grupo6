@@ -1,6 +1,4 @@
 import axios from "axios";
-import {Redirect} from "wouter";
-
 
 const API_URL = "http://localhost:8080/api/auth/";
 
@@ -23,7 +21,7 @@ const logout = () => {
   localStorage.removeItem('token')
   localStorage.removeItem('username')
   localStorage.removeItem('userId')
-  //todo redirect a home
+
 };
 
 export default {

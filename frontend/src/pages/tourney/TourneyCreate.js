@@ -3,6 +3,7 @@ import ReactModal from 'react-modal-resizable-draggable';
 import './TourneyCreate.css'
 import TourneyService from "../../service/TourneyService";
 import SessionCheck from "../sesion/SessionCheck";
+import Not from "../../components/not/Not";
 
 export default class TourneyCreate extends Component{
 
@@ -19,7 +20,8 @@ export default class TourneyCreate extends Component{
             errorVisible: false,
             successVisible: false,
             loading: false,
-            nameDisplay: ''
+            nameDisplay: '',
+            sessionError: false,
         };
 
         this.openModal = this.openModal.bind(this);
@@ -59,7 +61,12 @@ export default class TourneyCreate extends Component{
             .catch(error => {
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
-                SessionCheck(JSON.stringify(error.response.status),JSON.stringify(error.response.data.message));
+
+                const status = JSON.stringify(error.response.status)
+                const message = SessionCheck(status,JSON.stringify(error.response.data.message));
+                if(status === "401" || status === "403" || status === "400"){
+                    this.setState({sessionError: true, errorMessage: message})
+                }
             })
     }
 
@@ -70,6 +77,10 @@ export default class TourneyCreate extends Component{
         return(
 
         <div className="TourneyCreate">
+
+            {this.state.sessionError &&
+                <Not message={this.state.errorMessage}/>}
+
             <button type="submit" className="btn btn-outline-success my-2 my-sm-0" onClick={this.openModal}><h6>Crear torneo</h6></button>
             <ReactModal
                 initWidth={400}

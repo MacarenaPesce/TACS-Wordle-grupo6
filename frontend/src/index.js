@@ -27,7 +27,7 @@ root.render(
       <Route path="help" element={<Help />} />
       <Route path="dictionary" element={<Dictionary />} />
       <Route path="tourney" element={<Tourney />} /> 
-      <Route path="*" element={<Not />} />
+      <Route path="*" element={<Not message="Página no encontrada."/>} />
       <Route path="info" element={<InfoTourney />} />
     </Routes>  
   </BrowserRouter>
