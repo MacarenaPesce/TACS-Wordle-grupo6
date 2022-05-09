@@ -18,7 +18,10 @@ const loginService = (username, password) => {
     });
 };
 const logout = () => {
-  localStorage.removeItem("user");
+  localStorage.removeItem('token')
+  localStorage.removeItem('username')
+  localStorage.removeItem('userId')
+
 };
 
 export default {

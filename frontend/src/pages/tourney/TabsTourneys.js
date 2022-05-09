@@ -1,9 +1,11 @@
 import React, {Component, useState} from 'react'
 import Tab from 'react-bootstrap/Tab';
-import { BsTrashFill, BsInfoLg, BsCheckLg } from "react-icons/bs";
 import UserService from "./../../service/UserService"
 import TourneyCreate from './TourneyCreate'
 import './Tourney.css'
+import SessionCheck from "../sesion/SessionCheck";
+import BotonesTorneos from './BotonesTorneos.js'
+import Not from "../../components/not/Not";
 
 /*
 const TabsTourneys = ({nombreTabla}) => {
@@ -55,10 +57,6 @@ const TabsTourneys = ({nombreTabla}) => {
 
     return(
         <div className="col-md-12 search-table-col">
-                   
-
-
-
 
                             <div className="table-responsive table table-hover table-bordered results">
                                 <table className="table table-hover table-bordered">
@@ -104,26 +102,58 @@ const TabsTourneys = ({nombreTabla}) => {
 export default TabsTourneys;*/
 
 
-export default class TabsTourneys extends Component{
+export default class TabsTourneys extends Component{ 
 
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state = {
-            myTourneys: []
+            myTourneys: [],
+            sessionError: false,
+            errorMessage: ''
         }
     }
 
+    componentDidMount() {
+        /*debugger
+        console.log("did mount")*/
+        if(this.props.nombreTabla === 'Mis torneos'){
+            /*console.log("estas en mis torneos")*/
+            this.submitTourneys()
+        }
+        else{
+            /*console.log("no estas en mis torneos")*/
+        }
+    }
+
+    componentDidUpdate() {
+        /*this.submitTourneys()*/
+        /*console.log("did update")*/
+    }
+    
     submitHandler = e => {
         e.preventDefault()
         console.log('mostrando torneos')
-        UserService.getMyTourneys() /*mandar aca el tipo de torneos */
+        this.submitTourneys()
+    }
+
+    submitTourneys() {
+        console.log("submit tourneys")
+        UserService.getMyTourneys(this.props.nombreTabla) /*todo: como lo mando si no recibe parametros ._. mandar aca el tipo de torneos */ //mis torneos es el nombre del metodo, para otra tabla es otro metodo
             .then(response => {
                 console.log('Response obtenida: ')
                 console.log(response.data)
                 this.setState({myTourneys: response.data.tourneys})
+                if(JSON.stringify(this.state.myTourneys[0]) === undefined){
+                    //todo mostrar mensaje de tabla vacia
+                }
             })
             .catch(error => {
                 console.log(error)
+                const status = JSON.stringify(error.response.status)
+                const message = SessionCheck(status,JSON.stringify(error.response.data.message));
+                if(status === "401" || status === "403" || status === "400"){
+                    this.setState({sessionError: true, errorMessage: message})
+                }
             })
     }
 
@@ -138,24 +168,11 @@ export default class TabsTourneys extends Component{
                         <td> {tourney.start}</td>
                         <td> {tourney.finish}</td>
                         <td> {tourney.owner.username}</td>
-                        {/*el creador tiene que ser un usuario, lo pongo aca o en info?*/}
 
                         <td>
-                            <button className="btn btn-success" type="submit">
-                                <BsCheckLg/>
-                            </button>
-                            <button className="btn btn-danger" type="submit">
-                                <BsTrashFill/>
-                            </button>
-                            <button className="btn btn-primary" type="submit">
-                                <BsInfoLg/> {/*en info puede ir el creador, el puntaje, el puesto */}
-                            </button>
-                    <button className="btn btn-primary" type="submit">
-                        <BsInfoLg/> {/*AiOutlineUsergroupAdd -> agregar personas */}
-                    </button>
-                    <button className="btn btn-primary" type="submit">
-                        <BsInfoLg/> {/* AiOutlineUserAdd -> agregarte (verificar que no es tu torneo , solo en publicos iria) */}
-                    </button>
+                            <BotonesTorneos 
+                                type= {tourney.type}
+                            />   
                         </td>
                     </tr>
                 );
@@ -163,24 +180,37 @@ export default class TabsTourneys extends Component{
         return (
             <div className="col-md-12 search-table-col">
 
+                {this.state.sessionError &&
+                    <Not message={this.state.errorMessage}/>}
+
                 {/*------------------------------------------------------------------ */}
                 {/*todo: sacar este container y habilitar el TabIntro.js*/}
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                             <form className="form-inline">
-                                <input className="form-control " type="search" placeholder="Search"
+                                <input className="form-control " type="search" placeholder="Ingrese nombre del torneo"
                                        aria-label="Search"/>
                             </form>
                         </div>
-                        <div className="col-md-4">
-                            <form className="form-inline" onSubmit={this.submitHandler}>
+                        <div className="col-md-3">
+                            <form className="form-inline" >
                                 <button className="btn btn-outline-success my-2 my-sm-0"
-                                        type="submit">Actualizar/Buscar
+                                        type="submit">Buscar
                                 </button>
                             </form>
                         </div>
-                        <div className="col-md-4"> {/*todo: poner esta columna a la derecha */}
+                        <div className="col-md-3">
+                            <form className="form-inline" onSubmit={this.submitHandler}>
+                                <button className="btn btn-outline-success my-2 my-sm-0"
+                                        type="submit">Actualizar
+                                </button>
+                            </form>
+                        </div>
+                        <div className="col-md-1"> {/*sirve para que el btn de crear torneo este a la derecha */}
+                            
+                        </div>
+                        <div className="col-md-2"> 
                             <TourneyCreate/>
                         </div>
                     </div>
@@ -195,21 +225,23 @@ export default class TabsTourneys extends Component{
                             <th id="trs-hd-1" className="col-lg-1"> N°</th>
                             <th id="trs-hd-2" className="col-lg-2"> Nombre</th>
                             <th id="trs-hd-3" className="col-lg-1"> Tipo</th>
-                            <th id="trs-hd-4" className="col-lg-2"> Lenguaje</th>
+                            <th id="trs-hd-4" className="col-lg-1"> Lenguaje</th>
                             <th id="trs-hd-5" className="col-lg-1"> Inicio</th>
                             <th id="trs-hd-6" className="col-lg-1"> Fin</th>
                             <th id="trs-hd-7" className="col-lg-2"> Creador</th>
-                            <th id="trs-hd-8" className="col-lg-2"> Acciones</th>
+                            <th id="trs-hd-8" className="col-lg-3"> Acciones</th>
                         </tr>
                         </thead>
 
-                        {/*------------------------------------------------------------------ */}
-
                         {<tbody>
-                          {listTourneys}
+                        {listTourneys}
                         </tbody>}
+
                     </table>
                 </div>
+
+                        {/*------------------------------------------------------------------ */}
+
             </div>
         );
     }

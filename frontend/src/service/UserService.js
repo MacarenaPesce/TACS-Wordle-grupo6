@@ -21,13 +21,23 @@ const getAdminBoard = () => {
   return axios.get(API_URL + "admin", { headers: authHeader() });
 };
 
-const getMyTourneys = () => {
-  let userId = localStorage.getItem("userId");
-  return axios.get(API_USERS + userId + "/tournaments", { headers: authHeader() });
+const getMyTourneys = (nombreTabla) => {
+  if(nombreTabla === 'Mis torneos'){
+    let userId = localStorage.getItem("userId");
+    return axios.get(API_USERS + userId + "/tournaments", { headers: authHeader() });
+  }
+  else if(nombreTabla === 'Publicos'){
+    console.log('estas en torneos publicos')
+    return getTourneysPublic();
+  }
+  else{
+    console.log('falta la tabla de finalizados :) ')
+  }
+  
 };
 
 const getTourneysPublic = () => {
-  return axios.get(API + "/tournaments/public", { headers: authHeader() });
+  return axios.get(API + "tournaments/public", { headers: authHeader() });
 };
 
 export default {

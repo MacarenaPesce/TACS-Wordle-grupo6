@@ -15,7 +15,7 @@ import {
 } from "react-router-dom";
 import Dictionary from './pages/dictionary/Dictionary';
 import Tourney from './pages/tourney/Tourney';
-
+import InfoTourney from './pages/tourney/InfoTourney';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -27,7 +27,8 @@ root.render(
       <Route path="help" element={<Help />} />
       <Route path="dictionary" element={<Dictionary />} />
       <Route path="tourney" element={<Tourney />} /> 
-      <Route path="*" element={<Not />} />
+      <Route path="*" element={<Not message="Página no encontrada."/>} />
+      <Route path="info" element={<InfoTourney />} />
     </Routes>  
   </BrowserRouter>
   
