@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactModal from 'react-modal-resizable-draggable';
 import './TourneyCreate.css'
 import TourneyService from "../../service/TourneyService";
+import SessionCheck from "../sesion/SessionCheck";
 
 export default class TourneyCreate extends Component{
 
@@ -17,7 +18,8 @@ export default class TourneyCreate extends Component{
             errorMessage: '',
             errorVisible: false,
             successVisible: false,
-            loading: false
+            loading: false,
+            nameDisplay: ''
         };
 
         this.openModal = this.openModal.bind(this);
@@ -39,7 +41,7 @@ export default class TourneyCreate extends Component{
     submitHandler = e => {
         e.preventDefault()
         this.setState({errorVisible: false, errorMessage: '', successVisible: false, loading: true});
-        console.log('Boton Crear presionado con los datos: ')
+        console.log('Boton presionado, se intenta crear un torneo con los datos: ')
         let body = {
             name: this.state.name,
             type: this.state.type,
@@ -50,13 +52,14 @@ export default class TourneyCreate extends Component{
         console.log(body)
         TourneyService.createTourney(body)
             .then(response => {
-                this.setState({successVisible: true, loading: false});
+                this.setState({successVisible: true, nameDisplay: this.state.name, loading: false});
                 console.log('Response de creación obtenida: ')
                 console.log(response.data)
             })
             .catch(error => {
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
+                SessionCheck(JSON.stringify(error.response.status),JSON.stringify(error.response.data.message));
             })
     }
 
@@ -134,7 +137,7 @@ export default class TourneyCreate extends Component{
                     </div>}
                 {this.state.successVisible &&
                     <div className="alert alert-success" role="alert">
-                        Torneo '{this.state.name}' creado, actualice la lista manualmente
+                        Torneo '{this.state.nameDisplay}' creado, actualice la lista manualmente
                     </div>}
                 {this.state.loading &&
                     <div className="alert alert-white" role="alert">

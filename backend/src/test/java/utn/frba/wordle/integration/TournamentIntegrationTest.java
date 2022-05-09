@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.Language;
 import utn.frba.wordle.model.State;
 import utn.frba.wordle.model.TournamentType;
@@ -47,6 +48,24 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
 
         assertThat(dto).hasNoNullFieldsOrProperties();
         assertEquals(dto.getName(), name);
+    }
+
+    @Test
+    public void aUserTriesToCreateATournamentButHeDoesNotExist(){
+        String name = "TorneoPrueba";
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        //(el owner tiene id 1)
+        Long idInexistente = 22L;
+        TournamentDto dto = TournamentDto.builder()
+                .type(TournamentType.PRIVATE)
+                .start(new Date())
+                .finish(new Date())
+                .state(State.ACTIVE)
+                .name(name)
+                .language(Language.ES)
+                .build();
+
+        assertThrows(SessionJWTException.class, () -> tournamentService.create(dto, idInexistente));
     }
 
     @Test

@@ -8,6 +8,7 @@ import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.State;
 import utn.frba.wordle.repository.TournamentRepository;
 
@@ -32,7 +33,7 @@ public class TournamentService {
         try {
             owner = userService.findUser(userId);
         } catch (NoSuchElementException e) {
-            throw new BusinessException("El token de sesion jwt enviado, no coincide con usuarios existentes"); //TODO cambiar a SecurityException
+            throw new SessionJWTException("El token de sesion jwt enviado, no coincide con usuarios existentes");
         }
         dto.setOwner(owner);
         TournamentEntity newTournament = mapToEntity(dto);
