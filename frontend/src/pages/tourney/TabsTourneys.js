@@ -115,10 +115,32 @@ export default class TabsTourneys extends Component{
         }
     }
 
+    componentDidMount() {
+        /*debugger
+        console.log("did mount")*/
+        if(this.props.nombreTabla === 'Mis torneos'){
+            /*console.log("estas en mis torneos")*/
+            this.submitTourneys()
+        }
+        /*else{
+            console.log("no estas en mis torneos")
+        }*/
+    }
+
+    componentDidUpdate() {
+        /*this.submitTourneys()*/
+        /*console.log("did update")*/
+    }
+    
+
     submitHandler = e => {
         e.preventDefault()
         console.log('mostrando torneos')
-        /*console.log(tipoTabla)*/
+        this.submitTourneys()
+    }
+
+    submitTourneys() {
+        console.log("submit tourneys")
         UserService.getMyTourneys(this.props.nombreTabla) /*todo: como lo mando si no recibe parametros ._. mandar aca el tipo de torneos */
             .then(response => {
                 console.log('Response obtenida: ')

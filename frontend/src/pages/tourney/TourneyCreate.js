@@ -81,7 +81,6 @@ export default class TourneyCreate extends Component{
                 onRequestClose={this.closeModal}
                 isOpen={this.state.modalIsOpen}>
 
-
                 <h3>Crear Torneo</h3>
 
                 {/*TODO: hacer css propios en vez de ser tomados de help, para:
