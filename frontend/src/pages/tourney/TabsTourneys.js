@@ -106,10 +106,10 @@ const TabsTourneys = ({nombreTabla}) => {
 export default TabsTourneys;*/
 
 
-export default class TabsTourneys extends Component{
+export default class TabsTourneys extends Component{ 
 
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state = {
             myTourneys: []
         }
@@ -118,7 +118,8 @@ export default class TabsTourneys extends Component{
     submitHandler = e => {
         e.preventDefault()
         console.log('mostrando torneos')
-        UserService.getMyTourneys() /*mandar aca el tipo de torneos */
+        /*console.log(tipoTabla)*/
+        UserService.getMyTourneys(this.props.nombreTabla) /*todo: como lo mando si no recibe parametros ._. mandar aca el tipo de torneos */
             .then(response => {
                 console.log('Response obtenida: ')
                 console.log(response.data)
@@ -143,9 +144,6 @@ export default class TabsTourneys extends Component{
                         <td> {tourney.owner.username}</td>
 
                         <td>
-                            <button className="btn btn-success" type="submit">
-                                <BsCheckLg/>
-                            </button>
                             <button className="btn btn-danger" type="submit">
                                 <BsTrashFill/>
                             </button>
