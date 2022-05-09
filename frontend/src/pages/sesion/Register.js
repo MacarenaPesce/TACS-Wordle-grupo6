@@ -32,7 +32,7 @@ export default function Register() {
   
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Llegue aca ')
+
         if(
             username.valido === 'true' &&
             password.valido === 'true' &&

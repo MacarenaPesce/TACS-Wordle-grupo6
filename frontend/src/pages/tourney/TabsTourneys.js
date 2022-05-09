@@ -1,11 +1,11 @@
 import React, {Component, useState} from 'react'
 import Tab from 'react-bootstrap/Tab';
-import { BsTrashFill, BsInfoLg, BsCheckLg, BsPersonPlusFill } from "react-icons/bs";
-import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
+
 import UserService from "./../../service/UserService"
 import TourneyCreate from './TourneyCreate'
 import './Tourney.css'
 import SessionCheck from "../sesion/SessionCheck";
+import BotonesTorneos from './BotonesTorneos.js'
 
 /*
 const TabsTourneys = ({nombreTabla}) => {
@@ -122,9 +122,9 @@ export default class TabsTourneys extends Component{
             /*console.log("estas en mis torneos")*/
             this.submitTourneys()
         }
-        /*else{
-            console.log("no estas en mis torneos")
-        }*/
+        else{
+            /*console.log("no estas en mis torneos")*/
+        }
     }
 
     componentDidUpdate() {
@@ -132,7 +132,6 @@ export default class TabsTourneys extends Component{
         /*console.log("did update")*/
     }
     
-
     submitHandler = e => {
         e.preventDefault()
         console.log('mostrando torneos')
@@ -166,18 +165,9 @@ export default class TabsTourneys extends Component{
                         <td> {tourney.owner.username}</td>
 
                         <td>
-                            <button className="btn btn-danger" type="submit">
-                                <BsTrashFill/>
-                            </button>
-                            <button className="btn btn-primary" type="submit">
-                                <BsInfoLg/> {/*en info puede ir el creador, el puntaje, el puesto, miembros, ranking, tu puntaje actual y puesto */}
-                            </button>
-                            <button className="btn btn-dark" type="submit">
-                                <AiOutlineUsergroupAdd/> {/*AiOutlineUsergroupAdd -> agregar personas */}
-                            </button>
-                            <button className="btn btn-dark" type="submit">
-                                <AiOutlineUserAdd/> {/* AiOutlineUserAdd -> agregarte (verificar que no es tu torneo , solo en publicos iria) */}
-                            </button>
+                            <BotonesTorneos 
+                                type= {tourney.type}
+                            />   
                         </td>
                     </tr>
                 );
