@@ -2,20 +2,20 @@ import React from 'react';
 import { BsTrashFill, BsInfoLg, BsCheckLg, BsPersonPlusFill } from "react-icons/bs";
 import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
 
-
 function BotonesTorneos(tipoTorneo){
     /*debugger*/
     console.log(tipoTorneo.type)
+
     if(tipoTorneo.type === "PRIVATE"){
         return(
             <div> 
                 <button className="btn btn-danger" type="submit">
                     <BsTrashFill/>
                 </button>
-                <button className="btn btn-primary" type="submit">
+                <button className="btn btn-primary" type="submit" href="/info" onClick={console.log("acabas de tocar el boton info")}>
                     <BsInfoLg/> 
                 </button>
-                <button className="btn btn-warning" type="submit">
+                <button className="btn btn-warning" type="submit" >
                     <AiOutlineUsergroupAdd/> {/* AiOutlineUsergroupAdd -> agregar personas  */}
                 </button>
             </div>
@@ -27,11 +27,11 @@ function BotonesTorneos(tipoTorneo){
                 <button className="btn btn-danger" type="submit">
                     <BsTrashFill/>
                 </button>
-                <button className="btn btn-primary" type="submit">
+                <button className="btn btn-primary" type="submit" href="/info" onClick={console.log("acabas de tocar el boton info")}>
                     <BsInfoLg/> 
                 </button>
                 <button className="btn btn-info" type="submit">
-                        <AiOutlineUserAdd/> {/* AiOutlineUserAdd -> agregarte  */}
+                    <AiOutlineUserAdd/> {/* AiOutlineUserAdd -> agregarte  */}
                 </button>
             </div>
         )

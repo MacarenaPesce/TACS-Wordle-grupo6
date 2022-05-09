@@ -1,6 +1,5 @@
 import React, {Component, useState} from 'react'
 import Tab from 'react-bootstrap/Tab';
-
 import UserService from "./../../service/UserService"
 import TourneyCreate from './TourneyCreate'
 import './Tourney.css'
@@ -57,10 +56,6 @@ const TabsTourneys = ({nombreTabla}) => {
 
     return(
         <div className="col-md-12 search-table-col">
-                   
-
-
-
 
                             <div className="table-responsive table table-hover table-bordered results">
                                 <table className="table table-hover table-bordered">
