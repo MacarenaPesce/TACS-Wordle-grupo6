@@ -143,6 +143,9 @@ export default class TabsTourneys extends Component{
                 console.log('Response obtenida: ')
                 console.log(response.data)
                 this.setState({myTourneys: response.data.tourneys})
+                if(JSON.stringify(this.state.myTourneys[0]) === undefined){
+                    //todo mostrar mensaje de tabla vacia
+                }
             })
             .catch(error => {
                 console.log(error)
@@ -230,13 +233,15 @@ export default class TabsTourneys extends Component{
                         </tr>
                         </thead>
 
-                        {/*------------------------------------------------------------------ */}
-
                         {<tbody>
-                          {listTourneys}
+                        {listTourneys}
                         </tbody>}
+
                     </table>
                 </div>
+
+                        {/*------------------------------------------------------------------ */}
+
             </div>
         );
     }
