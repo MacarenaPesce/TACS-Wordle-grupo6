@@ -6,13 +6,13 @@
 https://docs.google.com/document/d/e/2PACX-1vS850Wxcrs3LThOAQamtTEhG6IEMmebXJxV3xXo-iPqCWHDI9LlncGyUONLx-hbIOBblutYCisS5aXh/pub
 
 
-#Para Deployar la aplicación:
+# Para Deployar la aplicación:
 Luego de Clonar el proyecto a su ambiente, puede ejecutar el siguiente script de acuerdo a si su ambiente es Windows o Linux
 
-#Entorno Windows:
+# Entorno Windows:
 Ejecutar script.bat
 
-#Entorno Linux:
+# Entorno Linux:
 Ejecutar script.sh
 
 Esperar unos segundos y luego ir a un navegador e ingresar a la dirección: http://localhost:3000
