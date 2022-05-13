@@ -17,13 +17,12 @@ const ComponenteTabs = () => {
     //toDO se podria ocultar esta ayuda de funcionamiento con un botón
     const ayudaMis = <div className="alert alert-primary" role="alert">
         <p>
-            <p>Te salen tus torneos creados</p>
+            <p>Te salen tus torneos creados o a los que te agregaste, en todos los que este el userId</p>
             <p>Te salen torneos de otros a los que estas anotado (sin boton para agregar personas)</p>
 
             <button className="btn btn-warning" type="submit" >
                 <AiOutlineUsergroupAdd/> {/* AiOutlineUsergroupAdd -> agregar personas  */}
             </button> Boton para sumar personas (si sos el creador)
-
             <p></p>
             <button className="btn btn-primary" type="submit" href="/info">
                 <BsInfoLg/>
@@ -44,7 +43,6 @@ const ComponenteTabs = () => {
             <button className="btn btn-info" type="submit">
                 <AiOutlineUserAdd/> {/* AiOutlineUserAdd -> agregarte  */}
             </button> Boton para sumarte (solo si aún no estás participando)
-
             <p></p>
             <button className="btn btn-primary" type="submit" href="/info">
                 <BsInfoLg/>
@@ -52,7 +50,7 @@ const ComponenteTabs = () => {
             <p></p>
             <button className="btn btn-danger" type="submit">
                 <BsTrashFill/>
-            </button> ???
+            </button> eliminar solo si es tuyo
 
         </p>
     </div>
@@ -63,7 +61,7 @@ const ComponenteTabs = () => {
             <p>Mostrar el ganador en alguna columna</p>
             <button className="btn btn-primary" type="submit" href="/info">
                 <BsInfoLg/>
-            </button> Boton para ver detalles y ranking final?
+            </button> Boton para ver detalles y ranking final
 
         </p>
     </div>

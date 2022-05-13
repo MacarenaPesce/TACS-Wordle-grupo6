@@ -171,7 +171,7 @@ export default class TabsTourneys extends Component{
 
                         <td>
                             <BotonesTorneos 
-                                type= {tourney.type}
+                                torneo= {tourney}
                             />   
                         </td>
                     </tr>
