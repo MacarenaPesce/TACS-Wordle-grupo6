@@ -39,7 +39,7 @@ public class TournamentsController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PatchMapping ("/{tournamentId}/join")
+    @PostMapping ("/{tournamentId}/join")
     public ResponseEntity<JoinDto> join(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
         SessionDto session = AuthService.getSession(token);
         JoinDto dto = tournamentService.join(session.getUserId(), tournamentId);

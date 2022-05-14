@@ -17,10 +17,15 @@ const createTourney = (body) => {
 };
 
 const addMember = (tournamentId, userId) => {
-    return axios.post(API_URL+"/"+tournamentId+"/members/"+userId, {}, { headers: authHeader() });
+    return axios.post(API_URL+tournamentId+"/members/"+userId, {}, { headers: authHeader() });
+};
+
+const join = (tournamentId) => {
+    return axios.post(API_URL+tournamentId+"/join", {}, { headers: authHeader() });
 };
 
 export default {
     createTourney,
-    addMember
+    addMember,
+    join
 };

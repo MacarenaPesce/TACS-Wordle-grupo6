@@ -112,23 +112,6 @@ export default class TabsTourneys extends Component{
             errorMessage: ''
         }
     }
-
-    componentDidMount() {
-        /*debugger
-        console.log("did mount")*/
-        if(this.props.nombreTabla === 'Mis torneos'){
-            /*console.log("estas en mis torneos")*/
-            this.submitTourneys()
-        }
-        else{
-            /*console.log("no estas en mis torneos")*/
-        }
-    }
-
-    componentDidUpdate() {
-        /*this.submitTourneys()*/
-        /*console.log("did update")*/
-    }
     
     submitHandler = e => {
         e.preventDefault()
@@ -143,6 +126,7 @@ export default class TabsTourneys extends Component{
                 console.log('Response obtenida: ')
                 console.log(response.data)
                 this.setState({myTourneys: response.data.tourneys})
+                console.log("ya setee el estado ")
                 if(JSON.stringify(this.state.myTourneys[0]) === undefined){
                     //todo mostrar mensaje de tabla vacia
                 }
@@ -159,7 +143,7 @@ export default class TabsTourneys extends Component{
 
     render() {
       
-        let listTourneys = this.state.myTourneys.map((tourney) =>
+        const listTourneys = this.state.myTourneys.map((tourney) =>
                     <tr key={tourney.tourneyId}>
                         <td> {tourney.tourneyId}</td>
                         <td> {tourney.name}</td>
@@ -185,37 +169,32 @@ export default class TabsTourneys extends Component{
 
                 {/*------------------------------------------------------------------ */}
                 {/*todo: sacar este container y habilitar el TabIntro.js*/}
-                <div className="container">
-                    <div className="row">
-                        <div className="col-md-3">
-                            <form className="form-inline">
-                                <input className="form-control " type="search" placeholder="Ingrese nombre del torneo"
-                                       aria-label="Search"/>
-                            </form>
-                        </div>
-                        <div className="col-md-3">
-                            <form className="form-inline" >
-                                <button className="btn btn-outline-success my-2 my-sm-0"
-                                        type="submit">Buscar
-                                </button>
-                            </form>
-                        </div>
-                        <div className="col-md-3">
-                            <form className="form-inline" onSubmit={this.submitHandler}>
-                                <button className="btn btn-outline-success my-2 my-sm-0"
-                                        type="submit">Actualizar
-                                </button>
-                            </form>
-                        </div>
-                        <div className="col-md-1"> {/*sirve para que el btn de crear torneo este a la derecha */}
-                            
-                        </div>
-                        <div className="col-md-2"> 
-                            <TourneyCreate/>
+                <form className='form-inline' >
+                    <div className="container">
+                        <div className="row">
+                                <div className="col-md-3">
+                                    <input className="form-control " type="search" placeholder="Ingrese nombre del torneo"
+                                        aria-label="Search"/>
+                                </div>
+                                <div className="col-md-3">
+                                    <button className="btn btn-outline-success my-2 my-sm-0"
+                                            type="submit">Buscar
+                                    </button>
+                                </div>
+                                <div className="col-md-3">
+                                    <button className="btn btn-outline-success my-2 my-sm-0"  onClick={this.submitHandler}
+                                            type="submit">Actualizar
+                                    </button>
+                                </div>
+                            <div className="col-md-1"> {/*sirve para que el btn de cargar resultado este a la derecha */}
+                                
+                            </div>
+                            <div className="col-md-2"> 
+                                <TourneyCreate/>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
+                </form>
                 {/*------------------------------------------------------------------ */}
                 
                 <div className="table-responsive table table-hover table-bordered results">
@@ -240,7 +219,7 @@ export default class TabsTourneys extends Component{
                     </table>
                 </div>
 
-                        {/*------------------------------------------------------------------ */}
+                {/*------------------------------------------------------------------ */}
 
             </div>
         );

@@ -5,6 +5,8 @@ import TabsTourneys from './TabsTourneys';
 import TabIntro from './TabIntro'
 import {BsInfoLg, BsTrashFill} from "react-icons/bs";
 import {AiOutlineUserAdd, AiOutlineUsergroupAdd} from "react-icons/ai";
+import TourneyCreate from './TourneyCreate'
+
 
 const ComponenteTabs = () => {
 
@@ -64,30 +66,31 @@ const ComponenteTabs = () => {
 
     //TODO logica de volver a cargar / request de lista de torneos cada vez que cambias de tab
     return(
+        <div>
         <Tabs defaultActiveKey="myTourney" id="uncontrolled-tab-example" className="mb-3">
             <Tab eventKey="myTourney" title={nombres.misTorneos}>
                 {/*<TabIntro />*/}
-                {ayudaMis}
+                {/*ayudaMis*/}
                 <TabsTourneys 
                     nombreTabla={nombres.misTorneos}
                 />         
             </Tab>
             <Tab eventKey="publicTourney" title={nombres.torneosPublicos}>
                 {/*<TabIntro />*/}
-                {ayudaPublic}
+                {/*ayudaPublic*/}
                 <TabsTourneys 
                     nombreTabla={nombres.torneosPublicos}
                 />
             </Tab>
             <Tab eventKey="finishTourney" title={nombres.finalizados} >
                 {/*<TabIntro />*/}
-                {ayudaFin}
+                {/*ayudaFin*/}
                 <TabsTourneys 
                     nombreTabla={nombres.finalizados}
                 />
             </Tab>
-            
         </Tabs>
+        </div>
     )
 }
 

@@ -12,6 +12,7 @@ export default class InfoTourney extends Component{
                 </header>
 
                 <h1> es un nuevo archivito</h1>
+                <button> holaaaaa</button>
 
                 <Footer />
             </body>
