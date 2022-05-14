@@ -7,16 +7,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import utn.frba.wordle.dto.MemberDto;
 import utn.frba.wordle.dto.ResultDto;
 import utn.frba.wordle.dto.SessionDto;
 import utn.frba.wordle.dto.TournamentDto;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 
-import java.math.BigInteger;
-
-import static org.aspectj.runtime.internal.Conversions.longValue;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,32 +52,29 @@ public class TournamentsControllerTest {
     @SneakyThrows
     @Test
     public void puedoAgregarUnMiembroAUnTorneo() {
-        MemberDto request = RANDOM.nextObject(MemberDto.class);
+        Long userId = 2L;
         Long tourneyID = 40L;
         SessionDto sessionDto = TestUtils.getMockSession();
 
-        String urlController = "/api/tournaments/"+tourneyID+"/members";
+        String urlController = "/api/tournaments/"+tourneyID+"/members/"+userId;
         mvc.perform(post(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(request)))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).addMember(request, tourneyID, sessionDto.getUserId());
+        verify(tournamentService).addMember(userId, tourneyID, sessionDto.getUserId());
     }
 
     @SneakyThrows
     @Test
     public void puedoUnirmeAUnTorneo() {
-        MemberDto request = RANDOM.nextObject(MemberDto.class);
         SessionDto sessionDto = TestUtils.getMockSession();
 
         Long tournamentId = 123L;
         String urlController = "/api/tournaments/" + tournamentId + "/join";
         mvc.perform(patch(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(request)))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         verify(tournamentService).join(sessionDto.getUserId(), tournamentId);

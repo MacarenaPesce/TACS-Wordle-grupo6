@@ -19,15 +19,12 @@ const ComponenteTabs = () => {
         <p>
             <p>Te salen tus torneos creados o a los que te agregaste, en todos los que este el userId</p>
             <p>Te salen torneos de otros a los que estas anotado (sin boton para agregar personas)</p>
-
             <button className="btn btn-warning" type="submit" >
                 <AiOutlineUsergroupAdd/> {/* AiOutlineUsergroupAdd -> agregar personas  */}
             </button> Boton para sumar personas (si sos el creador)
-            <p></p>
             <button className="btn btn-primary" type="submit" href="/info">
                 <BsInfoLg/>
             </button> Información del torneo
-            <p></p>
             <button className="btn btn-danger" type="submit">
                 <BsTrashFill/>
             </button> Borrar torneo si es propio? salir del torneo si es de otro?
@@ -43,11 +40,9 @@ const ComponenteTabs = () => {
             <button className="btn btn-info" type="submit">
                 <AiOutlineUserAdd/> {/* AiOutlineUserAdd -> agregarte  */}
             </button> Boton para sumarte (solo si aún no estás participando)
-            <p></p>
             <button className="btn btn-primary" type="submit" href="/info">
                 <BsInfoLg/>
             </button> Información del torneo
-            <p></p>
             <button className="btn btn-danger" type="submit">
                 <BsTrashFill/>
             </button> eliminar solo si es tuyo
@@ -58,7 +53,7 @@ const ComponenteTabs = () => {
     const ayudaFin = <div className="alert alert-primary" role="alert">
         <p>
             <p>Torneos finalizados de los cuales hayas participado/jugado</p>
-            <p>Mostrar el ganador en alguna columna</p>
+            <p>Mostrar el ganador en alguna columna ?????</p>
             <button className="btn btn-primary" type="submit" href="/info">
                 <BsInfoLg/>
             </button> Boton para ver detalles y ranking final

@@ -76,11 +76,9 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
                 .username("usernameTest2")
                 .build();
         userService.createUser(user);
-        MemberDto newMember = MemberDto.builder()
-                .username("Richard")
-                .build();
+        Long userId = 2L;
 
-        assertThrows(BusinessException.class, () -> tournamentService.addMember(newMember, 32167L, userOwner.getId()));
+        assertThrows(BusinessException.class, () -> tournamentService.addMember(userId, 32167L, userOwner.getId()));
 
     }
     @Test
@@ -88,9 +86,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         String name = "TorneoPrueba";
         UserDto ownerUser = getUserDto("mail@mail.com", "usernameTest");
         UserDto magicUser = getUserDto("mail@mail.com2", "usernameTest2");
-        MemberDto newMember = MemberDto.builder()
-                .username("Richard")
-                .build();
+        Long userId = 2L;
         TournamentDto dto = TournamentDto.builder()
                 .type(TournamentType.PRIVATE)
                 .start(new Date())
@@ -101,7 +97,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
                 .build();
         tournamentService.create(dto, ownerUser.getId());
 
-        assertThrows(BusinessException.class, () -> tournamentService.addMember(newMember, 32167L, ownerUser.getId()));
+        assertThrows(BusinessException.class, () -> tournamentService.addMember(userId, 32167L, ownerUser.getId()));
 
     }
 
@@ -119,11 +115,9 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
                 .build();
         dto = tournamentService.create(dto, ownerUser.getId());
         UserDto player = getUserDto("mail@mail.com2", "usernameTest2");
-        MemberDto newMember = MemberDto.builder()
-                .username(player.getUsername())
-                .build();
+        Long userId = 2L;
 
-        tournamentService.addMember(newMember, dto.getTourneyId(), ownerUser.getId());
+        tournamentService.addMember(userId, dto.getTourneyId(), ownerUser.getId());
 
         Set<UserDto> members = userService.getTournamentMembers(dto.getTourneyId());
         assertThat(members).contains(player);

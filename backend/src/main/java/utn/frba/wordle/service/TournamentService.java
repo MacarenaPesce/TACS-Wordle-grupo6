@@ -49,7 +49,7 @@ public class TournamentService {
     }
 
     @Transactional
-    public MemberNewDto addMember(MemberDto memberDto, Long tourneyID, Long ownerUserId) {
+    public MemberNewDto addMember(Long userId, Long tourneyID, Long ownerUserId) {
 
         TournamentEntity tournamentEntity = tournamentRepository.findById(tourneyID).orElse(null);
 
@@ -60,13 +60,13 @@ public class TournamentService {
             throw new BusinessException("Solo puedes agregar miembros a un torneo que tu hayas creado.");
         }
 
-        UserEntity userEntity = userService.findUserByUsername(memberDto.getUsername());
+        UserDto userEntity = userService.findUser(userId);
         if(userEntity == null){
-            throw new BusinessException("El usuario '"+memberDto.getUsername()+"', no se encuentra registrado en el sistema");
+            throw new BusinessException("El usuario especificado no se encuentra registrado en el sistema");
         }
 
         Set<UserDto> members = userService.getTournamentMembers(tournamentEntity.getId());
-        UserDto existingUser = members.stream().filter(member -> member.getUsername().equals(memberDto.getUsername())).findAny().orElse(null);; //TODO hacer la busqueda directo en la query a la base de datos?
+        UserDto existingUser = members.stream().filter(member -> member.getUsername().equals(userEntity.getUsername())).findAny().orElse(null);; //TODO hacer la busqueda directo en la query a la base de datos?
         if (existingUser != null) {
             throw new BusinessException("The user '"+userEntity.getUsername()+"' is already a member of the tournament "+tournamentEntity.getName());
         }

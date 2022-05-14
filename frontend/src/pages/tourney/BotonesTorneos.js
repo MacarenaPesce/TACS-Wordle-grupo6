@@ -9,14 +9,14 @@ function BotonesTorneos(tourney){
     console.log(tourney.torneo.name)*/
     /*console.log(torneo.type)*/
     let userId = localStorage.getItem("userId");
-    console.log(userId);
+    /*console.log(userId);
     console.log(tourney.torneo.owner.id)
+    console.log(userId==tourney.torneo.owner.id , userId!=tourney.torneo.owner.id )*/
 
-    if(tourney.torneo.owner.id === userId){
+    if(tourney.torneo.owner.id == userId){
         if(tourney.torneo.type === 'PUBLIC' || tourney.torneo.type === 'PRIVATE'){
             return(
                 <div> 
-                    <p> este torneo es mio</p>
                     <button className="btn btn-danger" type="submit">
                         <BsTrashFill/> {/* como soy el creador lo puedo eliminar*/}
                     </button>
@@ -30,7 +30,7 @@ function BotonesTorneos(tourney){
             )
         }
     }
-    else if(tourney.torneo.owner.id !== userId){
+    else if(tourney.torneo.owner.id != userId){
         if(tourney.torneo.type === 'PUBLIC'){
             return(
                 <div> {/*es un torneo publico al que entraste o te agregaron y no sos el creador */}

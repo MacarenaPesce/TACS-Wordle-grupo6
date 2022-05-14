@@ -7,11 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import utn.frba.wordle.dto.MemberDto;
 import utn.frba.wordle.dto.PositionsResponseDto;
-import utn.frba.wordle.dto.ResultDto;
-import utn.frba.wordle.dto.TournamentDto;
-import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.service.UserService;
 
 import static org.mockito.Mockito.verify;
