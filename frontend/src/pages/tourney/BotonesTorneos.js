@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button'
 import { BsTrashFill, BsInfoLg, BsCheckLg, BsPersonPlusFill } from "react-icons/bs";
 import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
 import { HiLogout } from "react-icons/hi";
@@ -28,9 +29,9 @@ function BotonesTorneos(tourney){
                     <button className="btn btn-danger" type="button">
                         <BsTrashFill/> {/* como soy el creador lo puedo eliminar*/}
                     </button>
-                    <button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
+                    <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
-                    </button>
+                    </Button>
                     <button className="btn btn-warning" type="button" >
                         <AiOutlineUsergroupAdd/> {/*si sos el creador agregas personas ya sea publico o privado */}
                     </button>
@@ -45,9 +46,9 @@ function BotonesTorneos(tourney){
                     <button className="btn btn-danger" type="button">
                         <HiLogout/> {/* si no soy el creador, me puedo salir */}
                     </button>
-                    <button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
+                    <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
-                    </button>
+                    </Button>
                     <button className="btn btn-info" type="button" onClick={()=>clickAgregarme()}>
                         <AiOutlineUserAdd/> {/* te permite agregarte al torneo si el torneo es de tipo publico y vos NO sos el creador 
                                             todo:falta validar que no estes en la lista de integrantes del torneo*/}
@@ -61,9 +62,9 @@ function BotonesTorneos(tourney){
                     <button className="btn btn-danger" type="button">
                         <HiLogout/> {/* si no soy el creador, me puedo salir */}
                     </button>
-                    <button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
+                    <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
-                    </button>
+                    </Button>
                 </div>                
             )
         }
