@@ -40,7 +40,7 @@ function BotonesTorneos(tourney){
                     <button className="btn btn-primary" type="submit" href="/info" onClick={console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
                     </button>
-                    <button className="btn btn-info" type="submit">
+                    <button className="btn btn-info" type="submit" >
                         <AiOutlineUserAdd/> {/* te permite agregarte al torneo si el torneo es de tipo publico y vos NO sos el creador 
                                             todo:falta validar que no estes en la lista de integrantes del torneo*/}
                     </button>
