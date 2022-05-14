@@ -15,8 +15,8 @@ export default function SessionCheck(responseStatusCode, message) {
     }
 
     if(responseStatusCode === "400"){
-        AuthService.logout()
-        return "Se borraron/modificaron campos críticos del store (o alguna otra causa de 400 bad request) \n\n"+message
+        //AuthService.logout()  tenemos code 400 para cualquier error de negocio. Deberia cerrarse la sesión, solo si se llega a una bad request a causa de campos erróneos en el store.
+        return message
 
     }
 

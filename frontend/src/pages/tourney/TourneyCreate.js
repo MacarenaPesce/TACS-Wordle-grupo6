@@ -65,7 +65,7 @@ export default class TourneyCreate extends Component{
 
                 const status = JSON.stringify(error.response.status)
                 const message = SessionCheck(status,JSON.stringify(error.response.data.message));
-                if(status === "401" || status === "403" || status === "400"){
+                if(status === "401" || status === "403"){
                     this.setState({sessionError: true, errorMessage: message})
                 }
             })

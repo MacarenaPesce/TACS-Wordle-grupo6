@@ -39,7 +39,7 @@ export default class TabsTourneys extends Component{
                 console.log(error)
                 const status = JSON.stringify(error.response.status)
                 const message = SessionCheck(status,JSON.stringify(error.response.data.message));
-                if(status === "401" || status === "403" || status === "400"){
+                if(status === "401" || status === "403"){   //para este botón se podría incluir el 400, como no es un form. La unica causa de 400 puede ser que el store de la sesión esté corrupto. Dónde poner el codigo de log out?
                     this.setState({sessionError: true, errorMessage: message})
                 }
             })
