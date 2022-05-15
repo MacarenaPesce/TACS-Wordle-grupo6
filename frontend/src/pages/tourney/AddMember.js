@@ -1,17 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import ReactModal from 'react-modal-resizable-draggable';
 import TourneyService from "../../service/TourneyService";
 import SessionCheck from "../sesion/SessionCheck";
 import Not from "../../components/not/Not";
 import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
 import { Button } from 'bootstrap';
+import UserService from '../../service/UserService';
 
-//esto es lo nuevo para la parte de sumar un miembro
-const users = UserService.getUsers()
-// the value of the search field 
-const [username, setUsername] = useState('');
-// the search result
-const [foundUsers, setFoundUsers] = useState(users);
 export default class TourneyCreate extends Component{
 
     constructor(){
@@ -68,21 +63,31 @@ export default class TourneyCreate extends Component{
             })
     }
 
+    //esto es lo nuevo para la parte de sumar un miembro
+    //const users = UserService.getUsers()
+    // the value of the search field 
+    //const [username, setUsername] = useState('');
+    // the search result
+    //const [foundUsers, setFoundUsers] = useState(users);
+
     //esto es nuevo para el filtro 
+    /*
     filter = (e) => {
         const keyword = e.target.value;
     
+        console.log("estas dentro del filtro de usuario")
+
         if (keyword !== '') {
           const results = users.filter((user) => {
             return user.username.toLowerCase().startsWith(keyword.toLowerCase());
             // Use the toLowerCase() method to make it case-insensitive
           });
-          setFoundUsers(results);
+          setFoundUsers(results); //TODO: aca habria que cargar los users en members para el submit 
         } else {
           console.log("no existe usuario")
           // If the text field is empty, show all users
         }
-    }
+    }*/
     
     render(){
         let spinner = (<div className="spinner-border text-black" role="status">
@@ -111,15 +116,16 @@ export default class TourneyCreate extends Component{
 
                     {/*TODO: hacer css propios en vez de ser tomados de help, para:
                                 form-help, opciones, selectidioma, form-control*/}
-                    <form onSubmit={this.submitHandler} className="form-help">
-
-                        <div className="opciones">
-                            <div className="">
-                                <label><h5>Nombre miembro</h5></label>
+                    
+                    {/*<form onSubmit={this.submitHandler} className="form-help">
+                        
+                        /*borrar esto si no sirve 
+                        <div className="opciones">                          
                                 <input type="text" className="form-control" placeholder="Nombre del miembro..." name="name" onChange={this.changeHandler} />
-                            </div>
-                        </div>
+                        </div>*/
+                        /*
                         <div className="container">
+                            <label><h5>Nombre miembro</h5></label>
                             <input
                             type="search"
                             value={username}
@@ -127,7 +133,7 @@ export default class TourneyCreate extends Component{
                             className="input"
                             placeholder="Filter"
                             />
-                    
+
                             <div className="user-list">
                             {foundUsers && foundUsers.length > 0 ? (
                                 foundUsers.map((user) => (
@@ -157,6 +163,7 @@ export default class TourneyCreate extends Component{
                         <div className="alert alert-white" role="alert">
                             {spinner}{spinner}
                     </div>} 
+                    */}
 
                     <button className="btn btn-outline-success my-2 my-sm-0" onClick={this.closeModal}>
                         Cerrar
