@@ -3,9 +3,10 @@ import Tab from 'react-bootstrap/Tab';
 import UserService from "./../../service/UserService"
 import TourneyCreate from './TourneyCreate'
 import './Tourney.css'
-import SessionCheck from "../sesion/SessionCheck";
+import StatusCheck from "../sesion/StatusCheck";
 import BotonesTorneos from './BotonesTorneos.js'
 import Not from "../../components/not/Not";
+import AuthService from "../../service/AuthService";
 
 export default class TabsTourneys extends Component{ 
 
@@ -38,8 +39,9 @@ export default class TabsTourneys extends Component{
             .catch(error => {
                 console.log(error)
                 const status = JSON.stringify(error.response.status)
-                const message = SessionCheck(status,JSON.stringify(error.response.data.message));
-                if(status === "401" || status === "403"){   //para este botón se podría incluir el 400, como no es un form. La unica causa de 400 puede ser que el store de la sesión esté corrupto. Dónde poner el codigo de log out?
+                const message = StatusCheck(status,JSON.stringify(error.response.data.message));
+                if(status === "401" || status === "403" || status === "400"){   //Como este caso no es un form. La unica causa de 400 puede ser que el store de la sesión esté corrupto. (y no errores de negocio)
+                    AuthService.logout()
                     this.setState({sessionError: true, errorMessage: message})
                 }
             })
