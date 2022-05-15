@@ -7,6 +7,7 @@ import StatusCheck from "../sesion/StatusCheck";
 import BotonesTorneos from './BotonesTorneos.js'
 import Not from "../../components/not/Not";
 import AuthService from "../../service/AuthService";
+import TourneySubmit from "./TourneySubmit";
 
 export default class TabsTourneys extends Component{ 
 
@@ -83,14 +84,14 @@ export default class TabsTourneys extends Component{
                                        aria-label="Search"/>
                             </form>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-2">
                             <form className="form-inline" >
                                 <button className="btn btn-outline-success my-2 my-sm-0"
                                         type="submit">Buscar
                                 </button>
                             </form>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-2">
                             <form className="form-inline" onSubmit={this.submitHandler}>
                                 <button className="btn btn-outline-success my-2 my-sm-0"
                                         type="submit">Actualizar
@@ -100,8 +101,11 @@ export default class TabsTourneys extends Component{
                         <div className="col-md-1"> {/*sirve para que el btn de crear torneo este a la derecha */}
 
                         </div>
-                        <div className="col-md-2"> 
+                        <div className="col-md-2">
                             <TourneyCreate/>
+                        </div>
+                        <div className="col-md-2">
+                            <TourneySubmit/>
                         </div>
                     </div>
                 </div>      
