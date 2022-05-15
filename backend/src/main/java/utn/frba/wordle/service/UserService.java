@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -103,5 +104,9 @@ public class UserService {
             dtos.add(UserService.mapToDto(user));
         }
         return dtos;
+    }
+
+    public List<UserDto> findAll() {
+        return mapToDto((List<UserEntity>) userRepository.findAll()).stream().collect(Collectors.toList());
     }
 }

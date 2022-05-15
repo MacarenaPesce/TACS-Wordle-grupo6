@@ -10,10 +10,7 @@ import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.UserService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -47,6 +44,12 @@ public class UserController {
                 .build();
 
         return new ResponseEntity<>(tourneysDto, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getUsers(){
+        List<UserDto> users = userService.findAll();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     private TournamentDto mapToDto(TournamentEntity entity) {

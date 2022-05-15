@@ -30,7 +30,7 @@ function BotonesTorneos(tourney){
                         <BsInfoLg/> 
                     </Button>
                     <Button className="btn btn-warning" type="button" >
-                        <AddMember/> {/*si sos el creador agregas personas ya sea publico o privado */}
+                        <AiOutlineUsergroupAdd/> {/*si sos el creador agregas personas ya sea publico o privado */}
                     </Button>
                 </div>
             )
