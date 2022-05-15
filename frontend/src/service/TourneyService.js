@@ -16,7 +16,11 @@ const createTourney = (body) => {
     return axios.post(API_URL, body,{ headers: authHeader() });
 };
 
-export default {
-    createTourney
+const submitResults = (body) => {
+    return axios.post(API_URL + "submitResults", body,{ headers: authHeader() });
+};
 
+export default {
+    createTourney,
+    submitResults
 };

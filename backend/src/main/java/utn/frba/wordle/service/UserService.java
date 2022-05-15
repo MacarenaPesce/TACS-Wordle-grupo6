@@ -85,7 +85,7 @@ public class UserService {
         try {
             user = userRepository.findById(userId).orElseThrow();
         }catch (NoSuchElementException e){
-            throw new BusinessException("The requested user ID is not found.");
+            throw new BusinessException("The requested user ID ("+userId+") is not found.");
         }
         return user;
     }

@@ -53,7 +53,7 @@ public class UserController {
     private void checkIDs(SessionDto session, Long userId){
         Long tokenUserId = session.getUserId();
         if (userId != tokenUserId){
-            throw new BusinessException("Debe coincidir el user id del path, con el user id del usuario logueado");
+            throw new BusinessException("Debe coincidir el user id del path ("+userId+"), con el user id del usuario logueado ("+tokenUserId+")");
         }
     }
 
@@ -77,7 +77,7 @@ public class UserController {
         return dtos;
     }
 
-    @GetMapping("/{userId}/getTodaysResult/{language}")
+    @GetMapping("/{userId}/getTodaysResult/{language}")     //TODO agregar tests para esta ruta
     public ResponseEntity<ResultDto> getTodaysResult(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Language language) {
         SessionDto session = AuthService.getSession(token);
         checkIDs(session, userId);

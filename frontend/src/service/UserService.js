@@ -36,6 +36,11 @@ const getMyTourneys = (nombreTabla) => {
   
 };
 
+const getTodaysResult = (language) => {
+  const userId = localStorage.getItem("userId");
+  return axios.get(API_USERS + userId + "/getTodaysResult/" + language, { headers: authHeader() });
+};
+
 const getTourneysPublic = () => {
   return axios.get(API + "tournaments/public", { headers: authHeader() });
 };
@@ -46,5 +51,6 @@ export default {
   getModeratorBoard,
   getAdminBoard,
   getMyTourneys,
-  getTourneysPublic
+  getTourneysPublic,
+  getTodaysResult
 };
