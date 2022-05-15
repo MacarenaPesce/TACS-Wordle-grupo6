@@ -40,11 +40,16 @@ const getTourneysPublic = () => {
   return axios.get(API + "tournaments/public", { headers: authHeader() });
 };
 
+const getUsers = () => {
+  return axios.get(API_USERS, { headers: authHeader() });
+};
+
 export default {
   getPublicContent,
   getUserBoard,
   getModeratorBoard,
   getAdminBoard,
   getMyTourneys,
-  getTourneysPublic
+  getTourneysPublic,
+  getUsers
 };

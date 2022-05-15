@@ -208,7 +208,10 @@ export default class TabsTourneys extends Component{
                             <th id="trs-hd-5" className="col-lg-1"> Inicio</th>
                             <th id="trs-hd-6" className="col-lg-1"> Fin</th>
                             <th id="trs-hd-7" className="col-lg-2"> Creador</th>
-                            <th id="trs-hd-8" className="col-lg-3"> Acciones</th>
+                            <th id="trs-hd-8" className="col-lg-1"> Acciones</th>
+                            {/** todo: las dos col de abajo NO tienen que aparecer en tabla de publicos */}
+                            <th id="trs-hd-7" className="col-lg-1"> Puntaje</th>
+                            <th id="trs-hd-7" className="col-lg-1"> Posicion</th>
                         </tr>
                         </thead>
 
