@@ -8,6 +8,7 @@ import utn.frba.wordle.dto.UserDto;
 import utn.frba.wordle.entity.ResultEntity;
 import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.model.Language;
 import utn.frba.wordle.repository.ResultRepository;
 
 import java.time.LocalDate;
@@ -51,7 +52,20 @@ public class ResultService {
         return ResultDto.builder()
                 .language(entity.getLanguage())
                 .result(entity.getResult())
-                .id(entity.getId())
+                .userId(entity.getId())
                 .build();
+    }
+
+    public Long getTodaysResult(Long userId, Language language) {
+        UserEntity user = userService.findUserByID(userId);
+        LocalDate now = LocalDate.now();
+
+        List<ResultEntity> results = resultRepository.findTodayResults(user,language, now);
+
+        if(results.isEmpty()){
+            throw new BusinessException("Awaiting today's "+user.getUsername()+" (id "+userId+") "+language+" results to be submitted.");
+        }
+
+        return results.get(0).getResult();
     }
 }

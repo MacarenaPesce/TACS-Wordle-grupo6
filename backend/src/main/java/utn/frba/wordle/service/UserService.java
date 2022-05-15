@@ -6,13 +6,12 @@ import org.springframework.stereotype.Service;
 import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.entity.UserEntity;
+import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.model.Language;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.repository.UserRepository;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @NoArgsConstructor
@@ -79,6 +78,16 @@ public class UserService {
 
     public UserEntity findUserByUsernameAndPassword(String username, String password) {
         return userRepository.findByUsernameAndPassword(username, password);
+    }
+
+    public UserEntity findUserByID(Long userId) {
+        UserEntity user;
+        try {
+            user = userRepository.findById(userId).orElseThrow();
+        }catch (NoSuchElementException e){
+            throw new BusinessException("The requested user ID is not found.");
+        }
+        return user;
     }
 
     public UserDto findUser(Long userId) {

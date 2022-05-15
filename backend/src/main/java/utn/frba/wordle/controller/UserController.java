@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.model.Language;
 import utn.frba.wordle.service.AuthService;
+import utn.frba.wordle.service.ResultService;
 import utn.frba.wordle.service.UserService;
 
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    ResultService resultService;
 
     @GetMapping ("getPositions")
     public ResponseEntity<PositionsResponseDto> getPositions() {
@@ -30,16 +34,13 @@ public class UserController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @GetMapping ("/{UserId}/tournaments")
-    public ResponseEntity<TourneysDto> getMyTournamets(@RequestHeader("Authorization") String token, @PathVariable Long UserId) {
+    @GetMapping ("/{userId}/tournaments")
+    public ResponseEntity<TourneysDto> getMyTournamets(@RequestHeader("Authorization") String token, @PathVariable Long userId) {
 
         SessionDto session = AuthService.getSession(token); //todo sacar dto de authservice
-        Long tokenUserId = session.getUserId();
-        if(UserId != tokenUserId){
-            throw new BusinessException("Debe coincidir el user id del path, con el user id del usuario logueado");
-        }
+        checkIDs(session, userId);
 
-        List<TournamentEntity> tournaments = userService.getMyTournamets(tokenUserId);
+        List<TournamentEntity> tournaments = userService.getMyTournamets(userId);
 
 
         TourneysDto tourneysDto = TourneysDto.builder()
@@ -47,6 +48,13 @@ public class UserController {
                 .build();
 
         return new ResponseEntity<>(tourneysDto, HttpStatus.OK);
+    }
+
+    private void checkIDs(SessionDto session, Long userId){
+        Long tokenUserId = session.getUserId();
+        if (userId != tokenUserId){
+            throw new BusinessException("Debe coincidir el user id del path, con el user id del usuario logueado");
+        }
     }
 
     private TournamentDto mapToDto(TournamentEntity entity) {
@@ -67,6 +75,21 @@ public class UserController {
             dtos.add(mapToDto(tournament));
         }
         return dtos;
+    }
+
+    @GetMapping("/{userId}/getTodaysResult/{language}")
+    public ResponseEntity<ResultDto> getTodaysResult(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Language language) {
+        SessionDto session = AuthService.getSession(token);
+        checkIDs(session, userId);
+
+        Long result = resultService.getTodaysResult(userId, language);
+
+        ResultDto dto = ResultDto.builder()
+                .userId(userId)
+                .result(result)
+                .language(language)
+                .build();
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
 }
