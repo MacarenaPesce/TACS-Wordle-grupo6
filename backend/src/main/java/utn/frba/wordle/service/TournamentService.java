@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
-import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.State;
@@ -20,6 +19,9 @@ public class TournamentService {
 
     @Autowired
     TournamentRepository tournamentRepository;
+
+    @Autowired
+    RegistrationService registrationService;
 
     @Autowired
     UserService userService;
@@ -66,12 +68,12 @@ public class TournamentService {
         }
 
         Set<UserDto> members = userService.getTournamentMembers(tournamentEntity.getId());
-        UserDto existingUser = members.stream().filter(member -> member.getUsername().equals(userEntity.getUsername())).findAny().orElse(null);; //TODO hacer la busqueda directo en la query a la base de datos?
+        UserDto existingUser = members.stream().filter(member -> member.getUsername().equals(userEntity.getUsername())).findAny().orElse(null); //TODO hacer la busqueda directo en la query a la base de datos?
         if (existingUser != null) {
             throw new BusinessException("The user '"+userEntity.getUsername()+"' is already a member of the tournament "+tournamentEntity.getName());
         }
 
-        tournamentRepository.addMember(tournamentEntity.getId(), userEntity.getId());
+        tournamentRepository.addMember(tournamentEntity.getId(), userEntity.getId(), new Date());
 
         return MemberNewDto.builder()
                 .tournamentId(tournamentEntity.getId())
@@ -87,12 +89,13 @@ public class TournamentService {
             throw new BusinessException("The specified Tournament doesn't exist.");
         }
 
-        boolean userAlreadyJoined = tournamentEntity.getMembers().stream().anyMatch(m -> m.getId().equals(userId));
+        List<RegistrationDto> registrations = registrationService.getRegistrationsFromUser(userId);
+        boolean userAlreadyJoined = registrations.stream().anyMatch(m -> m.getUser().getId().equals(userId));
         if(userAlreadyJoined){
             throw new BusinessException("The user already joined the Tournament.");
         }
 
-        tournamentRepository.addMember(tournamentEntity.getId(), userId);
+        tournamentRepository.addMember(tournamentEntity.getId(), userId, new Date());
 
         return JoinDto.builder()
                 .tournamentID(tournamentId)
@@ -108,9 +111,8 @@ public class TournamentService {
                 .build();
     }
 
-    public ResultDto submitResults(Long userId, ResultDto resultDto) {
-
-        return resultsService.submitResults(userId, resultDto);
+    public void submitResults(Long userId, ResultDto resultDto) {
+        resultsService.submitResults(userId, resultDto);
     }
 
     private TournamentEntity mapToEntity(TournamentDto dto) {

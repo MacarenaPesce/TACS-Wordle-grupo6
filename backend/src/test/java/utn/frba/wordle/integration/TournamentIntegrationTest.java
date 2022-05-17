@@ -3,6 +3,7 @@ package utn.frba.wordle.integration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.dto.*;
+import utn.frba.wordle.entity.PunctuationEntity;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
@@ -10,10 +11,13 @@ import utn.frba.wordle.model.Language;
 import utn.frba.wordle.model.State;
 import utn.frba.wordle.model.TournamentType;
 import utn.frba.wordle.repository.TournamentRepository;
+import utn.frba.wordle.service.RegistrationService;
+import utn.frba.wordle.service.ResultService;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.service.UserService;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -30,6 +34,12 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RegistrationService registrationService;
+
+    @Autowired
+    ResultService resultService;
 
     @Test
     public void aUserCanCreateATournament(){
@@ -125,9 +135,9 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void aUserCantBeAddedToATournamentTwice(){
-        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournamentDto = getPrivateTournamentDto(owner);
-        UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
+        UserDto owner = getUserDto("mail2@mail.com", "usernameTest2");
+        UserDto user = getUserDto("mailPlayer@mail.com", "usernamePlayer");
+        TournamentDto tournamentDto = getPublicTournamentDto(owner, "Public Tourney");
 
         tournamentService.join(user.getId(), tournamentDto.getTourneyId());
 
@@ -179,14 +189,20 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanSubmitHisResult() {
         UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
+        UserDto player = getUserDto("mailPlayer@mail.com", "usernamePlayer");
         ResultDto resultDto = ResultDto.builder()
                 .result(2L)
                 .language(Language.ES)
                 .build();
+        TournamentDto tournamentDto = getPrivateTournamentDto(user, "Private Tourney");
+        tournamentService.addMember(player.getId(), tournamentDto.getTourneyId(), user.getId());
 
-        resultDto = tournamentService.submitResults(user.getId(), resultDto);
+        tournamentService.submitResults(player.getId(), resultDto);
 
-        assertThat(resultDto).hasNoNullFieldsOrProperties();
+        List<RegistrationDto> registrations =  registrationService.getRegistrationsFromUser(player.getId());
+        List<PunctuationEntity> punctuations = resultService.getPunctuationsEntityFromTourney(registrations.get(0).getId());
+        assertThat(punctuations).isNotEmpty();
+        assertThat(punctuations.get(0)).hasNoNullFieldsOrProperties();
     }
 
     @Test

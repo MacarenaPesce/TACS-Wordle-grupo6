@@ -1,0 +1,14 @@
+package utn.frba.wordle.repository;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import utn.frba.wordle.entity.RegistrationEntity;
+
+import java.util.List;
+
+public interface RegistrationRepository extends CrudRepository<RegistrationEntity, Long> {
+
+    @Query(value = "select r from RegistrationEntity r \n" +
+            "where r.user.id = :userId ")
+    List<RegistrationEntity> getAllByUser(Long userId);
+}

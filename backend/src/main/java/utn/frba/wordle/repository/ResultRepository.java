@@ -2,17 +2,24 @@ package utn.frba.wordle.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import utn.frba.wordle.dto.UserDto;
-import utn.frba.wordle.entity.ResultEntity;
+import utn.frba.wordle.entity.PunctuationEntity;
 import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.model.Language;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface ResultRepository extends CrudRepository<ResultEntity, Long> {
+public interface ResultRepository extends CrudRepository<PunctuationEntity, Long> {
 
 
-    @Query(value = "select r from ResultEntity r where user = :user and language = :language and date = :now")
-    List<ResultEntity> findTodayResults(UserEntity user, Language language, LocalDate now);
+    @Query(value = "select p.* from Registration r, Punctuation p \n" +
+            "where r.id_user = :userId \n" +
+            "and r.id = p.id_registration \n" +
+            "and p.date = :now", nativeQuery = true)
+    List<PunctuationEntity> findTodayResults(Long userId, LocalDate now);
+
+    @Query(value = "select p.* from Punctuation p, Registration r \n" +
+            "where r.id = p.id_registration \n" +
+            "and r.id_tournament = :idTournament \n", nativeQuery = true)
+    List<PunctuationEntity> findResultsFromTournament(Long idTournament);
 }
