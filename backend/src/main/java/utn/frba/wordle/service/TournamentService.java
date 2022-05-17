@@ -8,10 +8,13 @@ import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
+import utn.frba.wordle.model.Punctuation;
+import utn.frba.wordle.model.Ranking;
 import utn.frba.wordle.model.State;
 import utn.frba.wordle.repository.TournamentRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -27,7 +30,7 @@ public class TournamentService {
     UserService userService;
 
     @Autowired
-    ResultService resultsService;
+    PunctuationService punctuationService;
 
     public TournamentDto create(TournamentDto dto, Long userId) {
 
@@ -111,8 +114,34 @@ public class TournamentService {
                 .build();
     }
 
-    public void submitResults(Long userId, ResultDto resultDto) {
-        resultsService.submitResults(userId, resultDto);
+    public void submitResults(Long userId, ResultDto result) {
+        punctuationService.submitResults(userId, result);
+    }
+
+    public Ranking getRanking(Long tourneyId) {
+        List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
+        List<Punctuation> punctuations = new ArrayList<>();
+        registrations.forEach(
+            registration -> {
+                Integer sum = registration.getPunctuations().stream()
+                        .reduce(0,
+                                (acum, punctuation) ->
+                                        acum + punctuation.getPunctuation().intValue(),
+                                Integer::sum);
+                Punctuation punctuation = Punctuation.builder()
+                        .punctuation(sum.longValue())
+                        .user(registration.getUser().getUsername())
+                        .build();
+                punctuations.add(punctuation);
+            }
+        );
+        List<Punctuation> orderedPunctuations = punctuations.stream()
+                .sorted(Comparator.comparingLong(Punctuation::getPunctuation).reversed())
+                .collect(Collectors.toList());
+        return Ranking.builder()
+                .idTournament(tourneyId)
+                .punctuations(orderedPunctuations)
+                .build();
     }
 
     private TournamentEntity mapToEntity(TournamentDto dto) {

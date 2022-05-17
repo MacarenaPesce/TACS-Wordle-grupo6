@@ -23,10 +23,10 @@ public class PunctuationEntity {
     @Column
     Long punctuation;
 
-    @Column(unique = true)
+    @Column
     LocalDate date;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "Id_Registration", nullable = false, unique = true)
+    @JoinColumn(name = "Id_Registration", nullable = false)
     private RegistrationEntity registration;
 }

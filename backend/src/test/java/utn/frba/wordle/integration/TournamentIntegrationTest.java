@@ -1,5 +1,6 @@
 package utn.frba.wordle.integration;
 
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.dto.*;
@@ -8,11 +9,12 @@ import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.Ranking;
 import utn.frba.wordle.model.State;
 import utn.frba.wordle.model.TournamentType;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.service.RegistrationService;
-import utn.frba.wordle.service.ResultService;
+import utn.frba.wordle.service.PunctuationService;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.service.UserService;
 
@@ -39,7 +41,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
     RegistrationService registrationService;
 
     @Autowired
-    ResultService resultService;
+    PunctuationService punctuationService;
 
     @Test
     public void aUserCanCreateATournament(){
@@ -200,9 +202,34 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         tournamentService.submitResults(player.getId(), resultDto);
 
         List<RegistrationDto> registrations =  registrationService.getRegistrationsFromUser(player.getId());
-        List<PunctuationEntity> punctuations = resultService.getPunctuationsEntityFromTourney(registrations.get(0).getId());
+        List<PunctuationEntity> punctuations = punctuationService.getPunctuationsEntityFromTourney(registrations.get(0).getId());
         assertThat(punctuations).isNotEmpty();
         assertThat(punctuations.get(0)).hasNoNullFieldsOrProperties();
+    }
+
+    @Test
+    public void aUserCanSeeThePositionsTableOfATournament(){
+        UserDto player1 = getUserDto("mail1@mail.com", "player1");
+        UserDto player2 = getUserDto("mail2@mail.com", "player2");
+        UserDto player3 = getUserDto("mail3@mail.com", "player3");
+        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney");
+        tournamentService.addMember(player1.getId(), tournamentDto.getTourneyId(), player1.getId());
+        tournamentService.addMember(player2.getId(), tournamentDto.getTourneyId(), player1.getId());
+        tournamentService.addMember(player3.getId(), tournamentDto.getTourneyId(), player1.getId());
+        ResultDto result = ResultDto.builder().result(5L).language(Language.ES).build();
+        ResultDto result2 = ResultDto.builder().result(2L).language(Language.ES).build();
+        ResultDto result3 = ResultDto.builder().result(3L).language(Language.ES).build();
+        tournamentService.submitResults(player1.getId(), result);
+        tournamentService.submitResults(player2.getId(), result2);
+        tournamentService.submitResults(player3.getId(), result3);
+
+        Ranking ranking = tournamentService.getRanking(tournamentDto.getTourneyId());
+
+        assertThat(ranking).hasNoNullFieldsOrProperties();
+        assertThat(ranking.getPunctuations()).isNotEmpty();
+        assertThat(ranking.getPunctuations().get(0)).isNotEqualTo(0);
+        assertTrue(ranking.getPunctuations().get(0).getPunctuation() > ranking.getPunctuations().get(1).getPunctuation());
+        assertTrue(ranking.getPunctuations().get(1).getPunctuation() > ranking.getPunctuations().get(2).getPunctuation());
     }
 
     @Test

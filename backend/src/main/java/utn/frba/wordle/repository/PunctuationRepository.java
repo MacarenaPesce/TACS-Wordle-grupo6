@@ -9,7 +9,7 @@ import utn.frba.wordle.model.Language;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface ResultRepository extends CrudRepository<PunctuationEntity, Long> {
+public interface PunctuationRepository extends CrudRepository<PunctuationEntity, Long> {
 
 
     @Query(value = "select p.* from Registration r, Punctuation p \n" +
