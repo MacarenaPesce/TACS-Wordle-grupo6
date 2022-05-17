@@ -5,7 +5,7 @@ import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
 import { HiLogout } from "react-icons/hi";
 import TourneyService from '../../service/TourneyService';
 import UserService from "../../service/UserService";
-import AddMember1 from "./AddMember1"
+import AddMember from "./AddMember"
 
 
 function BotonesTorneos(tourney){
@@ -29,7 +29,7 @@ function BotonesTorneos(tourney){
                     <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
                     </Button>
-                    <AddMember1 tourneyId ={tourney.torneo.tourneyId} /> {/*si sos el creador agregas personas ya sea publico o privado */}
+                    <AddMember tourneyId ={tourney.torneo.tourneyId} /> {/*si sos el creador agregas personas ya sea publico o privado */}
                 </div>
             )
         }

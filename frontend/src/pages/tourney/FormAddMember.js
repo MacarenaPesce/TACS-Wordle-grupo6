@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './FormAddMember.css';
+//import './FormAddMember.css';
 import UserService from '../../service/UserService';
 
 
@@ -20,7 +20,7 @@ function AddMember1() {
 
 	const [name, setName] = useState('');
   
-  const USERS = UserService.getUsers();
+  //const USERS = UserService.getUsers();
 
 	const [foundUsers, setFoundUsers] = useState(USERS);
   
