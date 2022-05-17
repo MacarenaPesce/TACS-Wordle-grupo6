@@ -19,6 +19,23 @@ export default class TabsTourneys extends Component{
             errorMessage: ''
         }
     }
+
+    componentDidMount() {
+        /*debugger
+        console.log("did mount")*/
+        if(this.props.nombreTabla === 'Mis torneos'){
+            /*console.log("estas en mis torneos")*/
+            this.submitTourneys()
+        }
+        else{
+            /*console.log("no estas en mis torneos")*/
+        }
+    }
+
+    componentDidUpdate() {
+        /*this.submitTourneys()*/
+        /*console.log("did update")*/
+    }
     
     submitHandler = e => {
         e.preventDefault()
@@ -62,7 +79,7 @@ export default class TabsTourneys extends Component{
 
                         <td>
                             <BotonesTorneos 
-                                torneo= {tourney}
+                                type= {tourney.type}
                             />   
                         </td>
                     </tr>
