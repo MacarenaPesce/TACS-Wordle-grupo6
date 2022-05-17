@@ -38,10 +38,12 @@ export default class TourneyCreate extends Component{
         this.setState({[e.target.name]: e.target.value})
     }
 
+    /**revisar */
     submitHandler = e => {
         e.preventDefault()
         this.setState({errorVisible: false, errorMessage: '', successVisible: false, loading: true});
         console.log('Boton presionado, se intenta crear un torneo con los datos: ')
+        /**revisar */
         let body = {
             username: this.state.name,
         }
