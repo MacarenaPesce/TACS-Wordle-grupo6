@@ -4,6 +4,7 @@ import TourneyService from "../../service/TourneyService";
 import SessionCheck from "../sesion/SessionCheck";
 import Not from "../../components/not/Not";
 import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
+import UserService from '../../service/UserService';
 
 
 export default class TourneyCreate extends Component{
@@ -12,7 +13,7 @@ export default class TourneyCreate extends Component{
         super()
         this.state = {
             modalIsOpen: false,
-            username: '',
+            users: [],
             errorMessage: '',
             errorVisible: false,
             successVisible: false,
@@ -26,13 +27,13 @@ export default class TourneyCreate extends Component{
     }
 
     openModal() {
-        debugger
         this.setState({modalIsOpen: true});
     }
     closeModal() {
         this.setState({modalIsOpen: false});
     }
 
+    /**revisar */
     changeHandler = (e)  => {
         this.setState({[e.target.name]: e.target.value})
     }
@@ -44,12 +45,11 @@ export default class TourneyCreate extends Component{
         let body = {
             username: this.state.name,
         }
-        console.log(body)
-        TourneyService.createTourney(body)
-            .then(response => {
-                this.setState({successVisible: true, nameDisplay: this.state.name, loading: false});
+        UserService.getUsers()
+        .then(response => {
                 console.log('Response de creación obtenida: ')
                 console.log(response.data)
+                this.setState({successVisible: true, nameDisplay: this.state.name, loading: false});
             })
             .catch(error => {
                 console.log(error)
