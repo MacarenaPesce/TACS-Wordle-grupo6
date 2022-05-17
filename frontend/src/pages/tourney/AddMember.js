@@ -1,13 +1,13 @@
 import {useAddMember} from '../../hooks/useAddMember';
 import FormAddMember from './FormAddMember';
 import ModalAddMember from './ModalAddMember';
-import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
 
 
 function AddMember (tourneyId)  {
 
     const [isOpenModal,openModal,closeModal] = useAddMember(false);
-	console.log("voy a mostrar eltourneyId: ", tourneyId);
+	console.log("voy a añadir un miembro a el tourneyId: ", tourneyId);
 
 	return(
 		<div>	

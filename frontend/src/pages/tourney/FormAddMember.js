@@ -2,35 +2,31 @@ import React, { useState } from 'react';
 //import './FormAddMember.css';
 import UserService from '../../service/UserService';
 
+function AddMember() {
+  const [USERS,setUsers] = useState([]);
 
+  UserService.getUsers()
+  .then(response => {
+          console.log('Response de usuarios obtenida: ')
+          console.log(response.data)
+          setUsers(response.data)
+          console.log("USUARIOS:",USERS)
+      })
+      .catch(error => {
+        console.log(error)
+        /**todo: falta manejo de error como en tourney create */
+    })
 
-const USERS = [
-    { id: 1, name: 'Andy', age: 32 },
-    { id: 2, name: 'Bob', age: 30 },
-    { id: 3, name: 'Tom Hulk', age: 40 },
-    { id: 4, name: 'Tom Hank', age: 50 },
-    { id: 5, name: 'Audra', age: 30 },
-    { id: 6, name: 'Anna', age: 68 },
-    { id: 7, name: 'Tom', age: 34 },
-    { id: 8, name: 'Tom Riddle', age: 28 },
-    { id: 9, name: 'Bolo', age: 23 },
-  ];
-
-function AddMember1() {
-
-	const [name, setName] = useState('');
+	const [username, setName] = useState('');
   
-  //const USERS = UserService.getUsers();
-
 	const [foundUsers, setFoundUsers] = useState(USERS);
   
 	const filter = (e) => {
     const keyword = e.target.value;
 
-
     if (keyword !== '') {
       const results = USERS.filter((user) => {
-        return user.name.toLowerCase().startsWith(keyword.toLowerCase());
+        return user.username.toLowerCase().startsWith(keyword.toLowerCase());
         // Use the toLowerCase() method to make it case-insensitive
       });
       setFoundUsers(results);
@@ -46,7 +42,7 @@ function AddMember1() {
     <div className="container">
       <input
         type="search"
-        value={name}
+        value={username}
         onChange={filter}
         className="input"
         placeholder="Filter"
@@ -56,9 +52,8 @@ function AddMember1() {
         {foundUsers && foundUsers.length > 0 ? (
           foundUsers.map((user) => (
             <li key={user.id} className="user">
-              <span className="user-id">{user.id}</span>
-              <span className="user-name">{user.name}</span>
-              <span className="user-age">{user.age} year old</span>
+              <span className="user-id">{user.id} </span>
+              <span className="user-name">{user.username}</span>
             </li>
           ))
         ) : (
@@ -70,4 +65,4 @@ function AddMember1() {
 }
 
 
-export default AddMember1;
+export default AddMember;

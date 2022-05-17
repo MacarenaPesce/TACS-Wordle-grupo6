@@ -29,7 +29,6 @@ export default class TourneyCreate extends Component{
     }
 
     openModal() {
-        debugger
         this.setState({modalIsOpen: true});
     }
     closeModal() {
