@@ -14,9 +14,9 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     @Query(value = "SELECT * FROM user u WHERE u.username = :username", nativeQuery = true)
     UserEntity findByUsername(String username);
 
-    @Query(value = "select u.* from user u, tournament_User tu \n" +
-            "where tu.Id_Tournament = :tourneyId \n" +
-            "and tu.Id_User = u.id", nativeQuery = true)
+    @Query(value = "select u.* from user u, registration r \n" +
+            "where r.Id_Tournament = :tourneyId \n" +
+            "and r.Id_User = u.id", nativeQuery = true)
     List<UserEntity> getTournamentMembers(Long tourneyId);
 
     @Query(value = "SELECT * FROM user u WHERE u.email = :email", nativeQuery = true)

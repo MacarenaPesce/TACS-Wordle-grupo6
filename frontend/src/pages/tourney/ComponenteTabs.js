@@ -5,6 +5,8 @@ import TabsTourneys from './TabsTourneys';
 import TabIntro from './TabIntro'
 import {BsInfoLg, BsTrashFill} from "react-icons/bs";
 import {AiOutlineUserAdd, AiOutlineUsergroupAdd} from "react-icons/ai";
+import TourneyCreate from './TourneyCreate'
+
 
 const ComponenteTabs = () => {
 
@@ -17,18 +19,14 @@ const ComponenteTabs = () => {
     //toDO se podria ocultar esta ayuda de funcionamiento con un botón
     const ayudaMis = <div className="alert alert-primary" role="alert">
         <p>
-            <p>Te salen tus torneos creados</p>
+            <p>Te salen tus torneos creados o a los que te agregaste, en todos los que este el userId</p>
             <p>Te salen torneos de otros a los que estas anotado (sin boton para agregar personas)</p>
-
             <button className="btn btn-warning" type="submit" >
                 <AiOutlineUsergroupAdd/> {/* AiOutlineUsergroupAdd -> agregar personas  */}
             </button> Boton para sumar personas (si sos el creador)
-
-            <p></p>
             <button className="btn btn-primary" type="submit" href="/info">
                 <BsInfoLg/>
             </button> Información del torneo
-            <p></p>
             <button className="btn btn-danger" type="submit">
                 <BsTrashFill/>
             </button> Borrar torneo si es propio? salir del torneo si es de otro?
@@ -44,15 +42,12 @@ const ComponenteTabs = () => {
             <button className="btn btn-info" type="submit">
                 <AiOutlineUserAdd/> {/* AiOutlineUserAdd -> agregarte  */}
             </button> Boton para sumarte (solo si aún no estás participando)
-
-            <p></p>
             <button className="btn btn-primary" type="submit" href="/info">
                 <BsInfoLg/>
             </button> Información del torneo
-            <p></p>
             <button className="btn btn-danger" type="submit">
                 <BsTrashFill/>
-            </button> ???
+            </button> eliminar solo si es tuyo
 
         </p>
     </div>
@@ -60,10 +55,10 @@ const ComponenteTabs = () => {
     const ayudaFin = <div className="alert alert-primary" role="alert">
         <p>
             <p>Torneos finalizados de los cuales hayas participado/jugado</p>
-            <p>Mostrar el ganador en alguna columna</p>
+            <p>Mostrar el ganador en alguna columna ?????</p>
             <button className="btn btn-primary" type="submit" href="/info">
                 <BsInfoLg/>
-            </button> Boton para ver detalles y ranking final?
+            </button> Boton para ver detalles y ranking final
 
         </p>
     </div>
@@ -71,30 +66,31 @@ const ComponenteTabs = () => {
 
     //TODO logica de volver a cargar / request de lista de torneos cada vez que cambias de tab
     return(
+        <div>
         <Tabs defaultActiveKey="myTourney" id="uncontrolled-tab-example" className="mb-3">
             <Tab eventKey="myTourney" title={nombres.misTorneos}>
                 {/*<TabIntro />*/}
-                {ayudaMis}
+                {/*ayudaMis*/}
                 <TabsTourneys 
                     nombreTabla={nombres.misTorneos}
                 />         
             </Tab>
             <Tab eventKey="publicTourney" title={nombres.torneosPublicos}>
                 {/*<TabIntro />*/}
-                {ayudaPublic}
+                {/*ayudaPublic*/}
                 <TabsTourneys 
                     nombreTabla={nombres.torneosPublicos}
                 />
             </Tab>
             <Tab eventKey="finishTourney" title={nombres.finalizados} >
                 {/*<TabIntro />*/}
-                {ayudaFin}
+                {/*ayudaFin*/}
                 <TabsTourneys 
                     nombreTabla={nombres.finalizados}
                 />
             </Tab>
-            
         </Tabs>
+        </div>
     )
 }
 

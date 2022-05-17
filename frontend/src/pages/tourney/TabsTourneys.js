@@ -9,101 +9,6 @@ import Not from "../../components/not/Not";
 import AuthService from "../../service/AuthService";
 import TourneySubmit from "./TourneySubmit";
 
-/*
-const TabsTourneys = ({nombreTabla}) => {
-
-    constructor(){
-        super()
-        this.state = {
-            myTourneys: []
-        }
-    }
-
-    submitHandler = e => {
-        e.preventDefault()
-        console.log('mostrando torneos')       
-        UserService.getMyTourneys() /*mandar aca el tipo de torneos 
-            .then(response => {
-                console.log('Response obtenida: ')
-                console.log(response.data)
-                this.setState({myTourneys: response.data.tourneys})
-            })
-            .catch(error => {
-                console.log(error)
-            })
-    }
-
-    let listTourneys = tourneys.map((tourney) =>
-        <tr>
-            <td> {tourney.id}</td>
-            <td> {tourney.name}</td>
-            <td> {tourney.type}</td>
-            <td> {tourney.lenguage}</td>
-            <td> {tourney.start}</td>
-            <td> {tourney.finish}</td>
-            <td> {tourney.owner.username}</td>
-
-            <td> 
-                <button className="btn btn-success"  type="submit">
-                    <BsCheckLg />
-                </button>
-                <button className="btn btn-danger"  type="submit">
-                    <BsTrashFill />
-                </button>
-                <button className="btn btn-primary"  type="submit">
-                    <BsInfoLg />
-                </button>
-            </td>
-        </tr>
-    );
-
-    return(
-        <div className="col-md-12 search-table-col">
-
-                            <div className="table-responsive table table-hover table-bordered results">
-                                <table className="table table-hover table-bordered">
-                                    <thead className="bill-header cs">
-                                        <tr>
-                                            <th id="trs-hd-1" className="col-lg-1"> N°</th>
-                                            <th id="trs-hd-2" className="col-lg-2"> Nombre</th>
-                                            <th id="trs-hd-3" className="col-lg-1"> Tipo</th>
-                                            <th id="trs-hd-4" className="col-lg-2"> Lenguaje</th>
-                                            <th id="trs-hd-5" className="col-lg-1"> Inicio</th>
-                                            <th id="trs-hd-6" className="col-lg-1"> Fin</th>
-                                            <th id="trs-hd-7" className="col-lg-2"> Creador</th>
-                                            <th id="trs-hd-8" className="col-lg-2"> Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {listTourneys}
-                                    </tbody>
-                                    {/*}
-
-                                    <tfoot>
-                                        <tr>
-                                            <td colSpan="1">
-                                                <div className="paging">
-                                                    <ul>
-                                                        <li> <a href="#"> <span> Anterior </span> </a> </li>
-                                                        <li> <a href="#"> <span> 1 </span> </a> </li>
-                                                        <li> <a href="#"> <span> 2 </span> </a> </li>
-                                                        <li> <a href="#"> <span> 3 </span> </a> </li>
-                                                        <li> <a href="#"> <span> Siguiente </span> </a> </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                    </table>
-                </div>
-            </div>
-        );
-    }
-}
-
-export default TabsTourneys;*/
-
-
 export default class TabsTourneys extends Component{ 
 
     constructor(props){
@@ -211,7 +116,7 @@ export default class TabsTourneys extends Component{
                             </form>
                         </div>
                         <div className="col-md-1"> {/*sirve para que el btn de crear torneo este a la derecha */}
-                            
+
                         </div>
                         <div className="col-md-2">
                             <TourneyCreate/>
@@ -220,10 +125,9 @@ export default class TabsTourneys extends Component{
                             <TourneySubmit/>
                         </div>
                     </div>
-                </div>
-                
+                </div>      
                 {/*------------------------------------------------------------------ */}
-                
+
                 <div className="table-responsive table table-hover table-bordered results">
                     <table className="table table-hover table-bordered">
                         <thead className="bill-header cs">
@@ -235,7 +139,10 @@ export default class TabsTourneys extends Component{
                             <th id="trs-hd-5" className="col-lg-1"> Inicio</th>
                             <th id="trs-hd-6" className="col-lg-1"> Fin</th>
                             <th id="trs-hd-7" className="col-lg-2"> Creador</th>
-                            <th id="trs-hd-8" className="col-lg-3"> Acciones</th>
+                            <th id="trs-hd-8" className="col-lg-1"> Acciones</th>
+                            {/** todo: las dos col de abajo NO tienen que aparecer en tabla de publicos */}
+                            <th id="trs-hd-7" className="col-lg-1"> Puntaje</th>
+                            <th id="trs-hd-7" className="col-lg-1"> Posicion</th>
                         </tr>
                         </thead>
 
@@ -246,8 +153,7 @@ export default class TabsTourneys extends Component{
                     </table>
                 </div>
 
-                        {/*------------------------------------------------------------------ */}
-
+                {/*------------------------------------------------------------------ */}
             </div>
         );
     }

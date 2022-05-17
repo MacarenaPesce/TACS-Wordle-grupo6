@@ -1,19 +1,25 @@
 package utn.frba.wordle.integration;
 
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.dto.*;
+import utn.frba.wordle.entity.PunctuationEntity;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.Ranking;
 import utn.frba.wordle.model.State;
 import utn.frba.wordle.model.TournamentType;
 import utn.frba.wordle.repository.TournamentRepository;
+import utn.frba.wordle.service.RegistrationService;
+import utn.frba.wordle.service.PunctuationService;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.service.UserService;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -30,6 +36,12 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RegistrationService registrationService;
+
+    @Autowired
+    PunctuationService punctuationService;
 
     @Test
     public void aUserCanCreateATournament(){
@@ -76,11 +88,9 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
                 .username("usernameTest2")
                 .build();
         userService.createUser(user);
-        MemberDto newMember = MemberDto.builder()
-                .username("Richard")
-                .build();
+        Long userId = 2L;
 
-        assertThrows(BusinessException.class, () -> tournamentService.addMember(newMember, 32167L, userOwner.getId()));
+        assertThrows(BusinessException.class, () -> tournamentService.addMember(userId, 32167L, userOwner.getId()));
 
     }
     @Test
@@ -88,9 +98,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         String name = "TorneoPrueba";
         UserDto ownerUser = getUserDto("mail@mail.com", "usernameTest");
         UserDto magicUser = getUserDto("mail@mail.com2", "usernameTest2");
-        MemberDto newMember = MemberDto.builder()
-                .username("Richard")
-                .build();
+        Long userId = 2L;
         TournamentDto dto = TournamentDto.builder()
                 .type(TournamentType.PRIVATE)
                 .start(new Date())
@@ -101,7 +109,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
                 .build();
         tournamentService.create(dto, ownerUser.getId());
 
-        assertThrows(BusinessException.class, () -> tournamentService.addMember(newMember, 32167L, ownerUser.getId()));
+        assertThrows(BusinessException.class, () -> tournamentService.addMember(userId, 32167L, ownerUser.getId()));
 
     }
 
@@ -119,11 +127,9 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
                 .build();
         dto = tournamentService.create(dto, ownerUser.getId());
         UserDto player = getUserDto("mail@mail.com2", "usernameTest2");
-        MemberDto newMember = MemberDto.builder()
-                .username(player.getUsername())
-                .build();
+        Long userId = 2L;
 
-        tournamentService.addMember(newMember, dto.getTourneyId(), ownerUser.getId());
+        tournamentService.addMember(userId, dto.getTourneyId(), ownerUser.getId());
 
         Set<UserDto> members = userService.getTournamentMembers(dto.getTourneyId());
         assertThat(members).contains(player);
@@ -131,9 +137,9 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void aUserCantBeAddedToATournamentTwice(){
-        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournamentDto = getPrivateTournamentDto(owner);
-        UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
+        UserDto owner = getUserDto("mail2@mail.com", "usernameTest2");
+        UserDto user = getUserDto("mailPlayer@mail.com", "usernamePlayer");
+        TournamentDto tournamentDto = getPublicTournamentDto(owner, "Public Tourney");
 
         tournamentService.join(user.getId(), tournamentDto.getTourneyId());
 
@@ -185,14 +191,45 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanSubmitHisResult() {
         UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
+        UserDto player = getUserDto("mailPlayer@mail.com", "usernamePlayer");
         ResultDto resultDto = ResultDto.builder()
                 .result(2L)
                 .language(Language.ES)
                 .build();
+        TournamentDto tournamentDto = getPrivateTournamentDto(user, "Private Tourney");
+        tournamentService.addMember(player.getId(), tournamentDto.getTourneyId(), user.getId());
 
-        resultDto = tournamentService.submitResults(user.getId(), resultDto);
+        tournamentService.submitResults(player.getId(), resultDto);
 
-        assertThat(resultDto).hasNoNullFieldsOrProperties();
+        List<RegistrationDto> registrations =  registrationService.getRegistrationsFromUser(player.getId());
+        List<PunctuationEntity> punctuations = punctuationService.getPunctuationsEntityFromTourney(registrations.get(0).getId());
+        assertThat(punctuations).isNotEmpty();
+        assertThat(punctuations.get(0)).hasNoNullFieldsOrProperties();
+    }
+
+    @Test
+    public void aUserCanSeeThePositionsTableOfATournament(){
+        UserDto player1 = getUserDto("mail1@mail.com", "player1");
+        UserDto player2 = getUserDto("mail2@mail.com", "player2");
+        UserDto player3 = getUserDto("mail3@mail.com", "player3");
+        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney");
+        tournamentService.addMember(player1.getId(), tournamentDto.getTourneyId(), player1.getId());
+        tournamentService.addMember(player2.getId(), tournamentDto.getTourneyId(), player1.getId());
+        tournamentService.addMember(player3.getId(), tournamentDto.getTourneyId(), player1.getId());
+        ResultDto result = ResultDto.builder().result(5L).language(Language.ES).build();
+        ResultDto result2 = ResultDto.builder().result(2L).language(Language.ES).build();
+        ResultDto result3 = ResultDto.builder().result(3L).language(Language.ES).build();
+        tournamentService.submitResults(player1.getId(), result);
+        tournamentService.submitResults(player2.getId(), result2);
+        tournamentService.submitResults(player3.getId(), result3);
+
+        Ranking ranking = tournamentService.getRanking(tournamentDto.getTourneyId());
+
+        assertThat(ranking).hasNoNullFieldsOrProperties();
+        assertThat(ranking.getPunctuations()).isNotEmpty();
+        assertThat(ranking.getPunctuations().get(0)).isNotEqualTo(0);
+        assertTrue(ranking.getPunctuations().get(0).getPunctuation() > ranking.getPunctuations().get(1).getPunctuation());
+        assertTrue(ranking.getPunctuations().get(1).getPunctuation() > ranking.getPunctuations().get(2).getPunctuation());
     }
 
     @Test

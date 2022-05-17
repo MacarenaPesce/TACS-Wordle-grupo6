@@ -28,7 +28,9 @@ public class UserEntity {
     @Column
     private String password;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
-    private Set<TournamentEntity> tournaments;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<RegistrationEntity> registrations;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<TournamentEntity> myTournaments;
 }

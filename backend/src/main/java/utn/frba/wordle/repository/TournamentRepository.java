@@ -7,13 +7,14 @@ import utn.frba.wordle.dto.TournamentDto;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.entity.UserEntity;
 
+import java.util.Date;
 import java.util.List;
 
 public interface TournamentRepository extends CrudRepository<TournamentEntity, Long> {
 
     @Modifying
-    @Query(value = "insert into Tournament_User (Id_Tournament, Id_User) values (:tournamentId, :userId)", nativeQuery = true)
-    void addMember(Long tournamentId, Long userId);
+    @Query(value = "insert into Registration (Id_Tournament, Id_User, registered) values (:tournamentId, :userId, :date)", nativeQuery = true)
+    void addMember(Long tournamentId, Long userId, Date date);
 
     @Query(value = "select * from Tournament where type = 'PUBLIC'", nativeQuery = true)
     List<TournamentEntity> getPublicTournaments();

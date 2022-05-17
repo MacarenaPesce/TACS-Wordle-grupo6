@@ -1,0 +1,60 @@
+https://www.kindacode.com/article/how-to-create-a-filter-search-list-in-react/
+   
+   
+   //esto es lo nuevo para la parte de sumar un miembro
+    //const users = UserService.getUsers()
+    // the value of the search field 
+    //const [username, setUsername] = useState('');
+    // the search result
+    //const [foundUsers, setFoundUsers] = useState(users);
+
+    //esto es nuevo para el filtro 
+    /*
+    filter = (e) => {
+        const keyword = e.target.value;
+    
+        console.log("estas dentro del filtro de usuario")
+
+        if (keyword !== '') {
+          const results = users.filter((user) => {
+            return user.username.toLowerCase().startsWith(keyword.toLowerCase());
+            // Use the toLowerCase() method to make it case-insensitive
+          });
+          setFoundUsers(results); //TODO: aca habria que cargar los users en members para el submit 
+        } else {
+          console.log("no existe usuario")
+          // If the text field is empty, show all users
+        }
+    }*/
+
+
+
+                        borrar esto si no sirve 
+                        <div className="opciones">                          
+                                <input type="text" className="form-control" placeholder="Nombre del miembro..." name="name" onChange={this.changeHandler} />
+                        </div>
+                        /*
+                        <div className="container">
+                            <label><h5>Nombre miembro</h5></label>
+                            <input
+                            type="search"
+                            value={username}
+                            onChange={this.filter}
+                            className="input"
+                            placeholder="Filter"
+                            />
+
+                            <div className="user-list">
+                            {foundUsers && foundUsers.length > 0 ? (
+                                foundUsers.map((user) => (
+                                <li key={user.id} className="user">
+                                    <span className="user-id">{user.id}</span>
+                                    <span className="user-name">{user.name}</span>
+                                    <span className="user-age">{user.age} year old</span>
+                                </li>
+                                ))
+                            ) : (
+                                <h1>No results found!</h1>
+                            )}
+                            </div>
+                        </div>

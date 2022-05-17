@@ -40,14 +40,10 @@ public class TournamentEntity {
     @Column
     Date finish;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "owner_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "Id_User", nullable = false)
     UserEntity owner;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable( name = "Tournament_User",
-            joinColumns = @JoinColumn(name = "Id_Tournament"),
-            inverseJoinColumns = @JoinColumn(name = "Id_User"))
-    private Set<UserEntity> members;
-
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<RegistrationEntity> registrations;
 }

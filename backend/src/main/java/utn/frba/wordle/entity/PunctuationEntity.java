@@ -5,7 +5,7 @@ import utn.frba.wordle.model.Language;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -13,22 +13,20 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "Result")
-public class ResultEntity {
+@Table(name = "Punctuation")
+public class PunctuationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    Long  result;
-
-    @Column
-    Language language;
+    Long punctuation;
 
     @Column
     LocalDate date;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    UserEntity user;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "Id_Registration", nullable = false)
+    private RegistrationEntity registration;
 }

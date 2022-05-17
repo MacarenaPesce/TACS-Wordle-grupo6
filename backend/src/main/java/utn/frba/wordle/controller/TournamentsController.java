@@ -26,8 +26,8 @@ public class TournamentsController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PostMapping("/{tournamentId}/members")
-    public ResponseEntity<MemberNewDto> addMember(@RequestHeader("Authorization") String token, @RequestBody MemberDto memberDto, @PathVariable Long tournamentId) {
+    @PostMapping("/{tournamentId}/members/{userId}")
+    public ResponseEntity<MemberNewDto> addMember(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Long tournamentId) {
 
        /* if(true){
             throw new BusinessException("Llegue aqui");
@@ -35,11 +35,11 @@ public class TournamentsController {
 
         SessionDto session = AuthService.getSession(token);
 
-        MemberNewDto dto = tournamentService.addMember(memberDto, tournamentId, session.getUserId());
+        MemberNewDto dto = tournamentService.addMember(userId, tournamentId, session.getUserId());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PatchMapping ("/{tournamentId}/join")
+    @PostMapping ("/{tournamentId}/join")
     public ResponseEntity<JoinDto> join(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
         SessionDto session = AuthService.getSession(token);
         JoinDto dto = tournamentService.join(session.getUserId(), tournamentId);
@@ -54,9 +54,9 @@ public class TournamentsController {
     }
     
     @PostMapping("submitResults")
-    public ResponseEntity<ResultDto> submitResults(@RequestHeader("Authorization") String token, @RequestBody ResultDto resultDto) {
+    public ResponseEntity<String> submitResults(@RequestHeader("Authorization") String token, @RequestBody ResultDto resultDto) {
         SessionDto session = AuthService.getSession(token);
-        ResultDto dto = tournamentService.submitResults(session.getUserId(), resultDto);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        tournamentService.submitResults(session.getUserId(), resultDto);
+        return new ResponseEntity<>("Resultados cargados correctamente", HttpStatus.OK);
     }
 }

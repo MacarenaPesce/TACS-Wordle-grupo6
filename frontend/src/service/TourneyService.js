@@ -16,11 +16,21 @@ const createTourney = (body) => {
     return axios.post(API_URL, body,{ headers: authHeader() });
 };
 
+const addMember = (tournamentId, userId) => {
+    return axios.post(API_URL+tournamentId+"/members/"+userId, {}, { headers: authHeader() });
+};
+
+const join = (tournamentId) => {
+    return axios.post(API_URL+tournamentId+"/join", {}, { headers: authHeader() });
+};
+
 const submitResults = (body) => {
     return axios.post(API_URL + "submitResults", body,{ headers: authHeader() });
 };
 
 export default {
+    submitResults,
     createTourney,
-    submitResults
+    addMember,
+    join
 };

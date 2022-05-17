@@ -12,6 +12,7 @@ import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.repository.UserRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -112,5 +113,9 @@ public class UserService {
             dtos.add(UserService.mapToDto(user));
         }
         return dtos;
+    }
+
+    public List<UserDto> findAll() {
+        return mapToDto((List<UserEntity>) userRepository.findAll()).stream().collect(Collectors.toList());
     }
 }
