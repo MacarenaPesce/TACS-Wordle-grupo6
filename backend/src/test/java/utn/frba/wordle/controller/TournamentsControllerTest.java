@@ -72,7 +72,7 @@ public class TournamentsControllerTest {
 
         Long tournamentId = 123L;
         String urlController = "/api/tournaments/" + tournamentId + "/join";
-        mvc.perform(patch(urlController)
+        mvc.perform(post(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

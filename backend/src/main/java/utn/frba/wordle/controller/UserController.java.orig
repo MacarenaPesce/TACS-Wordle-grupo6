@@ -4,18 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.dto.PositionsResponseDto;
-import utn.frba.wordle.dto.SessionDto;
-import utn.frba.wordle.dto.TournamentDto;
-import utn.frba.wordle.dto.TourneysDto;
+import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.model.Language;
 import utn.frba.wordle.service.AuthService;
+import utn.frba.wordle.service.ResultService;
 import utn.frba.wordle.service.UserService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,6 +21,15 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    ResultService resultService;
+
+    @GetMapping ("getPositions")
+    public ResponseEntity<PositionsResponseDto> getPositions() {
+
+        PositionsResponseDto dto = userService.getPositions();
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
 
     @GetMapping ("/{userId}/tournaments")
     public ResponseEntity<TourneysDto> getMyTournamets(@RequestHeader("Authorization") String token, @PathVariable Long userId) {
@@ -41,11 +47,18 @@ public class UserController {
         return new ResponseEntity<>(tourneysDto, HttpStatus.OK);
     }
 
+<<<<<<< HEAD
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getUsers(){
+        List<UserDto> users = userService.findAll();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+=======
     private void checkIDs(SessionDto session, Long userId){
         Long tokenUserId = session.getUserId();
         if (userId != tokenUserId){
             throw new BusinessException("Debe coincidir el user id del path, con el user id del usuario logueado");
         }
+>>>>>>> getTodaysResult backend
     }
 
     private TournamentDto mapToDto(TournamentEntity entity) {
@@ -67,4 +80,20 @@ public class UserController {
         }
         return dtos;
     }
+
+    @GetMapping("/{userId}/getTodaysResult/{language}")
+    public ResponseEntity<ResultDto> getTodaysResult(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Language language) {
+        SessionDto session = AuthService.getSession(token);
+        checkIDs(session, userId);
+
+        Long result = resultService.getTodaysResult(userId, language);
+
+        ResultDto dto = ResultDto.builder()
+                .userId(userId)
+                .result(result)
+                .language(language)
+                .build();
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
 }
