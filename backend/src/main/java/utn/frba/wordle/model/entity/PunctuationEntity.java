@@ -1,7 +1,7 @@
-package utn.frba.wordle.entity;
+package utn.frba.wordle.model.entity;
 
 import lombok.*;
-import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.pojo.Language;
 
 import javax.persistence.*;
 import java.time.LocalDate;

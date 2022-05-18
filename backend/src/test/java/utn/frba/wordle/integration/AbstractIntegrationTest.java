@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import utn.frba.wordle.dto.LoginDto;
-import utn.frba.wordle.dto.UserDto;
+import utn.frba.wordle.model.dto.LoginDto;
+import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.service.UserService;
 
 @ExtendWith(SpringExtension.class)

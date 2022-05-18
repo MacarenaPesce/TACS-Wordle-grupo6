@@ -1,4 +1,4 @@
-package utn.frba.wordle.dto;
+package utn.frba.wordle.model.dto;
 
 import lombok.*;
 

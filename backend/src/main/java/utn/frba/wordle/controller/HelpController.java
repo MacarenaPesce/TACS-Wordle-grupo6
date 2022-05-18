@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.dto.HelpRequestDto;
-import utn.frba.wordle.dto.HelpSolutionDto;
+import utn.frba.wordle.model.dto.HelpRequestDto;
+import utn.frba.wordle.model.dto.HelpSolutionDto;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.service.HelpService;
 
 import java.io.IOException;

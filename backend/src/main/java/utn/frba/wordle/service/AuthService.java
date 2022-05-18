@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.dto.LoginDto;
-import utn.frba.wordle.dto.SessionDto;
-import utn.frba.wordle.dto.UserDto;
-import utn.frba.wordle.entity.UserEntity;
+import utn.frba.wordle.model.dto.LoginDto;
+import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.model.dto.UserDto;
+import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
 
 import java.util.Base64;

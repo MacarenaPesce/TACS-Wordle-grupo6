@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.controller.HelpController;
-import utn.frba.wordle.dto.HelpRequestDto;
-import utn.frba.wordle.dto.HelpSolutionDto;
+import utn.frba.wordle.model.dto.HelpRequestDto;
+import utn.frba.wordle.model.dto.HelpSolutionDto;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.service.HelpService;
 
 import java.io.IOException;

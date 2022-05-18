@@ -2,7 +2,7 @@ package utn.frba.wordle.service;
 
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.utils.WordFileReader;
 
 import java.io.IOException;

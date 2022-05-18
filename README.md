@@ -57,3 +57,11 @@ CONTAINER ID   IMAGE                   COMMAND                  CREATED         
 
 Parar la imagen
 docker stop <NAME>
+
+
+## Backend - Reporte de Cobertura
+Para ejecutar los tests de la aplicación, y generar el reporte de cobertura, en la carpeta backend ejecutar
+>mvn clean verify
+
+Esto generará el reporte en la carpeta target, el mismo puede verse en el navegador accediendo a:
+> http://localhost:63342/backend/target/site/jacoco-unit-test-coverage-report/index.html

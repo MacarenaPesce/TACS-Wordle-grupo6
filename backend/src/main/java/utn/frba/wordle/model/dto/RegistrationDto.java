@@ -1,8 +1,8 @@
-package utn.frba.wordle.dto;
+package utn.frba.wordle.model.dto;
 
 import lombok.*;
-import utn.frba.wordle.entity.PunctuationEntity;
-import utn.frba.wordle.entity.UserEntity;
+import utn.frba.wordle.model.entity.PunctuationEntity;
+import utn.frba.wordle.model.entity.UserEntity;
 
 import java.util.Date;
 import java.util.List;

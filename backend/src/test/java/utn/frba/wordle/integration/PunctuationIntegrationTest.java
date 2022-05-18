@@ -2,9 +2,9 @@ package utn.frba.wordle.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import utn.frba.wordle.dto.ResultDto;
-import utn.frba.wordle.dto.UserDto;
-import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.dto.ResultDto;
+import utn.frba.wordle.model.dto.UserDto;
+import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.service.PunctuationService;
 
 

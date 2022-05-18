@@ -1,7 +1,7 @@
-package utn.frba.wordle.dto;
+package utn.frba.wordle.model.dto;
 
 import lombok.*;
-import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.pojo.Language;
 
 @Getter
 @Setter
