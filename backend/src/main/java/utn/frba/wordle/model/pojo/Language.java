@@ -1,4 +1,4 @@
-package utn.frba.wordle.model;
+package utn.frba.wordle.model.pojo;
 
 public enum Language {
     EN("English"),

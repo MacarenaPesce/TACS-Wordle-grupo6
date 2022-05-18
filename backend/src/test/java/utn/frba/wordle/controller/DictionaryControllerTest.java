@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.service.DictionaryService;
 
 import static org.mockito.Mockito.verify;

@@ -1,9 +1,9 @@
-package utn.frba.wordle.entity;
+package utn.frba.wordle.model.entity;
 
 import lombok.*;
-import utn.frba.wordle.model.Language;
-import utn.frba.wordle.model.State;
-import utn.frba.wordle.model.TournamentType;
+import utn.frba.wordle.model.pojo.Language;
+import utn.frba.wordle.model.pojo.State;
+import utn.frba.wordle.model.pojo.TournamentType;
 
 import javax.persistence.*;
 import java.util.Date;

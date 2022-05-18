@@ -3,10 +3,7 @@ package utn.frba.wordle.repository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import utn.frba.wordle.dto.TournamentDto;
-import utn.frba.wordle.entity.RegistrationEntity;
-import utn.frba.wordle.entity.TournamentEntity;
-import utn.frba.wordle.model.State;
+import utn.frba.wordle.model.entity.TournamentEntity;
 
 import java.util.Date;
 import java.util.List;

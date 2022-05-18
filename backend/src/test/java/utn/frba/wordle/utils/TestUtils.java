@@ -6,10 +6,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import utn.frba.wordle.dto.LoginDto;
-import utn.frba.wordle.dto.SessionDto;
-import utn.frba.wordle.dto.UserDto;
+import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.UserService;
 

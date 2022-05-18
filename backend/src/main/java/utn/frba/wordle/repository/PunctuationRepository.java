@@ -2,7 +2,7 @@ package utn.frba.wordle.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import utn.frba.wordle.entity.PunctuationEntity;
+import utn.frba.wordle.model.entity.PunctuationEntity;
 
 import java.time.LocalDate;
 import java.util.List;

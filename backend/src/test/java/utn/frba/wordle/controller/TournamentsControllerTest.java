@@ -7,11 +7,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import utn.frba.wordle.dto.ResultDto;
-import utn.frba.wordle.dto.SessionDto;
-import utn.frba.wordle.dto.TournamentDto;
-import utn.frba.wordle.model.Ranking;
-import utn.frba.wordle.model.State;
+import utn.frba.wordle.model.dto.ResultDto;
+import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.model.dto.TournamentDto;
+import utn.frba.wordle.model.pojo.State;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 
