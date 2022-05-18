@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.*;
-import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.model.Ranking;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.TournamentService;
 
@@ -58,5 +58,12 @@ public class TournamentsController {
         SessionDto session = AuthService.getSession(token);
         tournamentService.submitResults(session.getUserId(), resultDto);
         return new ResponseEntity<>("Resultados cargados correctamente", HttpStatus.OK);
+    }
+
+    @GetMapping("/{tournamentId}/ranking")
+    public ResponseEntity<Ranking> getRanking(@PathVariable Long tournamentId) {
+        Ranking ranking = tournamentService.getRanking(tournamentId);
+
+        return new ResponseEntity<>(ranking, HttpStatus.OK);
     }
 }

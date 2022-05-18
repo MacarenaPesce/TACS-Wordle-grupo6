@@ -1,6 +1,5 @@
 package utn.frba.wordle.integration;
 
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.dto.*;
@@ -13,10 +12,9 @@ import utn.frba.wordle.model.Ranking;
 import utn.frba.wordle.model.State;
 import utn.frba.wordle.model.TournamentType;
 import utn.frba.wordle.repository.TournamentRepository;
-import utn.frba.wordle.service.RegistrationService;
 import utn.frba.wordle.service.PunctuationService;
+import utn.frba.wordle.service.RegistrationService;
 import utn.frba.wordle.service.TournamentService;
-import utn.frba.wordle.service.UserService;
 
 import java.util.Date;
 import java.util.List;
@@ -33,9 +31,6 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     TournamentRepository tournamentRepository;
-
-    @Autowired
-    UserService userService;
 
     @Autowired
     RegistrationService registrationService;
@@ -248,14 +243,6 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament1");
 
         assertNotEquals(tournament1.getTourneyId(), tournament2.getTourneyId());
-    }
-
-    private UserDto getUserDto(String s, String usernameTest2) {
-        LoginDto user = LoginDto.builder()
-                .email(s)
-                .username(usernameTest2)
-                .build();
-        return userService.createUser(user);
     }
 
     private void inabilityTournament(TournamentDto tournament1, State state) {

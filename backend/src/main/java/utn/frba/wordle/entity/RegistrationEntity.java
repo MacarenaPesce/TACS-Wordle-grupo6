@@ -29,7 +29,7 @@ public class RegistrationEntity {
     @JoinColumn(name = "Id_Tournament", nullable = false)
     private TournamentEntity tournament;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "registrations", fetch = FetchType.EAGER)
     private Set<PunctuationEntity> punctuations;
 
     @Column

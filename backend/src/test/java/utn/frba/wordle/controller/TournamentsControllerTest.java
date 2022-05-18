@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import utn.frba.wordle.dto.ResultDto;
 import utn.frba.wordle.dto.SessionDto;
 import utn.frba.wordle.dto.TournamentDto;
+import utn.frba.wordle.model.Ranking;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 
@@ -106,5 +107,20 @@ public class TournamentsControllerTest {
                 .andExpect(status().isOk());
 
         verify(tournamentService).submitResults(sessionDto.getUserId(), request);
+    }
+
+    @SneakyThrows
+    @Test
+    public void aUserCanGetTheRankingOfATourney() {
+        Long idTournament = 22L;
+        SessionDto sessionDto = TestUtils.getMockSession();
+
+        String urlController = String.format("/api/tournaments/%s/ranking", idTournament);
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).getRanking(idTournament);
     }
 }
