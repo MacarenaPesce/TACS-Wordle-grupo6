@@ -2,6 +2,7 @@ package utn.frba.wordle.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.PunctuationEntity;
 import utn.frba.wordle.entity.TournamentEntity;
@@ -46,7 +47,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
                 .type(TournamentType.PRIVATE)
                 .start(new Date())
                 .finish(new Date())
-                .state(State.ACTIVE)
+                .state(State.STARTED)
                 .name(name)
                 .language(Language.ES)
                 .build();
@@ -67,7 +68,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
                 .type(TournamentType.PRIVATE)
                 .start(new Date())
                 .finish(new Date())
-                .state(State.ACTIVE)
+                .state(State.STARTED)
                 .name(name)
                 .language(Language.ES)
                 .build();
@@ -239,10 +240,38 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
     public void anActiveTournamentWithDuplicatedNameCanBeCreatedIfTheDuplicatedIsNotActive() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
         TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1");
-        inabilityTournament(tournament1, State.INACTIVE);
+        inabilityTournament(tournament1, State.FINISHED);
         TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament1");
 
         assertNotEquals(tournament1.getTourneyId(), tournament2.getTourneyId());
+    }
+
+    @Test
+    @Transactional
+    public void aUserCanListTheirFinishedTournaments(){
+        State state = State.FINISHED;
+        UserDto owner = getUserDto("owner@mail.com", "owner");
+        UserDto player1 = getUserDto("player1@mail.com", "player1");
+        UserDto player2 = getUserDto("player2@mail.com", "player2");
+        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1");
+        tournament1.setState(state);
+        TournamentEntity tournament1entity = tournamentService.mapToEntity(tournament1);
+        tournamentRepository.save(tournament1entity);
+        tournamentService.addMember(player1.getId(), tournament1.getTourneyId(), owner.getId());
+        tournamentService.addMember(player2.getId(), tournament1.getTourneyId(), owner.getId());
+        tournamentRepository.findById(tournament1.getTourneyId()).orElseThrow();
+        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament2");
+        tournament2.setState(State.STARTED);
+        TournamentEntity tournament2entity = tournamentService.mapToEntity(tournament2);
+        tournamentRepository.save(tournament2entity);
+        tournamentService.addMember(player2.getId(), tournament2.getTourneyId(), owner.getId());
+        tournamentRepository.findById(tournament2.getTourneyId()).orElseThrow();
+
+        List<TournamentDto> tournaments = tournamentService.findUserTournamentsByState(player2.getId(), state);
+
+        assertThat(tournaments).isNotEmpty();
+        assertThat(tournaments.get(0)).hasNoNullFieldsOrProperties();
+        assertEquals(tournaments.get(0).getState(), state);
     }
 
     private void inabilityTournament(TournamentDto tournament1, State state) {

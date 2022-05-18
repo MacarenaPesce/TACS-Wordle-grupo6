@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utn.frba.wordle.dto.*;
+import utn.frba.wordle.entity.RegistrationEntity;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
@@ -47,7 +48,7 @@ public class TournamentService {
         if (existingActiveTournament != null) {
             throw new BusinessException("There is already an active Tournament with this name.");
         }
-        newTournament.setState(State.ACTIVE);
+        newTournament.setState(State.READY);
         newTournament = tournamentRepository.save(newTournament);
 
         return mapToDto(newTournament);
@@ -76,7 +77,13 @@ public class TournamentService {
             throw new BusinessException("The user '"+userEntity.getUsername()+"' is already a member of the tournament "+tournamentEntity.getName());
         }
 
-        tournamentRepository.addMember(tournamentEntity.getId(), userEntity.getId(), new Date());
+
+        RegistrationEntity registrationEntity = registrationService.addMember(tournamentEntity.getId(), userEntity.getId(), new Date());
+        if(tournamentEntity.getRegistrations() == null){
+            tournamentEntity.setRegistrations(new HashSet<>());
+        }
+        tournamentEntity.getRegistrations().add(registrationEntity);
+        tournamentEntity = tournamentRepository.save(tournamentEntity);
 
         return MemberNewDto.builder()
                 .tournamentId(tournamentEntity.getId())
@@ -144,8 +151,13 @@ public class TournamentService {
                 .build();
     }
 
-    private TournamentEntity mapToEntity(TournamentDto dto) {
+    public List<TournamentDto> findUserTournamentsByState(Long userId, State state) {
+        return mapToDto(tournamentRepository.findUserTournamentsByState(userId, state.name()));
+    }
+
+    public TournamentEntity mapToEntity(TournamentDto dto) {
         return TournamentEntity.builder()
+                .id(dto.getTourneyId())
                 .finish(dto.getFinish())
                 .start(dto.getStart())
                 .language(dto.getLanguage())

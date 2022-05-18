@@ -1,8 +1,9 @@
 package utn.frba.wordle.model;
 
 public enum State {
-    ACTIVE("Active"),
-    INACTIVE("Inactive");
+    READY("Ready"),
+    STARTED("Started"),
+    FINISHED("Finished");
 
     final String status;
 
