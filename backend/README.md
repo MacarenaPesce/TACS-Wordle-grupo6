@@ -24,3 +24,15 @@ CONTAINER ID   IMAGE                   COMMAND                  CREATED         
 
 Parar la imagen
 docker stop <NAME>
+
+### BD MySQL
+Si aún no tenemos creada la BD localmente:
+
+1- Accedemos a la consola de MySQL (pass: root)
+>mysql -u root
+
+2- Creamos la BD
+>CREATE DATABASE wordle;
+
+3- Cerramos la BD
+>exit;
