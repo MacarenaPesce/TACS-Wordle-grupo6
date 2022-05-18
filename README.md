@@ -21,7 +21,7 @@ y la aplicaciòn **Wordle-Helper** se abrirá
 
 
 ## FRONTEND
-Fronted This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Frontend This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## BACKEND
 ### BD MySQL
