@@ -6,7 +6,6 @@ import utn.frba.wordle.model.Language;
 import utn.frba.wordle.utils.WordFileReader;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,9 +25,7 @@ public class HelpService {
      */
     public Set<String> solution(String yellow, String grey, String solution, Language language) throws IOException {
 
-        Set<String> posibleSolutions = findPossibleSolutions(language, yellow, grey, solution);
-
-        return posibleSolutions;
+        return findPossibleSolutions(language, yellow, grey, solution);
     }
 
     /**
@@ -68,8 +65,8 @@ public class HelpService {
 
         List<Character> greyLetters = grey.chars().mapToObj(e->(char)e).collect(Collectors.toList());
 
-        for (int i = 0; i < greyLetters.size(); i++) {
-            String letter = String.valueOf(greyLetters.get(i));
+        for (Character greyLetter : greyLetters) {
+            String letter = String.valueOf(greyLetter);
             wordList = wordList.stream().filter(word -> !word.contains(letter)).collect(Collectors.toSet());
         }
 
@@ -86,8 +83,8 @@ public class HelpService {
 
         List<Character> yellowLetters = yellow.chars().mapToObj(e->(char)e).collect(Collectors.toList());
 
-        for (int i = 0; i < yellowLetters.size(); i++) {
-            String letter = String.valueOf(yellowLetters.get(i));
+        for (Character yellowLetter : yellowLetters) {
+            String letter = String.valueOf(yellowLetter);
             wordList = wordList.stream().filter(word -> word.contains(letter)).collect(Collectors.toSet());
         }
 

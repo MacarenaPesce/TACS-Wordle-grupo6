@@ -4,13 +4,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.dto.RegistrationDto;
-import utn.frba.wordle.entity.PunctuationEntity;
 import utn.frba.wordle.entity.RegistrationEntity;
 import utn.frba.wordle.repository.RegistrationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor

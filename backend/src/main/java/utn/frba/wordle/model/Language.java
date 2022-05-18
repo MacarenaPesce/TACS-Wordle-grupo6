@@ -4,7 +4,7 @@ public enum Language {
     EN("English"),
     ES("Español");
 
-    String language;
+    final String language;
 
     Language(String language){
         this.language = language;

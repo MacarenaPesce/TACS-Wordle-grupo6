@@ -21,9 +21,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class AuthService {
 
-    public static String ADMIN_USER = "utn";
-    public static String ADMIN_PASS = "utn";
-    public static String ADMIN_EMAIL = "utnfrba@admin.com";
+    public static final String ADMIN_USER = "utn";
+    public static final String ADMIN_PASS = "utn";
+    public static final String ADMIN_EMAIL = "utnfrba@admin.com";
 
     public static final String SECRET = "aVeryRandomSecretAndGreenKey";
 
@@ -46,7 +46,7 @@ public class AuthService {
     }
 
     public SessionDto register(LoginDto loginDto) {
-        UserEntity userEntity = null;
+        UserEntity userEntity;
 
         userEntity = userService.findUserByUsername(loginDto.getUsername());
         if(userEntity != null){
@@ -65,7 +65,7 @@ public class AuthService {
     public SessionDto login(LoginDto loginDto) {
         if (loginDto.getUsername().equals(ADMIN_USER) &&
                 loginDto.getPassword().equals(ADMIN_PASS)) {
-            return getSessionDtoHardcodeado(loginDto);
+            return getSessionDtoHardcodeado();
         } else {
             UserEntity userEntity = userService.findUserByUsernameAndPassword(loginDto.getUsername(), loginDto.getPassword());
             if (userEntity == null) {
@@ -92,7 +92,7 @@ public class AuthService {
         return getSessionDto(UserService.mapToDto(userEntity));
     }
 
-    private SessionDto getSessionDtoHardcodeado(LoginDto loginDto) {
+    private SessionDto getSessionDtoHardcodeado() {
         String accessToken = getJWTToken(ADMIN_USER, ADMIN_EMAIL, 0L, jwtAccessExpiration);
 
         return SessionDto.builder()

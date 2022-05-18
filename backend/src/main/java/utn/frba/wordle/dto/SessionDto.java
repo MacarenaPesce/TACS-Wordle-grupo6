@@ -2,8 +2,6 @@ package utn.frba.wordle.dto;
 
 import lombok.*;
 
-import java.util.Objects;
-
 @Getter
 @Setter
 @NoArgsConstructor

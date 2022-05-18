@@ -56,7 +56,7 @@ public class UserController {
 
     private void checkIDs(SessionDto session, Long userId){
         Long tokenUserId = session.getUserId();
-        if (userId != tokenUserId){
+        if (!userId.equals(tokenUserId)){
             throw new BusinessException("Debe coincidir el user id del path ("+userId+"), con el user id del usuario logueado ("+tokenUserId+")");
         }
     }

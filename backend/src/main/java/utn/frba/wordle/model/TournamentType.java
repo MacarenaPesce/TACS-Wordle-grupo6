@@ -4,7 +4,7 @@ public enum TournamentType {
     PRIVATE("Private"),
     PUBLIC("Public");
 
-    String type;
+    final String type;
 
     TournamentType(String type){
         this.type = type;

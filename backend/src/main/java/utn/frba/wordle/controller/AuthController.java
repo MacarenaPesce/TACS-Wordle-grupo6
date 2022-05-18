@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.LoginDto;
 import utn.frba.wordle.dto.SessionDto;
-import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.service.AuthService;
 
 @RestController

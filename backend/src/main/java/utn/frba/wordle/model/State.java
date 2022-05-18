@@ -4,7 +4,7 @@ public enum State {
     ACTIVE("Active"),
     INACTIVE("Inactive");
 
-    String status;
+    final String status;
 
     State(String status){
         this.status = status;

@@ -1,7 +1,6 @@
 package utn.frba.wordle.dto;
 
 import lombok.*;
-import utn.frba.wordle.entity.UserEntity;
 
 import java.util.Date;
 

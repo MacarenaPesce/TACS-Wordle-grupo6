@@ -28,6 +28,7 @@ public class WordleBackendApplication {
 
     @EnableWebSecurity
     @Configuration
+    static
     class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Bean

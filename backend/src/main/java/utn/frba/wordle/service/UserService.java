@@ -7,12 +7,10 @@ import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.Language;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.repository.UserRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -45,8 +43,7 @@ public class UserService {
     }
 
     public List<TournamentEntity> getMyTournamets(Long userId){
-        List<TournamentEntity> tournaments = tournamentRepository.findByUserName(userId);
-        return tournaments;
+        return tournamentRepository.findByUserName(userId);
     }
 
     public UserDto createUser(LoginDto loginDto) {
