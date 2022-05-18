@@ -71,7 +71,7 @@ public class TournamentService {
             throw new BusinessException("El usuario especificado no se encuentra registrado en el sistema");
         }
 
-        Set<UserDto> members = userService.getTournamentMembers(tournamentEntity.getId());
+        List<UserDto> members = userService.getTournamentMembers(tournamentEntity.getId());
         UserDto existingUser = members.stream().filter(member -> member.getUsername().equals(userEntity.getUsername())).findAny().orElse(null); //TODO hacer la busqueda directo en la query a la base de datos?
         if (existingUser != null) {
             throw new BusinessException("The user '"+userEntity.getUsername()+"' is already a member of the tournament "+tournamentEntity.getName());

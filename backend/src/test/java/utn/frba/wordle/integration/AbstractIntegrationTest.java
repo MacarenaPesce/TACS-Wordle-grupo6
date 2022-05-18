@@ -21,10 +21,10 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     UserService userService;
 
-    protected UserDto getUserDto(String s, String usernameTest2) {
+    protected UserDto getUserDto(String email, String username) {
         LoginDto user = LoginDto.builder()
-                .email(s)
-                .username(usernameTest2)
+                .email(email)
+                .username(username)
                 .build();
         return userService.createUser(user);
     }

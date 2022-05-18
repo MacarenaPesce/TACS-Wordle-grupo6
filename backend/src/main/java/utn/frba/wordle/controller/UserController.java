@@ -4,16 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.model.dto.*;
-import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.model.dto.ResultDto;
+import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.PunctuationService;
 import utn.frba.wordle.service.UserService;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -23,55 +22,17 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
     @Autowired
-    PunctuationService resultService;
+    PunctuationService punctuationService;
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> findAll() {
-        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
-    }
-
-    @GetMapping ("/{userId}/tournaments")
-    public ResponseEntity<TourneysDto> getMyTournamets(@RequestHeader("Authorization") String token, @PathVariable Long userId) {
-
-        SessionDto session = AuthService.getSession(token); //todo sacar dto de authservice
-        checkIDs(session, userId);
-
-        List<TournamentEntity> tournaments = userService.getMyTournamets(userId);
-
-
-        TourneysDto tourneysDto = TourneysDto.builder()
-                .tourneys(mapToDto(tournaments))
-                .build();
-
-        return new ResponseEntity<>(tourneysDto, HttpStatus.OK);
-    }
-
-    private void checkIDs(SessionDto session, Long userId){
-        Long tokenUserId = session.getUserId();
-        if (!userId.equals(tokenUserId)){
-            throw new BusinessException("Debe coincidir el user id del path ("+userId+"), con el user id del usuario logueado ("+tokenUserId+")");
+    public ResponseEntity<List<UserDto>> findAll(@RequestParam(required = false) String username) {
+        if (username==null){
+            return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+        } else{
+            return new ResponseEntity<>(userService.findByName(username), HttpStatus.OK);
         }
-    }
-
-    private TournamentDto mapToDto(TournamentEntity entity) {
-        return TournamentDto.builder()
-                .language(entity.getLanguage())
-                .name(entity.getName())
-                .finish(entity.getFinish())
-                .start(entity.getStart())
-                .state(entity.getState())
-                .tourneyId(entity.getId())
-                .type(entity.getType())
-                .owner(UserService.mapToDto(entity.getOwner()))
-                .build();
-    }
-    private List<TournamentDto> mapToDto(List<TournamentEntity> entities) {
-        List<TournamentDto> dtos = new ArrayList<>(Collections.emptySet());
-        for(TournamentEntity tournament:entities){
-            dtos.add(mapToDto(tournament));
-        }
-        return dtos;
     }
 
     @GetMapping("/{userId}/getTodaysResult/{language}")     //TODO agregar tests para esta ruta
@@ -79,7 +40,7 @@ public class UserController {
         SessionDto session = AuthService.getSession(token);
         checkIDs(session, userId);
 
-        Long result = resultService.getTodaysResult(userId, language);
+        Long result = punctuationService.getTodaysResult(userId, language);
 
         ResultDto dto = ResultDto.builder()
                 .userId(userId)
@@ -89,4 +50,10 @@ public class UserController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    private void checkIDs(SessionDto session, Long userId){
+        Long tokenUserId = session.getUserId();
+        if (!userId.equals(tokenUserId)){
+            throw new BusinessException("Debe coincidir el user id del path ("+userId+"), con el user id del usuario logueado ("+tokenUserId+")");
+        }
+    }
 }

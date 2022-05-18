@@ -128,7 +128,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
 
         tournamentService.addMember(userId, dto.getTourneyId(), ownerUser.getId());
 
-        Set<UserDto> members = userService.getTournamentMembers(dto.getTourneyId());
+        List<UserDto> members = userService.getTournamentMembers(dto.getTourneyId());
         assertThat(members).contains(player);
     }
 
@@ -169,7 +169,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
 
         tournamentService.join(user.getId(), tournamentDto.getTourneyId());
 
-        Set<UserDto> members = userService.getTournamentMembers(tournamentDto.getTourneyId());
+        List<UserDto> members = userService.getTournamentMembers(tournamentDto.getTourneyId());
         assertThat(members).contains(user);
     }
 
