@@ -116,6 +116,6 @@ public class UserService {
     }
 
     public List<UserDto> findAll() {
-        return mapToDto((List<UserEntity>) userRepository.findAll()).stream().collect(Collectors.toList());
+        return new ArrayList<>(mapToDto((List<UserEntity>) userRepository.findAll()));
     }
 }

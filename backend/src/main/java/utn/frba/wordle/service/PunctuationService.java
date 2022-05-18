@@ -9,6 +9,7 @@ import utn.frba.wordle.entity.PunctuationEntity;
 import utn.frba.wordle.entity.RegistrationEntity;
 import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.model.Language;
 import utn.frba.wordle.repository.PunctuationRepository;
 import utn.frba.wordle.repository.RegistrationRepository;
 
@@ -70,5 +71,12 @@ public class PunctuationService {
 
     public List<PunctuationEntity> getPunctuationsEntityFromTourney(Long idTournament) {
         return punctuationRepository.findResultsFromTournament(idTournament);
+    }
+
+    public Long getTodaysResult(Long userId, Language language) {
+        LocalDate now = LocalDate.now();
+        List<PunctuationEntity> results = punctuationRepository.findTodayResults(userId, now);
+        return results.stream().filter(punctuationEntity -> punctuationEntity.getLanguage().equals(language))
+                .findFirst().orElse(PunctuationEntity.builder().punctuation(0L).build()).getPunctuation();
     }
 }

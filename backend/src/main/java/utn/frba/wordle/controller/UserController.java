@@ -4,14 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.dto.PositionsResponseDto;
-import utn.frba.wordle.dto.SessionDto;
-import utn.frba.wordle.dto.TournamentDto;
-import utn.frba.wordle.dto.TourneysDto;
+import utn.frba.wordle.dto.*;
 import utn.frba.wordle.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.Language;
 import utn.frba.wordle.service.AuthService;
+import utn.frba.wordle.service.PunctuationService;
 import utn.frba.wordle.service.UserService;
 
 import java.util.ArrayList;
@@ -25,8 +23,13 @@ public class UserController {
 
     @Autowired
     UserService userService;
-    /*@Autowired
-    ResultService resultService;*/
+    @Autowired
+    PunctuationService resultService;
+
+    @GetMapping
+    public ResponseEntity<List<UserDto>> findAll() {
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+    }
 
     @GetMapping ("getPositions")
     public ResponseEntity<PositionsResponseDto> getPositions() {
@@ -77,7 +80,7 @@ public class UserController {
         }
         return dtos;
     }
-/*
+
     @GetMapping("/{userId}/getTodaysResult/{language}")     //TODO agregar tests para esta ruta
     public ResponseEntity<ResultDto> getTodaysResult(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Language language) {
         SessionDto session = AuthService.getSession(token);
@@ -92,5 +95,5 @@ public class UserController {
                 .build();
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-*/
+
 }

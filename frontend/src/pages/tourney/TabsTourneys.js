@@ -39,16 +39,16 @@ export default class TabsTourneys extends Component{
     
     submitHandler = e => {
         e.preventDefault()
-        console.log('mostrando torneos')
+        //console.log('mostrando torneos')
         this.submitTourneys()
     }
 
     submitTourneys() {
-        console.log("submit tourneys")
+        //console.log("submit tourneys")
         UserService.getMyTourneys(this.props.nombreTabla) /*todo: como lo mando si no recibe parametros ._. mandar aca el tipo de torneos */ //mis torneos es el nombre del metodo, para otra tabla es otro metodo
             .then(response => {
-                console.log('Response obtenida: ')
-                console.log(response.data)
+                //('Response obtenida: ')
+                //console.log(response.data)
                 this.setState({myTourneys: response.data.tourneys})
                 if(JSON.stringify(this.state.myTourneys[0]) === undefined){
                     //todo mostrar mensaje de tabla vacia
@@ -78,8 +78,7 @@ export default class TabsTourneys extends Component{
                         <td> {tourney.owner.username}</td>
 
                         <td>
-                            <BotonesTorneos 
-                                type= {tourney.type}
+                            <BotonesTorneos tourney={tourney}
                             />   
                         </td>
                     </tr>

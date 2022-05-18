@@ -5,7 +5,7 @@ import UserService from '../../service/UserService';
 function AddMember() {
   const [USERS,setUsers] = useState([]);
 
-  UserService.getUsers()
+  /*UserService.getUsers()
   .then(response => {
           console.log('Response de usuarios obtenida: ')
           console.log(response.data)
@@ -14,8 +14,8 @@ function AddMember() {
       })
       .catch(error => {
         console.log(error)
-        /**todo: falta manejo de error como en tourney create */
-    })
+        // todo: falta manejo de error como en tourney create 
+    })*/
 
 	const [username, setName] = useState('');
   
