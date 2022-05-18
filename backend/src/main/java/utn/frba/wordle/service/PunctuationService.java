@@ -13,6 +13,7 @@ import utn.frba.wordle.repository.PunctuationRepository;
 import utn.frba.wordle.repository.RegistrationRepository;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,15 +50,21 @@ public class PunctuationService {
 
         for(RegistrationEntity registration:registrations){
             PunctuationEntity entity = PunctuationEntity.builder()
-                    .registration(registration)
                     .punctuation(result.getResult())
+                    .language(result.getLanguage())
+                    .user(userEntity)
                     .date(LocalDate.now())
                     .build();
+            if(entity.getRegistrations() == null){
+                entity.setRegistrations(new HashSet<>());
+            }
+
 
             entity = punctuationRepository.save(entity);
             registration.getPunctuations().add(entity);
             registrationRepository.save(registration);
-
+            entity.getRegistrations().add(registration);
+            punctuationRepository.save(entity);
         }
     }
 

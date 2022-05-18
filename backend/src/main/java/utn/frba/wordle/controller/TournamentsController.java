@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.*;
-import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.Ranking;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.TournamentService;
