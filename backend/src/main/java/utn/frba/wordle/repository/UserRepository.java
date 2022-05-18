@@ -12,7 +12,7 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     UserEntity findByUsernameAndPassword(String username, String password);
 
     @Query(value = "SELECT * FROM user u WHERE u.username = :username", nativeQuery = true)
-    UserEntity findByUsername(String username);
+    UserEntity getByUsername(String username);
 
     @Query(value = "select u.* from user u, registration r \n" +
             "where r.Id_Tournament = :tourneyId \n" +
@@ -21,4 +21,7 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     @Query(value = "SELECT * FROM user u WHERE u.email = :email", nativeQuery = true)
     UserEntity findByEmail(String email);
+
+    @Query(value = "SELECT * FROM user u WHERE u.username like %:username%", nativeQuery = true)
+    List<UserEntity> findByParcialUsername(String username);
 }

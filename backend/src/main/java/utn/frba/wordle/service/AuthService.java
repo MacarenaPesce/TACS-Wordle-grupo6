@@ -48,7 +48,7 @@ public class AuthService {
     public SessionDto register(LoginDto loginDto) {
         UserEntity userEntity;
 
-        userEntity = userService.findUserByUsername(loginDto.getUsername());
+        userEntity = userService.getUserByUsername(loginDto.getUsername());
         if(userEntity != null){
             throw new BusinessException(String.format("El usuario %s ya se encuentra registrado", loginDto.getUsername()));
         }

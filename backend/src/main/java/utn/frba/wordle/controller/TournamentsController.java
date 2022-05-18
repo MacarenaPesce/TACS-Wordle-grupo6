@@ -29,12 +29,16 @@ public class TournamentsController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    @GetMapping("/myTournaments")
+    public ResponseEntity<List<TournamentDto>> getTournamentsFromUser(@RequestHeader("Authorization") String token){
+        SessionDto session = AuthService.getSession(token);
+
+        List<TournamentDto> tournaments = tournamentService.getTournamentsFromUser(session.getUserId());
+        return new ResponseEntity<>(tournaments, HttpStatus.OK);
+    }
+
     @PostMapping("/{tournamentId}/members/{userId}")
     public ResponseEntity<MemberNewDto> addMember(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Long tournamentId) {
-
-       /* if(true){
-            throw new BusinessException("Llegue aqui");
-        }*/
 
         SessionDto session = AuthService.getSession(token);
 
