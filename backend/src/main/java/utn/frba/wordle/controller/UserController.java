@@ -31,13 +31,6 @@ public class UserController {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping ("getPositions")
-    public ResponseEntity<PositionsResponseDto> getPositions() {
-
-        PositionsResponseDto dto = userService.getPositions();
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
-
     @GetMapping ("/{userId}/tournaments")
     public ResponseEntity<TourneysDto> getMyTournamets(@RequestHeader("Authorization") String token, @PathVariable Long userId) {
 

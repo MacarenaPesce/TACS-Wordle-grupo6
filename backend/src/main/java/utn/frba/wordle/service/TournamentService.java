@@ -155,6 +155,10 @@ public class TournamentService {
         return mapToDto(tournamentRepository.findUserTournamentsByState(userId, state.name()));
     }
 
+    public List<TournamentDto> getTournamentsFromUser(Long userId) {
+        return mapToDto(tournamentRepository.findTournamentsFromUser(userId));
+    }
+
     public TournamentEntity mapToEntity(TournamentDto dto) {
         return TournamentEntity.builder()
                 .id(dto.getTourneyId())

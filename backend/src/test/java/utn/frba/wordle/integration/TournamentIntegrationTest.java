@@ -1,5 +1,6 @@
 package utn.frba.wordle.integration;
 
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -270,8 +271,37 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         List<TournamentDto> tournaments = tournamentService.findUserTournamentsByState(player2.getId(), state);
 
         assertThat(tournaments).isNotEmpty();
+        assertEquals(tournaments.size(), 1);
         assertThat(tournaments.get(0)).hasNoNullFieldsOrProperties();
         assertEquals(tournaments.get(0).getState(), state);
+    }
+
+    @Test
+    @Transactional
+    public void aUserCanListAllTheirTournaments(){
+        UserDto owner = getUserDto("owner@mail.com", "owner");
+        UserDto player1 = getUserDto("player1@mail.com", "player1");
+        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1");
+        tournament1.setState(State.READY);
+        TournamentEntity tournament1entity = tournamentService.mapToEntity(tournament1);
+        tournamentRepository.save(tournament1entity);
+        tournamentService.addMember(player1.getId(), tournament1.getTourneyId(), owner.getId());
+        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament2");
+        tournament2.setState(State.STARTED);
+        TournamentEntity tournament2entity = tournamentService.mapToEntity(tournament2);
+        tournamentRepository.save(tournament2entity);
+        tournamentService.addMember(player1.getId(), tournament2.getTourneyId(), owner.getId());
+        TournamentDto tournament3 = getPublicTournamentDto(owner, "Tournament3");
+        tournament3.setState(State.FINISHED);
+        TournamentEntity tournament3entity = tournamentService.mapToEntity(tournament3);
+        tournamentRepository.save(tournament3entity);
+        tournamentService.addMember(player1.getId(), tournament3.getTourneyId(), owner.getId());
+
+        List<TournamentDto> tournaments = tournamentService.getTournamentsFromUser(player1.getId());
+
+        assertThat(tournaments).isNotEmpty();
+        assertEquals(tournaments.size(), 3);
+        tournaments.forEach(tournamentDto -> assertThat(tournamentDto).hasNoNullFieldsOrProperties());
     }
 
     private void inabilityTournament(TournamentDto tournament1, State state) {

@@ -137,4 +137,18 @@ public class TournamentsControllerTest {
 
         verify(tournamentService).findUserTournamentsByState(sessionDto.getUserId(), State.READY);
     }
+
+    @SneakyThrows
+    @Test
+    public void aUserCanGetTheListTheirTournaments() {
+        SessionDto sessionDto = TestUtils.getMockSession();
+
+        String urlController = "/api/tournaments/myTournaments";
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).getTournamentsFromUser(sessionDto.getUserId());
+    }
 }

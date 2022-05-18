@@ -28,4 +28,9 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
             "and r.id_tournament = t.id \n" +
             "and t.state = :state", nativeQuery = true)
     List<TournamentEntity> findUserTournamentsByState(Long userId, String state);
+
+    @Query(value = "select t.* from Registration r, Tournament t \n" +
+            "where r.id_user = :userId \n" +
+            "and r.id_tournament = t.id", nativeQuery = true)
+    List<TournamentEntity> findTournamentsFromUser(Long userId);
 }

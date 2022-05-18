@@ -21,27 +21,6 @@ public class UserService {
     @Autowired
     TournamentRepository tournamentRepository;
 
-    public PositionsResponseDto getPositions() {
-        PositionDto positionsDto = PositionDto
-                .builder()
-                .userId(1)
-                .points(10)
-                .username("carlita")
-                .build();
-
-        LadderboardDto ladderboardDtos = LadderboardDto
-                .builder()
-                .name("pepis")
-                .tourneyId(2)
-                .positions(Collections.singletonList(positionsDto))
-                .build();
-
-        return PositionsResponseDto
-                .builder()
-                .tourneys(Collections.singletonList(ladderboardDtos))
-                .build();
-    }
-
     public List<TournamentEntity> getMyTournamets(Long userId){
         return tournamentRepository.findByUserName(userId);
     }
