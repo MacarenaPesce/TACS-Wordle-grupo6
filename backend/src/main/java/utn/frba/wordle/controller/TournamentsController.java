@@ -6,8 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.dto.*;
 import utn.frba.wordle.model.Ranking;
+import utn.frba.wordle.model.State;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.TournamentService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tournaments")
@@ -65,5 +68,13 @@ public class TournamentsController {
         Ranking ranking = tournamentService.getRanking(tournamentId);
 
         return new ResponseEntity<>(ranking, HttpStatus.OK);
+    }
+
+    @GetMapping("/{state}")
+    public ResponseEntity<List<TournamentDto>> findUserTournamentsByState(@RequestHeader("Authorization") String token, @PathVariable State state){
+        SessionDto session = AuthService.getSession(token);
+        List<TournamentDto> tournaments = tournamentService.findUserTournamentsByState(session.getUserId(), state);
+
+        return new ResponseEntity<>(tournaments, HttpStatus.OK);
     }
 }

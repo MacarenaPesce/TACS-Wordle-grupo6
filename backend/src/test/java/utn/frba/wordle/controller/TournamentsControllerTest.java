@@ -11,6 +11,7 @@ import utn.frba.wordle.dto.ResultDto;
 import utn.frba.wordle.dto.SessionDto;
 import utn.frba.wordle.dto.TournamentDto;
 import utn.frba.wordle.model.Ranking;
+import utn.frba.wordle.model.State;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 
@@ -122,5 +123,19 @@ public class TournamentsControllerTest {
                 .andExpect(status().isOk());
 
         verify(tournamentService).getRanking(idTournament);
+    }
+
+    @SneakyThrows
+    @Test
+    public void aUserCanGetTheListOfReadyTournaments() {
+        SessionDto sessionDto = TestUtils.getMockSession();
+
+        String urlController = "/api/tournaments/READY";
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).findUserTournamentsByState(sessionDto.getUserId(), State.READY);
     }
 }
