@@ -186,7 +186,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
 
 
     @Test
-    public void aUserCanSubmitHisResult() {
+    public void aUserCanSubmitTheirResults() {
         UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
         UserDto player = getUserDto("mailPlayer@mail.com", "usernamePlayer");
         ResultDto resultDto = ResultDto.builder()
@@ -202,6 +202,90 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         List<PunctuationEntity> punctuations = punctuationService.getPunctuationsEntityFromTourney(registrations.get(0).getId());
         assertThat(punctuations).isNotEmpty();
         assertThat(punctuations.get(0)).hasNoNullFieldsOrProperties();
+    }
+
+    @Test
+    public void aUserCanSubmitTheirResultsWithoutAnyRegistration() {
+        UserDto player = getUserDto("mailPlayer@mail.com", "usernamePlayer");
+        ResultDto resultDto = ResultDto.builder()
+                .result(2L)
+                .language(Language.ES)
+                .build();
+
+        tournamentService.submitResults(player.getId(), resultDto);
+
+        Long punctuation = punctuationService.getTodaysResult(player.getId(), Language.ES);
+        assertEquals(punctuation, 2L);
+    }
+
+    @Test
+    public void aUserCantSubmitTheirResultsTwice() {
+        UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
+        UserDto player = getUserDto("mailPlayer@mail.com", "usernamePlayer");
+        ResultDto resultDto = ResultDto.builder()
+                .result(2L)
+                .language(Language.ES)
+                .build();
+        TournamentDto tournamentDto = getPrivateTournamentDto(user, "Private Tourney");
+        tournamentService.addMember(player.getId(), tournamentDto.getTourneyId(), user.getId());
+        tournamentService.submitResults(player.getId(), resultDto);
+
+        assertThrows(BusinessException.class, () -> tournamentService.submitResults(player.getId(), resultDto));
+    }
+
+
+    @Test
+    public void aUserCanGetTheResultsOfToday(){
+        UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
+        UserDto player = getUserDto("mailPlayer@mail.com", "usernamePlayer");
+        TournamentDto tournamentDtoSpanish = getPrivateTournamentDto(user, "Private Tourney ES", Language.ES);
+        tournamentService.addMember(player.getId(), tournamentDtoSpanish.getTourneyId(), user.getId());
+        ResultDto resultDtoSpanish = ResultDto.builder()
+                .result(3L)
+                .language(Language.ES)
+                .build();
+        tournamentService.submitResults(player.getId(), resultDtoSpanish);
+        TournamentDto tournamentDtoEnglish = getPrivateTournamentDto(user, "Private Tourney EN", Language.EN);
+        tournamentService.addMember(player.getId(), tournamentDtoEnglish.getTourneyId(), user.getId());
+        ResultDto resultDtoEnglish = ResultDto.builder()
+                .result(5L)
+                .language(Language.EN)
+                .build();
+        tournamentService.submitResults(player.getId(), resultDtoEnglish);
+
+
+        Long punctuationEnglish = punctuationService.getTodaysResult(player.getId(), Language.EN);
+        Long punctuationSpanish = punctuationService.getTodaysResult(player.getId(), Language.ES);
+
+        assertEquals(punctuationSpanish, 3L);
+        assertEquals(punctuationEnglish, 5L);
+    }
+
+    @Test
+    public void aUserCanGetTheResultsOfTodayWithNoPunctuations(){
+        UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
+        UserDto player = getUserDto("mailPlayer@mail.com", "usernamePlayer");
+        TournamentDto tournamentDtoSpanish = getPrivateTournamentDto(user, "Private Tourney ES", Language.ES);
+        tournamentService.addMember(player.getId(), tournamentDtoSpanish.getTourneyId(), user.getId());
+        TournamentDto tournamentDtoEnglish = getPrivateTournamentDto(user, "Private Tourney EN", Language.EN);
+        tournamentService.addMember(player.getId(), tournamentDtoEnglish.getTourneyId(), user.getId());
+
+        Long punctuationEnglish = punctuationService.getTodaysResult(player.getId(), Language.EN);
+        Long punctuationSpanish = punctuationService.getTodaysResult(player.getId(), Language.ES);
+
+        assertEquals(punctuationSpanish, 0L);
+        assertEquals(punctuationEnglish, 0L);
+    }
+
+    @Test
+    public void aUserCanGetTheResultsOfTodayWithNoTournaments(){
+        UserDto player = getUserDto("mailPlayer@mail.com", "usernamePlayer");
+
+        Long punctuationEnglish = punctuationService.getTodaysResult(player.getId(), Language.EN);
+        Long punctuationSpanish = punctuationService.getTodaysResult(player.getId(), Language.ES);
+
+        assertEquals(punctuationSpanish, 0L);
+        assertEquals(punctuationEnglish, 0L);
     }
 
     @Test
@@ -323,16 +407,20 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         return tournamentService.create(tournamentDto, owner.getId());
     }
 
-    private TournamentDto getPrivateTournamentDto(UserDto ownerUser, String tournamentName) {
+    private TournamentDto getPrivateTournamentDto(UserDto ownerUser, String tournamentName, Language language) {
         TournamentDto tournamentDto = TournamentDto.builder()
                 .type(TournamentType.PRIVATE)
                 .start(new Date())
                 .finish(new Date())
                 .name(tournamentName)
-                .language(Language.ES)
+                .language(language)
                 .owner(ownerUser)
                 .build();
         return tournamentService.create(tournamentDto, ownerUser.getId());
+    }
+
+    private TournamentDto getPrivateTournamentDto(UserDto ownerUser, String tournamentName) {
+        return getPrivateTournamentDto(ownerUser, tournamentName, Language.ES);
     }
 
     private TournamentDto getPrivateTournamentDto(UserDto ownerUser) {
