@@ -33,6 +33,7 @@ public class TournamentService {
     @Autowired
     PunctuationService punctuationService;
 
+    @Transactional
     public TournamentDto create(TournamentDto dto, Long userId) {
 
         UserDto owner;
@@ -50,6 +51,8 @@ public class TournamentService {
         }
         newTournament.setState(State.READY);
         newTournament = tournamentRepository.save(newTournament);
+
+        addMember(userId, newTournament.getId(), userId);
 
         return mapToDto(newTournament);
     }

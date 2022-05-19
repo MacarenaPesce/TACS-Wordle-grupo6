@@ -23,8 +23,7 @@ const getAdminBoard = () => {
 
 const getMyTourneys = (nombreTabla) => {
   if(nombreTabla === 'Mis torneos'){
-    let userId = localStorage.getItem("userId");
-    return axios.get(API_USERS + userId + "/tournaments", { headers: authHeader() });
+    return axios.get(API + "tournaments/myTournaments", { headers: authHeader() });
   }
   else if(nombreTabla === 'Publicos'){
     console.log('estas en torneos publicos')
@@ -37,8 +36,7 @@ const getMyTourneys = (nombreTabla) => {
 };
 
 const getTodaysResult = (language) => {
-  const userId = localStorage.getItem("userId");
-  return axios.get(API_USERS + userId + "/getTodaysResult/" + language, { headers: authHeader() });
+  return axios.get(API + "punctuation/todaysResult/" + language, { headers: authHeader() });
 };
 
 const getTourneysPublic = () => {
