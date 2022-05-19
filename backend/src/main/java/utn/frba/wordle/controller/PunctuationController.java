@@ -23,7 +23,7 @@ public class PunctuationController {
     PunctuationService punctuationService;
 
 
-    @GetMapping("/todaysResult/{language}")     //TODO agregar tests para esta ruta
+    @GetMapping("/todaysResult/{language}")
     public ResponseEntity<ResultDto> getTodaysResult(@RequestHeader("Authorization") String token, @PathVariable Language language) {
         SessionDto session = AuthService.getSession(token);
 

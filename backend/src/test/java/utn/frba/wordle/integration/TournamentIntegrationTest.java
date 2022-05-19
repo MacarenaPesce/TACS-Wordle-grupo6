@@ -199,7 +199,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         tournamentService.submitResults(player.getId(), resultDto);
 
         List<RegistrationDto> registrations =  registrationService.getRegistrationsFromUser(player.getId());
-        List<PunctuationEntity> punctuations = punctuationService.getPunctuationsEntityFromTourney(registrations.get(0).getId());
+        List<PunctuationEntity> punctuations = punctuationService.getPunctuationsEntityFromTourney(registrations.get(0).getTournamentId());
         assertThat(punctuations).isNotEmpty();
         assertThat(punctuations.get(0)).hasNoNullFieldsOrProperties();
     }
@@ -294,7 +294,7 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         UserDto player2 = getUserDto("mail2@mail.com", "player2");
         UserDto player3 = getUserDto("mail3@mail.com", "player3");
         TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney");
-        tournamentService.addMember(player1.getId(), tournamentDto.getTourneyId(), player1.getId());
+        //tournamentService.addMember(player1.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player2.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player3.getId(), tournamentDto.getTourneyId(), player1.getId());
         ResultDto result = ResultDto.builder().result(5L).language(Language.ES).build();
