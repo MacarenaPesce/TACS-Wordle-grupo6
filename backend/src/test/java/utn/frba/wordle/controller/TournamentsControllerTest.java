@@ -11,7 +11,6 @@ import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.SessionDto;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.pojo.State;
-import utn.frba.wordle.service.PunctuationService;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 
@@ -122,7 +121,7 @@ public class TournamentsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).getRanking(idTournament);
+        verify(tournamentService).orderedPunctuations(idTournament);
     }
 
     @SneakyThrows

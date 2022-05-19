@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.model.dto.*;
-import utn.frba.wordle.model.pojo.Ranking;
+import utn.frba.wordle.model.http.RankingResponse;
+import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.pojo.State;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.TournamentService;
@@ -68,8 +69,13 @@ public class TournamentsController {
     }
 
     @GetMapping("/{tournamentId}/ranking")
-    public ResponseEntity<Ranking> getRanking(@PathVariable Long tournamentId) {
-        Ranking ranking = tournamentService.getRanking(tournamentId);
+    public ResponseEntity<RankingResponse> getRanking(@PathVariable Long tournamentId) {
+        List<Punctuation> orderedPunctuations = tournamentService.orderedPunctuations(tournamentId);
+
+        RankingResponse ranking = RankingResponse.builder()
+                .idTournament(tournamentId)
+                .punctuations(orderedPunctuations)
+                .build();
 
         return new ResponseEntity<>(ranking, HttpStatus.OK);
     }

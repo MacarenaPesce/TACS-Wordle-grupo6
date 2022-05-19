@@ -10,7 +10,6 @@ import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.pojo.Punctuation;
-import utn.frba.wordle.model.pojo.Ranking;
 import utn.frba.wordle.model.pojo.State;
 import utn.frba.wordle.repository.TournamentRepository;
 
@@ -128,7 +127,7 @@ public class TournamentService {
         punctuationService.submitResults(userId, result);
     }
 
-    public Ranking getRanking(Long tourneyId) {
+    public List<Punctuation> orderedPunctuations(Long tourneyId) {
         List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
         List<Punctuation> punctuations = new ArrayList<>();
         registrations.forEach(
@@ -145,13 +144,9 @@ public class TournamentService {
                 punctuations.add(punctuation);
             }
         );
-        List<Punctuation> orderedPunctuations = punctuations.stream()
+        return punctuations.stream()
                 .sorted(Comparator.comparingLong(Punctuation::getPunctuation).reversed())
                 .collect(Collectors.toList());
-        return Ranking.builder()
-                .idTournament(tourneyId)
-                .punctuations(orderedPunctuations)
-                .build();
     }
 
     public List<TournamentDto> findUserTournamentsByState(Long userId, State state) {

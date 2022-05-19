@@ -1,6 +1,5 @@
 package utn.frba.wordle.integration;
 
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +9,8 @@ import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.pojo.Language;
-import utn.frba.wordle.model.pojo.Ranking;
+import utn.frba.wordle.model.http.RankingResponse;
+import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.pojo.State;
 import utn.frba.wordle.model.pojo.TournamentType;
 import utn.frba.wordle.repository.TournamentRepository;
@@ -20,7 +20,6 @@ import utn.frba.wordle.service.TournamentService;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -304,13 +303,12 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         tournamentService.submitResults(player2.getId(), result2);
         tournamentService.submitResults(player3.getId(), result3);
 
-        Ranking ranking = tournamentService.getRanking(tournamentDto.getTourneyId());
+        List<Punctuation> punctuations = tournamentService.orderedPunctuations(tournamentDto.getTourneyId());
 
-        assertThat(ranking).hasNoNullFieldsOrProperties();
-        assertThat(ranking.getPunctuations()).isNotEmpty();
-        assertThat(ranking.getPunctuations().get(0)).isNotEqualTo(0);
-        assertTrue(ranking.getPunctuations().get(0).getPunctuation() > ranking.getPunctuations().get(1).getPunctuation());
-        assertTrue(ranking.getPunctuations().get(1).getPunctuation() > ranking.getPunctuations().get(2).getPunctuation());
+        assertThat(punctuations).isNotEmpty();
+        assertThat(punctuations.get(0)).isNotEqualTo(0);
+        assertTrue(punctuations.get(0).getPunctuation() > punctuations.get(1).getPunctuation());
+        assertTrue(punctuations.get(1).getPunctuation() > punctuations.get(2).getPunctuation());
     }
 
     @Test
