@@ -40,7 +40,7 @@ public class PunctuationService {
         UserEntity userEntity = UserService.mapToEntity(user);
         LocalDate now = LocalDate.now();
 
-        List<PunctuationEntity> results = punctuationRepository.findTodayResults(userEntity.getId(), now);
+        List<PunctuationEntity> results = punctuationRepository.findTodayResults(userEntity.getId(), now, result.getLanguage());
 
         if(results != null && !results.isEmpty()){
             throw new BusinessException("The user already submitted his results.");
@@ -49,19 +49,16 @@ public class PunctuationService {
         List<RegistrationEntity> registrations = registrationService.getRegistrationsEntityFromUser(userId)
                 .stream().filter(reg -> reg.getTournament().getLanguage().equals(result.getLanguage())).collect(Collectors.toList());
 
-        for(RegistrationEntity registration:registrations){
-            PunctuationEntity entity = PunctuationEntity.builder()
-                    .punctuation(result.getResult())
-                    .language(result.getLanguage())
-                    .user(userEntity)
-                    .date(LocalDate.now())
-                    .build();
-            if(entity.getRegistrations() == null){
-                entity.setRegistrations(new HashSet<>());
-            }
+        PunctuationEntity entity = PunctuationEntity.builder()
+                .punctuation(result.getResult())
+                .language(result.getLanguage())
+                .user(userEntity)
+                .registrations(new HashSet<>())
+                .date(LocalDate.now())
+                .build();
+        entity = punctuationRepository.save(entity);
 
-
-            entity = punctuationRepository.save(entity);
+        for (RegistrationEntity registration : registrations) {
             registration.getPunctuations().add(entity);
             registrationRepository.save(registration);
             entity.getRegistrations().add(registration);
@@ -75,8 +72,7 @@ public class PunctuationService {
 
     public Long getTodaysResult(Long userId, Language language) {
         LocalDate now = LocalDate.now();
-        List<PunctuationEntity> results = punctuationRepository.findTodayResults(userId, now);
-        return results.stream().filter(punctuationEntity -> punctuationEntity.getLanguage().equals(language))
-                .findFirst().orElse(PunctuationEntity.builder().punctuation(0L).build()).getPunctuation();
+        List<PunctuationEntity> results = punctuationRepository.findTodayResults(userId, now, language);
+        return results.stream().findFirst().orElse(PunctuationEntity.builder().punctuation(0L).build()).getPunctuation();
     }
 }

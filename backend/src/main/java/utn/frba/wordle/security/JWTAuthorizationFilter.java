@@ -65,16 +65,12 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     private void setUpSpringAuthentication(Claims claims) {
         @SuppressWarnings("unchecked")
         List<String> authorities = (List<String>) claims.get("authorities");
-        String usuario = (String) claims.get("usuario");
-        Long idUsuario = Long.valueOf((Integer) claims.get("idUsuario"));
+        Long userId = Long.valueOf((Integer) claims.get("userId"));
+        String username = (String) claims.get("username");
         String email = (String) claims.get("email");
-        String nombre = (String) claims.get("nombre");
-        String apellido = (String) claims.get("apellido");
-        String legajo = (String) claims.get("legajo");
-        String dni = (String) claims.get("dni");
 
-        SessionUser auth = new SessionUser(claims.getSubject(), null,
-                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()), idUsuario, usuario, email, nombre, apellido, legajo, dni);
+        UserSession auth = new UserSession(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()), userId, username, email);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
     }
