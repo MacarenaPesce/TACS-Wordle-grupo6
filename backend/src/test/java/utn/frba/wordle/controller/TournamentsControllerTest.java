@@ -14,7 +14,9 @@ import utn.frba.wordle.model.pojo.State;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static utn.frba.wordle.utils.TestUtils.RANDOM;
@@ -38,6 +40,7 @@ public class TournamentsControllerTest {
         TournamentDto request = RANDOM.nextObject(dtoClass);
         request.setFinish(null);
         request.setStart(null);
+        when(tournamentService.create(any(), any())).thenReturn(request);
 
         SessionDto sessionDto = TestUtils.getMockSession();
         String urlController = "/api/tournaments/";

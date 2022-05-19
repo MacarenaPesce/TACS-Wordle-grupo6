@@ -6,12 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.model.dto.*;
 import utn.frba.wordle.model.http.RankingResponse;
+import utn.frba.wordle.model.http.TournamentResponse;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.pojo.State;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.TournamentService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tournaments")
@@ -22,19 +24,22 @@ public class TournamentsController {
     TournamentService tournamentService;
 
     @PostMapping
-    public ResponseEntity<TournamentDto> create(@RequestHeader("Authorization") String token, @RequestBody TournamentDto tournamentDto) {
-
+    public ResponseEntity<TournamentResponse> create(@RequestHeader("Authorization") String token, @RequestBody TournamentDto tournamentDto) {
         SessionDto session = AuthService.getSession(token);
-
         TournamentDto dto = tournamentService.create(tournamentDto, session.getUserId());
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+
+        TournamentResponse tournament = new TournamentResponse(dto);
+
+        return new ResponseEntity<>(tournament, HttpStatus.OK);
     }
 
     @GetMapping("/myTournaments")
-    public ResponseEntity<List<TournamentDto>> getTournamentsFromUser(@RequestHeader("Authorization") String token){
+    public ResponseEntity<List<TournamentResponse>> getTournamentsFromUser(@RequestHeader("Authorization") String token){
         SessionDto session = AuthService.getSession(token);
+        List<TournamentDto> tournamentsDto = tournamentService.getTournamentsFromUser(session.getUserId());
 
-        List<TournamentDto> tournaments = tournamentService.getTournamentsFromUser(session.getUserId());
+        List<TournamentResponse> tournaments = tournamentsDto
+                .stream().map(TournamentResponse::new).collect(Collectors.toList());
         return new ResponseEntity<>(tournaments, HttpStatus.OK);
     }
 
