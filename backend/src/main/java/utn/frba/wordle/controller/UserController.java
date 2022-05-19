@@ -34,26 +34,4 @@ public class UserController {
             return new ResponseEntity<>(userService.findByName(username), HttpStatus.OK);
         }
     }
-
-    @GetMapping("/{userId}/getTodaysResult/{language}")     //TODO agregar tests para esta ruta
-    public ResponseEntity<ResultDto> getTodaysResult(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Language language) {
-        SessionDto session = AuthService.getSession(token);
-        checkIDs(session, userId);
-
-        Long result = punctuationService.getTodaysResult(userId, language);
-
-        ResultDto dto = ResultDto.builder()
-                .userId(userId)
-                .result(result)
-                .language(language)
-                .build();
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
-
-    private void checkIDs(SessionDto session, Long userId){
-        Long tokenUserId = session.getUserId();
-        if (!userId.equals(tokenUserId)){
-            throw new BusinessException("Debe coincidir el user id del path ("+userId+"), con el user id del usuario logueado ("+tokenUserId+")");
-        }
-    }
 }

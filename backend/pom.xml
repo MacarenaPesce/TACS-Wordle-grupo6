@@ -90,6 +90,8 @@
 				<configuration>
 					<excludes>
 						<exclude>utn/frba/wordle/model/**/*.class</exclude>
+						<exclude>utn/frba/wordle/exception/**/*.class</exclude>
+						<exclude>utn/frba/wordle/security/**/*.class</exclude>
 						<exclude>**/config/*</exclude>
 					</excludes>
 				</configuration>
