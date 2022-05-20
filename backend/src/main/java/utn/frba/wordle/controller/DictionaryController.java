@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.model.dto.DictionaryDto;
+import utn.frba.wordle.model.http.DefinitionResponse;
 import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.service.DictionaryService;
 
@@ -20,18 +21,15 @@ public class DictionaryController {
     DictionaryService dictionaryService;
 
     @GetMapping("/{language}/{word}")
-    public ResponseEntity<DictionaryDto> getDefinitions(@PathVariable Language language, @PathVariable String word) {
+    public ResponseEntity<DefinitionResponse> getDefinitions(@PathVariable Language language, @PathVariable String word) {
 
         List<String> definitions = dictionaryService.getDefinitions(language, word);
 
-        System.out.println(definitions);
-        DictionaryDto dto = DictionaryDto.builder()
-                .definition(definitions)
-                .language(language)
-                .word(word)
+        DefinitionResponse response = DefinitionResponse.builder()
+                .definitions(definitions)
                 .build();
 
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
 
