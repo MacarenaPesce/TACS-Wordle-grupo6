@@ -1,6 +1,7 @@
-package utn.frba.wordle.model.pojo;
+package utn.frba.wordle.model.http;
 
 import lombok.*;
+import utn.frba.wordle.model.pojo.Punctuation;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class Ranking {
+public class RankingResponse {
     List<Punctuation> punctuations;
     Long idTournament;
 }

@@ -10,7 +10,6 @@ import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.pojo.Punctuation;
-import utn.frba.wordle.model.pojo.Ranking;
 import utn.frba.wordle.model.pojo.State;
 import utn.frba.wordle.repository.TournamentRepository;
 
@@ -58,7 +57,7 @@ public class TournamentService {
     }
 
     @Transactional
-    public MemberNewDto addMember(Long userId, Long tourneyID, Long ownerUserId) {
+    public RegistrationDto addMember(Long userId, Long tourneyID, Long ownerUserId) {
 
         TournamentEntity tournamentEntity = tournamentRepository.findById(tourneyID).orElse(null);
 
@@ -80,22 +79,18 @@ public class TournamentService {
             throw new BusinessException("The user '"+userEntity.getUsername()+"' is already a member of the tournament "+tournamentEntity.getName());
         }
 
-
         RegistrationEntity registrationEntity = registrationService.addMember(tournamentEntity.getId(), userEntity.getId(), new Date());
         if(tournamentEntity.getRegistrations() == null){
             tournamentEntity.setRegistrations(new HashSet<>());
         }
         tournamentEntity.getRegistrations().add(registrationEntity);
-        tournamentEntity = tournamentRepository.save(tournamentEntity);
+        tournamentRepository.save(tournamentEntity);
 
-        return MemberNewDto.builder()
-                .tournamentId(tournamentEntity.getId())
-                .username(userEntity.getUsername())
-                .build();
+        return registrationService.mapToDto(registrationEntity);
     }
 
     @Transactional
-    public JoinDto join(Long userId, Long tournamentId) {
+    public RegistrationDto join(Long userId, Long tournamentId) {
         TournamentEntity tournamentEntity = tournamentRepository.findById(tournamentId).orElse(null);
         //TODO verificar que solo pueda entrar a torneos publicos
         if (tournamentEntity == null) {
@@ -108,27 +103,22 @@ public class TournamentService {
             throw new BusinessException("The user already joined the Tournament.");
         }
 
-        tournamentRepository.addMember(tournamentEntity.getId(), userId, new Date());
+        RegistrationEntity registrationEntity = registrationService.addMember(tournamentEntity.getId(), userId, new Date());
 
-        return JoinDto.builder()
-                .tournamentID(tournamentId)
-                .userID(userId)
-                .build();
+        return registrationService.mapToDto(registrationEntity);
     }
 
-    public TourneysDto listPublicTournaments() {
+    public List<TournamentDto> listPublicTournaments() {
         List<TournamentEntity> tournaments = tournamentRepository.getPublicTournaments();
 
-        return TourneysDto.builder()
-                .tourneys(mapToDto(tournaments))
-                .build();
+        return mapToDto(tournaments);
     }
 
     public void submitResults(Long userId, ResultDto result) {
         punctuationService.submitResults(userId, result);
     }
 
-    public Ranking getRanking(Long tourneyId) {
+    public List<Punctuation> orderedPunctuations(Long tourneyId) {
         List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
         List<Punctuation> punctuations = new ArrayList<>();
         registrations.forEach(
@@ -145,13 +135,9 @@ public class TournamentService {
                 punctuations.add(punctuation);
             }
         );
-        List<Punctuation> orderedPunctuations = punctuations.stream()
+        return punctuations.stream()
                 .sorted(Comparator.comparingLong(Punctuation::getPunctuation).reversed())
                 .collect(Collectors.toList());
-        return Ranking.builder()
-                .idTournament(tourneyId)
-                .punctuations(orderedPunctuations)
-                .build();
     }
 
     public List<TournamentDto> findUserTournamentsByState(Long userId, State state) {

@@ -1,4 +1,4 @@
-package utn.frba.wordle.model.dto;
+package utn.frba.wordle.model.http;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @EqualsAndHashCode
 @Builder
 @AllArgsConstructor
-public class MemberNewDto {
+public class RegistrationResponse {
 
     private String username;
     private Long tournamentId;

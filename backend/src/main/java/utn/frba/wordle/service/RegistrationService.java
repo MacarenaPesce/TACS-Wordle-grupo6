@@ -4,9 +4,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.model.dto.RegistrationDto;
+import utn.frba.wordle.model.entity.PunctuationEntity;
 import utn.frba.wordle.model.entity.RegistrationEntity;
 import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.model.entity.UserEntity;
+import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.repository.RegistrationRepository;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.repository.UserRepository;
@@ -52,18 +54,25 @@ public class RegistrationService {
         return registrationRepository.save(entity);
     }
 
+    public RegistrationDto mapToDto(RegistrationEntity entity) {
+        ArrayList<PunctuationEntity> punctuations = new ArrayList<>();
+        if(entity.getPunctuations()!=null){
+            punctuations.addAll(entity.getPunctuations());
+        }
+
+        return RegistrationDto.builder()
+                .id(entity.getId())
+                .tournamentId(entity.getTournament().getId())
+                .punctuations(punctuations)
+                .registered(entity.getRegistered())
+                .user(entity.getUser())
+                .build();
+    }
+
     private List<RegistrationDto> mapToDto(List<RegistrationEntity> entities) {
         List<RegistrationDto> dtos = new ArrayList<>();
         for(RegistrationEntity entity: entities){
-            RegistrationDto dto = RegistrationDto.builder()
-                    .id(entity.getId())
-                    .tournamentId(entity.getTournament().getId())
-                    .punctuations(new ArrayList<>(entity.getPunctuations()))
-                    .registered(entity.getRegistered())
-                    .user(entity.getUser())
-                    .build();
-
-            dtos.add(dto);
+            dtos.add(mapToDto(entity));
         }
         return dtos;
     }

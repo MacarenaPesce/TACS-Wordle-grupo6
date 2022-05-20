@@ -7,15 +7,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import utn.frba.wordle.model.dto.RegistrationDto;
 import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.SessionDto;
 import utn.frba.wordle.model.dto.TournamentDto;
+import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.model.pojo.State;
-import utn.frba.wordle.service.PunctuationService;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 
+import java.util.ArrayList;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static utn.frba.wordle.utils.TestUtils.RANDOM;
@@ -39,6 +44,7 @@ public class TournamentsControllerTest {
         TournamentDto request = RANDOM.nextObject(dtoClass);
         request.setFinish(null);
         request.setStart(null);
+        when(tournamentService.create(any(), any())).thenReturn(request);
 
         SessionDto sessionDto = TestUtils.getMockSession();
         String urlController = "/api/tournaments/";
@@ -57,6 +63,11 @@ public class TournamentsControllerTest {
         Long userId = 2L;
         Long tourneyID = 40L;
         SessionDto sessionDto = TestUtils.getMockSession();
+        RegistrationDto registration = RegistrationDto.builder()
+                .punctuations(new ArrayList<>())
+                .user(UserEntity.builder().build())
+                .build();
+        when(tournamentService.addMember(any(), any(), any())).thenReturn(registration);
 
         String urlController = "/api/tournaments/"+tourneyID+"/members/"+userId;
         mvc.perform(post(urlController)
@@ -71,6 +82,11 @@ public class TournamentsControllerTest {
     @Test
     public void puedoUnirmeAUnTorneo() {
         SessionDto sessionDto = TestUtils.getMockSession();
+        RegistrationDto registration = RegistrationDto.builder()
+                .punctuations(new ArrayList<>())
+                .user(UserEntity.builder().build())
+                .build();
+        when(tournamentService.join(any(), any())).thenReturn(registration);
 
         Long tournamentId = 123L;
         String urlController = "/api/tournaments/" + tournamentId + "/join";
@@ -122,7 +138,7 @@ public class TournamentsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).getRanking(idTournament);
+        verify(tournamentService).orderedPunctuations(idTournament);
     }
 
     @SneakyThrows
