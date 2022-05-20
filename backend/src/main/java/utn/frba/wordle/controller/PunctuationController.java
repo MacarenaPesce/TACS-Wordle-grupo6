@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.model.dto.*;
+import utn.frba.wordle.model.http.PunctuationResponse;
 import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.PunctuationService;
@@ -18,16 +19,15 @@ public class PunctuationController {
     PunctuationService punctuationService;
 
     @GetMapping("/todaysResult/{language}")
-    public ResponseEntity<ResultDto> getTodaysResult(@RequestHeader("Authorization") String token, @PathVariable Language language) {
+    public ResponseEntity<PunctuationResponse> getTodaysResult(@RequestHeader("Authorization") String token, @PathVariable Language language) {
         SessionDto session = AuthService.getSession(token);
 
         Long result = punctuationService.getTodaysResult(session.getUserId(), language);
 
-        ResultDto dto = ResultDto.builder()
-                .userId(session.getUserId())
-                .result(result)
+        PunctuationResponse response = PunctuationResponse.builder()
                 .language(language)
+                .punctuation(result)
                 .build();
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
