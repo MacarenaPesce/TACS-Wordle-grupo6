@@ -24,7 +24,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class TournamentIntegrationTest extends AbstractIntegrationTest {
+public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     TournamentService tournamentService;

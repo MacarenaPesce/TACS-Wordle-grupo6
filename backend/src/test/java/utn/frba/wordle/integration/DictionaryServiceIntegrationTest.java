@@ -11,7 +11,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 
-public class DictionaryIntegrationTest extends AbstractIntegrationTest {
+public class DictionaryServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     DictionaryService service;

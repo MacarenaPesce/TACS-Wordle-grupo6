@@ -10,7 +10,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 
-public class UserIntegrationTest extends AbstractIntegrationTest {
+public class UserServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     UserService userService;

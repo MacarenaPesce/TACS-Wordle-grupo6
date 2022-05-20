@@ -85,7 +85,7 @@ public class HelpIntegrationTest extends AbstractIntegrationTest{
         assertThat(helpSolution.getPossibleWords()).contains("opium", "ouija");
     }
 
-    //TODO pasar esto a test unitario
+    //TODO pasar esto a otro tipo de test, crear una nueva clase que solo normalice, o delegar en otro objeto
     @Test
     public void canNormalize() {
         HelpRequest helpRequest = HelpRequest.builder()
