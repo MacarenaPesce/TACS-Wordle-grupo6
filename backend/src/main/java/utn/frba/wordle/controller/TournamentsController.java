@@ -72,7 +72,6 @@ public class TournamentsController {
 
     @GetMapping("public")
     public ResponseEntity<List<TournamentResponse>> listPublicTournaments(){
-
         List<TournamentDto> tournamentsDto = tournamentService.listPublicTournaments();
 
         List<TournamentResponse> tournaments = tournamentsDto
@@ -101,10 +100,12 @@ public class TournamentsController {
     }
 
     @GetMapping("/{state}")
-    public ResponseEntity<List<TournamentDto>> findUserTournamentsByState(@RequestHeader("Authorization") String token, @PathVariable State state){
+    public ResponseEntity<List<TournamentResponse>> findUserTournamentsByState(@RequestHeader("Authorization") String token, @PathVariable State state){
         SessionDto session = AuthService.getSession(token);
-        List<TournamentDto> tournaments = tournamentService.findUserTournamentsByState(session.getUserId(), state);
+        List<TournamentDto> tournamentsDto = tournamentService.findUserTournamentsByState(session.getUserId(), state);
 
+        List<TournamentResponse> tournaments = tournamentsDto
+                .stream().map(TournamentResponse::new).collect(Collectors.toList());
         return new ResponseEntity<>(tournaments, HttpStatus.OK);
     }
 }
