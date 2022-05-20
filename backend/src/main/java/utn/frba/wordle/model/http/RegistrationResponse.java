@@ -7,7 +7,7 @@ import lombok.*;
 @EqualsAndHashCode
 @Builder
 @AllArgsConstructor
-public class NewMemberResponse {
+public class RegistrationResponse {
 
     private String username;
     private Long tournamentId;

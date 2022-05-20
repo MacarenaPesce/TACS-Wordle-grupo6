@@ -63,11 +63,11 @@ public class TournamentsControllerTest {
         Long userId = 2L;
         Long tourneyID = 40L;
         SessionDto sessionDto = TestUtils.getMockSession();
-        RegistrationDto registrations = RegistrationDto.builder()
+        RegistrationDto registration = RegistrationDto.builder()
                 .punctuations(new ArrayList<>())
                 .user(UserEntity.builder().build())
                 .build();
-        when(tournamentService.addMember(any(), any(), any())).thenReturn(registrations);
+        when(tournamentService.addMember(any(), any(), any())).thenReturn(registration);
 
         String urlController = "/api/tournaments/"+tourneyID+"/members/"+userId;
         mvc.perform(post(urlController)
@@ -82,6 +82,11 @@ public class TournamentsControllerTest {
     @Test
     public void puedoUnirmeAUnTorneo() {
         SessionDto sessionDto = TestUtils.getMockSession();
+        RegistrationDto registration = RegistrationDto.builder()
+                .punctuations(new ArrayList<>())
+                .user(UserEntity.builder().build())
+                .build();
+        when(tournamentService.join(any(), any())).thenReturn(registration);
 
         Long tournamentId = 123L;
         String urlController = "/api/tournaments/" + tournamentId + "/join";

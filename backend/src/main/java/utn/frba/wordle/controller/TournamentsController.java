@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.model.dto.*;
-import utn.frba.wordle.model.http.NewMemberResponse;
+import utn.frba.wordle.model.http.RegistrationResponse;
 import utn.frba.wordle.model.http.RankingResponse;
 import utn.frba.wordle.model.http.TournamentResponse;
 import utn.frba.wordle.model.pojo.Punctuation;
@@ -45,11 +45,11 @@ public class TournamentsController {
     }
 
     @PostMapping("/{tournamentId}/members/{userId}")
-    public ResponseEntity<NewMemberResponse> addMember(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Long tournamentId) {
+    public ResponseEntity<RegistrationResponse> addMember(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Long tournamentId) {
         SessionDto session = AuthService.getSession(token);
         RegistrationDto dto = tournamentService.addMember(userId, tournamentId, session.getUserId());
 
-        NewMemberResponse registration = NewMemberResponse.builder()
+        RegistrationResponse registration = RegistrationResponse.builder()
                 .tournamentId(dto.getTournamentId())
                 .username(dto.getUser().getUsername())
                 .build();
@@ -58,11 +58,16 @@ public class TournamentsController {
     }
 
     @PostMapping ("/{tournamentId}/join")
-    public ResponseEntity<JoinDto> join(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
+    public ResponseEntity<RegistrationResponse> join(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
         SessionDto session = AuthService.getSession(token);
-        JoinDto dto = tournamentService.join(session.getUserId(), tournamentId);
+        RegistrationDto dto = tournamentService.join(session.getUserId(), tournamentId);
 
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        RegistrationResponse registration = RegistrationResponse.builder()
+                .tournamentId(dto.getTournamentId())
+                .username(dto.getUser().getUsername())
+                .build();
+
+        return new ResponseEntity<>(registration, HttpStatus.OK);
     }
 
     @GetMapping("public")

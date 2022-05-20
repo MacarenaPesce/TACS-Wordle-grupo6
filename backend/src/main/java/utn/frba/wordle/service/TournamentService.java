@@ -90,7 +90,7 @@ public class TournamentService {
     }
 
     @Transactional
-    public JoinDto join(Long userId, Long tournamentId) {
+    public RegistrationDto join(Long userId, Long tournamentId) {
         TournamentEntity tournamentEntity = tournamentRepository.findById(tournamentId).orElse(null);
         //TODO verificar que solo pueda entrar a torneos publicos
         if (tournamentEntity == null) {
@@ -103,12 +103,9 @@ public class TournamentService {
             throw new BusinessException("The user already joined the Tournament.");
         }
 
-        tournamentRepository.addMember(tournamentEntity.getId(), userId, new Date());
+        RegistrationEntity registrationEntity = registrationService.addMember(tournamentEntity.getId(), userId, new Date());
 
-        return JoinDto.builder()
-                .tournamentID(tournamentId)
-                .userID(userId)
-                .build();
+        return registrationService.mapToDto(registrationEntity);
     }
 
     public TourneysDto listPublicTournaments() {
