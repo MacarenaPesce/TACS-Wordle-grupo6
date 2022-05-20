@@ -4,16 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.dto.ResultDto;
-import utn.frba.wordle.model.dto.SessionDto;
 import utn.frba.wordle.model.dto.UserDto;
-import utn.frba.wordle.model.pojo.Language;
-import utn.frba.wordle.service.AuthService;
-import utn.frba.wordle.service.PunctuationService;
+import utn.frba.wordle.model.http.TournamentResponse;
+import utn.frba.wordle.model.http.UserResponse;
 import utn.frba.wordle.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -23,15 +21,17 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @Autowired
-    PunctuationService punctuationService;
-
     @GetMapping
-    public ResponseEntity<List<UserDto>> findAll(@RequestParam(required = false) String username) {
+    public ResponseEntity<List<UserResponse>> findAll(@RequestParam(required = false) String username) {
+        List<UserDto> usersDto;
         if (username==null){
-            return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+            usersDto = userService.findAll();
         } else{
-            return new ResponseEntity<>(userService.findByName(username), HttpStatus.OK);
+            usersDto = userService.findByName(username);
         }
+        List<UserResponse> users = usersDto
+                .stream().map(UserResponse::new).collect(Collectors.toList());
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }
