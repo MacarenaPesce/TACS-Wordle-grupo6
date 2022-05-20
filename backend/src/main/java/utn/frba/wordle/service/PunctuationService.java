@@ -73,10 +73,6 @@ public class PunctuationService {
     public Long getTodaysResult(Long userId, Language language) {
         LocalDate now = LocalDate.now();
         List<PunctuationEntity> results = punctuationRepository.findTodayResults(userId, now, language);
-        if(results.isEmpty()){
-            UserEntity user = userService.findUserById(userId);
-            throw new BusinessException("Awaiting today's "+user.getUsername()+" (id "+userId+") "+language+" results to be submitted.");
-        }
-        return results.get(0).getPunctuation();
+        return results.stream().findFirst().orElse(PunctuationEntity.builder().punctuation(0L).build()).getPunctuation();
     }
 }

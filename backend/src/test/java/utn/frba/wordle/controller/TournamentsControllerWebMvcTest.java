@@ -27,7 +27,7 @@ import static utn.frba.wordle.utils.TestUtils.RANDOM;
 import static utn.frba.wordle.utils.TestUtils.toJson;
 
 @WebMvcTest(TournamentsController.class)
-public class TournamentsControllerTest {
+public class TournamentsControllerWebMvcTest {
 
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     private final Class<TournamentDto> dtoClass = TournamentDto.class;

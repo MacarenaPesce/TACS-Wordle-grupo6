@@ -1,4 +1,4 @@
-package utn.frba.wordle.model.dto;
+package utn.frba.wordle.model.http;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.Set;
 @EqualsAndHashCode
 @AllArgsConstructor
 @Builder
-public class HelpSolutionDto {
+public class HelpResponse {
 
     Set<String> possibleWords;
 }

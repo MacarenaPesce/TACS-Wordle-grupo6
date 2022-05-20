@@ -8,7 +8,7 @@ import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.service.PunctuationService;
 
 
-public class PunctuationIntegrationTest extends AbstractIntegrationTest {
+public class PunctuationServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     PunctuationService punctuationService;

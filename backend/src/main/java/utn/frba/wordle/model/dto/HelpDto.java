@@ -7,7 +7,7 @@ import lombok.*;
 @EqualsAndHashCode
 @AllArgsConstructor
 @Builder
-public class HelpRequestDto {
+public class HelpDto {
 
     private String yellow;
     private String grey;
