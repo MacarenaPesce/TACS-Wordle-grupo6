@@ -3,6 +3,7 @@ package utn.frba.wordle.service;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.*;
 import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.repository.UserRepository;
@@ -34,6 +35,16 @@ public class UserService {
 
     public UserDto findUser(Long userId) {
         return mapToDto(userRepository.findById(userId).orElseThrow());
+    }
+
+    public UserEntity findUserById(Long userId) {
+        UserEntity user;
+        try {
+            user = userRepository.findById(userId).orElseThrow();
+        }catch (NoSuchElementException e){
+            throw new BusinessException("The requested user ID is not found.");
+        }
+        return user;
     }
 
     public UserEntity getUserByUsername(String username) {

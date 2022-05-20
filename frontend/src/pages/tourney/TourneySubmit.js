@@ -17,7 +17,7 @@ export default class TourneySubmit extends Component{
             englishValue: '',
             spanishValue: '',
             language: 'ES',
-            result: '',
+            punctuation: '',
             loading: false,             //TODO hacer un spinner individual para ingles y español
             sessionError: false,
             errorMessage: ''
@@ -48,9 +48,9 @@ export default class TourneySubmit extends Component{
                 console.log(language + ' results: ')
                 console.log(response.data)
                 if(language === "EN")
-                    this.setState({englishValue: response.data.result, availableEnglishResult: true})
+                    this.setState({englishValue: response.data.punctuation, availableEnglishResult: true})
                 if(language === "ES")
-                    this.setState({spanishValue: response.data.result, availableSpanishResult: true})
+                    this.setState({spanishValue: response.data.punctuation, availableSpanishResult: true})
             })
             .catch(error => {
                 this.setState({loading: false});
@@ -71,7 +71,7 @@ export default class TourneySubmit extends Component{
         console.log('Boton presionado, se intenta cargar resultados con los datos: ')
         const lang = this.state.language;
         let body = {
-            result: this.state.result,
+            result: this.state.punctuation,
             language: lang,
         }
         console.log(body)
@@ -158,7 +158,7 @@ export default class TourneySubmit extends Component{
                         <div className="opciones">
                             <div className="">
                                 <label><h5>Puntaje</h5></label>
-                                <input type="text" className="form-control" pattern="[0-9]{1}" title="Un número" required placeholder="Su puntaje obtenido... (no mienta)" name="result" onChange={this.changeHandler} />
+                                <input type="text" className="form-control" pattern="[0-9]{1}" title="Un número" required placeholder="Su puntaje obtenido... (no mienta)" name="punctuation" onChange={this.changeHandler} />
                             </div>
                         </div>
 
