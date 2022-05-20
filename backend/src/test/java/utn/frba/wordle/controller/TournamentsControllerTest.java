@@ -7,12 +7,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import utn.frba.wordle.model.dto.RegistrationDto;
 import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.SessionDto;
 import utn.frba.wordle.model.dto.TournamentDto;
+import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.model.pojo.State;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
+
+import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -59,6 +63,11 @@ public class TournamentsControllerTest {
         Long userId = 2L;
         Long tourneyID = 40L;
         SessionDto sessionDto = TestUtils.getMockSession();
+        RegistrationDto registrations = RegistrationDto.builder()
+                .punctuations(new ArrayList<>())
+                .user(UserEntity.builder().build())
+                .build();
+        when(tournamentService.addMember(any(), any(), any())).thenReturn(registrations);
 
         String urlController = "/api/tournaments/"+tourneyID+"/members/"+userId;
         mvc.perform(post(urlController)

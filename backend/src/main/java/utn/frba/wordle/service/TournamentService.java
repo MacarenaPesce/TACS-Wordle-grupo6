@@ -57,7 +57,7 @@ public class TournamentService {
     }
 
     @Transactional
-    public MemberNewDto addMember(Long userId, Long tourneyID, Long ownerUserId) {
+    public RegistrationDto addMember(Long userId, Long tourneyID, Long ownerUserId) {
 
         TournamentEntity tournamentEntity = tournamentRepository.findById(tourneyID).orElse(null);
 
@@ -79,18 +79,14 @@ public class TournamentService {
             throw new BusinessException("The user '"+userEntity.getUsername()+"' is already a member of the tournament "+tournamentEntity.getName());
         }
 
-
         RegistrationEntity registrationEntity = registrationService.addMember(tournamentEntity.getId(), userEntity.getId(), new Date());
         if(tournamentEntity.getRegistrations() == null){
             tournamentEntity.setRegistrations(new HashSet<>());
         }
         tournamentEntity.getRegistrations().add(registrationEntity);
-        tournamentEntity = tournamentRepository.save(tournamentEntity);
+        tournamentRepository.save(tournamentEntity);
 
-        return MemberNewDto.builder()
-                .tournamentId(tournamentEntity.getId())
-                .username(userEntity.getUsername())
-                .build();
+        return registrationService.mapToDto(registrationEntity);
     }
 
     @Transactional

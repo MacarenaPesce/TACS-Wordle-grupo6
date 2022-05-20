@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.model.dto.*;
+import utn.frba.wordle.model.http.NewMemberResponse;
 import utn.frba.wordle.model.http.RankingResponse;
 import utn.frba.wordle.model.http.TournamentResponse;
 import utn.frba.wordle.model.pojo.Punctuation;
@@ -44,12 +45,16 @@ public class TournamentsController {
     }
 
     @PostMapping("/{tournamentId}/members/{userId}")
-    public ResponseEntity<MemberNewDto> addMember(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Long tournamentId) {
-
+    public ResponseEntity<NewMemberResponse> addMember(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Long tournamentId) {
         SessionDto session = AuthService.getSession(token);
+        RegistrationDto dto = tournamentService.addMember(userId, tournamentId, session.getUserId());
 
-        MemberNewDto dto = tournamentService.addMember(userId, tournamentId, session.getUserId());
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        NewMemberResponse registration = NewMemberResponse.builder()
+                .tournamentId(dto.getTournamentId())
+                .username(dto.getUser().getUsername())
+                .build();
+
+        return new ResponseEntity<>(registration, HttpStatus.OK);
     }
 
     @PostMapping ("/{tournamentId}/join")
