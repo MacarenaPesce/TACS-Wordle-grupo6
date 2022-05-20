@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.*;
 import utn.frba.wordle.model.http.RegistrationResponse;
 import utn.frba.wordle.model.http.RankingResponse;
@@ -83,6 +84,11 @@ public class TournamentsController {
     @PostMapping("submitResults")
     public ResponseEntity<String> submitResults(@RequestHeader("Authorization") String token, @RequestBody ResultDto resultDto) {
         SessionDto session = AuthService.getSession(token);
+
+        if(resultDto.getResult() > 7 || resultDto.getResult() < 1){
+            throw new BusinessException("Solo se pueden cargar resultados del 1 al 7");
+        }
+
         tournamentService.submitResults(session.getUserId(), resultDto);
         return new ResponseEntity<>("Resultados cargados correctamente", HttpStatus.OK);
     }

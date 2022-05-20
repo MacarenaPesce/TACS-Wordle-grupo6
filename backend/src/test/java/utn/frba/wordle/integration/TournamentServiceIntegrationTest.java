@@ -16,6 +16,8 @@ import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.service.PunctuationService;
 import utn.frba.wordle.service.RegistrationService;
 import utn.frba.wordle.service.TournamentService;
+import utn.frba.wordle.controller.TournamentsController;
+import utn.frba.wordle.utils.TestUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -199,6 +201,30 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         List<PunctuationEntity> punctuations = punctuationService.getPunctuationsEntityFromTourney(registrations.get(0).getTournamentId());
         assertThat(punctuations).isNotEmpty();
         assertThat(punctuations.get(0)).hasNoNullFieldsOrProperties();
+    }
+
+    @Test
+    public void aUserCantSubmitResultsGreaterThan8() {
+        SessionDto session = TestUtils.getMockSession();
+
+        ResultDto resultDto = ResultDto.builder()
+                .result(8L)
+                .language(Language.ES)
+                .build();
+
+        assertThrows(BusinessException.class, () -> new TournamentsController().submitResults(session.getToken(), resultDto));
+    }
+
+    @Test
+    public void aUserCantSubmitResultsLesserThan1() {
+        SessionDto session = TestUtils.getMockSession();
+
+        ResultDto resultDto = ResultDto.builder()
+                .result(0L)
+                .language(Language.ES)
+                .build();
+
+        assertThrows(BusinessException.class, () -> new TournamentsController().submitResults(session.getToken(), resultDto));
     }
 
     @Test
