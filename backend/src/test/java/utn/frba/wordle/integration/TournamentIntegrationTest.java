@@ -3,13 +3,12 @@ package utn.frba.wordle.integration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.dto.*;
 import utn.frba.wordle.model.entity.PunctuationEntity;
 import utn.frba.wordle.model.entity.TournamentEntity;
-import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.pojo.Language;
-import utn.frba.wordle.model.http.RankingResponse;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.pojo.State;
 import utn.frba.wordle.model.pojo.TournamentType;
@@ -178,11 +177,10 @@ public class TournamentIntegrationTest extends AbstractIntegrationTest {
         TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1");
         TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament2");
 
-        TourneysDto tournaments = tournamentService.listPublicTournaments();
+        List<TournamentDto> tournaments = tournamentService.listPublicTournaments();
 
-        assertThat(tournaments.getTourneys()).containsExactlyInAnyOrder(tournament1, tournament2);
+        assertThat(tournaments).containsExactlyInAnyOrder(tournament1, tournament2);
     }
-
 
     @Test
     public void aUserCanSubmitTheirResults() {

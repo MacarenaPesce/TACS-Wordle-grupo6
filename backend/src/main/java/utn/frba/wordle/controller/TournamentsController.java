@@ -71,9 +71,14 @@ public class TournamentsController {
     }
 
     @GetMapping("public")
-    public ResponseEntity<TourneysDto> listPublicTournaments(){
-        TourneysDto dto = tournamentService.listPublicTournaments();
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+    public ResponseEntity<List<TournamentResponse>> listPublicTournaments(){
+
+        List<TournamentDto> tournamentsDto = tournamentService.listPublicTournaments();
+
+        List<TournamentResponse> tournaments = tournamentsDto
+                .stream().map(TournamentResponse::new).collect(Collectors.toList());
+
+        return new ResponseEntity<>(tournaments, HttpStatus.OK);
     }
     
     @PostMapping("submitResults")

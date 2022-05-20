@@ -108,12 +108,10 @@ public class TournamentService {
         return registrationService.mapToDto(registrationEntity);
     }
 
-    public TourneysDto listPublicTournaments() {
+    public List<TournamentDto> listPublicTournaments() {
         List<TournamentEntity> tournaments = tournamentRepository.getPublicTournaments();
 
-        return TourneysDto.builder()
-                .tourneys(mapToDto(tournaments))
-                .build();
+        return mapToDto(tournaments);
     }
 
     public void submitResults(Long userId, ResultDto result) {
