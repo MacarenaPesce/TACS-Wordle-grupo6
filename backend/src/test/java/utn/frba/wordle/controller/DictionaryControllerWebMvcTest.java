@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(DictionaryController.class)
-public class DictionaryControllerTest {
+public class DictionaryControllerWebMvcTest {
 
     @MockBean
     private DictionaryService dictionaryService;

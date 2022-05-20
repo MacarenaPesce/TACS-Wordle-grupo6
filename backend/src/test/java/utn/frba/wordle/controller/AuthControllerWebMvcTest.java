@@ -17,7 +17,7 @@ import static utn.frba.wordle.utils.TestUtils.RANDOM;
 import static utn.frba.wordle.utils.TestUtils.toJson;
 
 @WebMvcTest(AuthController.class)
-public class AuthControllerTest {
+public class AuthControllerWebMvcTest {
 
     private final Class<LoginDto> dtoClass = LoginDto.class;
 
