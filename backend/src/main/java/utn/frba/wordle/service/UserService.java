@@ -64,7 +64,7 @@ public class UserService {
     }
 
     public List<UserDto> findByName(String username) {
-        List<UserEntity> users = userRepository.findByParcialUsername(username.toLowerCase());
+        List<UserEntity> users = userRepository.findByPartialUsername(username.toLowerCase());
         return mapToDto(users);
     }
 

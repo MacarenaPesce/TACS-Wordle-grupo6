@@ -8,7 +8,6 @@ import utn.frba.wordle.model.entity.PunctuationEntity;
 import utn.frba.wordle.model.entity.RegistrationEntity;
 import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.model.entity.UserEntity;
-import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.repository.RegistrationRepository;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.repository.UserRepository;

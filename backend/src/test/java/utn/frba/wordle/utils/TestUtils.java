@@ -35,7 +35,7 @@ public class TestUtils {
         String username = "mockUser";
         String email = "mockMail@mail.com";
         Long userId = 100L;
-        String accessToken = getJWTToken(username, email, userId, 100L);
+        String accessToken = getJWTToken(username, email, userId);
 
         return SessionDto.builder()
                 .token(accessToken)
@@ -46,7 +46,7 @@ public class TestUtils {
     }
 
     public static SessionDto getValidSessionFromUser(UserDto user) {
-        String accessToken = getJWTToken(user.getUsername(), user.getEmail(), user.getId(), 100L);
+        String accessToken = getJWTToken(user.getUsername(), user.getEmail(), user.getId());
 
         return SessionDto.builder()
                 .token(accessToken)
@@ -56,7 +56,7 @@ public class TestUtils {
                 .build();
     }
 
-    private static String getJWTToken(String username, String email, Long userId, Long jwtExpiration) {
+    private static String getJWTToken(String username, String email, Long userId) {
 
         String token = Jwts
                 .builder()
@@ -64,7 +64,7 @@ public class TestUtils {
                 .claim("username", username)
                 .claim("email", email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration * 100))
+                .setExpiration(new Date(System.currentTimeMillis() + 100 * 100))
                 .signWith(SignatureAlgorithm.HS512,
                         AuthService.SECRET.getBytes()).compact();
 

@@ -40,7 +40,7 @@ public class TournamentsControllerWebMvcTest {
 
     @SneakyThrows
     @Test
-    public void puedoCrearUnNuevoTorneo() {
+    public void iCanAddNewTournament() {
         TournamentDto request = RANDOM.nextObject(dtoClass);
         request.setFinish(null);
         request.setStart(null);
@@ -59,7 +59,7 @@ public class TournamentsControllerWebMvcTest {
 
     @SneakyThrows
     @Test
-    public void puedoAgregarUnMiembroAUnTorneo() {
+    public void iCanAddNewMemberToTournament() {
         Long userId = 2L;
         Long tourneyID = 40L;
         SessionDto sessionDto = TestUtils.getMockSession();
@@ -80,7 +80,7 @@ public class TournamentsControllerWebMvcTest {
 
     @SneakyThrows
     @Test
-    public void puedoUnirmeAUnTorneo() {
+    public void iCanJoinTournament() {
         SessionDto sessionDto = TestUtils.getMockSession();
         RegistrationDto registration = RegistrationDto.builder()
                 .punctuations(new ArrayList<>())
@@ -100,7 +100,7 @@ public class TournamentsControllerWebMvcTest {
 
     @SneakyThrows
     @Test
-    public void puedoListarLosTorneosPublicos() {
+    public void iCanListPublicTournaments() {
 
         String urlController = "/api/tournaments/public";
         mvc.perform(get(urlController)
@@ -112,7 +112,7 @@ public class TournamentsControllerWebMvcTest {
 
     @SneakyThrows
     @Test
-    public void puedoPublicarLosResultados() {
+    public void iCanPublishResults() {
         ResultDto request = RANDOM.nextObject(ResultDto.class);
         request.setResult(5L);
         SessionDto sessionDto = TestUtils.getMockSession();

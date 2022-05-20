@@ -42,7 +42,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void aUserCanCreateATournament(){
-        String name = "TorneoPrueba";
+        String name = "TestTournament";
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
         TournamentDto dto = TournamentDto.builder()
                 .type(TournamentType.PRIVATE)
@@ -61,10 +61,8 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void aUserTriesToCreateATournamentButHeDoesNotExist(){
-        String name = "TorneoPrueba";
-        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        //(el owner tiene id 1)
-        Long idInexistente = 22L;
+        String name = "TestTournament";
+        Long nonExistentId = 22L;
         TournamentDto dto = TournamentDto.builder()
                 .type(TournamentType.PRIVATE)
                 .start(new Date())
@@ -74,7 +72,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
                 .language(Language.ES)
                 .build();
 
-        assertThrows(SessionJWTException.class, () -> tournamentService.create(dto, idInexistente));
+        assertThrows(SessionJWTException.class, () -> tournamentService.create(dto, nonExistentId));
     }
 
     @Test
@@ -92,7 +90,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
     @Test
     public void aUserCantAddAnotherUserToATournamentThatDontOwn(){
-        String name = "TorneoPrueba";
+        String name = "TestTournament";
         UserDto ownerUser = getUserDto("mail@mail.com", "usernameTest");
         UserDto magicUser = getUserDto("mail@mail.com2", "usernameTest2");
         Long userId = 2L;
@@ -112,7 +110,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void aUserCanAddAnotherUserToATournamentThatOwns(){
-        String name = "TorneoPrueba";
+        String name = "TestTournament";
         UserDto ownerUser = getUserDto("mail@mail.com", "usernameTest");
         TournamentDto dto = TournamentDto.builder()
                 .type(TournamentType.PRIVATE)
@@ -347,7 +345,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     public void anActiveTournamentWithDuplicatedNameCanBeCreatedIfTheDuplicatedIsNotActive() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
         TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1");
-        inabilityTournament(tournament1, State.FINISHED);
+        inabilityTournament(tournament1);
         TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament1");
 
         assertNotEquals(tournament1.getTourneyId(), tournament2.getTourneyId());
@@ -410,9 +408,9 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         tournaments.forEach(tournamentDto -> assertThat(tournamentDto).hasNoNullFieldsOrProperties());
     }
 
-    private void inabilityTournament(TournamentDto tournament1, State state) {
+    private void inabilityTournament(TournamentDto tournament1) {
         TournamentEntity entity = tournamentRepository.findById(tournament1.getTourneyId()).orElseThrow();
-        entity.setState(state);
+        entity.setState(State.FINISHED);
 
         tournamentRepository.save(entity);
     }
@@ -446,7 +444,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     private TournamentDto getPrivateTournamentDto(UserDto ownerUser) {
-        String tournamentName = "TorneoPrueba";
+        String tournamentName = "TestTournament";
         return getPrivateTournamentDto(ownerUser, tournamentName);
     }
 }

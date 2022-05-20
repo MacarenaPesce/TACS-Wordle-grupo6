@@ -23,5 +23,5 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     UserEntity findByEmail(String email);
 
     @Query(value = "SELECT * FROM user u WHERE u.username like %:username%", nativeQuery = true)
-    List<UserEntity> findByParcialUsername(String username);
+    List<UserEntity> findByPartialUsername(String username);
 }

@@ -11,5 +11,5 @@ import java.util.List;
 @Builder
 
 public class PositionsResponseDto {
-    List <LadderboardDto> tourneys;
+    List <LeaderboardDto> tourneys;
 }

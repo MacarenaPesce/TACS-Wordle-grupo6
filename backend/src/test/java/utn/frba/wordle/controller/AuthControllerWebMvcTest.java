@@ -29,7 +29,7 @@ public class AuthControllerWebMvcTest {
 
     @SneakyThrows
     @Test
-    public void puedoLoguearmeCorrectamente() {
+    public void iCanLoginCorrectly() {
         LoginDto request = RANDOM.nextObject(dtoClass);
 
         String urlController = "/api/auth/login";
@@ -42,7 +42,7 @@ public class AuthControllerWebMvcTest {
 
     @SneakyThrows
     @Test
-    public void puedoRegistrarmeCorrectamente() {
+    public void iCanRegisterCorrectly() {
         LoginDto request = RANDOM.nextObject(dtoClass);
 
         String urlController = "/api/auth/register";

@@ -12,6 +12,5 @@ public class ResultDto {
     Long userId;
     Long result;
     Language language;
-    //TODO como sincronizar la fecha de result cargado en front y back?
 }
 

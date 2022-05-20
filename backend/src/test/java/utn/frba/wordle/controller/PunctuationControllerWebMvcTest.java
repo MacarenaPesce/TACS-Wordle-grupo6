@@ -29,7 +29,7 @@ public class PunctuationControllerWebMvcTest {
 
     @SneakyThrows
     @Test
-    public void puedoCrearUnNuevoTorneo() {
+    public void iCanCreateNewTournament() {
 
         Language language = Language.ES;
         SessionDto sessionDto = TestUtils.getMockSession();

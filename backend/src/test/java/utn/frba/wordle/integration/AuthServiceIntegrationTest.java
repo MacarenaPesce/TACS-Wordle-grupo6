@@ -19,9 +19,6 @@ import static utn.frba.wordle.utils.TestUtils.RANDOM;
 
 public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
 
-    //protected static final String USUARIO_ADMIN = AuthService.USUARIO_DEFAULT_HARDCODEADO;
-    //protected static final String PASS_ADMIN = AuthService.PASS_HARDCODEADA;
-
     @Autowired
     UserService userService;
 
