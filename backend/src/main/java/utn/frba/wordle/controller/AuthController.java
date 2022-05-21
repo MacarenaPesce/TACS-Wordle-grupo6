@@ -8,6 +8,7 @@ import utn.frba.wordle.model.dto.LoginDto;
 import utn.frba.wordle.model.dto.SessionDto;
 import utn.frba.wordle.service.AuthService;
 
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin

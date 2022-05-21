@@ -1,5 +1,7 @@
 package utn.frba.wordle.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,12 @@ public class DictionaryController {
     @Autowired
     DictionaryService dictionaryService;
 
+    private static final Logger logger = LoggerFactory.getLogger(DictionaryController.class);
+
     @GetMapping("/{language}/{word}")
     public ResponseEntity<DefinitionResponse> getDefinitions(@PathVariable Language language, @PathVariable String word) {
+
+        logger.info("GetDefinitions - Request with params: {}, {}", language, word);
 
         List<String> definitions = dictionaryService.getDefinitions(language, word);
 
