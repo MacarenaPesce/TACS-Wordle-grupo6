@@ -30,8 +30,16 @@ public class UserController {
             usersDto = userService.findByName(username);
         }
         List<UserResponse> users = usersDto
-                .stream().map(UserResponse::new).collect(Collectors.toList());
+                .stream().map(this::buildResponse).collect(Collectors.toList());
 
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    public UserResponse buildResponse (UserDto dto) {
+        return UserResponse.builder()
+                .id(dto.getId())
+                .username(dto.getUsername())
+                .email(dto.getEmail())
+                .build();
     }
 }

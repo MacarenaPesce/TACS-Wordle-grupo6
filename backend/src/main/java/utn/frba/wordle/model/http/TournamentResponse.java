@@ -24,16 +24,5 @@ public class TournamentResponse {
     Date finish;
     UserDto owner;
 
-    public TournamentResponse(TournamentDto dto) {
-        TournamentResponse.builder()
-                .tourneyId(dto.getTourneyId())
-                .name(dto.getName())
-                .language(dto.getLanguage())
-                .type(dto.getType())
-                .state(dto.getState())
-                .start(dto.getStart())
-                .finish(dto.getFinish())
-                .owner(dto.getOwner())
-                .build();
-    }
+
 }

@@ -18,12 +18,4 @@ public class UserResponse {
     private Long id;
     private String username;
     private String email;
-
-    public UserResponse(UserDto dto) {
-        UserResponse.builder()
-                .id(dto.getId())
-                .username(dto.getUsername())
-                .email(dto.getEmail())
-                .build();
-    }
 }

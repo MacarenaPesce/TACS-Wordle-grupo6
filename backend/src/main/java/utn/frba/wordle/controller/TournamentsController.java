@@ -30,7 +30,7 @@ public class TournamentsController {
         SessionDto session = AuthService.getSession(token);
         TournamentDto dto = tournamentService.create(tournamentDto, session.getUserId());
 
-        TournamentResponse tournament = new TournamentResponse(dto);
+        TournamentResponse tournament = buildResponse(dto);
 
         return new ResponseEntity<>(tournament, HttpStatus.OK);
     }
@@ -41,7 +41,7 @@ public class TournamentsController {
         List<TournamentDto> tournamentsDto = tournamentService.getTournamentsFromUser(session.getUserId());
 
         List<TournamentResponse> tournaments = tournamentsDto
-                .stream().map(TournamentResponse::new).collect(Collectors.toList());
+                .stream().map(this::buildResponse).collect(Collectors.toList());
         return new ResponseEntity<>(tournaments, HttpStatus.OK);
     }
 
@@ -76,7 +76,7 @@ public class TournamentsController {
         List<TournamentDto> tournamentsDto = tournamentService.listPublicTournaments();
 
         List<TournamentResponse> tournaments = tournamentsDto
-                .stream().map(TournamentResponse::new).collect(Collectors.toList());
+                .stream().map(this::buildResponse).collect(Collectors.toList());
 
         return new ResponseEntity<>(tournaments, HttpStatus.OK);
     }
@@ -111,7 +111,20 @@ public class TournamentsController {
         List<TournamentDto> tournamentsDto = tournamentService.findUserTournamentsByState(session.getUserId(), state);
 
         List<TournamentResponse> tournaments = tournamentsDto
-                .stream().map(TournamentResponse::new).collect(Collectors.toList());
+                .stream().map(this::buildResponse).collect(Collectors.toList());
         return new ResponseEntity<>(tournaments, HttpStatus.OK);
+    }
+
+    public TournamentResponse buildResponse(TournamentDto dto) {
+        return TournamentResponse.builder()
+                .tourneyId(dto.getTourneyId())
+                .name(dto.getName())
+                .language(dto.getLanguage())
+                .type(dto.getType())
+                .state(dto.getState())
+                .start(dto.getStart())
+                .finish(dto.getFinish())
+                .owner(dto.getOwner())
+                .build();
     }
 }
