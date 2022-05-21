@@ -4,10 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.dto.HelpRequestDto;
-import utn.frba.wordle.dto.HelpSolutionDto;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.dto.HelpDto;
+import utn.frba.wordle.model.http.HelpRequest;
+import utn.frba.wordle.model.http.HelpResponse;
+import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.service.HelpService;
 
 import java.io.IOException;
@@ -25,13 +26,13 @@ public class HelpController {
     HelpService helpService;
 
     @PostMapping("/{language}")
-    public ResponseEntity<HelpSolutionDto> solution(@RequestBody HelpRequestDto helpRequestDto, @PathVariable Language language) throws IOException {
+    public ResponseEntity<HelpResponse> solution(@RequestBody HelpRequest helpRequest, @PathVariable Language language) {
 
-        HelpRequestDto normalized = normalizeInput(helpRequestDto);
+        HelpDto normalized = normalizeInput(helpRequest);
 
-        Set<String> possibleSolutions = helpService.solution(normalized.getYellow(), normalized.getGrey(), normalized.getSolution(), language);
+        Set<String> possibleSolutions = helpService.solution(normalized, language);
 
-        HelpSolutionDto responseDto = HelpSolutionDto.builder()
+        HelpResponse responseDto = HelpResponse.builder()
                             .possibleWords(possibleSolutions)
                             .build();
 
@@ -44,7 +45,7 @@ public class HelpController {
      * @param helpRequestDto DTO with the data captured from the wild world wide web
      * @return now safe DTO
      */
-    public HelpRequestDto normalizeInput(HelpRequestDto helpRequestDto){
+    public HelpDto normalizeInput(HelpRequest helpRequestDto){
         //remove non letters and make lowercase
         String yellow = helpRequestDto.getYellow().replaceAll("[^A-Za-z]+", "").toLowerCase();
         String grey = helpRequestDto.getGrey().replaceAll("[^A-Za-z]+", "").toLowerCase();
@@ -66,6 +67,10 @@ public class HelpController {
         helpRequestDto.setYellow(yellow);
         helpRequestDto.setSolution(solution);
 
-        return helpRequestDto;
+        return HelpDto.builder()
+                .solution(solution)
+                .grey(grey)
+                .yellow(yellow)
+                .build();
     }
 }

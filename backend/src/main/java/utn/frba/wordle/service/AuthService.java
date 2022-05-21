@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.dto.LoginDto;
-import utn.frba.wordle.dto.SessionDto;
-import utn.frba.wordle.dto.UserDto;
-import utn.frba.wordle.entity.UserEntity;
+import utn.frba.wordle.model.dto.LoginDto;
+import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.model.dto.UserDto;
+import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.security.UserSession;
 
 import java.util.Base64;
 import java.util.Date;
@@ -29,6 +30,9 @@ public class AuthService {
 
     @Value("${jwt.access.expiration}")
     private Long jwtAccessExpiration;
+
+    @Value("${jwt.refresh.expiration}")
+    private Long jwtRefreshExpiration;
 
     @Autowired
     UserService userService;
@@ -48,7 +52,7 @@ public class AuthService {
     public SessionDto register(LoginDto loginDto) {
         UserEntity userEntity;
 
-        userEntity = userService.findUserByUsername(loginDto.getUsername());
+        userEntity = userService.getUserByUsername(loginDto.getUsername());
         if(userEntity != null){
             throw new BusinessException(String.format("El usuario %s ya se encuentra registrado", loginDto.getUsername()));
         }
@@ -123,5 +127,18 @@ public class AuthService {
     public static Claims getClaims(String jwtToken) {
         jwtToken = jwtToken.replace("Bearer", "");
         return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
+    }
+
+    public void setJwtAccessExpiration(Long jwtAccessExpiration) {
+        this.jwtAccessExpiration = jwtAccessExpiration;
+    }
+
+    public void setJwtRefreshExpiration(Long jwtRefreshExpiration) {
+        this.jwtRefreshExpiration = jwtRefreshExpiration;
+    }
+
+    public String refreshAccessToken(UserSession userSession) {
+        return getJWTToken(userSession.getUsername(), userSession.getEmail(), userSession.getUserId(), jwtAccessExpiration);
+
     }
 }

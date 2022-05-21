@@ -21,8 +21,6 @@ export default class TabsTourneys extends Component{
     }
 
     componentDidMount() {
-        /*debugger
-        console.log("did mount")*/
         if(this.props.nombreTabla === 'Mis torneos'){
             /*console.log("estas en mis torneos")*/
             this.submitTourneys()
@@ -47,9 +45,7 @@ export default class TabsTourneys extends Component{
         //console.log("submit tourneys")
         UserService.getMyTourneys(this.props.nombreTabla) /*todo: como lo mando si no recibe parametros ._. mandar aca el tipo de torneos */ //mis torneos es el nombre del metodo, para otra tabla es otro metodo
             .then(response => {
-                //('Response obtenida: ')
-                //console.log(response.data)
-                this.setState({myTourneys: response.data.tourneys})
+                this.setState({myTourneys: response.data})
                 if(JSON.stringify(this.state.myTourneys[0]) === undefined){
                     //todo mostrar mensaje de tabla vacia
                 }
@@ -66,8 +62,9 @@ export default class TabsTourneys extends Component{
     }
 
     render() {
-      
-        let listTourneys = this.state.myTourneys.map((tourney) =>
+        let listTourneys = []
+      if(this.state.myTourneys){
+        listTourneys = this.state.myTourneys.map((tourney) =>
                     <tr key={tourney.tourneyId}>
                         <td> {tourney.tourneyId}</td>
                         <td> {tourney.name}</td>
@@ -82,7 +79,7 @@ export default class TabsTourneys extends Component{
                             />   
                         </td>
                     </tr>
-                );
+                );}
 
         return (
             <div className="col-md-12 search-table-col">

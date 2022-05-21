@@ -1,8 +1,10 @@
 package utn.frba.wordle.service;
 
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.dto.HelpDto;
+import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.utils.WordFileReader;
 
 import java.io.IOException;
@@ -16,16 +18,13 @@ public class HelpService {
 
     /**
      * Finds possible solutions.
-     * @param yellow desired yellow filter to match possible solutions
-     * @param grey desired grey filter
-     * @param solution desired solution filter
      * @param language desired language
      * @return returns a set of strings with the possible solutions
      * @throws IOException inherited from the contained method findPossibleSolutions
      */
-    public Set<String> solution(String yellow, String grey, String solution, Language language) throws IOException {
-
-        return findPossibleSolutions(language, yellow, grey, solution);
+    @SneakyThrows
+    public Set<String> solution(HelpDto normalized, Language language) {
+        return findPossibleSolutions(language, normalized.getYellow(), normalized.getGrey(), normalized.getSolution());
     }
 
     /**
@@ -127,5 +126,4 @@ public class HelpService {
 
         return wordList;
     }
-
 }

@@ -17,8 +17,8 @@ export default class TourneySubmit extends Component{
             englishValue: '',
             spanishValue: '',
             language: 'ES',
-            result: '',
-            loading: false,             //TODO hacer un spinner individual para ingles y español
+            punctuation: '',
+            loading: false,             //TODO hacer un spinner individual para ingles y español (mover el display del result a otro componente, e instanciarlo dos veces)
             sessionError: false,
             errorMessage: ''
         };
@@ -47,22 +47,33 @@ export default class TourneySubmit extends Component{
                 this.setState({loading: false});
                 console.log(language + ' results: ')
                 console.log(response.data)
-                if(language === "EN")
-                    this.setState({englishValue: response.data.result, availableEnglishResult: true})
-                if(language === "ES")
-                    this.setState({spanishValue: response.data.result, availableSpanishResult: true})
+                if(response.data.punctuation === 0)
+                    this.showMissingValue(language)
+                else
+                    this.showResultValue(language, response.data.punctuation)
             })
             .catch(error => {
                 this.setState({loading: false});
                 console.log(error)
-                if(language === "EN")
-                    this.setState({englishValue: error.response.data.message, availableEnglishResult: false})
-                if(language === "ES")
-                    this.setState({spanishValue: error.response.data.message, availableSpanishResult: false})
-                //TODO asignar los valores englishValue y spanishValue con error en el caso de que no responda el back
 
                 this.handleSessionError(error);
             })
+    }
+
+    showResultValue(lang, punctuation){
+        if(lang === "EN")
+            this.setState({englishValue: punctuation, availableEnglishResult: true})
+        if(lang === "ES")
+            this.setState({spanishValue: punctuation, availableSpanishResult: true})
+    }
+
+    showMissingValue(lang){
+        const message = "Awaiting today's "+localStorage.getItem("username")+" (id "+localStorage.getItem("userId")+") results to be submitted. For "
+        if(lang === "EN")
+            this.setState({englishValue: message+"english", availableEnglishResult: false})
+        if(lang === "ES")
+            this.setState({spanishValue: message+"spanish", availableSpanishResult: false})
+        //TODO asignar los valores englishValue y spanishValue con error en el caso de que no responda el back
     }
 
     submitHandler = e => {
@@ -71,7 +82,7 @@ export default class TourneySubmit extends Component{
         console.log('Boton presionado, se intenta cargar resultados con los datos: ')
         const lang = this.state.language;
         let body = {
-            result: this.state.result,
+            result: this.state.punctuation,
             language: lang,
         }
         console.log(body)
@@ -158,7 +169,7 @@ export default class TourneySubmit extends Component{
                         <div className="opciones">
                             <div className="">
                                 <label><h5>Puntaje</h5></label>
-                                <input type="text" className="form-control" pattern="[0-9]{1}" title="Un número" required placeholder="Su puntaje obtenido... (no mienta)" name="result" onChange={this.changeHandler} />
+                                <input type="text" className="form-control" pattern="[1-7]{1}" title="Puntaje del 1 al 7" required placeholder="Su puntaje obtenido... (no mienta)" name="punctuation" onChange={this.changeHandler} />
                             </div>
                         </div>
 
