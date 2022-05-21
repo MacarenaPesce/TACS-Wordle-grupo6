@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 
-public class LadderboardDto {
+public class LeaderboardDto {
     Integer tourneyId;
     String name;
     List <PositionDto> positions;

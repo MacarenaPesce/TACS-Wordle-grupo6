@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import utn.frba.wordle.model.dto.LoginDto;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.service.UserService;
 
@@ -22,11 +21,7 @@ public abstract class AbstractIntegrationTest {
     UserService userService;
 
     protected UserDto getUserDto(String email, String username) {
-        LoginDto user = LoginDto.builder()
-                .email(email)
-                .username(username)
-                .build();
-        return userService.createUser(user);
+        return userService.createUser(username, "123asd", email);
     }
 
 }

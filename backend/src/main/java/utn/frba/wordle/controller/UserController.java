@@ -5,11 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.model.dto.UserDto;
-import utn.frba.wordle.model.http.TournamentResponse;
 import utn.frba.wordle.model.http.UserResponse;
 import utn.frba.wordle.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

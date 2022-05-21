@@ -20,7 +20,6 @@ public class HelpService {
      * Finds possible solutions.
      * @param language desired language
      * @return returns a set of strings with the possible solutions
-     * @throws IOException inherited from the contained method findPossibleSolutions
      */
     @SneakyThrows
     public Set<String> solution(HelpDto normalized, Language language) {
@@ -38,18 +37,18 @@ public class HelpService {
      */
     public Set<String> findPossibleSolutions(Language lang, String yellow, String grey, String solutionSoFar) throws IOException {
 
-        Set<String> posibleSolutions = null;
+        Set<String> possibleSolutions = null;
         if (lang.equals(Language.ES))
-            posibleSolutions = WordFileReader.getSpanishWords();
+            possibleSolutions = WordFileReader.getSpanishWords();
         if (lang.equals(Language.EN))
-            posibleSolutions = WordFileReader.getEnglishWords();
+            possibleSolutions = WordFileReader.getEnglishWords();
 
 
-        posibleSolutions = matchWith(posibleSolutions, solutionSoFar);
-        posibleSolutions = removeWithoutYellow(posibleSolutions, yellow);
-        posibleSolutions = removeWithGray(posibleSolutions, grey);
+        possibleSolutions = matchWith(possibleSolutions, solutionSoFar);
+        possibleSolutions = removeWithoutYellow(possibleSolutions, yellow);
+        possibleSolutions = removeWithGray(possibleSolutions, grey);
 
-        return posibleSolutions;
+        return possibleSolutions;
     }
 
 

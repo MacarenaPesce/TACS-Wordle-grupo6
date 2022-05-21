@@ -8,11 +8,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.model.dto.LoginDto;
+import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.SessionDto;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.UserEntity;
-import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.security.UserSession;
 
 import java.util.Base64;
@@ -49,29 +48,29 @@ public class AuthService {
         return new Gson().fromJson(payload, SessionDto.class);
     }
 
-    public SessionDto register(LoginDto loginDto) {
+    public SessionDto register(String username, String password, String email) {
         UserEntity userEntity;
 
-        userEntity = userService.getUserByUsername(loginDto.getUsername());
+        userEntity = userService.getUserByUsername(username.toLowerCase());
         if(userEntity != null){
-            throw new BusinessException(String.format("El usuario %s ya se encuentra registrado", loginDto.getUsername()));
+            throw new BusinessException(String.format("El usuario %s ya se encuentra registrado", username));
         }
 
-        userEntity = userService.findUserByEmail(loginDto.getEmail());
+        userEntity = userService.findUserByEmail(email.toLowerCase());
         if(userEntity != null){
             throw new BusinessException("El mail ingresado ya se ecuentra en uso");
         }
 
-        UserDto userDto = userService.createUser(loginDto);
+        UserDto userDto = userService.createUser(username, password, email);
         return getSessionDto(userDto);
     }
 
-    public SessionDto login(LoginDto loginDto) {
-        if (loginDto.getUsername().equals(ADMIN_USER) &&
-                loginDto.getPassword().equals(ADMIN_PASS)) {
+    public SessionDto login(String username, String password) {
+        if (username.equals(ADMIN_USER) &&
+                password.equals(ADMIN_PASS)) {
             return getSessionDtoHardcodeado();
         } else {
-            UserEntity userEntity = userService.findUserByUsernameAndPassword(loginDto.getUsername(), loginDto.getPassword());
+            UserEntity userEntity = userService.findUserByUsernameAndPassword(username, password);
             if (userEntity == null) {
                 throw new BusinessException("Combinación de usuario y contraseña inválidos");
             }

@@ -11,7 +11,6 @@ import utn.frba.wordle.model.http.HelpResponse;
 import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.service.HelpService;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -52,7 +51,7 @@ public class HelpController {
         String solution = helpRequestDto.getSolution().replaceAll("[^A-Za-z_]+", "").toLowerCase();
 
         if( !(solution.length() == 5 || solution.length() == 0)){
-            throw new BusinessException("solution '"+solution+"' can not have a lenght of "+solution.length());
+            throw new BusinessException("solution '"+solution+"' can not have a length of "+solution.length());
         }
 
         //remove duplicates

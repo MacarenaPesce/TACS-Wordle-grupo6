@@ -1,4 +1,4 @@
-package utn.frba.wordle.model.dto;
+package utn.frba.wordle.model.http;
 
 import lombok.*;
 
@@ -9,7 +9,6 @@ import java.util.List;
 @EqualsAndHashCode
 @AllArgsConstructor
 @Builder
-
-public class PositionsResponseDto {
-    List <LeaderboardDto> tourneys;
+public class DefinitionResponse {
+    List<String> definitions;
 }

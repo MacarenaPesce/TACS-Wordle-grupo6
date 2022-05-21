@@ -15,7 +15,7 @@ public class PunctuationServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void aUserCanPublishTheirPunctuationWithoutATournament() {
-        UserDto user = getUserDto("mail@mail.com", "usernameTest");
+        UserDto user = getUserDto("email@email.com", "usernameTest");
 
         ResultDto resultESDto = ResultDto.builder()
                 .language(Language.ES)

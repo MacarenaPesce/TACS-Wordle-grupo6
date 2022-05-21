@@ -34,7 +34,7 @@ public class UserControllerWebMvcTest {
 
     @SneakyThrows
     @Test
-    public void puedoBuscarTodosLosUsuarios() {
+    public void iCanFindAllUsers() {
         SessionDto sessionDto = TestUtils.getMockSession();
 
         String urlController = "/api/users";
@@ -48,7 +48,7 @@ public class UserControllerWebMvcTest {
 
     @SneakyThrows
     @Test
-    public void puedoBuscarTodosLosUsuariosFiltrandolosPorNombre() {
+    public void iCanFindUsersByTheirNames() {
         SessionDto sessionDto = TestUtils.getMockSession();
         String filter = "aFilter";
 
