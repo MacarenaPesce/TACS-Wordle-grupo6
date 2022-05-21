@@ -114,6 +114,7 @@ public class TournamentsControllerWebMvcTest {
     @Test
     public void puedoPublicarLosResultados() {
         ResultDto request = RANDOM.nextObject(ResultDto.class);
+        request.setResult(5L);
         SessionDto sessionDto = TestUtils.getMockSession();
 
         String urlController = "/api/tournaments/submitResults";
