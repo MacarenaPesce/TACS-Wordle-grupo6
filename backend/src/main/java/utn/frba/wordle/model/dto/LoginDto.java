@@ -13,4 +13,9 @@ public class LoginDto {
     private String username;
     private String password;
     private String email;
+
+    @Override
+    public String toString(){
+        return String.format("{username: %s, email: %s}", username, email);
+    }
 }

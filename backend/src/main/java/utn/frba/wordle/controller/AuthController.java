@@ -1,5 +1,7 @@
 package utn.frba.wordle.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
     @PostMapping("/register")
     public ResponseEntity<SessionDto> register(@RequestBody LoginDto loginDto) {
         return new ResponseEntity<>(authService.register(loginDto), HttpStatus.CREATED);
@@ -24,6 +28,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<SessionDto> login(@RequestBody LoginDto loginDto) {
+
+        logger.error("GetDefinitions - Login called with params: {}", loginDto);
+
         return new ResponseEntity<>(authService.login(loginDto), HttpStatus.OK);
     }
 
