@@ -3,12 +3,12 @@ package utn.frba.wordle.service;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.dto.*;
+import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.repository.UserRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @NoArgsConstructor
@@ -17,11 +17,11 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public UserDto createUser(LoginDto loginDto) {
+    public UserDto createUser(String username, String password, String mail) {
         UserEntity newUser = UserEntity.builder()
-                .email(loginDto.getEmail())
-                .password(loginDto.getPassword())
-                .username(loginDto.getUsername().toLowerCase())
+                .email(mail.toLowerCase())
+                .password(password)
+                .username(username.toLowerCase())
                 .build();
 
         newUser = userRepository.save(newUser);
@@ -37,22 +37,12 @@ public class UserService {
         return mapToDto(userRepository.findById(userId).orElseThrow());
     }
 
-    public UserEntity findUserById(Long userId) {
-        UserEntity user;
-        try {
-            user = userRepository.findById(userId).orElseThrow();
-        }catch (NoSuchElementException e){
-            throw new BusinessException("The requested user ID is not found.");
-        }
-        return user;
-    }
-
     public UserEntity getUserByUsername(String username) {
-        return userRepository.getByUsername(username);
+        return userRepository.getByUsername(username.toLowerCase());
     }
 
     public UserEntity findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email.toLowerCase());
     }
 
     public List<UserDto> getTournamentMembers(Long tournamentId) {
@@ -91,5 +81,4 @@ public class UserService {
                 .id(user.getId())
                 .build();
     }
-
 }

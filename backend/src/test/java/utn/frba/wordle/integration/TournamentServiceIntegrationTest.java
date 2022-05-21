@@ -43,7 +43,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanCreateATournament(){
         String name = "TestTournament";
-        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        UserDto owner = getUserDto("email@email.com", "usernameTest");
         TournamentDto dto = TournamentDto.builder()
                 .type(TournamentType.PRIVATE)
                 .start(new Date())
@@ -77,22 +77,21 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void aUserCantAddAnotherUserToANonexistentTournament(){
-        UserDto userOwner = getUserDto("mail@mail.com", "usernameTest");
-        LoginDto user = LoginDto.builder()
-                .email("mail@mail.com2")
-                .username("usernameTest2")
-                .build();
-        userService.createUser(user);
+        String userOwnerUsername = "usernameTest";
+        String userOwnerEmail = "email@email.com";
+        UserDto userOwner = getUserDto(userOwnerEmail, userOwnerUsername);
+        String userUsername = "usernameTest2";
+        String userEmail = "email@email.com2";
+        userService.createUser(userUsername, "pass", userEmail);
         Long userId = 2L;
 
         assertThrows(BusinessException.class, () -> tournamentService.addMember(userId, 32167L, userOwner.getId()));
-
     }
     @Test
     public void aUserCantAddAnotherUserToATournamentThatDontOwn(){
         String name = "TestTournament";
-        UserDto ownerUser = getUserDto("mail@mail.com", "usernameTest");
-        UserDto magicUser = getUserDto("mail@mail.com2", "usernameTest2");
+        UserDto ownerUser = getUserDto("email@email.com", "usernameTest");
+        UserDto magicUser = getUserDto("email@email.com2", "usernameTest2");
         Long userId = 2L;
         TournamentDto dto = TournamentDto.builder()
                 .type(TournamentType.PRIVATE)

@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.model.dto.LoginDto;
 import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.model.http.LoginRequest;
+import utn.frba.wordle.model.http.RegisterRequest;
 import utn.frba.wordle.service.AuthService;
 
 
@@ -19,19 +21,24 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+    //private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/register")
-    public ResponseEntity<SessionDto> register(@RequestBody LoginDto loginDto) {
-        return new ResponseEntity<>(authService.register(loginDto), HttpStatus.CREATED);
+    public ResponseEntity<SessionDto> register(@RequestBody RegisterRequest request) {
+
+        SessionDto sessionDto = authService.register(request.getUsername(), request.getPassword(), request.getEmail());
+
+        return new ResponseEntity<>(sessionDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SessionDto> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<SessionDto> login(@RequestBody LoginRequest loginRequest) {
 
-        logger.error("GetDefinitions - Login called with params: {}", loginDto);
+        //logger.info("GetDefinitions - Login called with params: {}", loginRequest);
 
-        return new ResponseEntity<>(authService.login(loginDto), HttpStatus.OK);
+        SessionDto sessionDto = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
+
+        return new ResponseEntity<>(sessionDto, HttpStatus.OK);
     }
 
     @PostMapping("/logout")
