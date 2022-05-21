@@ -157,9 +157,3 @@ export default class TabsTourneys extends Component{
         );
     }
 }
-
-
-
-
-
-                        

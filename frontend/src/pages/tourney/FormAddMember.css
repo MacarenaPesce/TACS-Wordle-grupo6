@@ -1,19 +1,19 @@
-/*.container {
+.form-container {
     padding-top: 30px;
     width: 300px;
     margin: auto;
   }
   
-  .input {
+  .form-input {
     padding: 5px 15px;
     width: 300px;
   }
   
-  .user-list {
+  .form-user-list {
     margin-top: 30px;
   }
   
-  .user {
+  .form-user {
     list-style: none;
     margin: 10px 0;
     padding: 10px;
@@ -22,16 +22,15 @@
     justify-content: space-between;
   }
   
-  .user-id {
+  .form-user-id {
     color: red;
     margin-right: 20px;
   }
   
-  .user-name {
+  .form-user-name {
     color: blue;
   }
   
-  .user-age {
+  .form-user-age {
     margin-left: auto;
   }
-*/
