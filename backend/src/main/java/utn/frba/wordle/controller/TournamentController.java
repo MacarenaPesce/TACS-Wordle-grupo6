@@ -10,7 +10,8 @@ import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.*;
 import utn.frba.wordle.model.http.*;
 import utn.frba.wordle.model.pojo.Punctuation;
-import utn.frba.wordle.model.pojo.State;
+import utn.frba.wordle.model.enums.State;
+import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.TournamentService;
 

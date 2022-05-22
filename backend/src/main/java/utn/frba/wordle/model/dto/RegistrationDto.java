@@ -8,16 +8,15 @@ import java.util.Date;
 import java.util.List;
 
 @Getter
-@Setter
 @EqualsAndHashCode
-@AllArgsConstructor
 @Builder
+@ToString
 public class RegistrationDto {
 
-    private Long id;
-    private UserEntity user;
-    private Long tournamentId;
-    private Date registered;
-    private List<PunctuationEntity> punctuations;
+    private final Long id;
+    private final UserEntity user;
+    private final Long tournamentId;
+    private final Date registered;
+    private final List<PunctuationEntity> punctuations;
 
 }

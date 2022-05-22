@@ -4,7 +4,7 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.model.dto.HelpDto;
-import utn.frba.wordle.model.pojo.Language;
+import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.utils.WordFileReader;
 
 import java.io.IOException;

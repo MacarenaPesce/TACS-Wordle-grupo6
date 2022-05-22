@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import utn.frba.wordle.model.dto.LoginDto;
 import utn.frba.wordle.model.http.LoginRequest;
 import utn.frba.wordle.model.http.RegisterRequest;
 import utn.frba.wordle.service.AuthService;
@@ -15,13 +14,10 @@ import utn.frba.wordle.service.AuthService;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static utn.frba.wordle.utils.TestUtils.RANDOM;
 import static utn.frba.wordle.utils.TestUtils.toJson;
 
 @WebMvcTest(AuthController.class)
 public class AuthControllerWebMvcTest {
-
-    private final Class<LoginDto> dtoClass = LoginDto.class;
 
     @MockBean
     private AuthService authService;

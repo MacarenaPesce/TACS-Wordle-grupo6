@@ -7,7 +7,7 @@ import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.HelpDto;
 import utn.frba.wordle.model.http.HelpRequest;
 import utn.frba.wordle.model.http.HelpResponse;
-import utn.frba.wordle.model.pojo.Language;
+import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.service.HelpService;
 
 import java.util.Set;

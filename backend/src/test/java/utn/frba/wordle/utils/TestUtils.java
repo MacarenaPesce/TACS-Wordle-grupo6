@@ -5,20 +5,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-import org.springframework.beans.factory.annotation.Autowired;
-import utn.frba.wordle.model.dto.Session;
-import utn.frba.wordle.model.dto.UserDto;
+import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.service.AuthService;
-import utn.frba.wordle.service.UserService;
 
 import java.util.Date;
 
 public class TestUtils {
 
     public static final EasyRandom RANDOM = TestUtils.newEasyRandom();
-
-    @Autowired
-    UserService userService;
 
     private static EasyRandom newEasyRandom() {
         final EasyRandomParameters parameters = new EasyRandomParameters();
@@ -42,17 +36,6 @@ public class TestUtils {
                 .username(username)
                 .email(email)
                 .userId(userId)
-                .build();
-    }
-
-    public static Session getValidSessionFromUser(UserDto user) {
-        String accessToken = getJWTToken(user.getUsername(), user.getEmail(), user.getId());
-
-        return Session.builder()
-                .token(accessToken)
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .userId(user.getId())
                 .build();
     }
 

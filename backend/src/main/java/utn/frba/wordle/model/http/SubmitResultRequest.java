@@ -1,16 +1,14 @@
 package utn.frba.wordle.model.http;
 
 import lombok.*;
-import utn.frba.wordle.model.pojo.Language;
+import utn.frba.wordle.model.enums.Language;
 
 @Getter
-@Setter
-@EqualsAndHashCode
 @Builder
-@AllArgsConstructor
+@ToString
 public class SubmitResultRequest {
-    Long userId;
-    Long result;
-    Language language;
+    private final Long userId;
+    private final Long result;
+    private final Language language;
 }
 

@@ -1,24 +1,22 @@
 package utn.frba.wordle.model.http;
 
 import lombok.*;
-import utn.frba.wordle.model.pojo.Language;
-import utn.frba.wordle.model.pojo.TournamentType;
+import utn.frba.wordle.model.enums.Language;
+import utn.frba.wordle.model.enums.TournamentType;
 
 import java.util.Date;
 import java.util.Objects;
 
 @Getter
-@Setter
-@AllArgsConstructor
 @Builder
 @ToString
 public class CreateTournamentRequest {
 
-    String name;
-    Language language;
-    TournamentType type;
-    Date start;
-    Date finish;
+    private final String name;
+    private final Language language;
+    private final TournamentType type;
+    private final Date start;
+    private final Date finish;
 
     @Override
     public boolean equals(Object o) {

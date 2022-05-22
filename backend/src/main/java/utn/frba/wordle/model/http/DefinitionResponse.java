@@ -5,11 +5,8 @@ import lombok.*;
 import java.util.List;
 
 @Getter
-@Setter
-@EqualsAndHashCode
-@AllArgsConstructor
 @Builder
 @ToString
 public class DefinitionResponse {
-    List<String> definitions;
+    private final List<String> definitions;
 }
