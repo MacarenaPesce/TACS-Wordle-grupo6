@@ -6,11 +6,9 @@ import utn.frba.wordle.model.pojo.Punctuation;
 import java.util.List;
 
 @Getter
-@Setter
-@AllArgsConstructor
 @Builder
-@NoArgsConstructor
+@ToString
 public class RankingResponse {
-    List<Punctuation> punctuations;
-    Long idTournament;
+    private final List<Punctuation> punctuations;
+    private final Long idTournament;
 }

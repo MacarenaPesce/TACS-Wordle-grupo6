@@ -9,20 +9,17 @@ import utn.frba.wordle.model.enums.TournamentType;
 import java.util.Date;
 
 @Getter
-@Setter
-@AllArgsConstructor
 @Builder
-@NoArgsConstructor
 @ToString
 public class TournamentResponse {
-    Long tourneyId;
-    String name;
-    Language language;
-    TournamentType type;
-    State state;
-    Date start;
-    Date finish;
-    UserDto owner;
+    private final Long tourneyId;
+    private final String name;
+    private final Language language;
+    private final TournamentType type;
+    private final State state;
+    private final Date start;
+    private final Date finish;
+    private final UserDto owner;
 
 
 }

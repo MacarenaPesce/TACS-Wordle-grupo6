@@ -3,14 +3,11 @@ package utn.frba.wordle.model.http;
 import lombok.*;
 
 @Getter
-@Setter
-@EqualsAndHashCode
-@AllArgsConstructor
 @Builder
 public class LoginRequest {
 
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
 
     @Override
     public String toString(){

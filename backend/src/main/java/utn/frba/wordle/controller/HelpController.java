@@ -70,10 +70,6 @@ public class HelpController {
                 .distinct()
                 .collect(Collectors.joining());
 
-        helpRequestDto.setGrey(grey);
-        helpRequestDto.setYellow(yellow);
-        helpRequestDto.setSolution(solution);
-
         return HelpDto.builder()
                 .solution(solution)
                 .grey(grey)

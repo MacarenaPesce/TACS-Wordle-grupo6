@@ -4,12 +4,10 @@ import lombok.*;
 import utn.frba.wordle.model.dto.UserDto;
 
 @Getter
-@Setter
-@AllArgsConstructor
 @Builder
-@NoArgsConstructor
+@ToString
 public class UserResponse {
-    private Long id;
-    private String username;
-    private String email;
+    private final Long id;
+    private final String username;
+    private final String email;
 }

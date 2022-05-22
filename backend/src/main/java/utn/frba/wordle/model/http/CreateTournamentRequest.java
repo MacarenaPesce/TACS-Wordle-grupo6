@@ -8,17 +8,15 @@ import java.util.Date;
 import java.util.Objects;
 
 @Getter
-@Setter
-@AllArgsConstructor
 @Builder
 @ToString
 public class CreateTournamentRequest {
 
-    String name;
-    Language language;
-    TournamentType type;
-    Date start;
-    Date finish;
+    private final String name;
+    private final Language language;
+    private final TournamentType type;
+    private final Date start;
+    private final Date finish;
 
     @Override
     public boolean equals(Object o) {
