@@ -8,8 +8,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import utn.frba.wordle.model.dto.Session;
-import utn.frba.wordle.model.dto.UserDto;
-import utn.frba.wordle.service.PunctuationService;
 import utn.frba.wordle.service.UserService;
 import utn.frba.wordle.utils.TestUtils;
 
@@ -21,13 +19,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerWebMvcTest {
 
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
-    private final Class<UserDto> dtoClass = UserDto.class;
 
     @MockBean
     private UserService userService;
-
-    @MockBean
-    PunctuationService punctuationService;
 
     @Autowired
     private MockMvc mvc;

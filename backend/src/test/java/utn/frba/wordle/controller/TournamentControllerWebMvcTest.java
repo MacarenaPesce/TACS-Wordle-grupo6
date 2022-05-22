@@ -24,7 +24,8 @@ import java.util.ArrayList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static utn.frba.wordle.utils.TestUtils.RANDOM;
 import static utn.frba.wordle.utils.TestUtils.toJson;
@@ -33,7 +34,6 @@ import static utn.frba.wordle.utils.TestUtils.toJson;
 public class TournamentControllerWebMvcTest {
 
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
-    private final Class<TournamentDto> dtoClass = TournamentDto.class;
 
     @MockBean
     private TournamentService tournamentService;
