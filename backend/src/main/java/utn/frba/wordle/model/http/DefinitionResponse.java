@@ -9,6 +9,7 @@ import java.util.List;
 @EqualsAndHashCode
 @AllArgsConstructor
 @Builder
+@ToString
 public class DefinitionResponse {
     List<String> definitions;
 }

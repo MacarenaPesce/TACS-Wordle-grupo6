@@ -25,11 +25,11 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<Session> register(@RequestBody RegisterRequest request) {
 
-        logger.info("Method called: register - Request: {}", request);
+        logger.info("Method: register - Request: {}", request);
 
         Session response = authService.register(request.getUsername(), request.getPassword(), request.getEmail());
 
-        logger.info("Method called: register - Response: {}", response);
+        logger.info("Method: register - Response: {}", response);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -37,11 +37,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Session> login(@RequestBody LoginRequest request) {
 
-        logger.info("Method called: login - Request: {}", request);
+        logger.info("Method: login - Request: {}", request);
 
         Session response = authService.login(request.getUsername(), request.getPassword());
 
-        logger.info("Method called: login - Response: {}", response);
+        logger.info("Method: login - Response: {}", response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -49,7 +49,7 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
 
-        logger.info("logout method called with no params");
+        logger.info("logout Method with no params");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
