@@ -2,7 +2,7 @@ package utn.frba.wordle.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import utn.frba.wordle.model.pojo.Language;
+import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.service.DictionaryService;
 
 import java.util.List;

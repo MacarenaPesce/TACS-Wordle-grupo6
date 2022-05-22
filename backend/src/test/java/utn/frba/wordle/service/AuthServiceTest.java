@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.dto.Session;
+import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.security.UserSession;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.dto.Session;
+import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.security.UserSession;

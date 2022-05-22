@@ -9,13 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import utn.frba.wordle.model.dto.RegistrationDto;
 import utn.frba.wordle.model.dto.ResultDto;
-import utn.frba.wordle.model.dto.Session;
+import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.model.http.CreateTournamentRequest;
-import utn.frba.wordle.model.pojo.Language;
-import utn.frba.wordle.model.pojo.State;
-import utn.frba.wordle.model.pojo.TournamentType;
+import utn.frba.wordle.model.enums.Language;
+import utn.frba.wordle.model.enums.State;
+import utn.frba.wordle.model.enums.TournamentType;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 

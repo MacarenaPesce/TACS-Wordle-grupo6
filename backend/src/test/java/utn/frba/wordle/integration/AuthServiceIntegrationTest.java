@@ -5,7 +5,7 @@ import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.dto.Session;
+import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.UserService;
