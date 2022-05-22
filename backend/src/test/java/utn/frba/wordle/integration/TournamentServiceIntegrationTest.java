@@ -8,6 +8,7 @@ import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.dto.*;
 import utn.frba.wordle.model.entity.PunctuationEntity;
 import utn.frba.wordle.model.entity.TournamentEntity;
+import utn.frba.wordle.model.http.SubmitResultRequest;
 import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.pojo.State;
@@ -16,7 +17,7 @@ import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.service.PunctuationService;
 import utn.frba.wordle.service.RegistrationService;
 import utn.frba.wordle.service.TournamentService;
-import utn.frba.wordle.controller.TournamentsController;
+import utn.frba.wordle.controller.TournamentController;
 import utn.frba.wordle.utils.TestUtils;
 
 import java.util.Date;
@@ -202,26 +203,26 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void aUserCantSubmitResultsGreaterThan8() {
-        SessionDto session = TestUtils.getMockSession();
+        Session session = TestUtils.getMockSession();
 
-        ResultDto resultDto = ResultDto.builder()
+        SubmitResultRequest result = SubmitResultRequest.builder()
                 .result(8L)
                 .language(Language.ES)
                 .build();
 
-        assertThrows(BusinessException.class, () -> new TournamentsController().submitResults(session.getToken(), resultDto));
+        assertThrows(BusinessException.class, () -> new TournamentController().submitResults(session.getToken(), result));
     }
 
     @Test
     public void aUserCantSubmitResultsLesserThan1() {
-        SessionDto session = TestUtils.getMockSession();
+        Session session = TestUtils.getMockSession();
 
-        ResultDto resultDto = ResultDto.builder()
+        SubmitResultRequest result = SubmitResultRequest.builder()
                 .result(0L)
                 .language(Language.ES)
                 .build();
 
-        assertThrows(BusinessException.class, () -> new TournamentsController().submitResults(session.getToken(), resultDto));
+        assertThrows(BusinessException.class, () -> new TournamentController().submitResults(session.getToken(), result));
     }
 
     @Test

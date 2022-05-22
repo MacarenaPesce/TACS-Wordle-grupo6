@@ -9,6 +9,7 @@ import java.util.Set;
 @EqualsAndHashCode
 @AllArgsConstructor
 @Builder
+@ToString
 public class HelpResponse {
 
     Set<String> possibleWords;

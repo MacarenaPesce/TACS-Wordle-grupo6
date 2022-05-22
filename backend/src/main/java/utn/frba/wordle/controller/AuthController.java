@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.model.dto.Session;
 import utn.frba.wordle.model.http.LoginRequest;
 import utn.frba.wordle.model.http.RegisterRequest;
 import utn.frba.wordle.service.AuthService;
@@ -23,25 +23,34 @@ public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/register")
-    public ResponseEntity<SessionDto> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<Session> register(@RequestBody RegisterRequest request) {
 
-        SessionDto sessionDto = authService.register(request.getUsername(), request.getPassword(), request.getEmail());
+        logger.info("Method: register - Request: {}", request);
 
-        return new ResponseEntity<>(sessionDto, HttpStatus.CREATED);
+        Session response = authService.register(request.getUsername(), request.getPassword(), request.getEmail());
+
+        logger.info("Method: register - Response: {}", response);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SessionDto> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Session> login(@RequestBody LoginRequest request) {
 
-        logger.info("GetDefinitions - Login called with params: {}", loginRequest);
+        logger.info("Method: login - Request: {}", request);
 
-        SessionDto sessionDto = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        Session response = authService.login(request.getUsername(), request.getPassword());
 
-        return new ResponseEntity<>(sessionDto, HttpStatus.OK);
+        logger.info("Method: login - Response: {}", response);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
+
+        logger.info("logout Method with no params");
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -6,7 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.springframework.beans.factory.annotation.Autowired;
-import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.model.dto.Session;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.UserService;
@@ -31,13 +31,13 @@ public class TestUtils {
         return gson.toJson(object);
     }
 
-    public static SessionDto getMockSession() {
+    public static Session getMockSession() {
         String username = "mockUser";
         String email = "mockMail@mail.com";
         Long userId = 100L;
         String accessToken = getJWTToken(username, email, userId);
 
-        return SessionDto.builder()
+        return Session.builder()
                 .token(accessToken)
                 .username(username)
                 .email(email)
@@ -45,10 +45,10 @@ public class TestUtils {
                 .build();
     }
 
-    public static SessionDto getValidSessionFromUser(UserDto user) {
+    public static Session getValidSessionFromUser(UserDto user) {
         String accessToken = getJWTToken(user.getUsername(), user.getEmail(), user.getId());
 
-        return SessionDto.builder()
+        return Session.builder()
                 .token(accessToken)
                 .username(user.getUsername())
                 .email(user.getEmail())

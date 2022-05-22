@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.model.dto.Session;
 import utn.frba.wordle.security.UserSession;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +34,7 @@ public class AuthServiceTest {
         authService.setJwtAccessExpiration(100L);
         authService.setJwtRefreshExpiration(200L);
 
-        SessionDto session = authService.login(ADMIN_USER, ADMIN_PASS);
+        Session session = authService.login(ADMIN_USER, ADMIN_PASS);
 
         assertNotNull(session);
     }

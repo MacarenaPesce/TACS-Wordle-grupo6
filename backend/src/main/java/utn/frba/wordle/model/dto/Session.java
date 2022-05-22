@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @EqualsAndHashCode
 @ToString
-public class SessionDto {
+public class Session {
 
     private String token;
     private String username;
