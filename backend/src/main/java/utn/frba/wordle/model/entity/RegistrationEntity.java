@@ -8,10 +8,9 @@ import java.util.Set;
 
 @Entity
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Table(name = "Registration",
         uniqueConstraints = {
         @UniqueConstraint(columnNames = { "Id_Tournament", "Id_User" }) })
