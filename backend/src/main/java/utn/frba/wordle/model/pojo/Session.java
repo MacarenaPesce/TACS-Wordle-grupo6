@@ -3,17 +3,13 @@ package utn.frba.wordle.model.pojo;
 import lombok.*;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @EqualsAndHashCode
-@ToString
+@Builder
 public class Session {
 
-    private String token;
-    private String username;
-    private String email;
-    private Long userId;
+    private final String token;
+    private final String username;
+    private final String email;
+    private final Long userId;
 
 }

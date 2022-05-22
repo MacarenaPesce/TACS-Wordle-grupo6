@@ -3,11 +3,9 @@ package utn.frba.wordle.model.pojo;
 import lombok.*;
 
 @Getter
-@Setter
-@AllArgsConstructor
+@EqualsAndHashCode
 @Builder
-@NoArgsConstructor
 public class Punctuation {
-    String user;
-    Long punctuation;
+    private final String user;
+    private final Long punctuation;
 }
