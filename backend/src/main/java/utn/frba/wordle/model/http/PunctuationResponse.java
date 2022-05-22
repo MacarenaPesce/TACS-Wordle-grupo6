@@ -8,6 +8,7 @@ import utn.frba.wordle.model.pojo.Language;
 @EqualsAndHashCode
 @Builder
 @AllArgsConstructor
+@ToString
 public class PunctuationResponse {
     Long punctuation;
     Language language;
