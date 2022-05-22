@@ -202,7 +202,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void aUserCantSubmitResultsGreaterThan8() {
-        SessionDto session = TestUtils.getMockSession();
+        Session session = TestUtils.getMockSession();
 
         ResultDto resultDto = ResultDto.builder()
                 .result(8L)
@@ -214,7 +214,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void aUserCantSubmitResultsLesserThan1() {
-        SessionDto session = TestUtils.getMockSession();
+        Session session = TestUtils.getMockSession();
 
         ResultDto resultDto = ResultDto.builder()
                 .result(0L)

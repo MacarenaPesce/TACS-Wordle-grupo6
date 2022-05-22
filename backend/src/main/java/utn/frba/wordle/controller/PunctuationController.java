@@ -20,7 +20,7 @@ public class PunctuationController {
 
     @GetMapping("/todaysResult/{language}")
     public ResponseEntity<PunctuationResponse> getTodaysResult(@RequestHeader("Authorization") String token, @PathVariable Language language) {
-        SessionDto session = AuthService.getSession(token);
+        Session session = AuthService.getSession(token);
 
         Long result = punctuationService.getTodaysResult(session.getUserId(), language);
 

@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import utn.frba.wordle.model.dto.RegistrationDto;
 import utn.frba.wordle.model.dto.ResultDto;
-import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.model.dto.Session;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.model.pojo.State;
@@ -46,15 +46,15 @@ public class TournamentsControllerWebMvcTest {
         request.setStart(null);
         when(tournamentService.create(any(), any())).thenReturn(request);
 
-        SessionDto sessionDto = TestUtils.getMockSession();
+        Session session = TestUtils.getMockSession();
         String urlController = "/api/tournaments/";
         mvc.perform(post(urlController)
-                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).create(request, sessionDto.getUserId());
+        verify(tournamentService).create(request, session.getUserId());
     }
 
     @SneakyThrows
@@ -62,7 +62,7 @@ public class TournamentsControllerWebMvcTest {
     public void iCanAddNewMemberToTournament() {
         Long userId = 2L;
         Long tourneyID = 40L;
-        SessionDto sessionDto = TestUtils.getMockSession();
+        Session session = TestUtils.getMockSession();
         RegistrationDto registration = RegistrationDto.builder()
                 .punctuations(new ArrayList<>())
                 .user(UserEntity.builder().build())
@@ -71,17 +71,17 @@ public class TournamentsControllerWebMvcTest {
 
         String urlController = "/api/tournaments/"+tourneyID+"/members/"+userId;
         mvc.perform(post(urlController)
-                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).addMember(userId, tourneyID, sessionDto.getUserId());
+        verify(tournamentService).addMember(userId, tourneyID, session.getUserId());
     }
 
     @SneakyThrows
     @Test
     public void iCanJoinTournament() {
-        SessionDto sessionDto = TestUtils.getMockSession();
+        Session session = TestUtils.getMockSession();
         RegistrationDto registration = RegistrationDto.builder()
                 .punctuations(new ArrayList<>())
                 .user(UserEntity.builder().build())
@@ -91,11 +91,11 @@ public class TournamentsControllerWebMvcTest {
         Long tournamentId = 123L;
         String urlController = "/api/tournaments/" + tournamentId + "/join";
         mvc.perform(post(urlController)
-                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).join(sessionDto.getUserId(), tournamentId);
+        verify(tournamentService).join(session.getUserId(), tournamentId);
     }
 
     @SneakyThrows
@@ -115,27 +115,27 @@ public class TournamentsControllerWebMvcTest {
     public void iCanPublishResults() {
         ResultDto request = RANDOM.nextObject(ResultDto.class);
         request.setResult(5L);
-        SessionDto sessionDto = TestUtils.getMockSession();
+        Session session = TestUtils.getMockSession();
 
         String urlController = "/api/tournaments/submitResults";
         mvc.perform(post(urlController)
-                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).submitResults(sessionDto.getUserId(), request);
+        verify(tournamentService).submitResults(session.getUserId(), request);
     }
 
     @SneakyThrows
     @Test
     public void aUserCanGetTheRankingOfATourney() {
         Long idTournament = 22L;
-        SessionDto sessionDto = TestUtils.getMockSession();
+        Session session = TestUtils.getMockSession();
 
         String urlController = String.format("/api/tournaments/%s/ranking", idTournament);
         mvc.perform(get(urlController)
-                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -145,28 +145,28 @@ public class TournamentsControllerWebMvcTest {
     @SneakyThrows
     @Test
     public void aUserCanGetTheListOfReadyTournaments() {
-        SessionDto sessionDto = TestUtils.getMockSession();
+        Session session = TestUtils.getMockSession();
 
         String urlController = "/api/tournaments/READY";
         mvc.perform(get(urlController)
-                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).findUserTournamentsByState(sessionDto.getUserId(), State.READY);
+        verify(tournamentService).findUserTournamentsByState(session.getUserId(), State.READY);
     }
 
     @SneakyThrows
     @Test
     public void aUserCanGetTheListTheirTournaments() {
-        SessionDto sessionDto = TestUtils.getMockSession();
+        Session session = TestUtils.getMockSession();
 
         String urlController = "/api/tournaments/myTournaments";
         mvc.perform(get(urlController)
-                .header(AUTHORIZATION_HEADER_NAME, sessionDto.getToken())
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).getTournamentsFromUser(sessionDto.getUserId());
+        verify(tournamentService).getTournamentsFromUser(session.getUserId());
     }
 }

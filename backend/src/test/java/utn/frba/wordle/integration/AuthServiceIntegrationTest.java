@@ -5,7 +5,7 @@ import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.model.dto.Session;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.UserService;
@@ -31,7 +31,7 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
 
         UserDto user = userService.createUser(username, password, mail);
 
-        SessionDto login = authService.login(username, password);
+        Session login = authService.login(username, password);
 
         Claims claims = getClaims(login.getToken());
         String tokenUsername = (String) claims.get("username");
@@ -51,7 +51,7 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void getsJWTOnAdminsLogin() {
-        SessionDto login = authService.login(ADMIN_USER, ADMIN_PASS);
+        Session login = authService.login(ADMIN_USER, ADMIN_PASS);
 
         Claims claims = getClaims(login.getToken());
         String tokenUsername = (String) claims.get("username");
@@ -68,7 +68,7 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
         String password = "lamePassword";
         String email = "mail@prueba.com";
 
-        SessionDto login = authService.register(username, password, email);
+        Session login = authService.register(username, password, email);
 
         assertThat(login).hasNoNullFieldsOrProperties();
     }

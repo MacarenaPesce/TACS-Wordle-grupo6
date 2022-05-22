@@ -27,7 +27,7 @@ public class TournamentsController {
 
     @PostMapping
     public ResponseEntity<TournamentResponse> create(@RequestHeader("Authorization") String token, @RequestBody TournamentDto tournamentDto) {
-        SessionDto session = AuthService.getSession(token);
+        Session session = AuthService.getSession(token);
         TournamentDto dto = tournamentService.create(tournamentDto, session.getUserId());
 
         TournamentResponse tournament = buildResponse(dto);
@@ -37,7 +37,7 @@ public class TournamentsController {
 
     @GetMapping("/myTournaments")
     public ResponseEntity<List<TournamentResponse>> getTournamentsFromUser(@RequestHeader("Authorization") String token){
-        SessionDto session = AuthService.getSession(token);
+        Session session = AuthService.getSession(token);
         List<TournamentDto> tournamentsDto = tournamentService.getTournamentsFromUser(session.getUserId());
 
         List<TournamentResponse> tournaments = tournamentsDto
@@ -47,7 +47,7 @@ public class TournamentsController {
 
     @PostMapping("/{tournamentId}/members/{userId}")
     public ResponseEntity<RegistrationResponse> addMember(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Long tournamentId) {
-        SessionDto session = AuthService.getSession(token);
+        Session session = AuthService.getSession(token);
         RegistrationDto dto = tournamentService.addMember(userId, tournamentId, session.getUserId());
 
         RegistrationResponse registration = RegistrationResponse.builder()
@@ -60,7 +60,7 @@ public class TournamentsController {
 
     @PostMapping ("/{tournamentId}/join")
     public ResponseEntity<RegistrationResponse> join(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
-        SessionDto session = AuthService.getSession(token);
+        Session session = AuthService.getSession(token);
         RegistrationDto dto = tournamentService.join(session.getUserId(), tournamentId);
 
         RegistrationResponse registration = RegistrationResponse.builder()
@@ -83,7 +83,7 @@ public class TournamentsController {
     
     @PostMapping("submitResults")
     public ResponseEntity<String> submitResults(@RequestHeader("Authorization") String token, @RequestBody ResultDto resultDto) {
-        SessionDto session = AuthService.getSession(token);
+        Session session = AuthService.getSession(token);
 
         if(resultDto.getResult() > 7 || resultDto.getResult() < 1){
             throw new BusinessException("Solo se pueden cargar resultados del 1 al 7");
@@ -107,7 +107,7 @@ public class TournamentsController {
 
     @GetMapping("/{state}")
     public ResponseEntity<List<TournamentResponse>> findUserTournamentsByState(@RequestHeader("Authorization") String token, @PathVariable State state){
-        SessionDto session = AuthService.getSession(token);
+        Session session = AuthService.getSession(token);
         List<TournamentDto> tournamentsDto = tournamentService.findUserTournamentsByState(session.getUserId(), state);
 
         List<TournamentResponse> tournaments = tournamentsDto
