@@ -9,13 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import utn.frba.wordle.model.dto.RegistrationDto;
 import utn.frba.wordle.model.dto.ResultDto;
-import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.entity.UserEntity;
-import utn.frba.wordle.model.http.CreateTournamentRequest;
 import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.model.enums.TournamentType;
+import utn.frba.wordle.model.http.CreateTournamentRequest;
+import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 
@@ -27,7 +27,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static utn.frba.wordle.utils.TestUtils.RANDOM;
 import static utn.frba.wordle.utils.TestUtils.toJson;
 
 @WebMvcTest(TournamentController.class)
@@ -127,8 +126,11 @@ public class TournamentControllerWebMvcTest {
     @SneakyThrows
     @Test
     public void iCanPublishResults() {
-        ResultDto request = RANDOM.nextObject(ResultDto.class);
-        request.setResult(5L);
+        ResultDto request = ResultDto.builder()
+                .userId(1L)
+                .result(5L)
+                .language(Language.ES)
+                .build();
         Session session = TestUtils.getMockSession();
 
         String urlController = "/api/tournaments/submitResults";

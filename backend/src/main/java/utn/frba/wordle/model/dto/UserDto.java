@@ -2,16 +2,13 @@ package utn.frba.wordle.model.dto;
 
 import lombok.*;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode
 @Getter
-@Setter
+@EqualsAndHashCode
+@Builder
 @ToString
 public class UserDto {
 
-    private Long id;
-    private String username;
-    private String email;
+    private final Long id;
+    private final String username;
+    private final String email;
 }
