@@ -14,6 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
+@ToString
 public class TournamentResponse {
     Long tourneyId;
     String name;

@@ -34,7 +34,12 @@ public class UserService {
     }
 
     public UserDto findUser(Long userId) {
-        return mapToDto(userRepository.findById(userId).orElseThrow());
+        return mapToDto(findUserEntity(userId));
+    }
+
+
+    public UserEntity findUserEntity(Long userId) {
+        return userRepository.findById(userId).orElseThrow();
     }
 
     public UserEntity getUserByUsername(String username) {

@@ -12,7 +12,10 @@ import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.Session;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.entity.UserEntity;
+import utn.frba.wordle.model.http.CreateTournamentRequest;
+import utn.frba.wordle.model.pojo.Language;
 import utn.frba.wordle.model.pojo.State;
+import utn.frba.wordle.model.pojo.TournamentType;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 
@@ -26,8 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static utn.frba.wordle.utils.TestUtils.RANDOM;
 import static utn.frba.wordle.utils.TestUtils.toJson;
 
-@WebMvcTest(TournamentsController.class)
-public class TournamentsControllerWebMvcTest {
+@WebMvcTest(TournamentController.class)
+public class TournamentControllerWebMvcTest {
 
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     private final Class<TournamentDto> dtoClass = TournamentDto.class;
@@ -41,10 +44,19 @@ public class TournamentsControllerWebMvcTest {
     @SneakyThrows
     @Test
     public void iCanAddNewTournament() {
-        TournamentDto request = RANDOM.nextObject(dtoClass);
-        request.setFinish(null);
-        request.setStart(null);
-        when(tournamentService.create(any(), any())).thenReturn(request);
+        CreateTournamentRequest request = CreateTournamentRequest.builder()
+                .language(Language.ES)
+                .type(TournamentType.PUBLIC)
+                .name("name")
+                .build();
+
+        TournamentDto serviceDto = TournamentDto.builder()
+                .language(request.getLanguage())
+                .type(request.getType())
+                .name(request.getName())
+                .build();
+
+        when(tournamentService.create(any(), any())).thenReturn(serviceDto);
 
         Session session = TestUtils.getMockSession();
         String urlController = "/api/tournaments/";
@@ -54,7 +66,7 @@ public class TournamentsControllerWebMvcTest {
                 .content(toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).create(request, session.getUserId());
+        verify(tournamentService).create(serviceDto, session.getUserId());
     }
 
     @SneakyThrows
@@ -101,9 +113,11 @@ public class TournamentsControllerWebMvcTest {
     @SneakyThrows
     @Test
     public void iCanListPublicTournaments() {
+        Session session = TestUtils.getMockSession();
 
         String urlController = "/api/tournaments/public";
         mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

@@ -1,14 +1,14 @@
 package utn.frba.wordle.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.*;
-import utn.frba.wordle.model.http.RegistrationResponse;
-import utn.frba.wordle.model.http.RankingResponse;
-import utn.frba.wordle.model.http.TournamentResponse;
+import utn.frba.wordle.model.http.*;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.pojo.State;
 import utn.frba.wordle.service.AuthService;
@@ -20,99 +20,141 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/tournaments")
 @CrossOrigin
-public class TournamentsController {
+public class TournamentController {
 
     @Autowired
     TournamentService tournamentService;
 
+    private static final Logger logger = LoggerFactory.getLogger(TournamentController.class);
+
     @PostMapping
-    public ResponseEntity<TournamentResponse> create(@RequestHeader("Authorization") String token, @RequestBody TournamentDto tournamentDto) {
+    public ResponseEntity<TournamentResponse> create(@RequestHeader("Authorization") String token, @RequestBody CreateTournamentRequest request) {
+        logger.info("Method: create - Request: token={}, request={}", token, request);
+
         Session session = AuthService.getSession(token);
-        TournamentDto dto = tournamentService.create(tournamentDto, session.getUserId());
+        TournamentDto newTournament = TournamentDto.builder()
+                .language(request.getLanguage())
+                .name(request.getName())
+                .type(request.getType())
+                .start(request.getStart())
+                .finish(request.getFinish())
+                .build();
 
-        TournamentResponse tournament = buildResponse(dto);
+        TournamentResponse response = buildResponse(tournamentService.create(newTournament, session.getUserId()));
 
-        return new ResponseEntity<>(tournament, HttpStatus.OK);
+        logger.info("Method: create - Response: {}", response);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/myTournaments")
     public ResponseEntity<List<TournamentResponse>> getTournamentsFromUser(@RequestHeader("Authorization") String token){
+        logger.info("Method: getTournamentsFromUser - Request: token={}", token);
+
         Session session = AuthService.getSession(token);
         List<TournamentDto> tournamentsDto = tournamentService.getTournamentsFromUser(session.getUserId());
 
-        List<TournamentResponse> tournaments = tournamentsDto
+        List<TournamentResponse> response = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());
-        return new ResponseEntity<>(tournaments, HttpStatus.OK);
+
+        logger.info("Method: getTournamentsFromUser - Response: {}", response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/{tournamentId}/members/{userId}")
     public ResponseEntity<RegistrationResponse> addMember(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Long tournamentId) {
+        logger.info("Method: addMember - Request: token={}, userId={}, tournamentId={}", token, userId, tournamentId);
+
         Session session = AuthService.getSession(token);
         RegistrationDto dto = tournamentService.addMember(userId, tournamentId, session.getUserId());
 
-        RegistrationResponse registration = RegistrationResponse.builder()
+        RegistrationResponse response = RegistrationResponse.builder()
                 .tournamentId(dto.getTournamentId())
                 .username(dto.getUser().getUsername())
                 .build();
 
-        return new ResponseEntity<>(registration, HttpStatus.OK);
+        logger.info("Method: addMember - Response: {}", response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping ("/{tournamentId}/join")
     public ResponseEntity<RegistrationResponse> join(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
+        logger.info("Method: join - Request: token={}, tournamentId={}", token, tournamentId);
+
         Session session = AuthService.getSession(token);
         RegistrationDto dto = tournamentService.join(session.getUserId(), tournamentId);
 
-        RegistrationResponse registration = RegistrationResponse.builder()
+        RegistrationResponse response = RegistrationResponse.builder()
                 .tournamentId(dto.getTournamentId())
                 .username(dto.getUser().getUsername())
                 .build();
 
-        return new ResponseEntity<>(registration, HttpStatus.OK);
+        logger.info("Method: addMember - Response: {}", response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("public")
-    public ResponseEntity<List<TournamentResponse>> listPublicTournaments(){
+    public ResponseEntity<List<TournamentResponse>> listPublicTournaments(@RequestHeader("Authorization") String token){
+        logger.info("Method: listPublicTournaments - Request: token={}", token);
         List<TournamentDto> tournamentsDto = tournamentService.listPublicTournaments();
 
-        List<TournamentResponse> tournaments = tournamentsDto
+        List<TournamentResponse> response = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());
 
-        return new ResponseEntity<>(tournaments, HttpStatus.OK);
+        logger.info("Method: listPublicTournaments - Response: {}", response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
     @PostMapping("submitResults")
-    public ResponseEntity<String> submitResults(@RequestHeader("Authorization") String token, @RequestBody ResultDto resultDto) {
+    public ResponseEntity<String> submitResults(@RequestHeader("Authorization") String token, @RequestBody SubmitResultRequest request) {
+        logger.info("Method: submitResults - Request: token={}, request={}", token, request);
         Session session = AuthService.getSession(token);
 
-        if(resultDto.getResult() > 7 || resultDto.getResult() < 1){
+        if(request.getResult() > 7 || request.getResult() < 1){
             throw new BusinessException("Solo se pueden cargar resultados del 1 al 7");
         }
 
-        tournamentService.submitResults(session.getUserId(), resultDto);
+        ResultDto dto = ResultDto.builder()
+                .language(request.getLanguage())
+                .result(request.getResult())
+                .userId(request.getUserId())
+                .build();
+        tournamentService.submitResults(session.getUserId(), dto);
+
+        logger.info("Method: submitResults - submit OK");
+
         return new ResponseEntity<>("Resultados cargados correctamente", HttpStatus.OK);
     }
 
     @GetMapping("/{tournamentId}/ranking")
-    public ResponseEntity<RankingResponse> getRanking(@PathVariable Long tournamentId) {
+    public ResponseEntity<RankingResponse> getRanking(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
+        logger.info("Method: getRanking - Request: token={}, tournamentId={}", token, tournamentId);
+
         List<Punctuation> orderedPunctuations = tournamentService.orderedPunctuations(tournamentId);
 
-        RankingResponse ranking = RankingResponse.builder()
+        RankingResponse response = RankingResponse.builder()
                 .idTournament(tournamentId)
                 .punctuations(orderedPunctuations)
                 .build();
 
-        return new ResponseEntity<>(ranking, HttpStatus.OK);
+        logger.info("Method: getRanking - Response: {}", response);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{state}")
     public ResponseEntity<List<TournamentResponse>> findUserTournamentsByState(@RequestHeader("Authorization") String token, @PathVariable State state){
+        logger.info("Method: findUserTournamentsByState - Request: token={}, state={}", token, state);
+
         Session session = AuthService.getSession(token);
         List<TournamentDto> tournamentsDto = tournamentService.findUserTournamentsByState(session.getUserId(), state);
 
-        List<TournamentResponse> tournaments = tournamentsDto
+        List<TournamentResponse> response = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());
-        return new ResponseEntity<>(tournaments, HttpStatus.OK);
+
+        logger.info("Method: findUserTournamentsByState - Response: {}", response);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     public TournamentResponse buildResponse(TournamentDto dto) {
