@@ -1,5 +1,7 @@
 package utn.frba.wordle.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,18 +26,24 @@ public class HelpController {
     @Autowired
     HelpService helpService;
 
+    private static final Logger logger = LoggerFactory.getLogger(HelpController.class);
+
     @PostMapping("/{language}")
     public ResponseEntity<HelpResponse> solution(@RequestBody HelpRequest helpRequest, @PathVariable Language language) {
+
+        logger.info("Method: solution - Request: language={}, helpRequest={}", language, helpRequest);
 
         HelpDto normalized = normalizeInput(helpRequest);
 
         Set<String> possibleSolutions = helpService.solution(normalized, language);
 
-        HelpResponse responseDto = HelpResponse.builder()
+        HelpResponse response = HelpResponse.builder()
                             .possibleWords(possibleSolutions)
                             .build();
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        logger.info("Method: getDefinitions - Response: {}", response);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**

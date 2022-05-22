@@ -21,7 +21,7 @@ public class DictionaryController {
     @Autowired
     DictionaryService dictionaryService;
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private static final Logger logger = LoggerFactory.getLogger(DictionaryController.class);
 
     @GetMapping("/{language}/{word}")
     public ResponseEntity<DefinitionResponse> getDefinitions(@PathVariable Language language, @PathVariable String word) {
