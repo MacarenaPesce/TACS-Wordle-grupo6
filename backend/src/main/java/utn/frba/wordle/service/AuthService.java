@@ -70,7 +70,7 @@ public class AuthService {
                 password.equals(ADMIN_PASS)) {
             return getSessionDtoHardcodeado();
         } else {
-            UserEntity userEntity = userService.findUserByUsernameAndPassword(username, password);
+            UserEntity userEntity = userService.findUserByUsernameAndPassword(username.toLowerCase(), password);
             if (userEntity == null) {
                 throw new BusinessException("Combinación de usuario y contraseña inválidos");
             }
