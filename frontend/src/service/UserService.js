@@ -43,8 +43,8 @@ const getTourneysPublic = () => {
   return axios.get(API + "tournaments/public", { headers: authHeader() });
 };
 
-const getUsers = () => {
-  return axios.get(API_USERS, { headers: authHeader() });
+const getUsers = (userSearch) => {
+  return axios.get(API_USERS +'?'+ 'username='+userSearch);
 };
 
 export default {

@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import ReactModal from 'react-modal-resizable-draggable';
-import './TourneyCreate.css'
-import "./FormAddMember.css"
+import "./AddMember.css"
 import UserService from "../../service/UserService";
 import StatusCheck from "../sesion/StatusCheck";
 import Not from "../../components/not/Not";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import Member from './Member.js';
 
 export default class AddMember extends Component  {
 
     constructor(){
         super()
         let user={
-            idUser:'',
-            userName:'',
+            id:'',
+            username:'',
             email:'',
         }
         this.state = {
@@ -25,6 +25,8 @@ export default class AddMember extends Component  {
             loading: false,
             nameDisplay: '',
             sessionError: false,
+            clear: true,
+            searchUser:'',
         };
 
         this.openModal = this.openModal.bind(this);
@@ -36,24 +38,29 @@ export default class AddMember extends Component  {
     }
     closeModal() {
         this.setState({modalIsOpen: false});
+        this.setState({clear:true})
     }
 
 
     changeHandler = (e)  => {
-        this.setState({[e.target.name]: e.target.value})
+        this.setState({searchUser: e.target.value});
+        console.log(this.state.searchUser);
     }
+
+		toAdd = (id) =>{
+				console.log('lamando a toAdd con userId: '+ id);
+		} 
 
     submitHandler = e => {
         e.preventDefault()
         this.setState({errorVisible: false, errorMessage: '', successVisible: false, loading: true});
-        console.log('Boton presionado, se intenta buscar los usuarios: ')
-        UserService.getUsers()
-            .then(response => {
+        UserService.getUsers(this.state.searchUser)
+            .then(response => {console.log(response.data)
                 this.setState({successVisible: true, nameDisplay: this.state.name, loading: false,
-                users: response.data.users});
+                users: response.data});
                 console.log('Response de usuarios obtenida: ')
                 console.log(this.state.users)
-           
+                this.setState({clear:false})
             })
             .catch(error => {
                 console.log(error)
@@ -93,7 +100,7 @@ export default class AddMember extends Component  {
 
                 {/*TODO: hacer css propios en vez de ser tomados de help, para:
                             form-help, opciones, selectidioma, form-control*/}
-                <form onSubmit={this.submitHandler} className="form-help">
+                <form onSubmit={this.submitHandler} className="form-container">
                     <div>
                         <button type="submit" className="btn btn-success"><h5>Search</h5></button>
                         <button className="btn btn-outline-success my-2 my-sm-0" onClick={this.closeModal}>
@@ -103,20 +110,27 @@ export default class AddMember extends Component  {
                     <div className="opciones">
                         <div className="">
                             <label><h5>User Name</h5></label>
-                            <input type="text" className="form-control" placeholder="Nombre del usuario.." name="name" onChange={this.changeHandler} />
+                            <input type="text" className="form-control" placeholder="Nombre del usuario.." searchUser="searchUser" onChange={this.changeHandler} />
                         </div>
                     </div>
                     <div className="form-user-list">
-                        {this.state.users && this.state.users.length > 0 ? (
-                         this.state.users.map((user) => (
-                            <li key={user.idUser} className="form-user">
-                            <span className="form-user-id">{user.id} </span>
-                            <span className="form-user-name">{user.username}</span>
-                            </li>
-                        ))
+                    
+                        { !this.state.clear ? (
+                          this.state.users && this.state.users.length > 0 ? (
+                           this.state.users.map((user) => 
+
+                            <Member
+															 id={user.id}
+															 username={user.username}
+															 toAdd={this.toAdd} 
+															 />
+
+                        )
                         ) : (
                         <h1>No results found!</h1>
-                        )}
+                        )): (<div></div>)
+                    }
+                        
                     </div>
 
                 </form>
