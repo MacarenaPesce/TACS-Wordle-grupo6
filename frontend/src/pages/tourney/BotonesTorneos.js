@@ -48,7 +48,7 @@ function BotonesTorneos(data){
                         <BsInfoLg/> 
                     </Button>
                     <div> 
-                      <AddMember/>
+                      <AddMember torneo={tourney.tourneyId}/>
                     </div>
                 </div>
             )

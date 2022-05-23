@@ -1,28 +1,33 @@
 package utn.frba.wordle.model.dto;
 
-import lombok.*;
-import utn.frba.wordle.model.pojo.Language;
-import utn.frba.wordle.model.pojo.State;
-import utn.frba.wordle.model.pojo.TournamentType;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
+import utn.frba.wordle.model.enums.Language;
+import utn.frba.wordle.model.enums.State;
+import utn.frba.wordle.model.enums.TournamentType;
 
 import java.util.Date;
 import java.util.Objects;
 
 @Getter
-@Setter
-@AllArgsConstructor
 @Builder
 @ToString
 public class TournamentDto {
 
-    Long tourneyId;
-    String name;
-    Language language;
-    TournamentType type;
-    State state;
-    Date start;
-    Date finish;
-    UserDto owner;
+    private final Long tourneyId;
+    private final String name;
+    private final Language language;
+    private final TournamentType type;
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    private State state;
+    private final Date start;
+    private final Date finish;
+    private final UserDto owner;
 
     @Override
     public boolean equals(Object o) {

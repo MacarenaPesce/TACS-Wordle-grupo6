@@ -3,12 +3,10 @@ package utn.frba.wordle.model.http;
 import lombok.*;
 
 @Getter
-@Setter
-@EqualsAndHashCode
 @Builder
-@AllArgsConstructor
+@ToString
 public class RegistrationResponse {
 
-    private String username;
-    private Long tournamentId;
+    private final String username;
+    private final Long tournamentId;
 }

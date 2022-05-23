@@ -6,11 +6,12 @@ import StatusCheck from "../sesion/StatusCheck";
 import Not from "../../components/not/Not";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import Member from './Member.js';
+import TourneyService from '../../service/TourneyService';
 
 export default class AddMember extends Component  {
 
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         let user={
             id:'',
             username:'',
@@ -47,8 +48,24 @@ export default class AddMember extends Component  {
         console.log(this.state.searchUser);
     }
 
-		toAdd = (id) =>{
-				console.log('lamando a toAdd con userId: '+ id);
+		toAdd = (tourneyid,id) =>{
+				console.log('lamando a toAdd con userId: '+ id+ "torneo: " + tourneyid);
+				this.setState({errorVisible: false, errorMessage: '', successVisible: false, loading: true});
+				TourneyService.addMember(tourneyid,id)
+					.then(response => {
+						this.setState({successVisible: true, nameDisplay: this.state.name, loading: false})
+						console.log("se agregó el usuario: "+id+ " al torneo 1")
+						console.log(response)
+					})
+					.catch(error => {
+						console.log(error)
+						this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
+						const status = JSON.stringify(error.response.status)
+						const message = StatusCheck(status,JSON.stringify(error.response.data.message));
+						if(status === "401" || status === "403" || status === "400"){
+								this.setState({sessionError: true, errorMessage: message})
+						}
+				})
 		} 
 
     submitHandler = e => {
@@ -118,21 +135,18 @@ export default class AddMember extends Component  {
                         { !this.state.clear ? (
                           this.state.users && this.state.users.length > 0 ? (
                            this.state.users.map((user) => 
-
                             <Member
 															 id={user.id}
 															 username={user.username}
+                                                             tourneyid ={this.props.tourneyId}
 															 toAdd={this.toAdd} 
 															 />
-
                         )
                         ) : (
                         <h1>No results found!</h1>
                         )): (<div></div>)
                     }
-                        
                     </div>
-
                 </form>
                 {this.state.errorVisible &&
                     <div className="alert alert-danger" role="alert">

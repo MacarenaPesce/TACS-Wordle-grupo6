@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import utn.frba.wordle.model.pojo.Language;
+import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.service.DictionaryService;
 
 import static org.mockito.Mockito.verify;
@@ -25,15 +25,15 @@ public class DictionaryControllerWebMvcTest {
 
     @SneakyThrows
     @Test
-    public void puedoObtenerLaDefinicionDeUnaPalabra() {
+    public void iCanObtainTheDefinitionOfOneWord() {
 
-        String palabra = "prueba";
+        String word = "word";
         Language language = Language.ES;
-        String urlController = "/api/dictionary/" + language + "/" + palabra;
+        String urlController = "/api/dictionary/" + language + "/" + word;
         mvc.perform(get(urlController)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        verify(dictionaryService).getDefinitions(language, palabra);
+        verify(dictionaryService).getDefinitions(language, word);
     }
 
 }

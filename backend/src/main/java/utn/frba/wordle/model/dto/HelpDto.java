@@ -3,13 +3,12 @@ package utn.frba.wordle.model.dto;
 import lombok.*;
 
 @Getter
-@Setter
 @EqualsAndHashCode
-@AllArgsConstructor
 @Builder
+@ToString
 public class HelpDto {
 
-    private String yellow;
-    private String grey;
-    private String solution;
+    private final String yellow;
+    private final String grey;
+    private final String solution;
 }

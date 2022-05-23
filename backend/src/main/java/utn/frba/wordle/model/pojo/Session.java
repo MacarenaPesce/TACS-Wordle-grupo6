@@ -1,14 +1,15 @@
-package utn.frba.wordle.model.dto;
+package utn.frba.wordle.model.pojo;
 
 import lombok.*;
 
 @Getter
 @EqualsAndHashCode
 @Builder
-@ToString
-public class UserDto {
+public class Session {
 
-    private final Long id;
+    private final String token;
     private final String username;
     private final String email;
+    private final Long userId;
+
 }

@@ -2,8 +2,7 @@ package utn.frba.wordle.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import utn.frba.wordle.model.dto.DictionaryDto;
-import utn.frba.wordle.model.pojo.Language;
+import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.service.DictionaryService;
 
 import java.util.List;
@@ -23,14 +22,8 @@ public class DictionaryServiceIntegrationTest extends AbstractIntegrationTest {
 
         List<String> definitions = service.getDefinitions(lang, word);
 
-        DictionaryDto dto = DictionaryDto.builder()
-                .definition(definitions)
-                .language(lang)
-                .word(word)
-                .build();
-
-        assertThat(dto).hasNoNullFieldsOrProperties();
-        assertThat(dto.getDefinition().get(0)).contains("Recipiente rectangular");
+        assertThat(definitions).isNotEmpty();
+        assertThat(definitions.get(0)).contains("Recipiente rectangular");
     }
 
     @Test
@@ -40,14 +33,8 @@ public class DictionaryServiceIntegrationTest extends AbstractIntegrationTest {
 
         List<String> definitions = service.getDefinitions(lang, word);
 
-        DictionaryDto dto = DictionaryDto.builder()
-                .definition(definitions)
-                .language(lang)
-                .word(word)
-                .build();
-
-        assertThat(dto).hasNoNullFieldsOrProperties();
-        assertThat(dto.getDefinition().get(0)).contains("object or space");
+        assertThat(definitions).isNotEmpty();
+        assertThat(definitions.get(0)).contains("object or space");
     }
 
     @Test
@@ -57,14 +44,8 @@ public class DictionaryServiceIntegrationTest extends AbstractIntegrationTest {
 
         List<String> definitions = service.getDefinitions(lang, word);
 
-        DictionaryDto dto = DictionaryDto.builder()
-                .definition(definitions)
-                .language(lang)
-                .word(word)
-                .build();
-
-        assertThat(dto).hasNoNullFieldsOrProperties();
-        assertThat(dto.getDefinition().get(0)).contains("No existe Defincion");
+        assertThat(definitions).isNotEmpty();
+        assertThat(definitions.get(0)).contains("No existe Defincion");
     }
 
     @Test
@@ -74,13 +55,7 @@ public class DictionaryServiceIntegrationTest extends AbstractIntegrationTest {
 
         List<String> definitions = service.getDefinitions(lang, word);
 
-        DictionaryDto dto = DictionaryDto.builder()
-                .definition(definitions)
-                .language(lang)
-                .word(word)
-                .build();
-
-        assertThat(dto).hasNoNullFieldsOrProperties();
-        assertThat(dto.getDefinition().get(0)).contains("Not Definitions");
+        assertThat(definitions).isNotEmpty();
+        assertThat(definitions.get(0)).contains("Not Definitions");
     }
 }

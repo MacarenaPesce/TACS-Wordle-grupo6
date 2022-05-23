@@ -6,13 +6,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.dto.LoginDto;
-import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.security.UserSession;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static utn.frba.wordle.service.AuthService.ADMIN_PASS;
+import static utn.frba.wordle.service.AuthService.ADMIN_USER;
 
 public class AuthServiceTest {
 
@@ -32,13 +33,8 @@ public class AuthServiceTest {
 
         authService.setJwtAccessExpiration(100L);
         authService.setJwtRefreshExpiration(200L);
-        LoginDto request = LoginDto.builder()
-                .email(AuthService.ADMIN_EMAIL)
-                .password(AuthService.ADMIN_PASS)
-                .username(AuthService.ADMIN_USER)
-                .build();
 
-        SessionDto session = authService.login(request);
+        Session session = authService.login(ADMIN_USER, ADMIN_PASS);
 
         assertNotNull(session);
     }
@@ -46,23 +42,17 @@ public class AuthServiceTest {
     @Test
     public void whenTheyTriesToLoginWithUsernameAndPasswordWeGetAnException(){
         when(userService.findUserByUsernameAndPassword(any(), any())).thenReturn(null);
+        String username = "asd";
+        String password = "qwe";
+        authService.setJwtAccessExpiration(100L);
+        authService.setJwtRefreshExpiration(200L);
 
-        assertThrows(BusinessException.class, () -> {
-            LoginDto request = LoginDto.builder()
-                    .email("test@test.com")
-                    .password("asd123")
-                    .username("test")
-                    .build();
-            authService.setJwtAccessExpiration(100L);
-            authService.setJwtRefreshExpiration(200L);
-
-            authService.login(request);
-        });
+        assertThrows(BusinessException.class, () -> authService.login(username, password));
     }
 
     @Test
     public void getValidAccessTokenWhenRefreshExpiredToken() {
-        UserSession userSession = new UserSession(1L, AuthService.ADMIN_USER, AuthService.ADMIN_EMAIL);
+        UserSession userSession = new UserSession(1L, ADMIN_USER, AuthService.ADMIN_EMAIL);
 
         authService.setJwtAccessExpiration(100L);
         authService.setJwtRefreshExpiration(200L);

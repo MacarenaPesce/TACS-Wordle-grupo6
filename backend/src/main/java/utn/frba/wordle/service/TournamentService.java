@@ -9,8 +9,9 @@ import utn.frba.wordle.model.entity.RegistrationEntity;
 import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
+import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.model.pojo.Punctuation;
-import utn.frba.wordle.model.pojo.State;
+import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.repository.TournamentRepository;
 
 import java.util.*;
@@ -35,20 +36,20 @@ public class TournamentService {
     @Transactional
     public TournamentDto create(TournamentDto dto, Long userId) {
 
-        UserDto owner;
+        UserEntity owner;
         try {
-            owner = userService.findUser(userId);
+            owner = userService.findUserEntity(userId);
         } catch (NoSuchElementException e) {
             throw new SessionJWTException("El token de sesion jwt enviado, no coincide con usuarios existentes");
         }
-        dto.setOwner(owner);
-        TournamentEntity newTournament = mapToEntity(dto);
-
         TournamentEntity existingActiveTournament = tournamentRepository.findByName(dto.getName());
         if (existingActiveTournament != null) {
             throw new BusinessException("There is already an active Tournament with this name.");
         }
+        TournamentEntity newTournament = mapToEntity(dto);
+        newTournament.setRegistrations(new HashSet<>());
         newTournament.setState(State.READY);
+        newTournament.setOwner(owner);
         newTournament = tournamentRepository.save(newTournament);
 
         addMember(userId, newTournament.getId(), userId);
@@ -149,6 +150,10 @@ public class TournamentService {
     }
 
     public TournamentEntity mapToEntity(TournamentDto dto) {
+        UserEntity user = null;
+        if(dto.getOwner() != null) {
+            user = UserService.mapToEntity(dto.getOwner());
+        }
         return TournamentEntity.builder()
                 .id(dto.getTourneyId())
                 .finish(dto.getFinish())
@@ -157,7 +162,7 @@ public class TournamentService {
                 .name(dto.getName())
                 .state(dto.getState())
                 .type(dto.getType())
-                .owner(UserService.mapToEntity(dto.getOwner()))
+                .owner(user)
                 .build();
     }
 

@@ -3,13 +3,11 @@ package utn.frba.wordle.model.http;
 import lombok.*;
 
 @Getter
-@Setter
-@EqualsAndHashCode
-@AllArgsConstructor
 @Builder
+@ToString
 public class HelpRequest {
 
-    private String yellow;
-    private String grey;
-    private String solution;
+    private final String yellow;
+    private final String grey;
+    private final String solution;
 }

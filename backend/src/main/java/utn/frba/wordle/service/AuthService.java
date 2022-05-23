@@ -8,11 +8,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.model.dto.LoginDto;
-import utn.frba.wordle.model.dto.SessionDto;
+import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.UserEntity;
-import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.security.UserSession;
 
 import java.util.Base64;
@@ -37,7 +36,7 @@ public class AuthService {
     @Autowired
     UserService userService;
 
-    public static SessionDto getSession(String token) {
+    public static Session getSession(String token) {
         token = token.replace("Bearer", "");
 
         String[] chunks = token.split("\\.");
@@ -46,32 +45,32 @@ public class AuthService {
 
         String payload = new String(decoder.decode(chunks[1]));
 
-        return new Gson().fromJson(payload, SessionDto.class);
+        return new Gson().fromJson(payload, Session.class);
     }
 
-    public SessionDto register(LoginDto loginDto) {
+    public Session register(String username, String password, String email) {
         UserEntity userEntity;
 
-        userEntity = userService.getUserByUsername(loginDto.getUsername());
+        userEntity = userService.getUserByUsername(username.toLowerCase());
         if(userEntity != null){
-            throw new BusinessException(String.format("El usuario %s ya se encuentra registrado", loginDto.getUsername()));
+            throw new BusinessException(String.format("El usuario %s ya se encuentra registrado", username));
         }
 
-        userEntity = userService.findUserByEmail(loginDto.getEmail());
+        userEntity = userService.findUserByEmail(email.toLowerCase());
         if(userEntity != null){
             throw new BusinessException("El mail ingresado ya se ecuentra en uso");
         }
 
-        UserDto userDto = userService.createUser(loginDto);
+        UserDto userDto = userService.createUser(username, password, email);
         return getSessionDto(userDto);
     }
 
-    public SessionDto login(LoginDto loginDto) {
-        if (loginDto.getUsername().equals(ADMIN_USER) &&
-                loginDto.getPassword().equals(ADMIN_PASS)) {
+    public Session login(String username, String password) {
+        if (username.equals(ADMIN_USER) &&
+                password.equals(ADMIN_PASS)) {
             return getSessionDtoHardcodeado();
         } else {
-            UserEntity userEntity = userService.findUserByUsernameAndPassword(loginDto.getUsername(), loginDto.getPassword());
+            UserEntity userEntity = userService.findUserByUsernameAndPassword(username.toLowerCase(), password);
             if (userEntity == null) {
                 throw new BusinessException("Combinación de usuario y contraseña inválidos");
             }
@@ -81,10 +80,10 @@ public class AuthService {
     }
 
 
-    private SessionDto getSessionDto(UserDto userDto) {
+    private Session getSessionDto(UserDto userDto) {
         String accessToken = getJWTToken(userDto.getUsername(), userDto.getEmail(), userDto.getId(), jwtAccessExpiration);
 
-        return SessionDto.builder()
+        return Session.builder()
                 .username(userDto.getUsername())
                 .email(userDto.getEmail())
                 .userId(userDto.getId())
@@ -92,14 +91,14 @@ public class AuthService {
                 .build();
     }
 
-    private SessionDto getSessionDto(UserEntity userEntity) {
+    private Session getSessionDto(UserEntity userEntity) {
         return getSessionDto(UserService.mapToDto(userEntity));
     }
 
-    private SessionDto getSessionDtoHardcodeado() {
+    private Session getSessionDtoHardcodeado() {
         String accessToken = getJWTToken(ADMIN_USER, ADMIN_EMAIL, 0L, jwtAccessExpiration);
 
-        return SessionDto.builder()
+        return Session.builder()
                 .token(accessToken)
                 .username(ADMIN_USER)
                 .email(ADMIN_EMAIL)

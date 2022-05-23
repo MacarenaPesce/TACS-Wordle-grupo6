@@ -4,23 +4,17 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import utn.frba.wordle.model.dto.LoginDto;
-import utn.frba.wordle.model.dto.SessionDto;
-import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.model.pojo.Session;
+import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.UserService;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static utn.frba.wordle.service.AuthService.*;
-import static utn.frba.wordle.utils.TestUtils.RANDOM;
-
 
 public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
-
-    //protected static final String USUARIO_ADMIN = AuthService.USUARIO_DEFAULT_HARDCODEADO;
-    //protected static final String PASS_ADMIN = AuthService.PASS_HARDCODEADA;
 
     @Autowired
     UserService userService;
@@ -30,10 +24,13 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void getsJWTOnLogin() {
-        LoginDto loginDto = RANDOM.nextObject(LoginDto.class);
-        UserDto user = userService.createUser(loginDto);
+        String username = "qwe";
+        String password = "asd";
+        String mail = "mail@mail.com";
 
-        SessionDto login = authService.login(loginDto);
+        UserDto user = userService.createUser(username, password, mail);
+
+        Session login = authService.login(username, password);
 
         Claims claims = getClaims(login.getToken());
         String tokenUsername = (String) claims.get("username");
@@ -45,23 +42,15 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void getsErrorOnLoginWithInvalidCredentials() {
-        LoginDto wrongLogin = LoginDto.builder()
-                .email("falseEmail@false.com")
-                .password("falsePassword")
-                .username("notRealUser")
-                .build();
+        String username = "qwe";
+        String password = "asd";
 
-        assertThrows(BusinessException.class, () -> authService.login(wrongLogin));
+        assertThrows(BusinessException.class, () -> authService.login(username, password));
     }
 
     @Test
     public void getsJWTOnAdminsLogin() {
-        LoginDto loginDto = new LoginDto();
-        loginDto.setEmail(ADMIN_EMAIL);
-        loginDto.setUsername(ADMIN_USER);
-        loginDto.setPassword(ADMIN_PASS);
-
-        SessionDto login = authService.login(loginDto);
+        Session login = authService.login(ADMIN_USER, ADMIN_PASS);
 
         Claims claims = getClaims(login.getToken());
         String tokenUsername = (String) claims.get("username");
@@ -74,52 +63,39 @@ public class AuthServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void getsJWTOnRegister() {
-        LoginDto loginDto = new LoginDto();
-        loginDto.setEmail("mail@prueba.com");
-        loginDto.setUsername("usernamePrueba");
-        loginDto.setPassword("lamePassword");
+        String username = "usernamePrueba";
+        String password = "lamePassword";
+        String email = "mail@prueba.com";
 
-        SessionDto login = authService.register(loginDto);
+        Session login = authService.register(username, password, email);
 
         assertThat(login).hasNoNullFieldsOrProperties();
     }
 
     @Test
     public void whenRegisterUserWithRepeatedUsernameThrowsBusinessException() {
-        LoginDto loginDto = LoginDto.builder()
-                    .email("mail@prueba.com")
-                    .username("username")
-                    .password("lamePassword")
-                    .build();
+        String username = "usernamePrueba";
+        String password = "lamePassword";
+        String email = "mail@prueba.com";
+        String password2 = "lamePassword2";
+        String email2 = "mail@prueba.com2";
 
-        authService.register(loginDto);
+        authService.register(username, password, email);
 
-        LoginDto loginDto2 = LoginDto.builder()
-                .email("mail2@prueba2.com")
-                .username("username")
-                .password("lamePassword123")
-                .build();
-
-        assertThrows(BusinessException.class, () -> authService.register(loginDto2));
+        assertThrows(BusinessException.class, () -> authService.register(username, password2, email2));
     }
 
     @Test
     public void whenRegisterUserWithRepeatedEmailThrowsBusinessException() {
-        LoginDto loginDto = LoginDto.builder()
-                .email("mail@prueba.com")
-                .username("username1")
-                .password("lamePassword")
-                .build();
+        String username = "usernamePrueba";
+        String password = "lamePassword";
+        String email = "mail@prueba.com";
+        String username2 = "usernamePrueba2";
+        String password2 = "lamePassword2";
 
-        authService.register(loginDto);
+        authService.register(username, password, email);
 
-        LoginDto loginDto2 = LoginDto.builder()
-                .email("mail@prueba.com")
-                .username("username2")
-                .password("lamePassword123")
-                .build();
-
-        assertThrows(BusinessException.class, () -> authService.register(loginDto2));
+        assertThrows(BusinessException.class, () -> authService.register(username2, password2, email));
     }
 
     private Claims getClaims(String jwtToken) {

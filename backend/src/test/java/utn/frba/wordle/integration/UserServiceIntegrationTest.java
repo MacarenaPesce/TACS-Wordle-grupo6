@@ -31,7 +31,7 @@ public class UserServiceIntegrationTest extends AbstractIntegrationTest {
     public void aUserCanFindAllUsersUsingFilter(){
         UserDto user1 = getUserDto("jorge@mail.com", "jorge");
         UserDto user2 = getUserDto("jose@mail.com", "jose");
-        UserDto user3 = getUserDto("pedro@mail.com", "pedro");
+        getUserDto("pedro@mail.com", "pedro");
         String filter = "JO";
 
         List<UserDto> users = userService.findByName(filter);

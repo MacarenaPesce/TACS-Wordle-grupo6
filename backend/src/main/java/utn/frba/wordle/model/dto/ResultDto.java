@@ -1,17 +1,18 @@
 package utn.frba.wordle.model.dto;
 
-import lombok.*;
-import utn.frba.wordle.model.pojo.Language;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+import utn.frba.wordle.model.enums.Language;
 
 @Getter
-@Setter
 @EqualsAndHashCode
 @Builder
-@AllArgsConstructor
+@ToString
 public class ResultDto {
     Long userId;
     Long result;
     Language language;
-    //TODO como sincronizar la fecha de result cargado en front y back?
 }
 
