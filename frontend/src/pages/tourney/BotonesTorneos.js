@@ -47,9 +47,7 @@ function BotonesTorneos(data){
                     <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
                     </Button>
-                    <div> 
                       <AddMember torneo={tourney.tourneyId}/>
-                    </div>
                 </div>
             )
         }
