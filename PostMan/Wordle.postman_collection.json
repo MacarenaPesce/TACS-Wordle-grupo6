@@ -1,0 +1,718 @@
+{
+	"info": {
+		"_postman_id": "de2e18d8-689f-42f7-a8e6-3b99fd2e1b40",
+		"name": "Wordle",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register user1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"rodo\",\r\n    \"password\": \"rodo123\",\r\n    \"email\": \"rodo@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/auth/register",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register user2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"pablo\",\r\n    \"password\": \"1234\",\r\n    \"email\": \"pipi@wordmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/auth/register",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register User Exists No OK",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"rodo\", \r\n    \"password\": \"rodo123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"rodo\",\r\n    \"password\": \"rodo123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Not OK",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"pepita\",\r\n    \"password\": \"pepita321\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Tournament publico",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJXb3JkbGVKV1QiLCJzdWIiOiJwYWJsbyIsInVzZXJJZCI6MywidXNlcm5hbWUiOiJwYWJsbyIsImVtYWlsIjoicGlwaUB3b3JkbWFpbC5jb20iLCJpYXQiOjE2NTMzNTIzNzQsImV4cCI6MTY1MzM2NDM3NH0.Cdo9Nm_b1v9BgMJbKWqS4oifcBduMxp1q_9XgfZTKWvRJuInKDwQQtRYATdMdkiVRNfwt1xHXPHQtnkfVmXimw",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"La champion pub\",\r\n    \"type\": \"PUBLIC\",\r\n    \"start\": \"2022-04-25T06:53:14.562+00:00\",\r\n    \"finish\": \"2022-05-25T06:53:14.562+00:00\",\r\n    \"language\": \"ES\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/tournaments",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"tournaments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Tournament privado",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var token=\"Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJXb3JkbGVKV1QiLCJzdWIiOiJwYWJsbyIsInVzZXJJZCI6MywidXNlcm5hbWUiOiJwYWJsbyIsImVtYWlsIjoicGlwaUB3b3JkbWFpbC5jb20iLCJpYXQiOjE2NTMzNTIzNzQsImV4cCI6MTY1MzM2NDM3NH0.Cdo9Nm_b1v9BgMJbKWqS4oifcBduMxp1q_9XgfZTKWvRJuInKDwQQtRYATdMdkiVRNfwt1xHXPHQtnkfVmXimw\""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJXb3JkbGVKV1QiLCJzdWIiOiJwYWJsbyIsInVzZXJJZCI6MywidXNlcm5hbWUiOiJwYWJsbyIsImVtYWlsIjoicGlwaUB3b3JkbWFpbC5jb20iLCJpYXQiOjE2NTMzNTIzNzQsImV4cCI6MTY1MzM2NDM3NH0.Cdo9Nm_b1v9BgMJbKWqS4oifcBduMxp1q_9XgfZTKWvRJuInKDwQQtRYATdMdkiVRNfwt1xHXPHQtnkfVmXimw",
+						"type": "default"
+					},
+					{
+						"key": "token",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJXb3JkbGVKV1QiLCJzdWIiOiJwYWJsbyIsInVzZXJJZCI6MywidXNlcm5hbWUiOiJwYWJsbyIsImVtYWlsIjoicGlwaUB3b3JkbWFpbC5jb20iLCJpYXQiOjE2NTMzNTIzNjEsImV4cCI6MTY1MzM2NDM2MX0.Sh5o_AirvzEYurnMXBd6jWLiYOfN9Rf6PuAhFFON384KgFKvq3RoQMb7jAcnbh6WVUktCfZ8nYO7F162JjeTnw",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"La champion priv\",\r\n    \"type\": \"PRIVADO\",\r\n    \"start\": \"2022-04-25T06:53:14.562+00:00\",\r\n    \"finish\": \"2022-05-25T06:53:14.562+00:00\",\r\n    \"language\": \"ES\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/tournaments",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"tournaments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddMember user2 in tourney 1",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/tournaments/1/members/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"tournaments",
+						"1",
+						"members",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Public tourneys",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/tournaments/public",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"tournaments",
+						"public"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get my tournaments",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/tournaments/myTournaments",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"tournaments",
+						"myTournaments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Join tourney",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "1",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/tournaments/1/join",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"tournaments",
+						"1",
+						"join"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit results",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{   \r\n    \"userId\" : 1,\r\n    \"result\": 3,\r\n    \"language\": \"ES\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/tournaments/submitResults",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"tournaments",
+						"submitResults"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ranking",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/tournaments/1/ranking",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"tournaments",
+						"1",
+						"ranking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Help Spanish",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"yellow\": \"AI\",\r\n    \"grey\": \"E\",\r\n    \"solution\": \"p____\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/help/ES",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"help",
+						"ES"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Help Ingles",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"yellow\": \"CA\", \r\n \"grey\": \"HE\", \r\n\"solution\": \"____T\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/help/EN/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"help",
+						"EN",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dictionary",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/dictionary/ES/casona",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"dictionary",
+						"ES",
+						"casona"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dictionary  engilsh word  not found",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/dictionary/EN/tabler",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"dictionary",
+						"EN",
+						"tabler"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dictionary  engilsh word  found",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/dictionary/EN/portfolio",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"dictionary",
+						"EN",
+						"portfolio"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dictionary  spanish word  not found",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/dictionary/ES/portfolio",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"dictionary",
+						"ES",
+						"portfolio"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dictionary  spanish word  found",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/dictionary/ES/caqui",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"dictionary",
+						"ES",
+						"caqui"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "Mi Token",
+			"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJXb3JkbGVKV1QiLCJzdWIiOiJwYWJsbyIsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJwYWJsbyIsImVtYWlsIjoicGlwaUB3b3JkbWFpbC5jb20iLCJpYXQiOjE2NTA5MzkzNTQsImV4cCI6MTY1MDk0MDU1NH0.MQBxhV6pOp-nribeVyfLuqZz3qqNZR1Kc2TDUoHXa2gFsw-jWyrrU7HCasMssjltgbiI0lo01ryf7n6NkQZxbg"
+		}
+	]
+}
