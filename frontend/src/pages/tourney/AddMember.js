@@ -7,6 +7,7 @@ import Not from "../../components/not/Not";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import Member from './Member.js';
 import TourneyService from '../../service/TourneyService';
+import AuthService from "../../service/AuthService";
 
 export default class AddMember extends Component  {
 
@@ -57,16 +58,17 @@ export default class AddMember extends Component  {
 						console.log("se agregó el usuario: "+id+ " al torneo 1")
 						console.log(response)
 					})
-					.catch(error => {
+					.catch(error => {   //todo marca bloque catch de codigo duplicado con TourneyCreate
 						console.log(error)
 						this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
 						const status = JSON.stringify(error.response.status)
 						const message = StatusCheck(status,JSON.stringify(error.response.data.message));
-						if(status === "401" || status === "403" || status === "400"){
-								this.setState({sessionError: true, errorMessage: message})
+						if(status === "401" || status === "403"){
+                            AuthService.logout()
+							this.setState({sessionError: true, errorMessage: message})
 						}
 				})
-		} 
+		}
 
     submitHandler = e => {
         e.preventDefault()
@@ -97,7 +99,7 @@ export default class AddMember extends Component  {
         </div>);
         return(
 
-        <div > 
+        <React.Fragment>
 
             {this.state.sessionError &&
                 <Not message={this.state.errorMessage}/>}
@@ -157,7 +159,7 @@ export default class AddMember extends Component  {
                         {spinner}{spinner}
                     </div>}
             </ReactModal>
-        </div>
+        </React.Fragment>
 
         );
     }
