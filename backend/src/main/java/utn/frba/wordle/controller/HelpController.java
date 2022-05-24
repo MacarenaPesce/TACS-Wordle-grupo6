@@ -1,16 +1,18 @@
 package utn.frba.wordle.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.dto.HelpRequestDto;
-import utn.frba.wordle.dto.HelpSolutionDto;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.dto.HelpDto;
+import utn.frba.wordle.model.http.HelpRequest;
+import utn.frba.wordle.model.http.HelpResponse;
+import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.service.HelpService;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,18 +26,24 @@ public class HelpController {
     @Autowired
     HelpService helpService;
 
+    private static final Logger logger = LoggerFactory.getLogger(HelpController.class);
+
     @PostMapping("/{language}")
-    public ResponseEntity<HelpSolutionDto> solution(@RequestBody HelpRequestDto helpRequestDto, @PathVariable Language language) throws IOException {
+    public ResponseEntity<HelpResponse> solution(@RequestBody HelpRequest helpRequest, @PathVariable Language language) {
 
-        HelpRequestDto normalized = normalizeInput(helpRequestDto);
+        logger.info("Method: solution - Request: language={}, helpRequest={}", language, helpRequest);
 
-        Set<String> possibleSolutions = helpService.solution(normalized.getYellow(), normalized.getGrey(), normalized.getSolution(), language);
+        HelpDto normalized = normalizeInput(helpRequest);
 
-        HelpSolutionDto responseDto = HelpSolutionDto.builder()
+        Set<String> possibleSolutions = helpService.solution(normalized, language);
+
+        HelpResponse response = HelpResponse.builder()
                             .possibleWords(possibleSolutions)
                             .build();
 
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        logger.info("Method: getDefinitions - Response: {}", response);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**
@@ -44,14 +52,14 @@ public class HelpController {
      * @param helpRequestDto DTO with the data captured from the wild world wide web
      * @return now safe DTO
      */
-    public HelpRequestDto normalizeInput(HelpRequestDto helpRequestDto){
+    public HelpDto normalizeInput(HelpRequest helpRequestDto){
         //remove non letters and make lowercase
         String yellow = helpRequestDto.getYellow().replaceAll("[^A-Za-z]+", "").toLowerCase();
         String grey = helpRequestDto.getGrey().replaceAll("[^A-Za-z]+", "").toLowerCase();
         String solution = helpRequestDto.getSolution().replaceAll("[^A-Za-z_]+", "").toLowerCase();
 
         if( !(solution.length() == 5 || solution.length() == 0)){
-            throw new BusinessException("solution '"+solution+"' can not have a lenght of "+solution.length());
+            throw new BusinessException("solution '"+solution+"' can not have a length of "+solution.length());
         }
 
         //remove duplicates
@@ -62,10 +70,10 @@ public class HelpController {
                 .distinct()
                 .collect(Collectors.joining());
 
-        helpRequestDto.setGrey(grey);
-        helpRequestDto.setYellow(yellow);
-        helpRequestDto.setSolution(solution);
-
-        return helpRequestDto;
+        return HelpDto.builder()
+                .solution(solution)
+                .grey(grey)
+                .yellow(yellow)
+                .build();
     }
 }

@@ -1,12 +1,13 @@
 package utn.frba.wordle.service;
 
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.dto.HelpDto;
+import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.utils.WordFileReader;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,18 +18,12 @@ public class HelpService {
 
     /**
      * Finds possible solutions.
-     * @param yellow desired yellow filter to match possible solutions
-     * @param grey desired grey filter
-     * @param solution desired solution filter
      * @param language desired language
      * @return returns a set of strings with the possible solutions
-     * @throws IOException inherited from the contained method findPossibleSolutions
      */
-    public Set<String> solution(String yellow, String grey, String solution, Language language) throws IOException {
-
-        Set<String> posibleSolutions = findPossibleSolutions(language, yellow, grey, solution);
-
-        return posibleSolutions;
+    @SneakyThrows
+    public Set<String> solution(HelpDto normalized, Language language) {
+        return findPossibleSolutions(language, normalized.getYellow(), normalized.getGrey(), normalized.getSolution());
     }
 
     /**
@@ -42,18 +37,18 @@ public class HelpService {
      */
     public Set<String> findPossibleSolutions(Language lang, String yellow, String grey, String solutionSoFar) throws IOException {
 
-        Set<String> posibleSolutions = null;
+        Set<String> possibleSolutions = null;
         if (lang.equals(Language.ES))
-            posibleSolutions = WordFileReader.getSpanishWords();
+            possibleSolutions = WordFileReader.getSpanishWords();
         if (lang.equals(Language.EN))
-            posibleSolutions = WordFileReader.getEnglishWords();
+            possibleSolutions = WordFileReader.getEnglishWords();
 
 
-        posibleSolutions = matchWith(posibleSolutions, solutionSoFar);
-        posibleSolutions = removeWithoutYellow(posibleSolutions, yellow);
-        posibleSolutions = removeWithGray(posibleSolutions, grey);
+        possibleSolutions = matchWith(possibleSolutions, solutionSoFar);
+        possibleSolutions = removeWithoutYellow(possibleSolutions, yellow);
+        possibleSolutions = removeWithGray(possibleSolutions, grey);
 
-        return posibleSolutions;
+        return possibleSolutions;
     }
 
 
@@ -68,8 +63,8 @@ public class HelpService {
 
         List<Character> greyLetters = grey.chars().mapToObj(e->(char)e).collect(Collectors.toList());
 
-        for (int i = 0; i < greyLetters.size(); i++) {
-            String letter = String.valueOf(greyLetters.get(i));
+        for (Character greyLetter : greyLetters) {
+            String letter = String.valueOf(greyLetter);
             wordList = wordList.stream().filter(word -> !word.contains(letter)).collect(Collectors.toSet());
         }
 
@@ -86,8 +81,8 @@ public class HelpService {
 
         List<Character> yellowLetters = yellow.chars().mapToObj(e->(char)e).collect(Collectors.toList());
 
-        for (int i = 0; i < yellowLetters.size(); i++) {
-            String letter = String.valueOf(yellowLetters.get(i));
+        for (Character yellowLetter : yellowLetters) {
+            String letter = String.valueOf(yellowLetter);
             wordList = wordList.stream().filter(word -> word.contains(letter)).collect(Collectors.toSet());
         }
 
@@ -130,5 +125,4 @@ public class HelpService {
 
         return wordList;
     }
-
 }

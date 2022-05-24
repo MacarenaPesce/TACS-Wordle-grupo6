@@ -45,7 +45,12 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.14.3</version>
 		</dependency>
-
+		<!-- MySQL Connector -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -74,10 +79,71 @@
 			<version>4.0.0</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- LogBack -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.4</version>
+				<configuration>
+					<excludes>
+						<exclude>utn/frba/wordle/model/**/*.class</exclude>
+						<exclude>utn/frba/wordle/exception/**/*.class</exclude>
+						<exclude>utn/frba/wordle/security/**/*.class</exclude>
+						<exclude>**/config/*</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>before-unit-test-execution</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<destFile>${project.build.directory}/jacoco-output/jacoco-unit-tests.exec</destFile>
+							<propertyName>surefire.jacoco.args</propertyName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>after-unit-test-execution</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<dataFile>${project.build.directory}/jacoco-output/jacoco-unit-tests.exec</dataFile>
+							<outputDirectory>${project.reporting.outputDirectory}/jacoco-unit-test-coverage-report</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<!--suppress UnresolvedMavenProperty -->
+					<argLine>${surefire.jacoco.args}</argLine>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

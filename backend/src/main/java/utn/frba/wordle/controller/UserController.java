@@ -4,13 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.dto.*;
-import utn.frba.wordle.entity.TournamentEntity;
-import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.service.AuthService;
+import utn.frba.wordle.model.dto.UserDto;
+import utn.frba.wordle.model.http.UserResponse;
 import utn.frba.wordle.service.UserService;
 
-import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -20,56 +19,25 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping ("getPositions")
-    public ResponseEntity<PositionsResponseDto> getPositions() {
-
-        PositionsResponseDto dto = userService.getPositions();
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
-
-    @GetMapping ("/{UserId}/tournaments")
-    public ResponseEntity<TourneysDto> getMyTournamets(@RequestHeader("Authorization") String token, @PathVariable Long UserId) {
-
-        SessionDto session = AuthService.getSession(token); //todo sacar dto de authservice
-        Long tokenUserId = session.getUserId();
-        if(UserId != tokenUserId){
-            throw new BusinessException("Debe coincidir el user id del path, con el user id del usuario logueado");
-        }
-
-        List<TournamentEntity> tournaments = userService.getMyTournamets(tokenUserId);
-
-
-        TourneysDto tourneysDto = TourneysDto.builder()
-                .tourneys(mapToDto(tournaments))
-                .build();
-
-        return new ResponseEntity<>(tourneysDto, HttpStatus.OK);
-    }
-
     @GetMapping
-    public ResponseEntity<List<UserDto>> getUsers(){
-        List<UserDto> users = userService.findAll();
+    public ResponseEntity<List<UserResponse>> findAll(@RequestParam(required = false) String username) {
+        List<UserDto> usersDto;
+        if (username==null){
+            usersDto = userService.findAll();
+        } else{
+            usersDto = userService.findByName(username);
+        }
+        List<UserResponse> users = usersDto
+                .stream().map(this::buildResponse).collect(Collectors.toList());
+
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    private TournamentDto mapToDto(TournamentEntity entity) {
-        return TournamentDto.builder()
-                .language(entity.getLanguage())
-                .name(entity.getName())
-                .finish(entity.getFinish())
-                .start(entity.getStart())
-                .state(entity.getState())
-                .tourneyId(entity.getId())
-                .type(entity.getType())
-                .owner(UserService.mapToDto(entity.getOwner()))
+    public UserResponse buildResponse (UserDto dto) {
+        return UserResponse.builder()
+                .id(dto.getId())
+                .username(dto.getUsername())
+                .email(dto.getEmail())
                 .build();
     }
-    private List<TournamentDto> mapToDto(List<TournamentEntity> entities) {
-        List<TournamentDto> dtos = new ArrayList<>(Collections.emptySet());
-        for(TournamentEntity tournament:entities){
-            dtos.add(mapToDto(tournament));
-        }
-        return dtos;
-    }
-
 }

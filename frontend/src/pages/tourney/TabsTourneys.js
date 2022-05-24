@@ -3,9 +3,11 @@ import Tab from 'react-bootstrap/Tab';
 import UserService from "./../../service/UserService"
 import TourneyCreate from './TourneyCreate'
 import './Tourney.css'
-import SessionCheck from "../sesion/SessionCheck";
+import StatusCheck from "../sesion/StatusCheck";
 import BotonesTorneos from './BotonesTorneos.js'
 import Not from "../../components/not/Not";
+import AuthService from "../../service/AuthService";
+import TourneySubmit from "./TourneySubmit";
 
 export default class TabsTourneys extends Component{ 
 
@@ -17,20 +19,33 @@ export default class TabsTourneys extends Component{
             errorMessage: ''
         }
     }
+
+    componentDidMount() {
+        if(this.props.nombreTabla === 'Mis torneos'){
+            /*console.log("estas en mis torneos")*/
+            this.submitTourneys()
+        }
+        else{
+            /*console.log("no estas en mis torneos")*/
+        }
+    }
+
+    componentDidUpdate() {
+        /*this.submitTourneys()*/
+        /*console.log("did update")*/
+    }
     
     submitHandler = e => {
         e.preventDefault()
-        console.log('mostrando torneos')
+        //console.log('mostrando torneos')
         this.submitTourneys()
     }
 
     submitTourneys() {
-        console.log("submit tourneys")
+        //console.log("submit tourneys")
         UserService.getMyTourneys(this.props.nombreTabla) /*todo: como lo mando si no recibe parametros ._. mandar aca el tipo de torneos */ //mis torneos es el nombre del metodo, para otra tabla es otro metodo
             .then(response => {
-                console.log('Response obtenida: ')
-                console.log(response.data)
-                this.setState({myTourneys: response.data.tourneys})
+                this.setState({myTourneys: response.data})
                 if(JSON.stringify(this.state.myTourneys[0]) === undefined){
                     //todo mostrar mensaje de tabla vacia
                 }
@@ -38,16 +53,18 @@ export default class TabsTourneys extends Component{
             .catch(error => {
                 console.log(error)
                 const status = JSON.stringify(error.response.status)
-                const message = SessionCheck(status,JSON.stringify(error.response.data.message));
-                if(status === "401" || status === "403" || status === "400"){
+                const message = StatusCheck(status,JSON.stringify(error.response.data.message));
+                if(status === "401" || status === "403" || status === "400"){   //Como este caso no es un form. La unica causa de 400 puede ser que el store de la sesión esté corrupto. (y no errores de negocio)
+                    AuthService.logout()
                     this.setState({sessionError: true, errorMessage: message})
                 }
             })
     }
 
     render() {
-      
-        let listTourneys = this.state.myTourneys.map((tourney) =>
+        let listTourneys = []
+      if(this.state.myTourneys){
+        listTourneys = this.state.myTourneys.map((tourney) =>
                     <tr key={tourney.tourneyId}>
                         <td> {tourney.tourneyId}</td>
                         <td> {tourney.name}</td>
@@ -58,12 +75,11 @@ export default class TabsTourneys extends Component{
                         <td> {tourney.owner.username}</td>
 
                         <td>
-                            <BotonesTorneos 
-                                torneo= {tourney}
+                            <BotonesTorneos tourney={tourney}
                             />   
                         </td>
                     </tr>
-                );
+                );}
 
         return (
             <div className="col-md-12 search-table-col">
@@ -81,14 +97,14 @@ export default class TabsTourneys extends Component{
                                        aria-label="Search"/>
                             </form>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-2">
                             <form className="form-inline" >
                                 <button className="btn btn-outline-success my-2 my-sm-0"
                                         type="submit">Buscar
                                 </button>
                             </form>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-2">
                             <form className="form-inline" onSubmit={this.submitHandler}>
                                 <button className="btn btn-outline-success my-2 my-sm-0"
                                         type="submit">Actualizar
@@ -98,8 +114,11 @@ export default class TabsTourneys extends Component{
                         <div className="col-md-1"> {/*sirve para que el btn de crear torneo este a la derecha */}
 
                         </div>
-                        <div className="col-md-2"> 
+                        <div className="col-md-2">
                             <TourneyCreate/>
+                        </div>
+                        <div className="col-md-2">
+                            <TourneySubmit/>
                         </div>
                     </div>
                 </div>      
@@ -135,9 +154,3 @@ export default class TabsTourneys extends Component{
         );
     }
 }
-
-
-
-
-
-                        

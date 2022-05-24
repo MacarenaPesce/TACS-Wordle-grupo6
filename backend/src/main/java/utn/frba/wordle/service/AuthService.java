@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import utn.frba.wordle.dto.LoginDto;
-import utn.frba.wordle.dto.SessionDto;
-import utn.frba.wordle.dto.UserDto;
-import utn.frba.wordle.entity.UserEntity;
 import utn.frba.wordle.exception.BusinessException;
+import utn.frba.wordle.model.pojo.Session;
+import utn.frba.wordle.model.dto.UserDto;
+import utn.frba.wordle.model.entity.UserEntity;
+import utn.frba.wordle.security.UserSession;
 
 import java.util.Base64;
 import java.util.Date;
@@ -21,19 +21,22 @@ import java.util.Date;
 @NoArgsConstructor
 public class AuthService {
 
-    public static String ADMIN_USER = "utn";
-    public static String ADMIN_PASS = "utn";
-    public static String ADMIN_EMAIL = "utnfrba@admin.com";
+    public static final String ADMIN_USER = "utn";
+    public static final String ADMIN_PASS = "utn";
+    public static final String ADMIN_EMAIL = "utnfrba@admin.com";
 
     public static final String SECRET = "aVeryRandomSecretAndGreenKey";
 
     @Value("${jwt.access.expiration}")
     private Long jwtAccessExpiration;
 
+    @Value("${jwt.refresh.expiration}")
+    private Long jwtRefreshExpiration;
+
     @Autowired
     UserService userService;
 
-    public static SessionDto getSession(String token) {
+    public static Session getSession(String token) {
         token = token.replace("Bearer", "");
 
         String[] chunks = token.split("\\.");
@@ -42,32 +45,32 @@ public class AuthService {
 
         String payload = new String(decoder.decode(chunks[1]));
 
-        return new Gson().fromJson(payload, SessionDto.class);
+        return new Gson().fromJson(payload, Session.class);
     }
 
-    public SessionDto register(LoginDto loginDto) {
-        UserEntity userEntity = null;
+    public Session register(String username, String password, String email) {
+        UserEntity userEntity;
 
-        userEntity = userService.findUserByUsername(loginDto.getUsername());
+        userEntity = userService.getUserByUsername(username.toLowerCase());
         if(userEntity != null){
-            throw new BusinessException(String.format("El usuario %s ya se encuentra registrado", loginDto.getUsername()));
+            throw new BusinessException(String.format("El usuario %s ya se encuentra registrado", username));
         }
 
-        userEntity = userService.findUserByEmail(loginDto.getEmail());
+        userEntity = userService.findUserByEmail(email.toLowerCase());
         if(userEntity != null){
             throw new BusinessException("El mail ingresado ya se ecuentra en uso");
         }
 
-        UserDto userDto = userService.createUser(loginDto);
+        UserDto userDto = userService.createUser(username, password, email);
         return getSessionDto(userDto);
     }
 
-    public SessionDto login(LoginDto loginDto) {
-        if (loginDto.getUsername().equals(ADMIN_USER) &&
-                loginDto.getPassword().equals(ADMIN_PASS)) {
-            return getSessionDtoHardcodeado(loginDto);
+    public Session login(String username, String password) {
+        if (username.equals(ADMIN_USER) &&
+                password.equals(ADMIN_PASS)) {
+            return getSessionDtoHardcodeado();
         } else {
-            UserEntity userEntity = userService.findUserByUsernameAndPassword(loginDto.getUsername(), loginDto.getPassword());
+            UserEntity userEntity = userService.findUserByUsernameAndPassword(username.toLowerCase(), password);
             if (userEntity == null) {
                 throw new BusinessException("Combinación de usuario y contraseña inválidos");
             }
@@ -77,10 +80,10 @@ public class AuthService {
     }
 
 
-    private SessionDto getSessionDto(UserDto userDto) {
+    private Session getSessionDto(UserDto userDto) {
         String accessToken = getJWTToken(userDto.getUsername(), userDto.getEmail(), userDto.getId(), jwtAccessExpiration);
 
-        return SessionDto.builder()
+        return Session.builder()
                 .username(userDto.getUsername())
                 .email(userDto.getEmail())
                 .userId(userDto.getId())
@@ -88,14 +91,14 @@ public class AuthService {
                 .build();
     }
 
-    private SessionDto getSessionDto(UserEntity userEntity) {
+    private Session getSessionDto(UserEntity userEntity) {
         return getSessionDto(UserService.mapToDto(userEntity));
     }
 
-    private SessionDto getSessionDtoHardcodeado(LoginDto loginDto) {
+    private Session getSessionDtoHardcodeado() {
         String accessToken = getJWTToken(ADMIN_USER, ADMIN_EMAIL, 0L, jwtAccessExpiration);
 
-        return SessionDto.builder()
+        return Session.builder()
                 .token(accessToken)
                 .username(ADMIN_USER)
                 .email(ADMIN_EMAIL)
@@ -123,5 +126,18 @@ public class AuthService {
     public static Claims getClaims(String jwtToken) {
         jwtToken = jwtToken.replace("Bearer", "");
         return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
+    }
+
+    public void setJwtAccessExpiration(Long jwtAccessExpiration) {
+        this.jwtAccessExpiration = jwtAccessExpiration;
+    }
+
+    public void setJwtRefreshExpiration(Long jwtRefreshExpiration) {
+        this.jwtRefreshExpiration = jwtRefreshExpiration;
+    }
+
+    public String refreshAccessToken(UserSession userSession) {
+        return getJWTToken(userSession.getUsername(), userSession.getEmail(), userSession.getUserId(), jwtAccessExpiration);
+
     }
 }

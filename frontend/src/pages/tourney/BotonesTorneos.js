@@ -8,16 +8,17 @@ import UserService from "../../service/UserService";
 import AddMember from "./AddMember"
 
 
-function BotonesTorneos(tourney){
+function BotonesTorneos(data){
+    let tourney = data.tourney;
     let userId = localStorage.getItem("userId");
 
     const clickAgregarme = () => {
-        console.log("te agregaste a un torneo". tourney.torneo)
-        TourneyService.join(tourney.torneo.tourneyId);
+        console.log("te agregaste a un torneo". tourney)
+        TourneyService.join(tourney.tourneyId);
     }
 
-    if(tourney.torneo.owner.id == userId){
-        if(tourney.torneo.type === 'PUBLIC' || tourney.torneo.type === 'PRIVATE'){
+    if(tourney.owner.id == userId){
+        if(tourney.type === 'PUBLIC' || tourney.type === 'PRIVATE'){
             return(
                 <div> 
                     {/* como soy el creador lo puedo eliminar*/}
@@ -29,13 +30,13 @@ function BotonesTorneos(tourney){
                     <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
                     </Button>
-                    <AddMember tourneyId ={tourney.torneo.tourneyId} /> {/*si sos el creador agregas personas ya sea publico o privado */}
+                    <AddMember tourneyId ={tourney.tourneyId} /> {/*si sos el creador agregas personas ya sea publico o privado */}
                 </div>
             )
         }
     }
-    else if(tourney.torneo.owner.id != userId){
-        if(tourney.torneo.type === 'PUBLIC'){
+    else if(tourney.owner.id != userId){
+        if(tourney.type === 'PUBLIC'){
             return(
                 <div> {/*es un torneo publico al que entraste o te agregaron y no sos el creador */}
                         {/* si no soy el creador, me puedo salir */}
@@ -46,10 +47,7 @@ function BotonesTorneos(tourney){
                     <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
                     </Button>
-                    <button className="btn btn-info" type="button" onClick={()=>clickAgregarme()}>
-                        <AiOutlineUserAdd/> {/* te permite agregarte al torneo si el torneo es de tipo publico y vos NO sos el creador 
-                                            todo:falta validar que no estes en la lista de integrantes del torneo*/}
-                    </button>
+                      <AddMember torneo={tourney.tourneyId}/>
                 </div>
             )
         }

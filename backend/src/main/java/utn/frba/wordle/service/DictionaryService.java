@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import utn.frba.wordle.client.EnglishDictionaryClient;
 import utn.frba.wordle.client.SpanishDictionaryPage;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.Language;
+import utn.frba.wordle.model.enums.Language;
 
 import java.util.List;
 
