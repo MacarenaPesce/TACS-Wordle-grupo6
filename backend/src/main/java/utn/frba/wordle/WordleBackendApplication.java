@@ -55,10 +55,14 @@ public class WordleBackendApplication {
                     .cors().and().csrf().disable()
                     .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                     .authorizeRequests()
-                    .antMatchers("/api/**").permitAll()
-//                    .antMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/signup").permitAll()
-                    .antMatchers(HttpMethod.GET, "/", "/csrf",
-                            "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js", "/**/*.png").permitAll()
+                    .antMatchers(HttpMethod.POST,
+                            "/api/auth/login",
+                            "/api/auth/register",
+                            "/api/help/**/*").permitAll()
+                    .antMatchers(HttpMethod.GET,
+                            "/api/dictionary/**/*",
+                            "/", "/csrf", "/*.html", "/favicon.ico",
+                            "/**/*.html", "/**/*.css", "/**/*.js", "/**/*.png").permitAll()
                     .anyRequest().authenticated();
         }
     }
