@@ -12,7 +12,6 @@ function BotonesTorneos(data){
     let userId = localStorage.getItem("userId");
 
     const clickAgregarme = () => {
-        debugger
         console.log("te agregaste a un torneo". tourney)
         TourneyService.join(tourney.tourneyId);
     }

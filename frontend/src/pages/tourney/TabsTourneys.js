@@ -104,9 +104,6 @@ export default class TabsTourneys extends Component{
                                 </button>
                             </form>
                         </div>
-                        <div className="col-md-1"> {/*sirve para que el btn de crear torneo este a la derecha */}
-
-                        </div>
                         <div className="col-md-2">
                             <TourneyCreate/>
                         </div>
@@ -116,7 +113,6 @@ export default class TabsTourneys extends Component{
                     </div>
                 </div>      
                 {/*------------------------------------------------------------------ */}
-
                 <div className="table-responsive table table-hover table-bordered results">
                     <table className="table table-hover table-bordered">
                         <thead className="bill-header cs">
@@ -125,7 +121,6 @@ export default class TabsTourneys extends Component{
                                 <th id="trs-hd-2" className="col-lg-2"> Nombre</th>
                                 <th id="trs-hd-3" className="col-lg-1"> Tipo</th>
                                 <th id="trs-hd-4" className="col-lg-1"> Lenguaje</th>
-                                {/*todo: mostrar el estado de cada torneo */}
                                 <th id="trs-hd-8" className="col-lg-1"> Estado</th>
                                 <th id="trs-hd-5" className="col-lg-2"> Inicio</th>
                                 <th id="trs-hd-6" className="col-lg-2"> Fin</th>
@@ -140,7 +135,6 @@ export default class TabsTourneys extends Component{
 
                     </table>
                 </div>
-
                 {/*------------------------------------------------------------------ */}
             </div>
         );
