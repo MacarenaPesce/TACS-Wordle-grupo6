@@ -49,8 +49,7 @@ function BotonesTorneos(data){
                     </Button>
 
                     <button className="btn btn-info" type="button" onClick={()=>clickAgregarme()}>
-                        <AiOutlineUserAdd/> {/* te permite agregarte al torneo si el torneo es de tipo publico y vos NO sos el creador 
-                                            todo:falta validar que no estes en la lista de integrantes del torneo*/}
+                        <AiOutlineUserAdd/> {/* te permite agregarte al torneo si el torneo es de tipo publico y vos NO sos el creador */}
                     </button>
                 </div>
             )
