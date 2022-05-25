@@ -18,21 +18,21 @@ function Not(prop) {
         <Home />
 
         <Modal show={show} onHide={handleShow}>
-        <div className="modalErrorPage">
-          <Modal.Header closeButton>                          
-            <Modal.Title>Sorry!</Modal.Title>				
-          </Modal.Header>
-          <Modal.Body>{prop.message}</Modal.Body>
-          <Modal.Footer className="modal-footer">
-            {/*
-            <Button variant="primary" href="/">
-              Inicio
-            </Button>
-            */}
-              <Button className="button-modal" variant="danger" onClick={handleClose} href="/">
-                Ok
+          <div className="modalErrorPage">
+            <Modal.Header closeButton>                          
+              <Modal.Title>Sorry!</Modal.Title>				
+            </Modal.Header>
+            <Modal.Body>{prop.message}</Modal.Body>
+            <Modal.Footer className="modal-footer">
+              {/*
+              <Button variant="primary" href="/">
+                Inicio
               </Button>
-          </Modal.Footer>
+              */}
+                <Button className="button-modal" variant="danger" onClick={handleClose} href="/">
+                  Ok
+                </Button>
+            </Modal.Footer>
           </div>
         </Modal>
       </div>

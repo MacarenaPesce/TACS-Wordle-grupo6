@@ -43,7 +43,6 @@ export default class AddMember extends Component  {
         this.setState({clear:true})
     }
 
-
     changeHandler = (e)  => {
         this.setState({searchUser: e.target.value});
         console.log(this.state.searchUser);
