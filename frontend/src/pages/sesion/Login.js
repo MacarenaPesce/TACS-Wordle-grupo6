@@ -24,10 +24,12 @@ export default function Login({onLogin}) {
   useEffect(() => {
     if (isLogged) {
         navigate('/');
+        // onLogin && onLogin()
     }
   }, [isLogged, navigate])
 
   const handleSubmit = (e) => {
+    debugger;
     e.preventDefault();
     
     if(
@@ -40,7 +42,7 @@ export default function Login({onLogin}) {
     }
     console.log('Boton loggin presionado con los datos: ')
 
-    login(username, password)
+    login(username.campo, password.campo)
   };
 
   let spinner = (<div className="spinner-border text-light" role="status">
@@ -77,7 +79,7 @@ export default function Login({onLogin}) {
                             cambiarEstado={setPassword}
                             tipo="password"
                             label="Contraseña"
-                            name="password1"
+                            name="password"
                             leyendaError="La contraseña tiene que ser de 3 a 12 dígitos."
                             expresionRegular={expresiones.password}
 				            />   
