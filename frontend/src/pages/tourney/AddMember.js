@@ -48,26 +48,26 @@ export default class AddMember extends Component  {
         console.log(this.state.searchUser);
     }
 
-		toAdd = (tourneyid,id) =>{
-				console.log('lamando a toAdd con userId: '+ id+ "torneo: " + tourneyid);
-				this.setState({errorVisible: false, errorMessage: '', successVisible: false, loading: true});
-				TourneyService.addMember(tourneyid,id)
-					.then(response => {
-						this.setState({successVisible: true, nameDisplay: this.state.name, loading: false})
-						console.log("se agregó el usuario: "+id+ " al torneo 1")
-						console.log(response)
-					})
-					.catch(error => {   //todo marca bloque catch de codigo duplicado con TourneyCreate
-						console.log(error)
-						this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
-						const status = JSON.stringify(error.response.status)
-						const message = StatusCheck(status,JSON.stringify(error.response.data.message));
-						if(status === "401" || status === "403"){
-                            AuthService.logout()
-							this.setState({sessionError: true, errorMessage: message})
-						}
-				})
-		}
+    toAdd = (tourneyid,id) =>{
+        console.log('llamando a toAdd con userId: '+ id+ "torneo: " + tourneyid);
+        this.setState({errorVisible: false, errorMessage: '', successVisible: false, loading: true});
+        TourneyService.addMember(tourneyid,id)
+            .then(response => {
+                this.setState({successVisible: true, nameDisplay: this.state.name, loading: false})
+                console.log("se agregó el usuario: "+id+ " al torneo 1")
+                console.log(response)
+            })
+            .catch(error => {   //todo marca bloque catch de codigo duplicado con TourneyCreate
+                console.log(error)
+                this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
+                const status = JSON.stringify(error.response.status)
+                const message = StatusCheck(status,JSON.stringify(error.response.data.message));
+                if(status === "401" || status === "403"){
+                    AuthService.logout()
+                    this.setState({sessionError: true, errorMessage: message})
+                }
+        })
+    }
 
     submitHandler = e => {
         e.preventDefault()
@@ -116,8 +116,8 @@ export default class AddMember extends Component  {
 
                 <h3>Add Member</h3>
 
-                {/*TODO: hacer css propios en vez de ser tomados de help, para:
-                            form-help, opciones, selectidioma, form-control*/}
+                {/*TODO: hacer css propios en vez de ser tomados de help, para: form-help, opciones, selectidioma, form-control*/}
+                
                 <form onSubmit={this.submitHandler} className="form-container">
                     <div>
                         <button type="submit" className="btn btn-success"><h5>Search</h5></button>
@@ -159,7 +159,6 @@ export default class AddMember extends Component  {
                     </div>}
             </ReactModal>
         </React.Fragment>
-
         );
     }
 }
