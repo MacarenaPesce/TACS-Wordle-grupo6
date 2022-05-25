@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from 'react-bootstrap/Button'
 import { BsTrashFill, BsInfoLg, BsCheckLg, BsPersonPlusFill } from "react-icons/bs";
 import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
 import { HiLogout } from "react-icons/hi";
 import TourneyService from '../../service/TourneyService';
-import UserService from "../../service/UserService";
 import AddMember from "./AddMember"
 
 
@@ -13,6 +12,7 @@ function BotonesTorneos(data){
     let userId = localStorage.getItem("userId");
 
     const clickAgregarme = () => {
+        debugger
         console.log("te agregaste a un torneo". tourney)
         TourneyService.join(tourney.tourneyId);
     }
@@ -30,7 +30,8 @@ function BotonesTorneos(data){
                     <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
                     </Button>
-                    <AddMember tourneyId ={tourney.tourneyId} /> {/*si sos el creador agregas personas ya sea publico o privado */}
+                    {/* si sos el creador agregas personas ya sea publico o privado */}
+                    <AddMember tourneyId ={tourney.tourneyId} /> 
                 </div>
             )
         }
@@ -49,7 +50,8 @@ function BotonesTorneos(data){
                     </Button>
 
                     <button className="btn btn-info" type="button" onClick={()=>clickAgregarme()}>
-                        <AiOutlineUserAdd/> {/* te permite agregarte al torneo si el torneo es de tipo publico y vos NO sos el creador */}
+                        {/* te permite agregarte al torneo si el torneo es de tipo publico y vos NO sos el creador */}
+                        <AiOutlineUserAdd/> 
                     </button>
                 </div>
             )
