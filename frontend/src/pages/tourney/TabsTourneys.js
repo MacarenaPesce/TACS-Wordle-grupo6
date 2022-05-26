@@ -27,10 +27,10 @@ export default class TabsTourneys extends Component{
         }
     }*/
 
-    componentDidUpdate() {
-        /*this.submitTourneys()
-        console.log("did update")*/
-    }
+    /*componentDidUpdate() {
+        this.submitTourneys()
+        console.log("did update")
+    }*/
     
     submitHandler = e => {
         e.preventDefault()
@@ -70,7 +70,7 @@ export default class TabsTourneys extends Component{
                         <td> {tourney.finish}</td>
                         <td> {tourney.owner.username}</td>
                         <td>
-                            <BotonesTorneos tourney={tourney} />   
+                            <BotonesTorneos tourney={tourney} tourneys={this.state.myTourneys.map((tourney)=> tourney.tourneyId)} />   
                         </td>
                     </tr>
                 );}

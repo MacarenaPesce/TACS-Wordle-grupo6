@@ -8,32 +8,36 @@ import AddMember from "./AddMember"
 import UserService from "../../service/UserService";
 
 
-function BotonesTorneos(data){
+function BotonesTorneos(data, dataTourneys){
     let tourney = data.tourney;
     let userId = localStorage.getItem("userId");
-    const tourneys = [];
-    console.log("muestro el id torneo actual");
-    console.log(tourney.tourneyId);
+    /*let tourneys = [];*/
+    console.log("id torneo actual", tourney.tourneyId);
+    console.log("dataTourneys", dataTourneys);
+    /*let tourneysId = dataTourneys.map((data)=>data.tourney.tourneyId)
+    console.log(tourneysId);*/
     
-    UserService.getTourneysPublic()
-    .then(response => {
-        console.log("muestro torneos a continuacion");
-        tourneys= response.data.map((torneo)=>torneo.tourneyId);
-        console.log(tourneys);
-    })
-    .catch(error => {
-        console.log(error)
-    })
-
-
     let disableButton = false;
-    if(tourneys.includes(tourney.tourneyId))
+    /*disableBut();
+    console.log(disableButton);
+    
+    const disableBut = () => {
+        UserService.getTourneysPublic()
+        .then(response => {
+            console.log("muestro torneos a continuacion");
+            tourneys= response.data.map((torneo)=>torneo.tourneyId);
+            console.log(tourneys);
+        })
+        .catch(error => {
+            console.log(error)
+        })
+
+        if(tourneys.includes(tourney.tourneyId))
             disableButton = true;
         else 
             disableButton = false;
-    console.log(disableButton);
-
-
+    };*/
+    
     const clickAgregarme = () => {
         console.log("te agregaste a un torneo". tourney)
         TourneyService.join(tourney.tourneyId);
