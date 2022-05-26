@@ -24,12 +24,7 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
 
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
-        ExceptionResponse response = new ExceptionResponse(new Date(), ex.getMessage(), req.getDescription(false), httpStatus.value());
-
-        logger.error("Error Response: {}", response);
-        logger.debug("Stacktrace:", ex);
-
-        return ResponseEntity.status(httpStatus).body(response);
+        return getAndLogExceptionResponse(ex, req, httpStatus);
     }
 
     @ExceptionHandler(SessionJWTException.class)
@@ -37,19 +32,18 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
 
         HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
 
-        ExceptionResponse response = new ExceptionResponse(new Date(), ex.getMessage(), req.getDescription(false), httpStatus.value());
-
-        logger.error("Error Response: {}", response);
-        logger.debug("Stacktrace:", ex);
-
-        return ResponseEntity.status(httpStatus).body(response);
+        return getAndLogExceptionResponse(ex, req, httpStatus);
     }
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex, WebRequest req, HttpSession session) {
+    public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception exception, WebRequest request, HttpSession session) {
 
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 
+        return getAndLogExceptionResponse(exception, request, httpStatus);
+    }
+
+    private ResponseEntity<ExceptionResponse> getAndLogExceptionResponse(Exception ex, WebRequest req, HttpStatus httpStatus) {
         ExceptionResponse response = new ExceptionResponse(new Date(), ex.getMessage(), req.getDescription(false), httpStatus.value());
 
         logger.error("Error Response: {}", response);
@@ -57,4 +51,5 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(httpStatus).body(response);
     }
+
 }
