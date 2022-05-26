@@ -2,11 +2,9 @@ package utn.frba.wordle.controller;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import utn.frba.wordle.model.dto.RegistrationDto;
 import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.TournamentDto;
@@ -30,15 +28,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static utn.frba.wordle.utils.TestUtils.toJson;
 
 @WebMvcTest(TournamentController.class)
-public class TournamentControllerWebMvcTest {
-
-    public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
+public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
 
     @MockBean
     private TournamentService tournamentService;
-
-    @Autowired
-    private MockMvc mvc;
 
     @SneakyThrows
     @Test

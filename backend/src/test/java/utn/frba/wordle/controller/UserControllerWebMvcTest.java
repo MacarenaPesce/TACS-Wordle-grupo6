@@ -2,11 +2,9 @@ package utn.frba.wordle.controller;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.service.UserService;
 import utn.frba.wordle.utils.TestUtils;
@@ -16,15 +14,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-public class UserControllerWebMvcTest {
-
-    public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
+public class UserControllerWebMvcTest extends AbstractWebMvcTest {
 
     @MockBean
     private UserService userService;
-
-    @Autowired
-    private MockMvc mvc;
 
     @SneakyThrows
     @Test
