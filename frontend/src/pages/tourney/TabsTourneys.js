@@ -20,11 +20,12 @@ export default class TabsTourneys extends Component{
         }
     }
 
+    /*
     componentDidMount() {
         if(this.props.nombreTabla === 'Mis torneos'){
             this.submitTourneys()
         }
-    }
+    }*/
 
     componentDidUpdate() {
         /*this.submitTourneys()

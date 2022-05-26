@@ -5,11 +5,34 @@ import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
 import { HiLogout } from "react-icons/hi";
 import TourneyService from '../../service/TourneyService';
 import AddMember from "./AddMember"
+import UserService from "../../service/UserService";
 
 
 function BotonesTorneos(data){
     let tourney = data.tourney;
     let userId = localStorage.getItem("userId");
+    const tourneys = [];
+    console.log("muestro el id torneo actual");
+    console.log(tourney.tourneyId);
+    
+    UserService.getTourneysPublic()
+    .then(response => {
+        console.log("muestro torneos a continuacion");
+        tourneys= response.data.map((torneo)=>torneo.tourneyId);
+        console.log(tourneys);
+    })
+    .catch(error => {
+        console.log(error)
+    })
+
+
+    let disableButton = false;
+    if(tourneys.includes(tourney.tourneyId))
+            disableButton = true;
+        else 
+            disableButton = false;
+    console.log(disableButton);
+
 
     const clickAgregarme = () => {
         console.log("te agregaste a un torneo". tourney)
@@ -48,10 +71,13 @@ function BotonesTorneos(data){
                         <BsInfoLg/> 
                     </Button>
 
-                    <button className="btn btn-info" type="button" onClick={()=>clickAgregarme()}>
-                        {/* te permite agregarte al torneo si el torneo es de tipo publico y vos NO sos el creador */}
-                        <AiOutlineUserAdd/> 
-                    </button>
+                    {/* te permite agregarte al torneo si el torneo es de tipo publico y vos NO sos el creador 
+                     y se deshabilita si ya estas en el torneo*/}
+
+                    {disableButton ?
+                            (<button className="btn btn-info" type="button" disabled><AiOutlineUserAdd/></button>) :
+                            (<button className="btn btn-info" type="button" onClick={()=>clickAgregarme()}> <AiOutlineUserAdd/> </button>)
+                    }
                 </div>
             )
         }
