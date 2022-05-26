@@ -1,8 +1,9 @@
 package utn.frba.wordle.security;
 
 import io.jsonwebtoken.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import utn.frba.wordle.service.AuthService;
@@ -14,9 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
     private final String HEADER = "Authorization";
     private final String PREFIX = "Bearer";
@@ -38,7 +40,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         try {
             if (existeJWTToken(request, response)) {
                 Claims claims = validateToken(request);
-                if (claims.get("authorities") != null) {
+                if (claims != null && !claims.isEmpty()) {
                     setUpSpringAuthentication(claims);
                 } else {
                     SecurityContextHolder.clearContext();
@@ -48,29 +50,26 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             }
             chain.doFilter(request, response);
 
-          }
-            catch (ExpiredJwtException ex) {
+        } catch (ExpiredJwtException ex) {
+            logger.error("ExpiredJwtException", ex);
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-            } catch (UnsupportedJwtException | MalformedJwtException e) {
+        } catch (UnsupportedJwtException | MalformedJwtException ex) {
+            logger.error("UnsupportedJwtException | MalformedJwtException", ex);
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, ex.getMessage());
         }
     }
 
     /**
      * Metodo para autenticarnos dentro del flujo de Spring
-     *
      */
     private void setUpSpringAuthentication(Claims claims) {
-        @SuppressWarnings("unchecked")
-        List<String> authorities = (List<String>) claims.get("authorities");
         Long userId = Long.valueOf((Integer) claims.get("userId"));
         String username = (String) claims.get("username");
         String email = (String) claims.get("email");
 
-        UserSession auth = new UserSession(claims.getSubject(), null,
-                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()), userId, username, email);
+        UserSession auth = new UserSession(claims.getSubject(), null, null, userId, username, email);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
     }
