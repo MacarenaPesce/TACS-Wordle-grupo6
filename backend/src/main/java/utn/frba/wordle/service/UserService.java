@@ -1,12 +1,14 @@
 package utn.frba.wordle.service;
 
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.repository.UserRepository;
 
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class UserService {
     public UserDto createUser(String username, String password, String mail) {
         UserEntity newUser = UserEntity.builder()
                 .email(mail.toLowerCase())
-                .password(password)
+                .password(hashPassword(password))
                 .username(username.toLowerCase())
                 .build();
 
@@ -30,7 +32,7 @@ public class UserService {
     }
 
     public UserEntity findUserByUsernameAndPassword(String username, String password) {
-        return userRepository.findByUsernameAndPassword(username.toLowerCase(), password);
+        return userRepository.findByUsernameAndPassword(username.toLowerCase(), hashPassword(password));
     }
 
     public UserDto findUser(Long userId) {
@@ -85,5 +87,26 @@ public class UserService {
                 .username(user.getUsername())
                 .id(user.getId())
                 .build();
+    }
+
+    @SneakyThrows
+    public String hashPassword(String password)  {
+
+        String generatedPassword;
+        // Create MessageDigest instance for MD5
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        //Add password bytes to digest
+        md.update(password.getBytes());
+        //Get the hash's bytes
+        byte[] bytes = md.digest();
+        //This bytes[] has bytes in decimal format;
+        //Convert it to hexadecimal format
+        StringBuilder sb = new StringBuilder();
+        for (byte aByte : bytes) {
+            sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
+        }
+        //Get complete hashed password in hex format
+        generatedPassword = sb.toString();
+        return generatedPassword;
     }
 }
