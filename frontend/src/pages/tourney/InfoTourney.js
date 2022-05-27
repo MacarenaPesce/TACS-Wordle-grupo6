@@ -1,21 +1,32 @@
 import React, { Component } from 'react'
+import { Link, useParams } from 'react-router-dom';
 import NavbarAut from '../../components/navbar/Navbar';
 import Footer from '../../components/footer/Footer';
+import './InfoTourney.css'
 
-export default class InfoTourney extends Component{
+export default function InfoTourney() {
+    const { id } = useParams();
 
-    render(){
-        return (
-            <body>
-                <header className='NavTourney'>
-                    <NavbarAut />
-                </header>
+    return (
+      <div>
+        <header className='NavTourney'>
+            <NavbarAut />
+        </header>
 
-                <h1> es un nuevo archivito</h1>
-                <button> holaaaaa</button>
+        <h1 className='titleInfo'> Id del torneo {id}</h1>
+        <button> Boton para volver atras</button>
+        <p> Aca iria:
+            Nombre y id,
+            Estado del torneo,
+            tipo, lenguaje,
+            Fechas del torneo,
+            Creador,
+            Integrantes,
+            Tu puntaje y tu puesto actual,
+            Ranking a la derecha
+        </p>
 
-                <Footer />
-            </body>
-        )
-    }
-}
+        <Footer />
+      </div>
+    );
+  }
