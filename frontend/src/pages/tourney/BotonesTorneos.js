@@ -6,10 +6,11 @@ import { HiLogout } from "react-icons/hi";
 import TourneyService from '../../service/TourneyService';
 import AddMember from "./AddMember"
 import UserService from "../../service/UserService";
+import {GoCheck} from "react-icons/go";
+
 
 
 function BotonesTorneos(data){
-    //debugger
     let tourney = data.tourney;
     let userId = localStorage.getItem("userId");
     console.log("id torneo actual", tourney.tourneyId);
@@ -77,7 +78,8 @@ function BotonesTorneos(data){
                      y se deshabilita si ya estas en el torneo*/}
 
                     {disableButton ?
-                            (<button className="btn btn-info" type="button" disabled><AiOutlineUserAdd/></button>) :
+                            (<div><button className="btn btn-info" type="button" disabled><AiOutlineUserAdd/></button>
+                            <button className="btn btn-success" type="submit" disabled> <GoCheck/></button></div>) :
                             (<button className="btn btn-info" type="button" onClick={()=>clickAgregarme()}> <AiOutlineUserAdd/> </button>)
                     }
                 </div>
