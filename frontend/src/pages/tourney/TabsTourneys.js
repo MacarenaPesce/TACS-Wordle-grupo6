@@ -8,6 +8,7 @@ import BotonesTorneos from './BotonesTorneos.js'
 import Not from "../../components/not/Not";
 import AuthService from "../../service/AuthService";
 import TourneySubmit from "./TourneySubmit";
+import Tourney from "./Tourney";
 
 export default class TabsTourneys extends Component{ 
 
@@ -20,44 +21,34 @@ export default class TabsTourneys extends Component{
         }
     }
 
+    /*
     componentDidMount() {
         if(this.props.nombreTabla === 'Mis torneos'){
-            /*console.log("estas en mis torneos")*/
             this.submitTourneys()
         }
-        else{
-            /*console.log("no estas en mis torneos")*/
-        }
-    }
+    }*/
 
-    componentDidUpdate() {
-        /*this.submitTourneys()*/
-        /*console.log("did update")*/
-    }
+    /*componentDidUpdate() {
+        this.submitTourneys()
+        console.log("did update")
+    }*/
     
     submitHandler = e => {
         e.preventDefault()
-        //console.log('mostrando torneos')
         this.submitTourneys()
     }
 
     submitTourneys() {
-        //console.log("submit tourneys")
         UserService.getMyTourneys(this.props.nombreTabla) /*todo: como lo mando si no recibe parametros ._. mandar aca el tipo de torneos */ //mis torneos es el nombre del metodo, para otra tabla es otro metodo
             .then(response => {
                 this.setState({myTourneys: response.data})
                 if(JSON.stringify(this.state.myTourneys[0]) === undefined){
-                    //todo mostrar mensaje de tabla vacia
+                    //todo: mostrar mensaje de tabla vacia
                 }
             })
             .catch(error => {
                 console.log(error)
-                const status = JSON.stringify(error.response.status)
-                const message = StatusCheck(status,JSON.stringify(error.response.data.message));
-                if(status === "401" || status === "403" || status === "400"){   //Como este caso no es un form. La unica causa de 400 puede ser que el store de la sesión esté corrupto. (y no errores de negocio)
-                    AuthService.logout()
-                    this.setState({sessionError: true, errorMessage: message})
-                }
+                Tourney.handleSessionError(this, error)
             })
     }
 
@@ -70,13 +61,12 @@ export default class TabsTourneys extends Component{
                         <td> {tourney.name}</td>
                         <td> {tourney.type}</td>
                         <td> {tourney.language}</td>
+                        <td> {tourney.state}</td>
                         <td> {tourney.start}</td>
                         <td> {tourney.finish}</td>
                         <td> {tourney.owner.username}</td>
-
                         <td>
-                            <BotonesTorneos tourney={tourney}
-                            />   
+                            <BotonesTorneos tourney={tourney} dataTourneys={this.state.myTourneys.map((torneo)=>torneo.tourneyId)} />   
                         </td>
                     </tr>
                 );}
@@ -111,9 +101,6 @@ export default class TabsTourneys extends Component{
                                 </button>
                             </form>
                         </div>
-                        <div className="col-md-1"> {/*sirve para que el btn de crear torneo este a la derecha */}
-
-                        </div>
                         <div className="col-md-2">
                             <TourneyCreate/>
                         </div>
@@ -123,23 +110,20 @@ export default class TabsTourneys extends Component{
                     </div>
                 </div>      
                 {/*------------------------------------------------------------------ */}
-
                 <div className="table-responsive table table-hover table-bordered results">
                     <table className="table table-hover table-bordered">
                         <thead className="bill-header cs">
-                        <tr>
-                            <th id="trs-hd-1" className="col-lg-1"> N°</th>
-                            <th id="trs-hd-2" className="col-lg-2"> Nombre</th>
-                            <th id="trs-hd-3" className="col-lg-1"> Tipo</th>
-                            <th id="trs-hd-4" className="col-lg-1"> Lenguaje</th>
-                            <th id="trs-hd-5" className="col-lg-1"> Inicio</th>
-                            <th id="trs-hd-6" className="col-lg-1"> Fin</th>
-                            <th id="trs-hd-7" className="col-lg-2"> Creador</th>
-                            <th id="trs-hd-8" className="col-lg-1"> Acciones</th>
-                            {/** todo: las dos col de abajo NO tienen que aparecer en tabla de publicos */}
-                            <th id="trs-hd-7" className="col-lg-1"> Puntaje</th>
-                            <th id="trs-hd-7" className="col-lg-1"> Posicion</th>
-                        </tr>
+                            <tr>
+                                <th id="trs-hd-1" className="col-lg-1"> N°</th>
+                                <th id="trs-hd-2" className="col-lg-2"> Nombre</th>
+                                <th id="trs-hd-3" className="col-lg-1"> Tipo</th>
+                                <th id="trs-hd-4" className="col-lg-1"> Lenguaje</th>
+                                <th id="trs-hd-8" className="col-lg-1"> Estado</th>
+                                <th id="trs-hd-5" className="col-lg-2"> Inicio</th>
+                                <th id="trs-hd-6" className="col-lg-2"> Fin</th>
+                                <th id="trs-hd-7" className="col-lg-1"> Creador</th>
+                                <th id="trs-hd-8" className="col-lg-1"> Acciones</th>
+                            </tr>
                         </thead>
 
                         {<tbody>
@@ -148,7 +132,6 @@ export default class TabsTourneys extends Component{
 
                     </table>
                 </div>
-
                 {/*------------------------------------------------------------------ */}
             </div>
         );

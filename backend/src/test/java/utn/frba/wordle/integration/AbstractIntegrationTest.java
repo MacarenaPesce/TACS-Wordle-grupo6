@@ -18,10 +18,9 @@ import utn.frba.wordle.service.UserService;
 public abstract class AbstractIntegrationTest {
 
     @Autowired
-    UserService userService;
+    protected UserService userService;
 
     protected UserDto getUserDto(String email, String username) {
         return userService.createUser(username, "123asd", email);
     }
-
 }

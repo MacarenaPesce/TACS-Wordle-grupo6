@@ -23,14 +23,13 @@ const getAdminBoard = () => {
 
 const getMyTourneys = (nombreTabla) => {
   if(nombreTabla === 'Mis torneos'){
-    return axios.get(API + "tournaments/myTournaments", { headers: authHeader() });
+    return getMyTourneysActive();
   }
   else if(nombreTabla === 'Publicos'){
-    console.log('estas en torneos publicos')
     return getTourneysPublic();
   }
   else{
-    console.log('falta la tabla de finalizados :) ')
+    return getTourneysFinished();
   }
   
 };
@@ -39,12 +38,21 @@ const getTodaysResult = (language) => {
   return axios.get(API + "punctuation/todaysResult/" + language, { headers: authHeader() });
 };
 
+const getMyTourneysActive = () => {
+  return axios.get(API + "tournaments/myTournaments", { headers: authHeader() });
+};
+
+
 const getTourneysPublic = () => {
   return axios.get(API + "tournaments/public", { headers: authHeader() });
 };
 
-const getUsers = (usersearch) => {
-  return axios.get(API_USERS +'?'+ 'username='+usersearch);
+const getTourneysFinished = () => {
+  return axios.get(API + "tournaments/FINISHED", { headers: authHeader() });
+};
+
+const getUsers = (userSearch) => {
+  return axios.get(API_USERS +'?'+ 'username='+userSearch, { headers: authHeader() });
 };
 
 export default {
@@ -53,6 +61,7 @@ export default {
   getModeratorBoard,
   getAdminBoard,
   getMyTourneys,
+  getMyTourneysActive,
   getTourneysPublic,
   getUsers,
   getTodaysResult

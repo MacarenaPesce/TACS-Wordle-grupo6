@@ -8,6 +8,7 @@ import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import Member from './Member.js';
 import TourneyService from '../../service/TourneyService';
 import AuthService from "../../service/AuthService";
+import Tourney from "./Tourney";
 
 export default class AddMember extends Component  {
 
@@ -43,32 +44,26 @@ export default class AddMember extends Component  {
         this.setState({clear:true});
     }
 
-
     changeHandler = (e)  => {
         this.setState({searchUser: e.target.value});
         console.log(this.state.searchUser);
     }
 
-		toAdd = (tourneyid,id) =>{
-				console.log('lamando a toAdd con userId: '+ id+ "torneo: " + tourneyid);
-				this.setState({errorVisible: false, errorMessage: '', successVisible: false, loading: true});
-				TourneyService.addMember(tourneyid,id)
-					.then(response => {
-						this.setState({successVisible: true, nameDisplay: this.state.name, loading: false})
-						console.log("se agregó el usuario: "+id+ " al torneo" + tourneyid)
-						console.log(response)
-					})
-					.catch(error => {   //todo marca bloque catch de codigo duplicado con TourneyCreate
-						console.log(error)
-						this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
-						const status = JSON.stringify(error.response.status)
-						const message = StatusCheck(status,JSON.stringify(error.response.data.message));
-						if(status === "401" || status === "403"){
-                            AuthService.logout()
-							this.setState({sessionError: true, errorMessage: message})
-						}
-				})
-		}
+    toAdd = (tourneyid,id) =>{
+        console.log('llamando a toAdd con userId: '+ id+ "torneo: " + tourneyid);
+        this.setState({errorVisible: false, errorMessage: '', successVisible: false, loading: true});
+        TourneyService.addMember(tourneyid,id)
+            .then(response => {
+                this.setState({successVisible: true, nameDisplay: this.state.name, loading: false})
+                console.log("se agregó el usuario: "+id+ " al torneo 1")
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error)
+                this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
+                Tourney.handleSessionError(this, error)
+        })
+    }
 
     submitHandler = e => {
         e.preventDefault();
@@ -83,12 +78,7 @@ export default class AddMember extends Component  {
             .catch(error => {
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
-
-                const status = JSON.stringify(error.response.status)
-                const message = StatusCheck(status,JSON.stringify(error.response.data.message));
-                if(status === "401" || status === "403" || status === "400"){
-                    this.setState({sessionError: true, errorMessage: message})
-                }
+                Tourney.handleSessionError(this, error)
             })
     }
 
@@ -114,8 +104,9 @@ export default class AddMember extends Component  {
                 onRequestClose={this.closeModal}
                 isOpen={this.state.modalIsOpen}>
                 <h3>Add Member</h3>
-                {/*TODO: hacer css propios en vez de ser tomados de help, para:
-                            form-help, opciones, selectidioma, form-control*/}
+
+                {/*TODO: hacer css propios en vez de ser tomados de help, para: form-help, opciones, selectidioma, form-control*/}
+                
                 <form onSubmit={this.submitHandler} className="form-container">
                 <button className="form-close-boton" onClick={this.closeModal}>
                     X
@@ -158,7 +149,6 @@ export default class AddMember extends Component  {
                     </div>}
             </ReactModal>
         </React.Fragment>
-
         );
     }
 }

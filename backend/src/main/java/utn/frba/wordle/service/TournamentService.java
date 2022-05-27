@@ -99,7 +99,9 @@ public class TournamentService {
         }
 
         List<RegistrationDto> registrations = registrationService.getRegistrationsFromUser(userId);
-        boolean userAlreadyJoined = registrations.stream().anyMatch(m -> m.getUser().getId().equals(userId));
+        boolean userAlreadyJoined = registrations.stream()
+                            .filter(registrationDto -> registrationDto.getTournamentId().equals(tournamentId))
+                            .anyMatch(m -> m.getUser().getId().equals(userId));
         if(userAlreadyJoined){
             throw new BusinessException("The user already joined the Tournament.");
         }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import authHeader from "./AuthHeader";
 
 const API_URL = "http://localhost:8080/api/auth/";
 
@@ -23,9 +24,13 @@ const logout = () => {
   localStorage.removeItem('userId')
 
 };
+const ping = () => {
+  return axios.post(API_URL+"ping", {}, { headers: authHeader() });
+};
 
 export default {
   registerService,
   loginService,
   logout,
+  ping
 };

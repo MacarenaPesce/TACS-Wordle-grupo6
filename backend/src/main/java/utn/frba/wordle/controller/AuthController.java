@@ -1,15 +1,14 @@
 package utn.frba.wordle.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import ch.qos.logback.classic.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.model.pojo.Session;
+import utn.frba.wordle.logging.WordleLogger;
 import utn.frba.wordle.model.http.LoginRequest;
 import utn.frba.wordle.model.http.RegisterRequest;
+import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.service.AuthService;
 
 @RestController
@@ -20,10 +19,10 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private static final Logger logger = WordleLogger.getLogger(AuthController.class);
 
     @PostMapping("/register")
-    public ResponseEntity<Session> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity register(@RequestBody RegisterRequest request) {
 
         logger.info("Method: register - Request: {}", request);
 
@@ -32,10 +31,11 @@ public class AuthController {
         logger.info("Method: register - Response: {}", response);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Session> login(@RequestBody LoginRequest request) {
+    public ResponseEntity login(@RequestBody LoginRequest request) {
 
         logger.info("Method: login - Request: {}", request);
 
@@ -51,6 +51,11 @@ public class AuthController {
 
         logger.info("logout Method with no params");
 
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/ping")
+    public ResponseEntity pingToken(@RequestHeader("Authorization") String token) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

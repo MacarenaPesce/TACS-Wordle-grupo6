@@ -47,7 +47,7 @@ public class TestUtils {
                 .claim("username", username)
                 .claim("email", email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 100 * 100))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 1000))
                 .signWith(SignatureAlgorithm.HS512,
                         AuthService.SECRET.getBytes()).compact();
 

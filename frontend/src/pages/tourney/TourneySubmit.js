@@ -5,6 +5,7 @@ import Not from "../../components/not/Not";
 import TourneyService from "../../service/TourneyService";
 import StatusCheck from "../sesion/StatusCheck";
 import AuthService from "../../service/AuthService";
+import Tourney from "./Tourney";
 
 export default class TourneySubmit extends Component{
 
@@ -56,7 +57,7 @@ export default class TourneySubmit extends Component{
                 this.setState({loading: false});
                 console.log(error)
 
-                this.handleSessionError(error);
+                Tourney.handleSessionError(this, error)
             })
     }
 
@@ -97,17 +98,8 @@ export default class TourneySubmit extends Component{
                 console.log(error)
                 this.setState({loading: false});
 
-                this.handleSessionError(error);
+                Tourney.handleSessionError(this, error)
             })
-    }
-
-    handleSessionError(error){
-        const status = JSON.stringify(error.response.status)
-        const message = StatusCheck(status,JSON.stringify(error.response.data.message));
-        if(status === "401" || status === "403"){
-            AuthService.logout()
-            this.setState({sessionError: true, errorMessage: message})
-        }
     }
 
     render() {
@@ -162,8 +154,7 @@ export default class TourneySubmit extends Component{
                     <h3>Cargar Resultados</h3>
 
                     {/*TODO: hacer css propios en vez de ser tomados de TourneyCreate, para los flexible-modal*/}
-                    {/*TODO: hacer css propios en vez de ser tomados de help, para:
-                            form-help, opciones, selectidioma, form-control*/}
+                    {/*TODO: hacer css propios en vez de ser tomados de help, para: form-help, opciones, selectidioma, form-control*/}
                     <form onSubmit={this.submitHandler} className="form-help">
 
                         <div className="opciones">
