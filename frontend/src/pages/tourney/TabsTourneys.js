@@ -8,6 +8,7 @@ import BotonesTorneos from './BotonesTorneos.js'
 import Not from "../../components/not/Not";
 import AuthService from "../../service/AuthService";
 import TourneySubmit from "./TourneySubmit";
+import Tourney from "./Tourney";
 
 export default class TabsTourneys extends Component{ 
 
@@ -47,12 +48,7 @@ export default class TabsTourneys extends Component{
             })
             .catch(error => {
                 console.log(error)
-                const status = JSON.stringify(error.response.status)
-                const message = StatusCheck(status,JSON.stringify(error.response.data.message));
-                if(status === "401" || status === "403" || status === "400"){   //Como este caso no es un form. La unica causa de 400 puede ser que el store de la sesión esté corrupto. (y no errores de negocio)
-                    AuthService.logout()
-                    this.setState({sessionError: true, errorMessage: message})
-                }
+                Tourney.handleSessionError(this, error)
             })
     }
 

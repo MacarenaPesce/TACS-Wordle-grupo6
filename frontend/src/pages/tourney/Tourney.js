@@ -5,6 +5,7 @@ import './Tourney.css'
 import ComponenteTabs from './ComponenteTabs';
 import Not from "../../components/not/Not";
 import AuthService from "../../service/AuthService";
+import StatusCheck from "../sesion/StatusCheck";
 
 
 export default class Tourney extends Component{
@@ -27,7 +28,14 @@ export default class Tourney extends Component{
         }
     }
 
-
+    static handleSessionError(component, error){
+        const status = JSON.stringify(error.response.status)
+        const message = StatusCheck(status,JSON.stringify(error.response.data.message));
+        if(status === "401" || status === "403"){
+            AuthService.logout()
+            component.setState({sessionError: true, errorMessage: message})
+        }
+    }
 
     render() {
         return(

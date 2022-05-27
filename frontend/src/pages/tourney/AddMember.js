@@ -8,6 +8,7 @@ import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import Member from './Member.js';
 import TourneyService from '../../service/TourneyService';
 import AuthService from "../../service/AuthService";
+import Tourney from "./Tourney";
 
 export default class AddMember extends Component  {
 
@@ -57,15 +58,10 @@ export default class AddMember extends Component  {
                 console.log("se agregó el usuario: "+id+ " al torneo 1")
                 console.log(response)
             })
-            .catch(error => {   //todo marca bloque catch de codigo duplicado con TourneyCreate
+            .catch(error => {
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
-                const status = JSON.stringify(error.response.status)
-                const message = StatusCheck(status,JSON.stringify(error.response.data.message));
-                if(status === "401" || status === "403"){
-                    AuthService.logout()
-                    this.setState({sessionError: true, errorMessage: message})
-                }
+                Tourney.handleSessionError(this, error)
         })
     }
 
@@ -83,12 +79,7 @@ export default class AddMember extends Component  {
             .catch(error => {
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
-
-                const status = JSON.stringify(error.response.status)
-                const message = StatusCheck(status,JSON.stringify(error.response.data.message));
-                if(status === "401" || status === "403" || status === "400"){
-                    this.setState({sessionError: true, errorMessage: message})
-                }
+                Tourney.handleSessionError(this, error)
             })
     }
 

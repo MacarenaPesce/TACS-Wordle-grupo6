@@ -5,6 +5,7 @@ import TourneyService from "../../service/TourneyService";
 import StatusCheck from "../sesion/StatusCheck";
 import Not from "../../components/not/Not";
 import AuthService from "../../service/AuthService";
+import Tourney from "./Tourney";
 
 export default class TourneyCreate extends Component{
 
@@ -63,12 +64,7 @@ export default class TourneyCreate extends Component{
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
 
-                const status = JSON.stringify(error.response.status)
-                const message = StatusCheck(status,JSON.stringify(error.response.data.message));
-                if(status === "401" || status === "403"){
-                    AuthService.logout()
-                    this.setState({sessionError: true, errorMessage: message})
-                }
+                Tourney.handleSessionError(this, error)
             })
     }
 

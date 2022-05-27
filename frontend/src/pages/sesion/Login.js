@@ -29,7 +29,7 @@ export default function Login({onLogin}) {
   }, [isLogged, navigate])
 
   const handleSubmit = (e) => {
-    debugger;
+    //debugger;
     e.preventDefault();
     
     if(

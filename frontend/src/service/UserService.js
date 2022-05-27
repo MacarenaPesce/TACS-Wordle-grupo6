@@ -52,7 +52,7 @@ const getTourneysFinished = () => {
 };
 
 const getUsers = (userSearch) => {
-  return axios.get(API_USERS +'?'+ 'username='+userSearch);
+  return axios.get(API_USERS +'?'+ 'username='+userSearch, { headers: authHeader() });
 };
 
 export default {
