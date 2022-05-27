@@ -53,4 +53,9 @@ public class AuthController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/ping")
+    public ResponseEntity pingToken(@RequestHeader("Authorization") String token) {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

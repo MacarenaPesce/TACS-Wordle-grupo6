@@ -6,6 +6,7 @@ import './Navbar.css';
 import useUser from '../../hooks/useUser';
 import IconButton from '@mui/material/IconButton'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import {useEffect} from "react";
 
 export default function NavbarAut() {
    
@@ -19,6 +20,11 @@ export default function NavbarAut() {
 
     const { isLogged, logout} = useUser()
     /*const [match] = useRoute("/login");*/
+
+    /*useEffect(() => {
+        console.log("USE EFFECT !!!!!!!!!!!! para validar sesion, deberia estar aca el ping de sesion
+                                        en vez de solo home, pero que no lo tome /login ni /register")
+        },[])*/
 
     const clickLogout = e => {
       console.log("Log out")
