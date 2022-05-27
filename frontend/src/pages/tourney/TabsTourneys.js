@@ -70,7 +70,7 @@ export default class TabsTourneys extends Component{
                         <td> {tourney.finish}</td>
                         <td> {tourney.owner.username}</td>
                         <td>
-                            <BotonesTorneos tourney={tourney} tourneys={this.state.myTourneys.map((tourney)=> tourney.tourneyId)} />   
+                            <BotonesTorneos tourney={tourney} dataTourneys={this.state.myTourneys.map((torneo)=>torneo.tourneyId)} />   
                         </td>
                     </tr>
                 );}
