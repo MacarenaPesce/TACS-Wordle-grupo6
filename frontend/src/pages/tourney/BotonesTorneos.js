@@ -30,7 +30,10 @@ function BotonesTorneos(data){
                     <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
                     </Button>
-                    <AddMember tourneyId ={tourney.tourneyId} /> {/*si sos el creador agregas personas ya sea publico o privado */}
+                    <AddMember 
+                        tourneyId ={tourney.tourneyId} 
+                        ownerId ={tourney.owner.id}
+                        /> {/*si sos el creador agregas personas ya sea publico o privado */}
                 </div>
             )
         }
