@@ -3,7 +3,9 @@ import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import TabsTourneys from './TabsTourneys';
 import Ayuda from "./Ayuda";
-
+import TourneyCreate from "./TourneyCreate";
+import TourneySubmit from "./TourneySubmit";
+import './Panel.css';
 
 const ComponenteTabs = () => {
 
@@ -34,12 +36,21 @@ const ComponenteTabs = () => {
 
         <Tabs defaultActiveKey="myTourney" id="uncontrolled-tab-example" className="mb-3">
             <Tab eventKey="myTourney" title={nombres.misTorneos}>
-                {/*<TabIntro />*/}
-                {botonAyuda}
-                {mostrar && Ayuda.ayudaMis}
-                <TabsTourneys 
-                    nombreTabla={nombres.misTorneos}
-                />         
+                <div className="row">
+                    <div className="col-md-9">
+                        {/*<TabIntro />*/}
+                        {botonAyuda}
+                        {mostrar && Ayuda.ayudaMis}
+                        <TabsTourneys
+                            nombreTabla={nombres.misTorneos}
+                        />
+                            </div>
+                    <div className="col-md-3 Panel">
+                        <h2>Panel de control</h2>
+                        <TourneyCreate/>
+                        <TourneySubmit/>
+                    </div>
+                </div>
             </Tab>
             <Tab eventKey="publicTourney" title={nombres.torneosPublicos}>
                 {/*<TabIntro />*/}
