@@ -24,7 +24,7 @@ export default function useUser () {
       })
       .catch((error) => {
         //TODO ponemos una toast aca?
-        //console.log(error.response.data.message);
+        console.log(error.response.data.message);
         localStorage.removeItem('token')
         localStorage.removeItem('username')
         localStorage.removeItem('userId')

@@ -162,8 +162,7 @@ export default class TourneySubmit extends Component{
                     <h3>Cargar Resultados</h3>
 
                     {/*TODO: hacer css propios en vez de ser tomados de TourneyCreate, para los flexible-modal*/}
-                    {/*TODO: hacer css propios en vez de ser tomados de help, para:
-                            form-help, opciones, selectidioma, form-control*/}
+                    {/*TODO: hacer css propios en vez de ser tomados de help, para: form-help, opciones, selectidioma, form-control*/}
                     <form onSubmit={this.submitHandler} className="form-help">
 
                         <div className="opciones">
