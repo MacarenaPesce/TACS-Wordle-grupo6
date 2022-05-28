@@ -6,6 +6,7 @@ import TourneyService from "../../service/TourneyService";
 import StatusCheck from "../sesion/StatusCheck";
 import AuthService from "../../service/AuthService";
 import Tourney from "./Tourney";
+import Collapse from "react-bootstrap/Collapse";
 
 export default class TourneySubmit extends Component{
 
@@ -26,6 +27,7 @@ export default class TourneySubmit extends Component{
 
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+
     }
 
     openModal() {
@@ -102,6 +104,14 @@ export default class TourneySubmit extends Component{
             })
     }
 
+    botonClick() {
+        if(!this.state.modalIsOpen){
+            this.getTodaysResults("EN")
+            this.getTodaysResults("ES")
+        }
+        this.setState({modalIsOpen: !this.state.modalIsOpen})
+    }
+
     render() {
 
         let englishDisplay
@@ -134,7 +144,7 @@ export default class TourneySubmit extends Component{
                             <span className="visually-hidden">Loading...</span>
                         </div>)
 
-        const contenido = ( <React.Fragment>
+        const contenido = ( <div>
                     <h3>Cargar Resultados</h3>
 
                 {/*TODO: hacer css propios en vez de ser tomados de TourneyCreate, para los flexible-modal*/}
@@ -180,7 +190,7 @@ export default class TourneySubmit extends Component{
                     </div>
 
                 </div>
-            </React.Fragment>
+            </div>
         )
 
         return (
@@ -189,9 +199,10 @@ export default class TourneySubmit extends Component{
                 {this.state.sessionError &&
                     <Not message={this.state.errorMessage}/>}
 
-                <button type="submit" className="btn btn-outline-success my-2 my-sm-0" onClick={this.openModal}><h6>Cargar Resultados</h6></button>
                 {this.props.modal ?
-                    (<ReactModal
+                    (<div>
+                    <button type="submit" className="btn btn-outline-success my-2 my-sm-0" onClick={this.openModal}><h6>Cargar Resultados</h6></button>
+                    <ReactModal
                     initWidth={520}
                     initHeight={666}
                     top={200}
@@ -207,9 +218,23 @@ export default class TourneySubmit extends Component{
                         Cerrar
                     </button>
 
-                    </ReactModal>) :
+                    </ReactModal>
+                    </div>) :
                     (
-                        <div>{contenido}</div>
+                        <div>
+                            <button type="button" className="btn btn-outline-success my-2 my-sm-0"
+                                    onClick={() => this.botonClick()}
+                                    aria-controls="collapse-create"
+                                    aria-expanded={this.state.modalIsOpen}
+                            >
+                                <h6>Cargar Resultados del día</h6>
+                            </button>
+                            <Collapse in={this.state.modalIsOpen}>
+                                <div id="collapse-create">
+                                    {contenido}
+                                </div>
+                            </Collapse>
+                        </div>
                     )}
             </div>
         )

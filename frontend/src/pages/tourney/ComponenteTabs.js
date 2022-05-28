@@ -47,8 +47,10 @@ const ComponenteTabs = () => {
                             </div>
                     <div className="col-md-3 Panel">
                         <h2>Panel de control</h2>
-                        <TourneyCreate modal={false}/>
+                        <p></p>
                         <TourneySubmit modal={false}/>
+                        <p></p>
+                        <TourneyCreate modal={false}/>
                     </div>
                 </div>
             </Tab>

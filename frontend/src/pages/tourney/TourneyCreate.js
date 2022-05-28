@@ -7,11 +7,13 @@ import Not from "../../components/not/Not";
 import AuthService from "../../service/AuthService";
 import Tourney from "./Tourney";
 import Ayuda from "./Ayuda";
+import Button from "react-bootstrap/Button";
+import Collapse from "react-bootstrap/Collapse";
 
 export default class TourneyCreate extends Component{
 
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state = {
             modalIsOpen: false,
             name: '',
@@ -33,7 +35,6 @@ export default class TourneyCreate extends Component{
 
     openModal() {
         this.setState({modalIsOpen: true});
-        console.log(this.props.modal)
     }
     closeModal() {
         this.setState({modalIsOpen: false});
@@ -75,7 +76,7 @@ export default class TourneyCreate extends Component{
             <span className="visually-hidden">Loading...</span>
         </div>);
 
-        const contenido = (     <React.Fragment>
+        const contenido = (     <div>
                 <h3>Crear Torneo</h3>
 
                 {/*TODO: hacer css propios en vez de ser tomados de help, para:
@@ -137,7 +138,7 @@ export default class TourneyCreate extends Component{
                     <div className="alert alert-white" role="alert">
                         {spinner}{spinner}
                     </div>}
-                </React.Fragment>
+                </div>
         )
 
         return(
@@ -147,9 +148,10 @@ export default class TourneyCreate extends Component{
             {this.state.sessionError &&
                 <Not message={this.state.errorMessage}/>}
 
-            <button type="submit" className="btn btn-outline-success my-2 my-sm-0" onClick={this.openModal}><h6>Crear torneo</h6></button>
             {this.props.modal ?
-                (<ReactModal
+                (<div>
+                <button type="button" className="btn btn-outline-success my-2 my-sm-0" onClick={this.openModal}><h6>Crear torneo</h6></button>
+                <ReactModal
                 initWidth={400}
                 initHeight={830}
                 top={100}
@@ -164,11 +166,24 @@ export default class TourneyCreate extends Component{
                 <button className="btn btn-outline-success my-2 my-sm-0" onClick={this.closeModal}>
                     Cerrar
                 </button>
-                </ReactModal>) :
+                </ReactModal>
+                </div>) :
                 (
-                    <div>{contenido}</div>
+                    <div>
+                        <button type="button" className="btn btn-outline-success my-2 my-sm-0"
+                            onClick={() => this.setState({modalIsOpen: !this.state.modalIsOpen})}
+                            aria-controls="collapse-create"
+                            aria-expanded={this.state.modalIsOpen}
+                        >
+                            <h6>Crear torneo</h6>
+                        </button>
+                        <Collapse in={this.state.modalIsOpen}>
+                            <div id="collapse-create">
+                                {contenido}
+                            </div>
+                        </Collapse>
+                    </div>
                 )}
-
 
         </div>
 
