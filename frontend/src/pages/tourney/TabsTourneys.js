@@ -102,10 +102,10 @@ export default class TabsTourneys extends Component{
                             </form>
                         </div>
                         <div className="col-md-3">
-                            <TourneyCreate/>
+                            <TourneyCreate modal={true}/>
                         </div>
                         <div className="col-md-3">
-                            <TourneySubmit/>
+                            <TourneySubmit modal={true}/>
                         </div>
                     </div>
                 </div>      
