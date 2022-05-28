@@ -62,7 +62,7 @@ public class TournamentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{tournamentId}")
+    @GetMapping("/info/{tournamentId}")
     public ResponseEntity<TournamentResponse> getTournamentFromId(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId){
         logger.info("Method: getTournament - Request: token={}, tournamentId={}", token, tournamentId);
 
