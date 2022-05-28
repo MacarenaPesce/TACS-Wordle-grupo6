@@ -152,9 +152,7 @@ public class TournamentService {
     }
 
     public TournamentDto getTournamentFromId(Long tournamentId) {
-        TournamentEntity tournament = tournamentRepository.findTournamentFromId(tournamentId);
-
-        return mapToDto(tournament);
+        return mapToDto(tournamentRepository.findById(tournamentId).orElseThrow());
     }
 
     public TournamentEntity mapToEntity(TournamentDto dto) {
