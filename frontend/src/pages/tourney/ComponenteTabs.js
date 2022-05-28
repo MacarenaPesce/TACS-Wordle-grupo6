@@ -17,6 +17,9 @@ const ComponenteTabs = () => {
     }
     const [open, setOpen] = useState(true);
 
+    const [tabla, setTabla] = useState("col-md-9");
+    const [panel, setPanel] = useState("col-md-3");
+
     const [mostrar, setMostrar] = useState(false);
 
 
@@ -32,29 +35,38 @@ const ComponenteTabs = () => {
             setMostrar(true)
     }
 
+    function achicarTabla(){
+        setTabla("col-md-9")
+        setPanel("col-md-3")
+    }
+    function agrandarTabla(){
+        setTabla("col-md-12")
+        setPanel("col-md-0")
+    }
+
     //TODO logica de volver a cargar / request de lista de torneos cada vez que cambias de tab
     return(
         <div>
         <Tabs defaultActiveKey="myTourney" id="uncontrolled-tab-example" className="mb-3">
             <Tab eventKey="myTourney" title={nombres.misTorneos}>
                 <div className="row">
-                    <div className="col-md-9">
+                    <div className={tabla}>
+                        <button className="btn btn-outline-success my-2 my-sm-0" style={{float: "right"}}
+                                onClick={() => setOpen(!open)}
+                                aria-controls="collapse-panel"
+                                aria-expanded={open}
+                        >
+                            Panel de control
+                        </button>
                         {/*<TabIntro />*/}
                         {botonAyuda}
                         {mostrar && Ayuda.ayudaMis}
                         <TabsTourneys
                             nombreTabla={nombres.misTorneos}
                         />
-                            </div>
-                    <div className="col-md-3" style={{marginTop: "41px"}}>
-                        <button className="btn btn-outline-success my-2 my-sm-0" style={{float: "right"}}
-                            onClick={() => setOpen(!open)}
-                            aria-controls="collapse-panel"
-                            aria-expanded={open}
-                        >
-                            Panel de control
-                        </button>
-                        <Collapse in={open} dimension="width" className="Panel">
+                    </div>
+                    <div className={panel} >
+                        <Collapse in={open} dimension="width" onEnter={achicarTabla} onExited={agrandarTabla} className="Panel">
                             <div id="collapse-panel">
                                 <h2 className="flamaDos">{JSON.parse(localStorage.getItem('username'))}</h2>
                                 <p></p>
