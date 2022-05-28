@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import TabsTourneys from './TabsTourneys';
@@ -7,6 +7,9 @@ import TourneyCreate from "./TourneyCreate";
 import TourneySubmit from "./TourneySubmit";
 import './Panel.css';
 import Collapse from "react-bootstrap/Collapse";
+import Countdown from "react-countdown";
+import TourneyService from "../../service/TourneyService";
+import Tourney from "./Tourney";
 
 const ComponenteTabs = () => {
 
@@ -20,8 +23,13 @@ const ComponenteTabs = () => {
     const [tabla, setTabla] = useState("col-md-9");
     const [panel, setPanel] = useState("col-md-3");
 
-    const [mostrar, setMostrar] = useState(false);
+    const [day, setDay] = useState('');
+    const [tomorrow, setTomorrow] = useState('');
+    useEffect(() => {
+        getDay()
+    },[])
 
+    const [mostrar, setMostrar] = useState(false);
 
     const botonAyuda =  <button className="btn btn-info dropdown-toggle" type="button" id="dropdownMenu2"
                             data-bs-toggle="dropdown" aria-expanded="false"
@@ -42,6 +50,27 @@ const ComponenteTabs = () => {
     function agrandarTabla(){
         setTabla("col-md-12")
         setPanel("col-md-0")
+    }
+
+    function getDay(){
+        TourneyService.getEndOfTheDay()
+            .then(response => {
+                console.log('El dia finaliza en: ')
+                console.log(response.data)
+                setTomorrow(response.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        TourneyService.getDayOfTheDate()
+            .then(response => {
+                console.log('Hoy es: ')
+                console.log(response.data)
+                setDay(response.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     //TODO logica de volver a cargar / request de lista de torneos cada vez que cambias de tab
@@ -66,10 +95,13 @@ const ComponenteTabs = () => {
                         />
                     </div>
                     <div className={panel} >
-                        <Collapse in={open} dimension="width" onEnter={achicarTabla} onExited={agrandarTabla} className="Panel">
+                        <Collapse in={open} dimension="width" onEnter={achicarTabla} onExited={agrandarTabla} appear={true} className="Panel">
                             <div id="collapse-panel">
                                 <h2 className="flamaDos">{JSON.parse(localStorage.getItem('username'))}</h2>
-                                <p></p>
+                                <p style={{fontSize: "25px"}}>{day}</p>
+                                Quedan
+                                <div style={{fontSize: "2em"}}><Countdown date={tomorrow} key={tomorrow} /></div>
+                                <p>para revelar los resultados del día de la fecha</p>
                                 <TourneySubmit modal={false}/>
                                 <p></p>
                                 <TourneyCreate modal={false}/>
