@@ -11,7 +11,6 @@ import {GoCheck} from "react-icons/go";
 
 
 function BotonesTorneos(data){
-    //debugger
     let tourney = data.tourney;
     let userId = localStorage.getItem("userId");
     console.log("id torneo actual", tourney.tourneyId);

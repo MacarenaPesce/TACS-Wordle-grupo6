@@ -3,9 +3,14 @@ import { Link, useParams } from 'react-router-dom';
 import NavbarAut from '../../components/navbar/Navbar';
 import Footer from '../../components/footer/Footer';
 import './InfoTourney.css'
+import TourneyService from '../../service/TourneyService';
 
 export default function InfoTourney() {
     const { id } = useParams();
+
+    let tourney = TourneyService.getTournamentFromId(id);
+    console.log(tourney);
+
 
     return (
       <div>
@@ -13,7 +18,7 @@ export default function InfoTourney() {
             <NavbarAut />
         </header>
 
-        <h1 className='titleInfo'> Id del torneo {id}</h1>
+        <h1 className='titleInfo'> Informacion del torneo {id}</h1>
         <button> Boton para volver atras</button>
         <p> Aca iria:
             Nombre y id,
