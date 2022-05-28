@@ -46,7 +46,7 @@ const ComponenteTabs = () => {
                         />
                             </div>
                     <div className="col-md-3 Panel">
-                        <h2>Panel de control</h2>
+                        <h2 className="flamaDos">{JSON.parse(localStorage.getItem('username'))}</h2>
                         <p></p>
                         <TourneySubmit modal={false}/>
                         <p></p>
