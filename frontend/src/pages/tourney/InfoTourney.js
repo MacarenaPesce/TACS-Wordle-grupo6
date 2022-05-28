@@ -7,7 +7,7 @@ import TourneyService from '../../service/TourneyService';
 
 export default function InfoTourney() {
     const { id } = useParams();
-
+    console.log(id);
     let tourney = TourneyService.getTournamentFromId(id);
     console.log(tourney);
 

@@ -62,11 +62,11 @@ public class TournamentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{tournamentId}/")
+    @GetMapping("/{tournamentId}")
     public ResponseEntity<TournamentResponse> getTournamentFromId(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId){
         logger.info("Method: getTournament - Request: token={}, tournamentId={}", token, tournamentId);
 
-        Session session = AuthService.getSession(token);
+        //Session session = AuthService.getSession(token);
         TournamentDto tournamentDto = tournamentService.getTournamentFromId(tournamentId);
 
         TournamentResponse response = buildResponse(tournamentDto);
