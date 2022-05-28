@@ -46,7 +46,8 @@ function BotonesTorneos(data){
                             <BsInfoLg/> 
                         </Button>
                         {/* si sos el creador agregas personas ya sea publico o privado */}
-                        <AddMember tourneyId ={tourney.tourneyId} /> 
+                        <AddMember tourneyId ={tourney.tourneyId} 
+                                     ownerId ={tourney.owner.id}/> 
                     </div>
                 )
             }
