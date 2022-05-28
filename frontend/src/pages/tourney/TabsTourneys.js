@@ -10,6 +10,7 @@ import AuthService from "../../service/AuthService";
 import TourneySubmit from "./TourneySubmit";
 import Tourney from "./Tourney";
 
+
 export default class TabsTourneys extends Component{ 
 
     constructor(props){
@@ -52,6 +53,16 @@ export default class TabsTourneys extends Component{
             })
     }
 
+
+
+    formatDate(start) {
+        let fecha = new Date(start)
+        let day = fecha.getDate()+1 ;
+        let month = (fecha.getMonth() +1)>10?(fecha.getMonth() +1) : '0'+(fecha.getMonth() +1)  ; 
+        let year = fecha.getFullYear();
+        return day+'/'+month + '/' + year ;
+    }
+
     render() {
         let listTourneys = []
       if(this.state.myTourneys){
@@ -62,14 +73,15 @@ export default class TabsTourneys extends Component{
                         <td> {tourney.type}</td>
                         <td> {tourney.language}</td>
                         <td> {tourney.state}</td>
-                        <td> {tourney.start}</td>
-                        <td> {tourney.finish}</td>
+                        <td> {this.formatDate(tourney.start)}</td>
+                        <td> {this.formatDate(tourney.finish)}</td>
                         <td> {tourney.owner.username}</td>
                         <td>
                             <BotonesTorneos tourney={tourney} dataTourneys={this.state.myTourneys.map((torneo)=>torneo.tourneyId)} />   
                         </td>
                     </tr>
                 );}
+                
 
         return (
             <div className="col-md-12 search-table-col">
