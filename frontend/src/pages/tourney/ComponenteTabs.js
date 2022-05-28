@@ -6,6 +6,7 @@ import Ayuda from "./Ayuda";
 import TourneyCreate from "./TourneyCreate";
 import TourneySubmit from "./TourneySubmit";
 import './Panel.css';
+import Collapse from "react-bootstrap/Collapse";
 
 const ComponenteTabs = () => {
 
@@ -14,6 +15,7 @@ const ComponenteTabs = () => {
         torneosPublicos: 'Publicos', 
         finalizados: 'Finalizados',
     }
+    const [open, setOpen] = useState(true);
 
     const [mostrar, setMostrar] = useState(false);
 
@@ -33,7 +35,6 @@ const ComponenteTabs = () => {
     //TODO logica de volver a cargar / request de lista de torneos cada vez que cambias de tab
     return(
         <div>
-
         <Tabs defaultActiveKey="myTourney" id="uncontrolled-tab-example" className="mb-3">
             <Tab eventKey="myTourney" title={nombres.misTorneos}>
                 <div className="row">
@@ -45,12 +46,23 @@ const ComponenteTabs = () => {
                             nombreTabla={nombres.misTorneos}
                         />
                             </div>
-                    <div className="col-md-3 Panel">
-                        <h2 className="flamaDos">{JSON.parse(localStorage.getItem('username'))}</h2>
-                        <p></p>
-                        <TourneySubmit modal={false}/>
-                        <p></p>
-                        <TourneyCreate modal={false}/>
+                    <div className="col-md-3" style={{marginTop: "41px"}}>
+                        <button className="btn btn-outline-success my-2 my-sm-0" style={{float: "right"}}
+                            onClick={() => setOpen(!open)}
+                            aria-controls="collapse-panel"
+                            aria-expanded={open}
+                        >
+                            Panel de control
+                        </button>
+                        <Collapse in={open} dimension="width" className="Panel">
+                            <div id="collapse-panel">
+                                <h2 className="flamaDos">{JSON.parse(localStorage.getItem('username'))}</h2>
+                                <p></p>
+                                <TourneySubmit modal={false}/>
+                                <p></p>
+                                <TourneyCreate modal={false}/>
+                            </div>
+                        </Collapse>
                     </div>
                 </div>
             </Tab>
@@ -58,7 +70,7 @@ const ComponenteTabs = () => {
                 {/*<TabIntro />*/}
                 {botonAyuda}
                 {mostrar && Ayuda.ayudaPublic}
-                <TabsTourneys 
+                <TabsTourneys
                     nombreTabla={nombres.torneosPublicos}
                 />
             </Tab>
@@ -66,7 +78,7 @@ const ComponenteTabs = () => {
                 {/*<TabIntro />*/}
                 {botonAyuda}
                 {mostrar && Ayuda.ayudaFin}
-                <TabsTourneys 
+                <TabsTourneys
                     nombreTabla={nombres.finalizados}
                 />
             </Tab>
