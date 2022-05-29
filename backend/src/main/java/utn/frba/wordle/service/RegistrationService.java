@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.model.dto.RegistrationDto;
+import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.PunctuationEntity;
 import utn.frba.wordle.model.entity.RegistrationEntity;
 import utn.frba.wordle.model.entity.TournamentEntity;
@@ -15,6 +16,7 @@ import utn.frba.wordle.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -28,6 +30,9 @@ public class RegistrationService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    UserService userService;
 
     public List<RegistrationDto> getRegistrationsFromUser(Long userId) {
         return mapToDto(getRegistrationsEntityFromUser(userId));
@@ -51,6 +56,12 @@ public class RegistrationService {
                 .user(userEntity)
                 .build();
         return registrationRepository.save(entity);
+    }
+
+    public List<UserDto> getUsers(Long tournamentId){
+        List<Long> id_users = registrationRepository.getUsersByTournament(tournamentId);
+        List<UserDto> users = id_users.stream().collect(Collectors.toMap(x => userService.findUser(x), x->x));
+        return users;
     }
 
     public RegistrationDto mapToDto(RegistrationEntity entity) {

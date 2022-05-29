@@ -75,7 +75,6 @@ public class TournamentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
     @PostMapping("/{tournamentId}/members/{userId}")
     public ResponseEntity<RegistrationResponse> addMember(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Long tournamentId) {
         logger.info("Method: addMember - Request: token={}, userId={}, tournamentId={}", token, userId, tournamentId);
@@ -168,6 +167,19 @@ public class TournamentController {
                 .stream().map(this::buildResponse).collect(Collectors.toList());
 
         logger.info("Method: findUserTournamentsByState - Response: {}", response);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{tournamentId}/members")
+    public ResponseEntity<List<UserResponse>> getUsersTournament(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId){
+        logger.info("Method: getUsersTournamente - Request: token={}, tournament={}", token, tournamentId);
+
+        List<UserDto> userDtos = tournamentService.getUsersTournament(tournamentId);
+
+        List<UserResponse> response = userDtos.stream().collect(); //me falta aca
+
+        logger.info("Method: getUsersTournamente - Response: {}", response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
