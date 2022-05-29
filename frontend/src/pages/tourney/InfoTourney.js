@@ -7,17 +7,48 @@ import TourneyService from '../../service/TourneyService';
 import Tourney from "./Tourney";
 
 export default function InfoTourney() {
-    debugger
+    //debugger
     let { id } = useParams();
     console.log(id);
-    let [tourney, setTourney] = useState();
+    const [tourney, setTourney] = useState({owner: ""});
     console.log(tourney);
+    const [ranking, setRanking] = useState({punctuations: []});
 
-    let PUESTOS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+    function tournament(){
+        TourneyService.getTournamentFromId(id)
+            .then(response => {
+                setTourney(response.data);
+                console.log('Response de torneo obtenida: ')
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.log(error)
+                Tourney.handleSessionError(this, error) //todo esto no hace nada sin usar las variables de estado sessionError y errorMessage, solo funciona en class
+            })
+        TourneyService.getRanking(id)
+            .then(response => {
+                setRanking(response.data);
+                console.log('Response de ranking obtenida: ')
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
 
-    let listRanking = PUESTOS.map((puesto) =>
-    <li className="list-group-item disabled"> {puesto}</li>
-    );
+    useEffect(() => {
+      //debugger
+      tournament();
+      console.log(tourney);
+      console.log("daleeeeeeeeeee")
+    }, []);
+
+    let fullRanking = (ranking.punctuations.map((line) =>
+        <tr key={line.user}>
+            <td> ?? </td>
+            <td> {line.user}</td>
+            <td> {line.punctuation}</td>
+        </tr>));
 
     return (
       <div>
@@ -25,7 +56,7 @@ export default function InfoTourney() {
             <NavbarAut />
         </header>
 
-        <h1 className='titleInfo'> Torneo {id} + nombre: aaa</h1>
+        <h1 className='titleInfo'> Torneo N° {id} + nombre: {tourney.name}</h1>
         {/*<button> volver atras</button>*/}
 
         <container> 
@@ -40,22 +71,22 @@ export default function InfoTourney() {
                 <tbody>
                   <tr>
                     <td>Estado:  </td>
-                    <td>"state"</td>
+                    <td>{tourney.state}</td>
                   </tr>
                   <tr>
                     <td>Tipo: </td>
-                    <td>"tipo"</td>
+                    <td>{tourney.type}</td>
                   </tr>
                   <tr>
                     <td>Lenguaje: </td>
-                    <td>"lenguage"</td>
+                    <td>{tourney.language}</td>
                   </tr>
                   <tr>
-                    <td colSpan={2}>Inicio: "fecha inicio" - Fin: "fecha fin" </td>
+                    <td colSpan={2}>Inicio: {tourney.start} - Fin: {tourney.finish} </td>
                   </tr>
                   <tr>
                     <td>Creador: </td>
-                    <td>"creador"</td>
+                    <td>{tourney.owner.username}</td>
                   </tr>
                   <tr>
                     <td  colSpan={2}>Puntaje: "puntaje" - Puesto: "puesto"</td>
@@ -93,7 +124,7 @@ export default function InfoTourney() {
                       Puntaje
                     </td>
                   </tr>
-                  {listRanking}
+                  {fullRanking}
                 </tbody>
               </table>              
             </div>
@@ -103,7 +134,5 @@ export default function InfoTourney() {
       </div>
   );
 }
-
-
 
 

@@ -33,12 +33,19 @@ const getTournamentFromId = (tournamentId) => {
     return axios.get(API_URL+"info/"+tournamentId, { headers: authHeader() });
 };
 
+const getRanking = (tournamentId) => {
+    return axios.get(API_URL+tournamentId+"/ranking", { headers: authHeader() });
+};
+
 const getEndOfTheDay = () => {
     return axios.get(API_PUNCTUATION + "endOfTheDay", { headers: authHeader() });
 };
+
 const getDayOfTheDate = () => {
     return axios.get(API_PUNCTUATION + "dayOfTheDate", { headers: authHeader() });
 };
+
+
 
 export default {
     submitResults,
@@ -46,6 +53,7 @@ export default {
     addMember,
     join,
     getTournamentFromId,
+    getRanking,
     getEndOfTheDay,
     getDayOfTheDate
 };
