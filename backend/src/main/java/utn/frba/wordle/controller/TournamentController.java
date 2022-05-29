@@ -171,19 +171,6 @@ public class TournamentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{tournamentId}/members")
-    public ResponseEntity<List<UserResponse>> getUsersTournament(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId){
-        logger.info("Method: getUsersTournamente - Request: token={}, tournament={}", token, tournamentId);
-
-        List<UserDto> userDtos = tournamentService.getUsersTournament(tournamentId);
-
-        List<UserResponse> response = userDtos.stream().collect(); //me falta aca
-
-        logger.info("Method: getUsersTournamente - Response: {}", response);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
     public TournamentResponse buildResponse(TournamentDto dto) {
         return TournamentResponse.builder()
                 .tourneyId(dto.getTourneyId())

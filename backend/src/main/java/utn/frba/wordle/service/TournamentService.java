@@ -155,11 +155,6 @@ public class TournamentService {
         return mapToDto(tournamentRepository.findById(tournamentId).orElseThrow());
     }
 
-    public List<UserDto> getUsersTournament(Long tournamentId){
-        List<UserDto> users = registrationService.getUsers(tournamentId);
-        return users;
-    }
-
     public TournamentEntity mapToEntity(TournamentDto dto) {
         UserEntity user = null;
         if(dto.getOwner() != null) {

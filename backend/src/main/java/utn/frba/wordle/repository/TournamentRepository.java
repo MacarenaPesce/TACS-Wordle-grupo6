@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import utn.frba.wordle.model.entity.TournamentEntity;
-import utn.frba.wordle.model.entity.UserEntity;
 
 import java.util.Date;
 import java.util.List;
