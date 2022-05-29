@@ -36,12 +36,12 @@ export default class AddMember extends Component  {
         this.closeModal = this.closeModal.bind(this);
     }
 
-    openModal() {
+    openModal = e => {
         this.setState({modalIsOpen: true});
     }
-    closeModal() {
+    closeModal() { 
         this.setState({modalIsOpen: false});
-        this.setState({clear:true})
+        this.setState({clear:true});
     }
 
     changeHandler = (e)  => {
@@ -66,15 +66,14 @@ export default class AddMember extends Component  {
     }
 
     submitHandler = e => {
-        e.preventDefault()
+        e.preventDefault();
         this.setState({errorVisible: false, errorMessage: '', successVisible: false, loading: true});
         UserService.getUsers(this.state.searchUser)
             .then(response => {console.log(response.data)
                 this.setState({successVisible: true, nameDisplay: this.state.name, loading: false,
-                users: response.data});
-                console.log('Response de usuarios obtenida: ')
-                console.log(this.state.users)
+                users: response.data.filter(user => user.id != this.props.ownerId )});
                 this.setState({clear:false})
+                this.setState({searchUser: ''})
             })
             .catch(error => {
                 console.log(error)
@@ -104,35 +103,35 @@ export default class AddMember extends Component  {
                 className={"my-modal-custom-class"}
                 onRequestClose={this.closeModal}
                 isOpen={this.state.modalIsOpen}>
-
                 <h3>Add Member</h3>
 
                 {/*TODO: hacer css propios en vez de ser tomados de help, para: form-help, opciones, selectidioma, form-control*/}
                 
                 <form onSubmit={this.submitHandler} className="form-container">
-                    <div>
-                        <button type="submit" className="btn btn-success"><h5>Search</h5></button>
-                        <button className="btn btn-outline-success my-2 my-sm-0" onClick={this.closeModal}>
-                            X
-                        </button>
-                    </div>
+                <button className="form-close-boton" onClick={this.closeModal}>
+                    X
+                </button>
                     <div className="opciones">
                         <div className="">
                             <label><h5>User Name</h5></label>
-                            <input type="text" className="form-control" placeholder="Nombre del usuario.." searchUser="searchUser" onChange={this.changeHandler} />
+                            <input type="text" className="form-control" placeholder="Nombre del usuario.." 
+                                   searchUser="searchUser" onChange={this.changeHandler} 
+                                   value={this.state.searchUser}
+                                   />
+                            <button type="submit" className="form-search-boton"><h5>Search</h5></button>
                         </div>
                     </div>
                     <div className="form-user-list">
                     
                         { !this.state.clear ? (
                           this.state.users && this.state.users.length > 0 ? (
-                           this.state.users.map((user) => 
+                            this.state.users.map((user) => 
                             <Member
-															 id={user.id}
-															 username={user.username}
-                                                             tourneyid ={this.props.tourneyId}
-															 toAdd={this.toAdd} 
-															 />
+                                id={user.id}
+                                username={user.username}
+                                tourneyid ={this.props.tourneyId}
+                                toAdd={this.toAdd} 
+                             />
                         )
                         ) : (
                         <h1>No results found!</h1>

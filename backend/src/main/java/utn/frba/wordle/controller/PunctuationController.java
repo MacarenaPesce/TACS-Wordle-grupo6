@@ -1,5 +1,6 @@
 package utn.frba.wordle.controller;
 
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,10 @@ import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.PunctuationService;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 @RestController
 @RequestMapping("/api/punctuation")
@@ -36,6 +41,29 @@ public class PunctuationController {
                 .build();
 
         logger.info("Method: getDefinitions - Response: {}", response);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/endOfTheDay")
+    public ResponseEntity<Object> getEndOfTheDay(@RequestHeader("Authorization") String token){
+
+        Gson gson = new Gson();
+
+        Object response = gson.toJson(LocalDate.now().plusDays(1).atStartOfDay().toString());
+
+        logger.info("Requested end of the day time "+response, response);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/dayOfTheDate")
+    public ResponseEntity<Object> getDayOfTheDate(@RequestHeader("Authorization") String token){
+
+        Gson gson = new Gson();
+
+        Object response = gson.toJson(LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)));
+
+        logger.info("Requested day of the date "+response, response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -3,6 +3,7 @@ import authHeader from "./AuthHeader";
 import AuthService from "./AuthService";
 
 const API_URL = "http://localhost:8080/api/tournaments/";
+const API_PUNCTUATION = "http://localhost:8080/api/punctuation/";
 
 
 const createTourney = (body) => {
@@ -32,10 +33,19 @@ const getTournamentFromId = (tournamentId) => {
     return axios.get(API_URL+"info/"+tournamentId, { headers: authHeader() });
 };
 
+const getEndOfTheDay = () => {
+    return axios.get(API_PUNCTUATION + "endOfTheDay", { headers: authHeader() });
+};
+const getDayOfTheDate = () => {
+    return axios.get(API_PUNCTUATION + "dayOfTheDate", { headers: authHeader() });
+};
+
 export default {
     submitResults,
     createTourney,
     addMember,
     join,
-    getTournamentFromId
+    getTournamentFromId,
+    getEndOfTheDay,
+    getDayOfTheDate
 };
