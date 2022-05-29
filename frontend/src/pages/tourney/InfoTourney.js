@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import NavbarAut from '../../components/navbar/Navbar';
 import Footer from '../../components/footer/Footer';
 import './InfoTourney.css'
@@ -15,25 +15,6 @@ export default function InfoTourney() {
 
     let PUESTOS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 
-    let tournament = async () => {
-      await TourneyService.getTournamentFromId(id)
-      .then(response => {
-        setTourney(response.data);
-        console.log('Response de torneo obtenida: ')
-        console.log(response.data)
-      })
-      .catch(error => {
-          console.log(error)
-          Tourney.handleSessionError(this, error)
-      })
-    }
-
-    useEffect(() => {
-      tournament();
-      console.log(tourney);
-      console.log("daleeeeeeeeeee")
-    }, []);
-
     let listRanking = PUESTOS.map((puesto) =>
     <li className="list-group-item disabled"> {puesto}</li>
     );
@@ -44,7 +25,7 @@ export default function InfoTourney() {
             <NavbarAut />
         </header>
 
-        <h1 className='titleInfo'> Torneo {id} + nombre:  aaa</h1>
+        <h1 className='titleInfo'> Torneo {id} + nombre: aaa</h1>
         {/*<button> volver atras</button>*/}
 
         <container> 
