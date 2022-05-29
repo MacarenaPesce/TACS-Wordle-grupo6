@@ -30,8 +30,33 @@
   
   .form-user-name {
     color: blue;
+    margin-left:auto;
   }
   
-  .form-user-age {
-    margin-left: auto;
+
+
+  .form-search-boton {
+    margin-top: 5px;
+    width: 150px;
+    padding: 10px;
+    font-size: 18px;
+    font-family: Roboto, sans-serif;
+    border:blanchedalmond;
+    border-radius: 10px;
+    cursor: pointer;
+    outline: none;
+    background: #00471b;
+    color: #fff;
+    text-transform: capitalize;
   }
+
+.form-close-boton{
+  top: 45px;
+  right: 5px;
+  position: absolute;
+  cursor:pointer;
+  border: red;
+  color:white;
+  border-radius: 5px;
+  background-color: rgb(134, 3, 3);
+}
