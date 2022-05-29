@@ -30,4 +30,5 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
             "where r.id_user = :userId \n" +
             "and r.id_tournament = t.id", nativeQuery = true)
     List<TournamentEntity> findTournamentsFromUser(Long userId);
+
 }

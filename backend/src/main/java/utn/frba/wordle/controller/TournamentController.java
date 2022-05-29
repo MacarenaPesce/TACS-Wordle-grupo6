@@ -62,6 +62,20 @@ public class TournamentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/info/{tournamentId}")
+    public ResponseEntity<TournamentResponse> getTournamentFromId(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId){
+        logger.info("Method: getTournament - Request: token={}, tournamentId={}", token, tournamentId);
+
+        //Session session = AuthService.getSession(token);
+        TournamentDto tournamentDto = tournamentService.getTournamentFromId(tournamentId);
+
+        TournamentResponse response = buildResponse(tournamentDto);
+
+        logger.info("Method: getTournamentsFromUser - Response: {}", response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
     @PostMapping("/{tournamentId}/members/{userId}")
     public ResponseEntity<RegistrationResponse> addMember(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Long tournamentId) {
         logger.info("Method: addMember - Request: token={}, userId={}, tournamentId={}", token, userId, tournamentId);

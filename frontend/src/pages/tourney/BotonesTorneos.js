@@ -6,16 +6,16 @@ import { HiLogout } from "react-icons/hi";
 import TourneyService from '../../service/TourneyService';
 import AddMember from "./AddMember"
 import UserService from "../../service/UserService";
+import {GoCheck} from "react-icons/go";
+
 
 
 function BotonesTorneos(data){
-    //debugger
     let tourney = data.tourney;
     let userId = localStorage.getItem("userId");
     console.log("id torneo actual", tourney.tourneyId);
     console.log("dataTourneys", data.dataTourneys);
 
-    
     let disableButton = false;
     console.log(disableButton);
     
@@ -42,7 +42,7 @@ function BotonesTorneos(data){
                             <BsTrashFill/> 
                         </button>
                         */}
-                        <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
+                        <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
                             <BsInfoLg/> 
                         </Button>
                         {/* si sos el creador agregas personas ya sea publico o privado */}
@@ -78,7 +78,8 @@ function BotonesTorneos(data){
                      y se deshabilita si ya estas en el torneo*/}
 
                     {disableButton ?
-                            (<button className="btn btn-info" type="button" disabled><AiOutlineUserAdd/></button>) :
+                            (<div><button className="btn btn-info" type="button" disabled><AiOutlineUserAdd/></button>
+                            <button className="btn btn-success" type="submit" disabled> <GoCheck/></button></div>) :
                             (<button className="btn btn-info" type="button" onClick={()=>clickAgregarme()}> <AiOutlineUserAdd/> </button>)
                     }
                 </div>

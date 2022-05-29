@@ -26,7 +26,11 @@ const join = (tournamentId) => {
 };
 
 const submitResults = (body) => {
-    return axios.post(API_URL + "submitResults", body,{ headers: authHeader() });
+    return axios.post(API_URL + "submitResults", body, { headers: authHeader() });
+};
+
+const getTournamentFromId = (tournamentId) => {
+    return axios.get(API_URL+"info/"+tournamentId, { headers: authHeader() });
 };
 
 const getEndOfTheDay = () => {
@@ -41,6 +45,7 @@ export default {
     createTourney,
     addMember,
     join,
+    getTournamentFromId,
     getEndOfTheDay,
     getDayOfTheDate
 };
