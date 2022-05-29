@@ -40,52 +40,56 @@ export default function InfoTourney() {
         </header>
 
         <h1 className='titleInfo'> Torneo {id} + nombre:  aaa</h1>
-        <button> volver atras</button>
+        {/*<button> volver atras</button>*/}
 
         <container> 
           <div className="row">
             <div className="col-5">
               <table id="customers">
-                <tr> 
-                  <th></th>
-                  <th>Informacion</th>
-                </tr>
-                <tr>
-                  <td>Estado</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>Tipo</td>
-                  <td>"tipo"</td>
-                </tr>
-                <tr>
-                  <td>lenguaje</td>
-                  <td>"lenguaje"</td>
-                </tr>
-                <tr>
-                  <td>Fecha de Inicio - Fin </td>
-                  <td>"fecha inicio" - "fecha fin"</td>
-                </tr>
-                <tr>
-                  <td>Creador</td>
-                  <td>"creador"</td>
-                </tr>
-                <tr>
-                  <td>Puntaje actual</td>
-                  <td>"puntaje"</td>
-                </tr>
-                <tr>
-                  <td>Puesto actual</td>
-                  <td>"puesto"</td>
-                </tr>
-                <tr>
-                  <td>Integrantes</td>
-                  <td>"int"</td>
-                </tr>
+                <thead>
+                  <tr> 
+                    <th colSpan={2}>Informacion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Estado:  </td>
+                    <td>"state"</td>
+                  </tr>
+                  <tr>
+                    <td>Tipo: </td>
+                    <td>"tipo"</td>
+                  </tr>
+                  <tr>
+                    <td>Lenguaje: </td>
+                    <td>"lenguage"</td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}>Inicio: "fecha inicio" - Fin: "fecha fin" </td>
+                  </tr>
+                  <tr>
+                    <td>Creador: </td>
+                    <td>"creador"</td>
+                  </tr>
+                  <tr>
+                    <td  colSpan={2}>Puntaje: "puntaje" - Puesto: "puesto"</td>
+                  </tr>
+                  <tr>
+                    <td>Integrantes: </td>
+                    <td>
+                      <ul className="list-group scrollbar-success">
+                          <li>hola</li>
+                          <li>chau</li> 
+                          <li>si</li>  
+                          <li>no</li>
+                      </ul>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </div>
             <div className="col-7">
-              ranking
+              
             </div>
           </div>
         </container>
