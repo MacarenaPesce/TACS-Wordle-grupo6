@@ -19,4 +19,21 @@ tfoot{
     border-width: 0;
 }
 
+.flama {
+    color: #fcdde8;
+    font-size: 50px ;
+    font-weight: 900;
+    text-shadow: -0.0075em 0.0075em 0 #fef2f6, 0.005em 0.005em 0 #f6a5c1, 0.01em 0.01em 0 #f7aac4, 0.015em 0.015em #f7aec7, 0.02em 0.02em 0 #f8b3ca, 0.025em 0.025em 0 #f8b7cd, 0.03em 0.03em 0 #f8bcd0, 0.035em 0.035em 0 #f9c0d3
+}
+
+.flamaDos {
+    position: relative;
+    z-index: 2;
+    font-size: 5em;
+    letter-spacing: 15px;
+    text-transform: uppercase;
+    transform: rotate(-4deg);
+    text-shadow: 1px 1px #ac9939, 2px 2px #998833, 3px 3px #86772d, 4px 4px #82742b, 5px 5px #7e702a, 6px 6px #7a6d29, 7px 7px #776928, 8px 8px #736626, 9px 9px #6f6325, 10px 10px #6b5f24, 10px 10px 30px rgb(0 0 0 / 70%)
+}
+
 /* TODO: PONER TODOS LOS OTROS CSS ACA POR FAVOR!!!!!!*/

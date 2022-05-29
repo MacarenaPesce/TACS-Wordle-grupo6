@@ -6,11 +6,14 @@ import StatusCheck from "../sesion/StatusCheck";
 import Not from "../../components/not/Not";
 import AuthService from "../../service/AuthService";
 import Tourney from "./Tourney";
+import Ayuda from "./Ayuda";
+import Button from "react-bootstrap/Button";
+import Collapse from "react-bootstrap/Collapse";
 
 export default class TourneyCreate extends Component{
 
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state = {
             modalIsOpen: false,
             name: '',
@@ -72,24 +75,8 @@ export default class TourneyCreate extends Component{
         let spinner = (<div className="spinner-border text-black" role="status">
             <span className="visually-hidden">Loading...</span>
         </div>);
-        return(
 
-        <div className="TourneyCreate">
-
-            {this.state.sessionError &&
-                <Not message={this.state.errorMessage}/>}
-
-            <button type="submit" className="btn btn-outline-success my-2 my-sm-0" onClick={this.openModal}><h6>Crear torneo</h6></button>
-            <ReactModal
-                initWidth={400}
-                initHeight={830}
-                top={100}
-                left={200}
-                onFocus={() => console.log("Modal is clicked")}
-                className={"my-modal-custom-class"}
-                onRequestClose={this.closeModal}
-                isOpen={this.state.modalIsOpen}>
-
+        const contenido = (     <div>
                 <h3>Crear Torneo</h3>
 
                 {/*TODO: hacer css propios en vez de ser tomados de help, para:
@@ -151,11 +138,53 @@ export default class TourneyCreate extends Component{
                     <div className="alert alert-white" role="alert">
                         {spinner}{spinner}
                     </div>}
+                </div>
+        )
+
+        return(
+
+        <div className="TourneyCreate">
+
+            {this.state.sessionError &&
+                <Not message={this.state.errorMessage}/>}
+
+            {this.props.modal ?
+                (<div>
+                <button type="button" className="btn btn-outline-success my-2 my-sm-0" onClick={this.openModal}><h6>Crear torneo</h6></button>
+                <ReactModal
+                initWidth={400}
+                initHeight={830}
+                top={100}
+                left={200}
+                onFocus={() => console.log("Modal is clicked")}
+                className={"my-modal-custom-class"}
+                onRequestClose={this.closeModal}
+                isOpen={this.state.modalIsOpen}>
+
+                {contenido}
 
                 <button className="btn btn-outline-success my-2 my-sm-0" onClick={this.closeModal}>
                     Cerrar
                 </button>
-            </ReactModal>
+                </ReactModal>
+                </div>) :
+                (
+                    <div>
+                        <button type="button" className="btn btn-outline-success my-2 my-sm-0"
+                            onClick={() => this.setState({modalIsOpen: !this.state.modalIsOpen})}
+                            aria-controls="collapse-create"
+                            aria-expanded={this.state.modalIsOpen}
+                        >
+                            <h6>Crear torneo</h6>
+                        </button>
+                        <Collapse in={this.state.modalIsOpen}>
+                            <div id="collapse-create">
+                                {contenido}
+                            </div>
+                        </Collapse>
+                    </div>
+                )}
+
         </div>
 
         );

@@ -42,7 +42,6 @@ const getMyTourneysActive = () => {
   return axios.get(API + "tournaments/myTournaments", { headers: authHeader() });
 };
 
-
 const getTourneysPublic = () => {
   return axios.get(API + "tournaments/public", { headers: authHeader() });
 };

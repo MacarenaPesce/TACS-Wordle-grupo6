@@ -22,7 +22,7 @@ public class AuthController {
     private static final Logger logger = WordleLogger.getLogger(AuthController.class);
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<Session> register(@RequestBody RegisterRequest request) {
 
         logger.info("Method: register - Request: {}", request);
 
@@ -35,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequest request) {
+    public ResponseEntity<Session> login(@RequestBody LoginRequest request) {
 
         logger.info("Method: login - Request: {}", request);
 

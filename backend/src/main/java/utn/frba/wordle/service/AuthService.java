@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.security.UserSession;
 
+import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.Date;
 
@@ -78,7 +80,6 @@ public class AuthService {
             return getSessionDto(userEntity);
         }
     }
-
 
     private Session getSessionDto(UserDto userDto) {
         String accessToken = getJWTToken(userDto.getUsername(), userDto.getEmail(), userDto.getId(), jwtAccessExpiration);

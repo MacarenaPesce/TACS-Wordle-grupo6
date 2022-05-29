@@ -107,7 +107,7 @@ export default class TabsTourneys extends Component{
                 {/*todo: sacar este container y habilitar el TabIntro.js*/}
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-3">
+                        <div className="col-md-2">
                             <form className="form-inline">
                                 <input className="form-control " type="search" 
                                        placeholder="Ingrese nombre del torneo"
@@ -124,11 +124,11 @@ export default class TabsTourneys extends Component{
                                 </button>
                             </form>
                         </div>
-                        <div className="col-md-2">
-                            <TourneyCreate/>
+                        <div className="col-md-3">
+                            <TourneyCreate modal={true}/>
                         </div>
-                        <div className="col-md-2">
-                            <TourneySubmit/>
+                        <div className="col-md-3">
+                            <TourneySubmit modal={true}/>
                         </div>
                     </div>
                 </div>      
