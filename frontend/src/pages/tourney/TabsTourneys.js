@@ -18,7 +18,8 @@ export default class TabsTourneys extends Component{
         this.state = {
             myTourneys: [],
             sessionError: false,
-            errorMessage: ''
+            errorMessage: '',
+            name:'',
         }
     }
 
@@ -53,7 +54,20 @@ export default class TabsTourneys extends Component{
             })
     }
 
+    filtro =(e) =>{
 
+        const keyword = e.target.value;
+
+        if(keyword !==''){
+            const result = this.state.myTourneys.filter((tourney) =>{
+                return tourney.name.toLowerCase().startsWith(keyword.toLowerCase());
+            });
+            this.setState({myTourneys: result});
+        } else {
+            this.submitTourneys();
+        }
+        this.setState({name:keyword});
+    }
 
     formatDate(start) {
         let fecha = new Date(start)
@@ -95,17 +109,14 @@ export default class TabsTourneys extends Component{
                     <div className="row">
                         <div className="col-md-3">
                             <form className="form-inline">
-                                <input className="form-control " type="search" placeholder="Ingrese nombre del torneo"
+                                <input className="form-control " type="search" 
+                                       placeholder="Ingrese nombre del torneo"
+                                       value={this.name}
+                                       onChange={this.filtro}
                                        aria-label="Search"/>
                             </form>
                         </div>
-                        <div className="col-md-2">
-                            <form className="form-inline" >
-                                <button className="btn btn-outline-success my-2 my-sm-0"
-                                        type="submit">Buscar
-                                </button>
-                            </form>
-                        </div>
+
                         <div className="col-md-2">
                             <form className="form-inline" onSubmit={this.submitHandler}>
                                 <button className="btn btn-outline-success my-2 my-sm-0"
@@ -138,7 +149,7 @@ export default class TabsTourneys extends Component{
                             </tr>
                         </thead>
 
-                        {<tbody>
+                        {<tbody >
                         {listTourneys}
                         </tbody>}
 
