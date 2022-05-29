@@ -61,3 +61,16 @@
 .scrollbar-success {
   scrollbar-color: #00C851 #F5F5F5;
 }
+
+.encabezado{
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #04aa6da4;
+  color: white;  
+}
+
+.table-ranking{
+  overflow-y: scroll;
+  max-height: 69vh;
+}

@@ -13,6 +13,8 @@ export default function InfoTourney() {
     let [tourney, setTourney] = useState();
     console.log(tourney);
 
+    let PUESTOS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+
     let tournament = async () => {
       await TourneyService.getTournamentFromId(id)
       .then(response => {
@@ -32,6 +34,9 @@ export default function InfoTourney() {
       console.log("daleeeeeeeeeee")
     }, []);
 
+    let listRanking = PUESTOS.map((puesto) =>
+    <li className="list-group-item disabled"> {puesto}</li>
+    );
 
     return (
       <div>
@@ -88,8 +93,28 @@ export default function InfoTourney() {
                 </tbody>
               </table>
             </div>
-            <div className="col-7">
-              
+            <div className="col-7 table-ranking">
+              <table id="customers">
+                <thead>
+                  <tr> 
+                    <th colSpan={3}>Ranking</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className='encabezado'>
+                    <td> 
+                      Puesto
+                    </td>
+                    <td> 
+                      Miembro
+                    </td>
+                    <td> 
+                      Puntaje
+                    </td>
+                  </tr>
+                  {listRanking}
+                </tbody>
+              </table>              
             </div>
           </div>
         </container>
