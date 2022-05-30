@@ -91,6 +91,22 @@ public class TournamentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{tournamentId}/members")
+    public ResponseEntity<MembersResponse> getMembers(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
+        logger.info("Method: getMembers - Request: token={}, tournamentId={}", token, tournamentId);
+
+        List<UserDto> usersDto = tournamentService.getMembers(tournamentId);
+
+        List<UserResponse> users = usersDto.stream().map(this::buildResponse).collect(Collectors.toList());
+
+        MembersResponse response = MembersResponse.builder()
+                .members(users)
+                .build();
+
+        logger.info("Method: getMembers - Response: {}", response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping ("/{tournamentId}/join")
     public ResponseEntity<RegistrationResponse> join(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
         logger.info("Method: join - Request: token={}, tournamentId={}", token, tournamentId);
@@ -181,6 +197,14 @@ public class TournamentController {
                 .start(dto.getStart())
                 .finish(dto.getFinish())
                 .owner(dto.getOwner())
+                .build();
+    }
+
+    public UserResponse buildResponse (UserDto dto) {
+        return UserResponse.builder()
+                .id(dto.getId())
+                .username(dto.getUsername())
+                .email(dto.getEmail())
                 .build();
     }
 }

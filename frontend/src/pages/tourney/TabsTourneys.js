@@ -10,6 +10,7 @@ import AuthService from "../../service/AuthService";
 import TourneySubmit from "./TourneySubmit";
 import Tourney from "./Tourney";
 
+
 export default class TabsTourneys extends Component{ 
 
     constructor(props){
@@ -17,7 +18,8 @@ export default class TabsTourneys extends Component{
         this.state = {
             myTourneys: [],
             sessionError: false,
-            errorMessage: ''
+            errorMessage: '',
+            name:'',
         }
     }
 
@@ -52,6 +54,29 @@ export default class TabsTourneys extends Component{
             })
     }
 
+    filtro =(e) =>{
+
+        const keyword = e.target.value;
+
+        if(keyword !==''){
+            const result = this.state.myTourneys.filter((tourney) =>{
+                return tourney.name.toLowerCase().startsWith(keyword.toLowerCase());
+            });
+            this.setState({myTourneys: result});
+        } else {
+            this.submitTourneys();
+        }
+        this.setState({name:keyword});
+    }
+
+    formatDate(start) {
+        let fecha = new Date(start)
+        let day = fecha.getDate()+1 ;
+        let month = (fecha.getMonth() +1)>10?(fecha.getMonth() +1) : '0'+(fecha.getMonth() +1)  ; 
+        let year = fecha.getFullYear();
+        return day+'/'+month + '/' + year ;
+    }
+
     render() {
         let listTourneys = []
       if(this.state.myTourneys){
@@ -62,14 +87,15 @@ export default class TabsTourneys extends Component{
                         <td> {tourney.type}</td>
                         <td> {tourney.language}</td>
                         <td> {tourney.state}</td>
-                        <td> {tourney.start}</td>
-                        <td> {tourney.finish}</td>
+                        <td> {this.formatDate(tourney.start)}</td>
+                        <td> {this.formatDate(tourney.finish)}</td>
                         <td> {tourney.owner.username}</td>
                         <td>
                             <BotonesTorneos tourney={tourney} dataTourneys={this.state.myTourneys.map((torneo)=>torneo.tourneyId)} />   
                         </td>
                     </tr>
                 );}
+                
 
         return (
             <div className="col-md-12 search-table-col">
@@ -83,17 +109,14 @@ export default class TabsTourneys extends Component{
                     <div className="row">
                         <div className="col-md-2">
                             <form className="form-inline">
-                                <input className="form-control " type="search" placeholder="Ingrese nombre del torneo"
+                                <input className="form-control " type="search" 
+                                       placeholder="Ingrese nombre del torneo"
+                                       value={this.name}
+                                       onChange={this.filtro}
                                        aria-label="Search"/>
                             </form>
                         </div>
-                        <div className="col-md-2">
-                            <form className="form-inline" >
-                                <button className="btn btn-outline-success my-2 my-sm-0"
-                                        type="submit">Buscar
-                                </button>
-                            </form>
-                        </div>
+
                         <div className="col-md-2">
                             <form className="form-inline" onSubmit={this.submitHandler}>
                                 <button className="btn btn-outline-success my-2 my-sm-0"
@@ -126,7 +149,7 @@ export default class TabsTourneys extends Component{
                             </tr>
                         </thead>
 
-                        {<tbody>
+                        {<tbody >
                         {listTourneys}
                         </tbody>}
 
