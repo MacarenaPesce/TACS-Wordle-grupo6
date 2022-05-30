@@ -124,21 +124,12 @@ public class TournamentService {
     }
 
     public List<Punctuation> getRanking(Long tourneyId) {
+        updateTournamentScores(tourneyId);
+
         List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
+
         List<Punctuation> punctuations = new ArrayList<>();
-
-        TournamentDto tournament = getTournamentFromId(tourneyId);
-        long diff = tournament.getFinish().getTime() - tournament.getStart().getTime();
-        TimeUnit time = TimeUnit.DAYS;
-        long tournamentDuration = time.convert(diff, TimeUnit.MILLISECONDS);
         registrations.forEach(registration -> {
-            long notPlayedDays = (tournamentDuration - registration.getDaysPlayed());
-            if(notPlayedDays>0){
-                registration.setTotalScore(registration.getTotalScore() + notPlayedDays * 7);
-                registration.setDaysPlayed(registration.getDaysPlayed() + notPlayedDays);
-                registrationService.updateValues(registration);
-            }
-
             Punctuation punctuation = Punctuation.builder()
                     .punctuation(registration.getTotalScore())
                     .user(registration.getUser().getUsername())
@@ -155,6 +146,23 @@ public class TournamentService {
         orderedList.forEach(punctuation -> punctuation.setPosition((long) index.getAndIncrement() + offset));
 
         return orderedList;
+    }
+
+    private void updateTournamentScores(Long tourneyId) {
+        List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
+
+        TournamentDto tournament = getTournamentFromId(tourneyId);
+        long diff = tournament.getFinish().getTime() - tournament.getStart().getTime();
+        TimeUnit time = TimeUnit.DAYS;
+        long tournamentDuration = time.convert(diff, TimeUnit.MILLISECONDS);
+        registrations.forEach(registration -> {
+            long notPlayedDays = (tournamentDuration - registration.getDaysPlayed());
+            if (notPlayedDays > 0) {
+                registration.setTotalScore(registration.getTotalScore() + notPlayedDays * 7);
+                registration.setDaysPlayed(registration.getDaysPlayed() + notPlayedDays);
+                registrationService.updateValues(registration);
+            }
+        });
     }
 
     public List<TournamentDto> findUserTournamentsByState(Long userId, State state) {
