@@ -54,7 +54,7 @@ function BotonesTorneos(data){
             else{
                 return(
                     <div>
-                        <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
+                        <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
                             <BsInfoLg/> 
                         </Button>
                     </div>  )                      

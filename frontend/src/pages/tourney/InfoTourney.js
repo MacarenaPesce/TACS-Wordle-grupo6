@@ -71,7 +71,7 @@ export default function InfoTourney() {
             <NavbarAut />
         </header>
 
-        <h1 className='titleInfo'> Torneo N° {id} + nombre: {tourney.name}</h1>
+        <h1 className='titleInfo'> Torneo N° {id}</h1>
         {/*<button> volver atras</button>*/}
 
         <container> 
@@ -80,10 +80,14 @@ export default function InfoTourney() {
               <table id="customers">
                 <thead>
                   <tr> 
-                    <th colSpan={2}>Informacion</th>
+                    <th colSpan={2}  className='thTitulo'>Informacion</th>
                   </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                    <td>Nombre:  </td>
+                    <td>{tourney.name}</td>
+                  </tr>
                   <tr>
                     <td>Estado:  </td>
                     <td>{tourney.state}</td>
@@ -121,20 +125,44 @@ export default function InfoTourney() {
               <table id="customers">
                 <thead>
                   <tr> 
-                    <th colSpan={3}>Ranking</th>
+                    <th colSpan={3} className='thTitulo'>Ranking</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className='encabezado'>
-                    <td> 
+                  <tr>
+                    <td colSpan={2} className="searchUsername">
+                      <div>
+                        <form className="form-inline">
+                          <input className="form-control " type="search" 
+                                  placeholder="Ingrese nombre del usuario"
+                                  aria-label="Search"/>
+                                  {/*value={this.name}
+                                  onChange={this.filtro}*/}
+                        </form>
+                      </div>
+                    </td>
+                    <td className='searchPunctuation'> 
+                      <div>
+                        <form className="form-inline">
+                          <input className="form-control" type="search" 
+                                  placeholder="Ingrese puntaje"
+                                  aria-label="Search"/>
+                                  {/*value={this.name}
+                                  onChange={this.filtro}*/}
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th className='encabezado'> 
                       Puesto
-                    </td>
-                    <td> 
+                    </th>
+                    <th className='encabezado'> 
                       Miembro
-                    </td>
-                    <td> 
+                    </th>
+                    <th className='encabezado'> 
                       Puntaje
-                    </td>
+                    </th>
                   </tr>
                   {fullRanking}
                 </tbody>

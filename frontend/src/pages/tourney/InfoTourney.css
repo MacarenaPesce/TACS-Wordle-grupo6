@@ -20,7 +20,7 @@
 
 #customers tr:hover {background-color: #ddd;}
 
-#customers th {
+.thTitulo {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center;
@@ -62,6 +62,11 @@
   scrollbar-color: #00C851 #F5F5F5;
 }
 
+.table-ranking{
+  overflow-y: scroll;
+  max-height: 69vh;
+}
+
 .encabezado{
   padding-top: 12px;
   padding-bottom: 12px;
@@ -70,7 +75,6 @@
   color: white;  
 }
 
-.table-ranking{
-  overflow-y: scroll;
-  max-height: 69vh;
+.searchPunctuation{
+  width: 33%;
 }
