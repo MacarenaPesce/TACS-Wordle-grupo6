@@ -55,6 +55,13 @@ public class RegistrationService {
         return registrationRepository.save(entity);
     }
 
+    public void updateValues(RegistrationDto registration) {
+        RegistrationEntity entity = registrationRepository.findById(registration.getId()).orElseThrow();
+        entity.setTotalScore(registration.getTotalScore());
+        entity.setDaysPlayed(registration.getDaysPlayed());
+        registrationRepository.save(entity);
+    }
+
     public RegistrationDto mapToDto(RegistrationEntity entity) {
         ArrayList<PunctuationEntity> punctuations = new ArrayList<>();
         if(entity.getPunctuations()!=null){

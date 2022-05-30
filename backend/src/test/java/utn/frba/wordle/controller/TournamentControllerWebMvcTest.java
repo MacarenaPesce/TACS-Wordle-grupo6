@@ -148,7 +148,7 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).orderedPunctuations(idTournament);
+        verify(tournamentService).getRanking(idTournament);
     }
 
     @SneakyThrows

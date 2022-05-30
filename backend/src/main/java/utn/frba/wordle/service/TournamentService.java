@@ -123,24 +123,29 @@ public class TournamentService {
         punctuationService.submitResults(userId, result);
     }
 
-    public List<Punctuation> orderedPunctuations(Long tourneyId) {
+    public List<Punctuation> getRanking(Long tourneyId) {
         List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
+        List<Punctuation> punctuations = new ArrayList<>();
+
         TournamentDto tournament = getTournamentFromId(tourneyId);
         long diff = tournament.getFinish().getTime() - tournament.getStart().getTime();
         TimeUnit time = TimeUnit.DAYS;
         long tournamentDuration = time.convert(diff, TimeUnit.MILLISECONDS);
-
-        List<Punctuation> punctuations = new ArrayList<>();
-        registrations.forEach(
-            registration -> {
-                Long notPlayedDaysPunctuation = (tournamentDuration - registration.getDaysPlayed()) * 7;
-                Punctuation punctuation = Punctuation.builder()
-                        .punctuation(registration.getTotalScore() + notPlayedDaysPunctuation)
-                        .user(registration.getUser().getUsername())
-                        .build();
-                punctuations.add(punctuation);
+        registrations.forEach(registration -> {
+            long notPlayedDays = (tournamentDuration - registration.getDaysPlayed());
+            if(notPlayedDays>0){
+                registration.setTotalScore(registration.getTotalScore() + notPlayedDays * 7);
+                registration.setDaysPlayed(registration.getDaysPlayed() + notPlayedDays);
+                registrationService.updateValues(registration);
             }
-        );
+
+            Punctuation punctuation = Punctuation.builder()
+                    .punctuation(registration.getTotalScore())
+                    .user(registration.getUser().getUsername())
+                    .build();
+            punctuations.add(punctuation);
+        });
+
         List<Punctuation> orderedList = punctuations.stream()
                 .sorted(Comparator.comparingLong(Punctuation::getPunctuation))
                 .collect(Collectors.toList());
