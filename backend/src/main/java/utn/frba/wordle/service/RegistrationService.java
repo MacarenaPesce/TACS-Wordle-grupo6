@@ -48,6 +48,8 @@ public class RegistrationService {
         RegistrationEntity entity = RegistrationEntity.builder()
                 .registered(new Date())
                 .tournament(tournamentEntity)
+                .totalScore(0L)
+                .daysPlayed(0L)
                 .user(userEntity)
                 .build();
         return registrationRepository.save(entity);
@@ -63,6 +65,8 @@ public class RegistrationService {
                 .id(entity.getId())
                 .tournamentId(entity.getTournament().getId())
                 .punctuations(punctuations)
+                .totalScore(entity.getTotalScore())
+                .daysPlayed(entity.getDaysPlayed())
                 .registered(entity.getRegistered())
                 .user(entity.getUser())
                 .build();

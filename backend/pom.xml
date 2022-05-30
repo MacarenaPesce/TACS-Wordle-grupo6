@@ -16,7 +16,20 @@
 	<properties>
 		<java.version>11</java.version>
 	</properties>
+
+
 	<dependencies>
+		<dependency>
+			<groupId>org.apidesign.bck2brwsr</groupId>
+			<artifactId>emul</artifactId>
+			<version>0.20</version>
+		</dependency>
+		<!-- Thanks for using https://jar-download.com -->
+
+
+
+
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>

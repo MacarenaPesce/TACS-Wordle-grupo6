@@ -21,6 +21,7 @@ import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.controller.TournamentController;
 import utn.frba.wordle.utils.TestUtils;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -330,8 +331,11 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
 
         assertThat(punctuations).isNotEmpty();
         assertThat(punctuations.get(0)).isNotEqualTo(0);
-        assertTrue(punctuations.get(0).getPunctuation() > punctuations.get(1).getPunctuation());
-        assertTrue(punctuations.get(1).getPunctuation() > punctuations.get(2).getPunctuation());
+        assertTrue(punctuations.get(0).getPunctuation() < punctuations.get(1).getPunctuation());
+        assertTrue(punctuations.get(1).getPunctuation() < punctuations.get(2).getPunctuation());
+        assertEquals(punctuations.get(0).getPosition(), 1L);
+        assertEquals(punctuations.get(1).getPosition(), 2L);
+        assertEquals(punctuations.get(2).getPosition(), 3L);
     }
 
     @Test
@@ -417,10 +421,17 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     private TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName) {
+        Date currentDate = new Date();
+        // convert date to calendar
+        Calendar c = Calendar.getInstance();
+        c.setTime(currentDate);
+        c.add(Calendar.DATE, 2); //same with c.add(Calendar.DAY_OF_MONTH, 1);
+        Date currentDatePlusOne = c.getTime();
+
         TournamentDto tournamentDto = TournamentDto.builder()
                 .type(TournamentType.PUBLIC)
-                .start(new Date())
-                .finish(new Date())
+                .start(currentDate)
+                .finish(currentDatePlusOne)
                 .name(tournamentName)
                 .language(Language.ES)
                 .owner(owner)

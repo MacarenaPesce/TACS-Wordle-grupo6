@@ -49,20 +49,22 @@ public class PunctuationService {
         List<RegistrationEntity> registrations = registrationService.getRegistrationsEntityFromUser(userId)
                 .stream().filter(reg -> reg.getTournament().getLanguage().equals(result.getLanguage())).collect(Collectors.toList());
 
-        PunctuationEntity entity = PunctuationEntity.builder()
+        PunctuationEntity punctuation = PunctuationEntity.builder()
                 .punctuation(result.getResult())
                 .language(result.getLanguage())
                 .user(userEntity)
                 .registrations(new HashSet<>())
                 .date(LocalDate.now())
                 .build();
-        entity = punctuationRepository.save(entity);
+        punctuation = punctuationRepository.save(punctuation);
 
         for (RegistrationEntity registration : registrations) {
-            registration.getPunctuations().add(entity);
+            registration.getPunctuations().add(punctuation);
+            registration.setDaysPlayed(registration.getDaysPlayed() + 1L);
+            registration.setTotalScore(registration.getTotalScore() + punctuation.getPunctuation());
             registrationRepository.save(registration);
-            entity.getRegistrations().add(registration);
-            punctuationRepository.save(entity);
+            punctuation.getRegistrations().add(registration);
+            punctuationRepository.save(punctuation);
         }
     }
 

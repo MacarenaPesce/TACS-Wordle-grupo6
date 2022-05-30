@@ -18,5 +18,7 @@ public class RegistrationDto {
     private final Long tournamentId;
     private final Date registered;
     private final List<PunctuationEntity> punctuations;
+    private final Long totalScore;
+    private final Long daysPlayed;
 
 }

@@ -10,12 +10,13 @@ import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.entity.UserEntity;
-import utn.frba.wordle.model.http.UserResponse;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.repository.TournamentRepository;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -124,24 +125,31 @@ public class TournamentService {
 
     public List<Punctuation> orderedPunctuations(Long tourneyId) {
         List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
+        TournamentDto tournament = getTournamentFromId(tourneyId);
+        long diff = tournament.getFinish().getTime() - tournament.getStart().getTime();
+        TimeUnit time = TimeUnit.DAYS;
+        long tournamentDuration = time.convert(diff, TimeUnit.MILLISECONDS);
+
         List<Punctuation> punctuations = new ArrayList<>();
         registrations.forEach(
             registration -> {
-                Integer sum = registration.getPunctuations().stream()
-                        .reduce(0,
-                                (acum, punctuation) ->
-                                        acum + punctuation.getPunctuation().intValue(),
-                                Integer::sum);
+                Long notPlayedDaysPunctuation = (tournamentDuration - registration.getDaysPlayed()) * 7;
                 Punctuation punctuation = Punctuation.builder()
-                        .punctuation(sum.longValue())
+                        .punctuation(registration.getTotalScore() + notPlayedDaysPunctuation)
                         .user(registration.getUser().getUsername())
                         .build();
                 punctuations.add(punctuation);
             }
         );
-        return punctuations.stream()
-                .sorted(Comparator.comparingLong(Punctuation::getPunctuation).reversed())
+        List<Punctuation> orderedList = punctuations.stream()
+                .sorted(Comparator.comparingLong(Punctuation::getPunctuation))
                 .collect(Collectors.toList());
+
+        AtomicInteger index = new AtomicInteger();
+        int offset = 1;
+        orderedList.forEach(punctuation -> punctuation.setPosition((long) index.getAndIncrement() + offset));
+
+        return orderedList;
     }
 
     public List<TournamentDto> findUserTournamentsByState(Long userId, State state) {
