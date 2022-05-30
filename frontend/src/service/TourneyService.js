@@ -45,7 +45,7 @@ const getDayOfTheDate = () => {
     return axios.get(API_PUNCTUATION + "dayOfTheDate", { headers: authHeader() });
 };
 
-const getUsersTournament = (tournamentId) => {
+const getMembers = (tournamentId) => {
     return axios.get(API_URL+tournamentId+"/members", { headers: authHeader() });
 }
 
@@ -66,7 +66,7 @@ export default {
     getRanking,
     getEndOfTheDay,
     getDayOfTheDate,
-    getUsersTournament,
+    getMembers,
     getPunctuation,
     getPosition
 };

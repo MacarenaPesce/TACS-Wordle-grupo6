@@ -13,6 +13,7 @@ export default function InfoTourney() {
     const [tourney, setTourney] = useState({owner: ""});
     console.log(tourney);
     const [ranking, setRanking] = useState({punctuations: []});
+    const [members, setMembers] = useState({members: []});
 
     function tournament(){
         TourneyService.getTournamentFromId(id)
@@ -23,7 +24,7 @@ export default function InfoTourney() {
             })
             .catch(error => {
                 console.log(error)
-                Tourney.handleSessionError(this, error) //todo esto no hace nada sin usar las variables de estado sessionError y errorMessage, solo funciona en class
+                //Tourney.handleSessionError(this, error) //todo esto no hace nada sin usar las variables de estado sessionError y errorMessage, solo funciona en class
             })
         TourneyService.getRanking(id)
             .then(response => {
@@ -34,6 +35,16 @@ export default function InfoTourney() {
             .catch(error => {
                 console.log(error)
             })
+        TourneyService.getMembers(id)
+            .then(response => {
+              setMembers(response.data);
+              console.log('Response de Members obtenida: ')
+              console.log(response.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+
     }
 
     useEffect(() => {
@@ -49,6 +60,10 @@ export default function InfoTourney() {
             <td> {line.user}</td>
             <td> {line.punctuation}</td>
         </tr>));
+    
+    let listMembers = (members.members.map((member) =>
+      <li className="list-group-item disabled" key={member.username}> {member.username}</li>
+    ));
 
     return (
       <div>
@@ -95,10 +110,7 @@ export default function InfoTourney() {
                     <td>Integrantes: </td>
                     <td>
                       <ul className="list-group scrollbar-success">
-                          <li>hola</li>
-                          <li>chau</li> 
-                          <li>si</li>  
-                          <li>no</li>
+                          {listMembers}
                       </ul>
                     </td>
                   </tr>

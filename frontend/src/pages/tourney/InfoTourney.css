@@ -37,7 +37,7 @@
   text-align: center;
   color: black;
   background-color: white;
-  max-height: 20vh;
+  max-height: 18vh;
 }
 
 .scrollbar-success::-webkit-scrollbar-track {
