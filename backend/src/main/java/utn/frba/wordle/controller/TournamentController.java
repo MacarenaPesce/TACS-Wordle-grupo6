@@ -49,11 +49,11 @@ public class TournamentController {
     }
 
     @GetMapping("/myTournaments")
-    public ResponseEntity<List<TournamentResponse>> getTournamentsFromUser(@RequestHeader("Authorization") String token){
+    public ResponseEntity<List<TournamentResponse>> getActiveTournamentsFromUser(@RequestHeader("Authorization") String token){
         logger.info("Method: getTournamentsFromUser - Request: token={}", token);
 
         Session session = AuthService.getSession(token);
-        List<TournamentDto> tournamentsDto = tournamentService.getTournamentsFromUser(session.getUserId());
+        List<TournamentDto> tournamentsDto = tournamentService.getActiveTournamentsFromUser(session.getUserId());
 
         List<TournamentResponse> response = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());

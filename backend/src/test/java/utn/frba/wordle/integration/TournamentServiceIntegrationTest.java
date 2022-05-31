@@ -420,27 +420,28 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     public void aUserCanListAllTheirTournaments(){
         UserDto owner = getUserDto("owner@mail.com", "owner");
         UserDto player1 = getUserDto("player1@mail.com", "player1");
-        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1");
-        tournament1.setState(State.READY);
-        TournamentEntity tournament1entity = tournamentService.mapToEntity(tournament1);
+        TournamentDto tournamentReady = getPublicTournamentDto(owner, "Tournament1");
+        tournamentReady.setState(State.READY);
+        TournamentEntity tournament1entity = tournamentService.mapToEntity(tournamentReady);
         tournamentRepository.save(tournament1entity);
-        tournamentService.addMember(player1.getId(), tournament1.getTourneyId(), owner.getId());
-        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament2");
-        tournament2.setState(State.STARTED);
-        TournamentEntity tournament2entity = tournamentService.mapToEntity(tournament2);
+        tournamentService.addMember(player1.getId(), tournamentReady.getTourneyId(), owner.getId());
+        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Tournament2");
+        tournamentStarted.setState(State.STARTED);
+        TournamentEntity tournament2entity = tournamentService.mapToEntity(tournamentStarted);
         tournamentRepository.save(tournament2entity);
-        tournamentService.addMember(player1.getId(), tournament2.getTourneyId(), owner.getId());
-        TournamentDto tournament3 = getPublicTournamentDto(owner, "Tournament3");
-        tournament3.setState(State.FINISHED);
-        TournamentEntity tournament3entity = tournamentService.mapToEntity(tournament3);
+        tournamentService.addMember(player1.getId(), tournamentStarted.getTourneyId(), owner.getId());
+        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "Tournament3");
+        tournamentFinished.setState(State.FINISHED);
+        TournamentEntity tournament3entity = tournamentService.mapToEntity(tournamentFinished);
         tournamentRepository.save(tournament3entity);
-        tournamentService.addMember(player1.getId(), tournament3.getTourneyId(), owner.getId());
+        tournamentService.addMember(player1.getId(), tournamentFinished.getTourneyId(), owner.getId());
 
-        List<TournamentDto> tournaments = tournamentService.getTournamentsFromUser(player1.getId());
+        List<TournamentDto> tournaments = tournamentService.getActiveTournamentsFromUser(player1.getId());
 
         assertThat(tournaments).isNotEmpty();
-        assertEquals(tournaments.size(), 3);
+        assertEquals(tournaments.size(), 2);
         tournaments.forEach(tournamentDto -> assertThat(tournamentDto).hasNoNullFieldsOrProperties());
+        assertThat(tournaments).containsExactlyInAnyOrder(tournamentReady, tournamentStarted);
     }
 
     private void inabilityTournament(TournamentDto tournament1) {
