@@ -153,6 +153,21 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
 
     @SneakyThrows
     @Test
+    public void aUserCanGetTheirScoreFromATourney() {
+        Long idTournament = 22L;
+        Session session = TestUtils.getMockSession();
+
+        String urlController = String.format("/api/tournaments/%s/ranking/myScore", idTournament);
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).getScoreFromUser(idTournament, session.getUsername());
+    }
+
+    @SneakyThrows
+    @Test
     public void aUserCanGetTheListOfReadyTournaments() {
         Session session = TestUtils.getMockSession();
 

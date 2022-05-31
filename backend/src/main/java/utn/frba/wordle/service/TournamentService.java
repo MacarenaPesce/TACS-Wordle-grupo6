@@ -171,6 +171,7 @@ public class TournamentService {
     }
 
     public Punctuation getScoreFromUser(Long tournamentId, String username) {
+        updateTournamentScores(tournamentId);
         return mapRankingToDto(rankingRepository.findScore(tournamentId, username));
     }
 
