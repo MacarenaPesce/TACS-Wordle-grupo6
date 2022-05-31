@@ -137,19 +137,6 @@ public class TournamentService {
         return mapRankingToDto(rankingEntities);
     }
 
-    private List<Punctuation> mapRankingToDto(List<RankingEntity> rankingEntities) {
-        List<Punctuation> punctuations = new ArrayList<>();
-        rankingEntities.forEach(entity -> {
-            Punctuation punctuation = Punctuation.builder()
-                    .punctuation(entity.getTotalScore())
-                    .user(entity.getUsername())
-                    .position(entity.getPosition())
-                    .build();
-            punctuations.add(punctuation);
-        });
-        return punctuations;
-    }
-
     private void updateTournamentScores(Long tourneyId) {
         List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
 
@@ -181,6 +168,26 @@ public class TournamentService {
 
     public List<UserDto> getMembers(Long tournamentId) {
         return userService.getTournamentMembers(tournamentId);
+    }
+
+    public Punctuation getScoreFromUser(Long tournamentId, String username) {
+        return mapRankingToDto(rankingRepository.findScore(tournamentId, username));
+    }
+
+    private List<Punctuation> mapRankingToDto(List<RankingEntity> rankingEntities) {
+        List<Punctuation> punctuations = new ArrayList<>();
+        rankingEntities.forEach(entity -> {
+            punctuations.add(mapRankingToDto(entity));
+        });
+        return punctuations;
+    }
+
+    private Punctuation mapRankingToDto(RankingEntity entity) {
+        return Punctuation.builder()
+                .punctuation(entity.getTotalScore())
+                .user(entity.getUsername())
+                .position(entity.getPosition())
+                .build();
     }
 
     public TournamentEntity mapToEntity(TournamentDto dto) {
