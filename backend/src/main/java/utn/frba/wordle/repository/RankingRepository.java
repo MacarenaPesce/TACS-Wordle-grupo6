@@ -18,5 +18,5 @@ public interface RankingRepository extends CrudRepository<RankingEntity, Long> {
     @Query(value= "SELECT r from RankingEntity r \n" +
             "where r.idTournament = :idTournament \n" +
             "and r.username = :username")
-    RankingEntity findScore(Long tournamentId, String username);
+    RankingEntity findScore(Long idTournament, String username);
 }

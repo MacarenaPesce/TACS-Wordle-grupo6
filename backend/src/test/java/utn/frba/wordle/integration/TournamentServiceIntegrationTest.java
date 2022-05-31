@@ -312,13 +312,35 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void aUserCanSeeTheirScoreFromATournament(){
+        UserDto player1 = getUserDto("mail1@mail.com", "player1");
+        UserDto player2 = getUserDto("mail2@mail.com", "player2");
+        UserDto player3 = getUserDto("mail3@mail.com", "player3");
+        UserDto player4 = getUserDto("mail4@mail.com", "player4");
+        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney");
+        tournamentService.addMember(player2.getId(), tournamentDto.getTourneyId(), player1.getId());
+        tournamentService.addMember(player3.getId(), tournamentDto.getTourneyId(), player1.getId());
+        tournamentService.addMember(player4.getId(), tournamentDto.getTourneyId(), player1.getId());
+        ResultDto result = ResultDto.builder().result(5L).language(Language.ES).build();
+        ResultDto result2 = ResultDto.builder().result(2L).language(Language.ES).build();
+        ResultDto result3 = ResultDto.builder().result(3L).language(Language.ES).build();
+        tournamentService.submitResults(player1.getId(), result);
+        tournamentService.submitResults(player2.getId(), result2);
+        tournamentService.submitResults(player3.getId(), result3);
+
+        Punctuation score = tournamentService.getScoreFromUser(tournamentDto.getTourneyId(), player1.getUsername());
+
+        assertEquals(score.getPunctuation(), 12L);
+        assertEquals(score.getPosition(), 3L);
+    }
+
+    @Test
     public void aUserCanSeeThePositionsTableOfATournament(){
         UserDto player1 = getUserDto("mail1@mail.com", "player1");
         UserDto player2 = getUserDto("mail2@mail.com", "player2");
         UserDto player3 = getUserDto("mail3@mail.com", "player3");
         UserDto player4 = getUserDto("mail4@mail.com", "player4");
         TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney");
-        //tournamentService.addMember(player1.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player2.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player3.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player4.getId(), tournamentDto.getTourneyId(), player1.getId());
