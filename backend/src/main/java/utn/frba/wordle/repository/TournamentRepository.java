@@ -8,8 +8,10 @@ import java.util.List;
 
 public interface TournamentRepository extends CrudRepository<TournamentEntity, Long> {
 
-    @Query(value = "select * from tournament where type = 'PUBLIC'", nativeQuery = true)
-    List<TournamentEntity> getPublicTournaments();
+    @Query(value = "select * from tournament \n" +
+            "where type = 'PUBLIC' \n" +
+            "and state in('READY', 'STARTED')", nativeQuery = true)
+    List<TournamentEntity> getPublicActiveTournaments();
 
     @Query(value = "select * from tournament where name = :name and state = 'READY'", nativeQuery = true)
     TournamentEntity findByName(String name);

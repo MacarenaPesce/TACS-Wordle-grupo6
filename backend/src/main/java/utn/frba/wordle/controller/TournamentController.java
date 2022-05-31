@@ -125,9 +125,9 @@ public class TournamentController {
     }
 
     @GetMapping("public")
-    public ResponseEntity<List<TournamentResponse>> listPublicTournaments(@RequestHeader("Authorization") String token){
+    public ResponseEntity<List<TournamentResponse>> listPublicActiveTournaments(@RequestHeader("Authorization") String token){
         logger.info("Method: listPublicTournaments - Request: token={}", token);
-        List<TournamentDto> tournamentsDto = tournamentService.listPublicTournaments();
+        List<TournamentDto> tournamentsDto = tournamentService.listPublicActiveTournaments();
 
         List<TournamentResponse> response = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());

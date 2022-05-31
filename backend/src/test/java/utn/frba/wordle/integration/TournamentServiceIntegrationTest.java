@@ -176,12 +176,22 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanListAllPublicTournaments() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1");
-        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament2");
+        TournamentDto tournamentReady = getPublicTournamentDto(owner, "Tournament1");
+        tournamentReady.setState(State.READY);
+        TournamentEntity tournament1entity = tournamentService.mapToEntity(tournamentReady);
+        tournamentRepository.save(tournament1entity);
+        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Tournament2");
+        tournamentStarted.setState(State.STARTED);
+        TournamentEntity tournament2entity = tournamentService.mapToEntity(tournamentStarted);
+        tournamentRepository.save(tournament2entity);
+        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "Tournament3");
+        tournamentFinished.setState(State.FINISHED);
+        TournamentEntity tournament3entity = tournamentService.mapToEntity(tournamentFinished);
+        tournamentRepository.save(tournament3entity);
 
-        List<TournamentDto> tournaments = tournamentService.listPublicTournaments();
+        List<TournamentDto> tournaments = tournamentService.listPublicActiveTournaments();
 
-        assertThat(tournaments).containsExactlyInAnyOrder(tournament1, tournament2);
+        assertThat(tournaments).containsExactlyInAnyOrder(tournamentReady, tournamentStarted);
     }
 
     @Test
