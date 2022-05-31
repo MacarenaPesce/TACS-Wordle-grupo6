@@ -195,6 +195,31 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void aUserCanFindByTournamentName() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        TournamentDto tournamentReady = getPublicTournamentDto(owner, "Alpha");
+        tournamentReady.setState(State.READY);
+        TournamentEntity tournament1entity = tournamentService.mapToEntity(tournamentReady);
+        tournamentRepository.save(tournament1entity);
+        TournamentDto tournamentAlphabet = getPublicTournamentDto(owner, "Alphabet");
+        tournamentAlphabet.setState(State.READY);
+        TournamentEntity tournamentAentity = tournamentService.mapToEntity(tournamentAlphabet);
+        tournamentRepository.save(tournamentAentity);
+        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Beta");
+        tournamentStarted.setState(State.STARTED);
+        TournamentEntity tournament2entity = tournamentService.mapToEntity(tournamentStarted);
+        tournamentRepository.save(tournament2entity);
+        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "Gamma");
+        tournamentFinished.setState(State.FINISHED);
+        TournamentEntity tournament3entity = tournamentService.mapToEntity(tournamentFinished);
+        tournamentRepository.save(tournament3entity);
+
+        List<TournamentDto> tournaments = tournamentService.findPublicActiveTournaments("alph");
+
+        assertThat(tournaments).containsExactlyInAnyOrder(tournamentReady, tournamentAlphabet);
+    }
+
+    @Test
     public void aUserCanSubmitTheirResults() {
         UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
         UserDto player = getUserDto("mailPlayer@mail.com", "usernamePlayer");

@@ -75,7 +75,6 @@ public class TournamentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
     @PostMapping("/{tournamentId}/members/{userId}")
     public ResponseEntity<RegistrationResponse> addMember(@RequestHeader("Authorization") String token, @PathVariable Long userId, @PathVariable Long tournamentId) {
         logger.info("Method: addMember - Request: token={}, userId={}, tournamentId={}", token, userId, tournamentId);
@@ -125,9 +124,17 @@ public class TournamentController {
     }
 
     @GetMapping("public")
-    public ResponseEntity<List<TournamentResponse>> listPublicActiveTournaments(@RequestHeader("Authorization") String token){
+    public ResponseEntity<List<TournamentResponse>> listPublicActiveTournaments(
+            @RequestHeader("Authorization") String token,
+            @RequestParam(required = false) String name){
         logger.info("Method: listPublicTournaments - Request: token={}", token);
-        List<TournamentDto> tournamentsDto = tournamentService.listPublicActiveTournaments();
+        List<TournamentDto> tournamentsDto;
+        if(name == null) {
+            tournamentsDto = tournamentService.listPublicActiveTournaments();
+        }
+        else {
+            tournamentsDto = tournamentService.findPublicActiveTournaments(name);
+        }
 
         List<TournamentResponse> response = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());

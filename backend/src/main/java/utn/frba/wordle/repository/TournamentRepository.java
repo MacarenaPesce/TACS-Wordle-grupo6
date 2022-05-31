@@ -28,4 +28,9 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
             "and state in('READY', 'STARTED')", nativeQuery = true)
     List<TournamentEntity> findActiveTournamentsFromUser(Long userId);
 
+    @Query(value = "select * from tournament \n" +
+            "where type = 'PUBLIC' \n" +
+            "and state in('READY', 'STARTED') \n" +
+            "and LOWER(name) like %:name%", nativeQuery = true)
+    List<TournamentEntity> findPublicActiveTournamentsByName(String name);
 }
