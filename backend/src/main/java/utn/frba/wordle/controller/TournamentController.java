@@ -173,6 +173,18 @@ public class TournamentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{tournamentId}/ranking/myScore")
+    public ResponseEntity<Punctuation> getMyScore(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
+        logger.info("Method: getMyScore - Request: token={}, tournamentId={}", token, tournamentId);
+
+        Session session = AuthService.getSession(token);
+        Punctuation response = tournamentService.getScoreFromUser(tournamentId, session.getUsername());
+
+        logger.info("Method: getMyScore - Response: {}", response);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/{state}")
     public ResponseEntity<List<TournamentResponse>> findUserTournamentsByState(@RequestHeader("Authorization") String token, @PathVariable State state){
         logger.info("Method: findUserTournamentsByState - Request: token={}, state={}", token, state);
