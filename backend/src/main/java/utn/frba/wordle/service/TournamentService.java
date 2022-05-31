@@ -119,8 +119,8 @@ public class TournamentService {
         return registrationService.mapToDto(registrationEntity);
     }
 
-    public List<TournamentDto> listPublicTournaments() {
-        List<TournamentEntity> tournaments = tournamentRepository.getPublicTournaments();
+    public List<TournamentDto> listPublicActiveTournaments() {
+        List<TournamentEntity> tournaments = tournamentRepository.getPublicActiveTournaments();
 
         return mapToDto(tournaments);
     }
@@ -158,8 +158,8 @@ public class TournamentService {
         return mapToDto(tournamentRepository.findUserTournamentsByState(userId, state.name()));
     }
 
-    public List<TournamentDto> getTournamentsFromUser(Long userId) {
-        return mapToDto(tournamentRepository.findTournamentsFromUser(userId));
+    public List<TournamentDto> getActiveTournamentsFromUser(Long userId) {
+        return mapToDto(tournamentRepository.findActiveTournamentsFromUser(userId));
     }
 
     public TournamentDto getTournamentFromId(Long tournamentId) {

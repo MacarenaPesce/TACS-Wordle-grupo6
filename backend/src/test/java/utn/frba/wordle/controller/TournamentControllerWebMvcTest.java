@@ -113,7 +113,7 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).listPublicTournaments();
+        verify(tournamentService).listPublicActiveTournaments();
     }
 
     @SneakyThrows
@@ -191,6 +191,6 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).getTournamentsFromUser(session.getUserId());
+        verify(tournamentService).getActiveTournamentsFromUser(session.getUserId());
     }
 }
