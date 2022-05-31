@@ -147,9 +147,12 @@ public class TournamentService {
         List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
 
         TournamentDto tournament = getTournamentFromId(tourneyId);
-        long diff = tournament.getFinish().getTime() - tournament.getStart().getTime();
+        long todayTime = new Date().getTime();
+        long startTime = tournament.getStart().getTime();
+        long finishTime = tournament.getFinish().getTime();
+        long diff = Long.min(todayTime, finishTime) - startTime;
         TimeUnit time = TimeUnit.DAYS;
-        long tournamentDuration = time.convert(diff, TimeUnit.MILLISECONDS);
+        long tournamentDuration = time.convert(diff, TimeUnit.MILLISECONDS) + 1L;
         registrations.forEach(registration -> {
             long notPlayedDays = (tournamentDuration - registration.getDaysPlayed());
             if (notPlayedDays > 0) {
@@ -187,9 +190,7 @@ public class TournamentService {
 
     private List<Punctuation> mapRankingToDto(List<RankingEntity> rankingEntities) {
         List<Punctuation> punctuations = new ArrayList<>();
-        rankingEntities.forEach(entity -> {
-            punctuations.add(mapRankingToDto(entity));
-        });
+        rankingEntities.forEach(entity -> punctuations.add(mapRankingToDto(entity)));
         return punctuations;
     }
 

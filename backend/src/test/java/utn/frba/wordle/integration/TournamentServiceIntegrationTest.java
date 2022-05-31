@@ -3,22 +3,25 @@ package utn.frba.wordle.integration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import utn.frba.wordle.controller.TournamentController;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
-import utn.frba.wordle.model.dto.*;
+import utn.frba.wordle.model.dto.RegistrationDto;
+import utn.frba.wordle.model.dto.ResultDto;
+import utn.frba.wordle.model.dto.TournamentDto;
+import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.PunctuationEntity;
 import utn.frba.wordle.model.entity.TournamentEntity;
-import utn.frba.wordle.model.http.SubmitResultRequest;
 import utn.frba.wordle.model.enums.Language;
-import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.model.enums.TournamentType;
+import utn.frba.wordle.model.http.SubmitResultRequest;
+import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.service.PunctuationService;
 import utn.frba.wordle.service.RegistrationService;
 import utn.frba.wordle.service.TournamentService;
-import utn.frba.wordle.controller.TournamentController;
 import utn.frba.wordle.utils.TestUtils;
 
 import java.util.Calendar;
@@ -393,14 +396,14 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         assertTrue(punctuations.get(0).getPunctuation() < punctuations.get(1).getPunctuation());
         assertTrue(punctuations.get(1).getPunctuation() < punctuations.get(2).getPunctuation());
         assertTrue(punctuations.get(2).getPunctuation() < punctuations.get(3).getPunctuation());
-        assertEquals(punctuations.get(0).getPosition(), 1L);
-        assertEquals(punctuations.get(1).getPosition(), 2L);
-        assertEquals(punctuations.get(2).getPosition(), 3L);
-        assertEquals(punctuations.get(3).getPosition(), 4L);
-        assertEquals(punctuations.get(0).getPunctuation(), 9L);
-        assertEquals(punctuations.get(1).getPunctuation(), 10L);
-        assertEquals(punctuations.get(2).getPunctuation(), 12L);
-        assertEquals(punctuations.get(3).getPunctuation(), 14L);
+        assertEquals(1L, punctuations.get(0).getPosition());
+        assertEquals(2L, punctuations.get(1).getPosition());
+        assertEquals(3L, punctuations.get(2).getPosition());
+        assertEquals(4L, punctuations.get(3).getPosition());
+        assertEquals(9L, punctuations.get(0).getPunctuation() );
+        assertEquals(10L, punctuations.get(1).getPunctuation());
+        assertEquals(12L, punctuations.get(2).getPunctuation());
+        assertEquals(14L, punctuations.get(3).getPunctuation());
     }
 
     @Test
@@ -520,13 +523,13 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         // convert date to calendar
         Calendar c = Calendar.getInstance();
         c.setTime(currentDate);
-        c.add(Calendar.DATE, 2); //same with c.add(Calendar.DAY_OF_MONTH, 1);
-        Date currentDatePlusOne = c.getTime();
+        c.add(Calendar.DATE, -1); //same with c.add(Calendar.DAY_OF_MONTH, 1);
+        Date currentDateMinusOne = c.getTime();
 
         TournamentDto tournamentDto = TournamentDto.builder()
                 .type(TournamentType.PUBLIC)
-                .start(currentDate)
-                .finish(currentDatePlusOne)
+                .start(currentDateMinusOne)
+                .finish(currentDate)
                 .name(tournamentName)
                 .language(Language.ES)
                 .owner(owner)
