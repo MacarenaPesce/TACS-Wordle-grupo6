@@ -41,7 +41,6 @@ public class RegistrationService {
         return mapToDto(registrationRepository.getAllByTournament(tourneyId));
     }
 
-
     public RegistrationEntity addMember(Long tournamentId, Long userId, Date date) {
         TournamentEntity tournamentEntity = tournamentRepository.findById(tournamentId).orElseThrow();
         UserEntity userEntity = userRepository.findById(userId).orElseThrow();

@@ -4,20 +4,23 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import utn.frba.wordle.model.dto.*;
-import utn.frba.wordle.model.entity.RegistrationEntity;
-import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
+import utn.frba.wordle.model.dto.RegistrationDto;
+import utn.frba.wordle.model.dto.ResultDto;
+import utn.frba.wordle.model.dto.TournamentDto;
+import utn.frba.wordle.model.dto.UserDto;
+import utn.frba.wordle.model.entity.RankingEntity;
+import utn.frba.wordle.model.entity.RegistrationEntity;
+import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.model.entity.UserEntity;
-import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.enums.State;
+import utn.frba.wordle.model.pojo.Punctuation;
+import utn.frba.wordle.repository.RankingRepository;
 import utn.frba.wordle.repository.TournamentRepository;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -28,6 +31,9 @@ public class TournamentService {
 
     @Autowired
     RegistrationService registrationService;
+
+    @Autowired
+    RankingRepository rankingRepository;
 
     @Autowired
     UserService userService;
@@ -126,26 +132,22 @@ public class TournamentService {
     public List<Punctuation> getRanking(Long tourneyId) {
         updateTournamentScores(tourneyId);
 
-        List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
+        List<RankingEntity> rankingEntities = rankingRepository.getScores(tourneyId);
 
+        return mapRankingToDto(rankingEntities);
+    }
+
+    private List<Punctuation> mapRankingToDto(List<RankingEntity> rankingEntities) {
         List<Punctuation> punctuations = new ArrayList<>();
-        registrations.forEach(registration -> {
+        rankingEntities.forEach(entity -> {
             Punctuation punctuation = Punctuation.builder()
-                    .punctuation(registration.getTotalScore())
-                    .user(registration.getUser().getUsername())
+                    .punctuation(entity.getTotalScore())
+                    .user(entity.getUsername())
+                    .position(entity.getPosition())
                     .build();
             punctuations.add(punctuation);
         });
-
-        List<Punctuation> orderedList = punctuations.stream()
-                .sorted(Comparator.comparingLong(Punctuation::getPunctuation))
-                .collect(Collectors.toList());
-
-        AtomicInteger index = new AtomicInteger();
-        int offset = 1;
-        orderedList.forEach(punctuation -> punctuation.setPosition((long) index.getAndIncrement() + offset));
-
-        return orderedList;
+        return punctuations;
     }
 
     private void updateTournamentScores(Long tourneyId) {
