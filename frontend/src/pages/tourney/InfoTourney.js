@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import NavbarAut from '../../components/navbar/Navbar';
 import Footer from '../../components/footer/Footer';
 import './InfoTourney.css'
 import TourneyService from '../../service/TourneyService';
 import Tourney from "./Tourney";
-import BotonesTorneos from "./BotonesTorneos";
 
 export default function InfoTourney() {
     //debugger
@@ -14,10 +13,12 @@ export default function InfoTourney() {
     const [tourney, setTourney] = useState({owner: ""});
     console.log(tourney);
     const [ranking, setRanking] = useState({punctuations: []});
+    const [members, setMembers] = useState({members: []});
+    const [username, setUsername] = useState('');
+    const [puntuacion, setPuntuacion] =useState([]);
+    const [puntaje, setPuntaje] = useState(0);
 
-    let PUESTOS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-
-    function tournament(){
+    const getTourney=() =>{
         TourneyService.getTournamentFromId(id)
             .then(response => {
                 setTourney(response.data);
@@ -26,8 +27,10 @@ export default function InfoTourney() {
             })
             .catch(error => {
                 console.log(error)
-                Tourney.handleSessionError(this, error) //todo esto no hace nada sin usar las variables de estado sessionError y errorMessage, solo funciona en class
+                //Tourney.handleSessionError(this, error) //todo esto no hace nada sin usar las variables de estado sessionError y errorMessage, solo funciona en class
             })
+          }
+     const getRanking =() => {      
         TourneyService.getRanking(id)
             .then(response => {
                 setRanking(response.data);
@@ -37,23 +40,70 @@ export default function InfoTourney() {
             .catch(error => {
                 console.log(error)
             })
-    }
+          }
+     const getMember =() => {
+        TourneyService.getMembers(id)
+            .then(response => {
+              setMembers(response.data);
+              console.log('Response de Members obtenida: ')
+              console.log(response.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+          }
 
     useEffect(() => {
-      tournament();
+      //debugger
+      getTourney();
+      getRanking();
+      getMember();
+      setPuntuacion(ranking.punctuations);
       console.log(tourney);
       console.log("daleeeeeeeeeee")
     }, []);
 
-    let listRanking = PUESTOS.map((puesto) =>
-    <li className="list-group-item disabled"> {puesto}</li>
-    );
-    let fullRanking = (ranking.punctuations.map((line) =>
-        <tr key={line.user}>
-            <td> ? </td>
-            <td> {line.user}</td>
-            <td> {line.punctuation}</td>
-        </tr>));
+    let listMembers = (members.members.map((member) =>
+      <li className="list-group-item disabled" key={member.username}> {member.username}</li>
+    ));
+
+    const filtroUser = (e) => {
+      const keyword = e.target.value;
+  
+      if (keyword !== '') {
+        const results = ranking.punctuations.filter((puntuacion) => {
+          return puntuacion.user.toLowerCase().startsWith(keyword.toLowerCase());
+          // Use the toLowerCase() method to make it case-insensitive
+        });
+        setPuntuacion(results);
+      } else {
+        getRanking();
+        setPuntuacion(ranking.punctuations);
+      }
+      setUsername(keyword);
+    };  
+    
+    const filtroPuntaje = (e) => {
+      const keyword = e.target.value;
+  
+      if (keyword !== '') {
+        const results = ranking.punctuations.filter((puntuacion) => 
+           puntuacion.punctuation == keyword  );
+        setPuntuacion(results);
+      } else {
+        getRanking();
+        setPuntuacion(ranking.punctuations);
+      }
+      setPuntaje(keyword);
+    };
+    
+    const formatDate =(start)=> {
+      let fecha = new Date(start)
+      let day = fecha.getDate()+1 ;
+      let month = (fecha.getMonth() +1)>10?(fecha.getMonth() +1) : '0'+(fecha.getMonth() +1)  ; 
+      let year = fecha.getFullYear();
+      return day+'/'+month + '/' + year ;
+  };    
 
     return (
       <div>
@@ -61,7 +111,7 @@ export default function InfoTourney() {
             <NavbarAut />
         </header>
 
-        <h1 className='titleInfo'> Torneo {id} + nombre:  aaa</h1>
+        <h1 className='titleInfo'> Torneo N° {id}</h1>
         {/*<button> volver atras</button>*/}
 
         <container> 
@@ -70,10 +120,14 @@ export default function InfoTourney() {
               <table id="customers">
                 <thead>
                   <tr> 
-                    <th colSpan={2}>Informacion</th>
+                    <th colSpan={2}  className='thTitulo'>Informacion</th>
                   </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                    <td>Nombre:  </td>
+                    <td>{tourney.name}</td>
+                  </tr>
                   <tr>
                     <td>Estado:  </td>
                     <td>{tourney.state}</td>
@@ -87,7 +141,7 @@ export default function InfoTourney() {
                     <td>{tourney.language}</td>
                   </tr>
                   <tr>
-                    <td colSpan={2}>Inicio: {tourney.start} - Fin: {tourney.finish} </td>
+                    <td colSpan={2}>Inicio: {formatDate(tourney.start)} - Fin: {formatDate(tourney.finish)} </td>
                   </tr>
                   <tr>
                     <td>Creador: </td>
@@ -100,10 +154,7 @@ export default function InfoTourney() {
                     <td>Integrantes: </td>
                     <td>
                       <ul className="list-group scrollbar-success">
-                          <li>hola</li>
-                          <li>chau</li> 
-                          <li>si</li>  
-                          <li>no</li>
+                        {listMembers}
                       </ul>
                     </td>
                   </tr>
@@ -114,22 +165,63 @@ export default function InfoTourney() {
               <table id="customers">
                 <thead>
                   <tr> 
-                    <th colSpan={3}>Ranking</th>
+                    <th colSpan={3} className='thTitulo'>Ranking</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className='encabezado'>
-                    <td> 
-                      Puesto
+                  <tr>
+                    <td colSpan={2} className="searchUsername">
+                      <div>
+                        <form className="form-inline">
+                          <input className="form-control " type="search" 
+                                  placeholder="Ingrese nombre del usuario"
+                                  aria-label="Search"
+                                  value={username}
+                                  onChange={filtroUser}
+                                  />
+                        </form>
+                      </div>
                     </td>
-                    <td> 
-                      Miembro
-                    </td>
-                    <td> 
-                      Puntaje
+                    <td className='searchPunctuation'> 
+                      <div>
+                        <form className="form-inline">
+                          <input className="form-control" type="search" 
+                                  placeholder="Ingrese puntaje"
+                                  aria-label="Search"
+                                  value={puntaje}
+                                  onChange={filtroPuntaje}/>
+                        </form>
+                      </div>
                     </td>
                   </tr>
-                  {fullRanking}
+                  <tr>
+                    <th className='encabezado'> 
+                      Puesto
+                    </th>
+                    <th className='encabezado'> 
+                      Miembro
+                    </th>
+                    <th className='encabezado'> 
+                      Puntaje
+                    </th>
+                  </tr>
+                  {puntuacion && puntuacion.length > 0 ? (
+                            puntuacion.map((line) =>(
+                            <tr key={line.user}>
+                                <td> ?? </td>
+                                <td> {line.user}</td>
+                                <td> {line.punctuation}</td>
+                            </tr>
+                            ))
+                          ):(ranking.punctuations.map((line) =>(
+                            <tr key={line.user}>
+                                <td> ?? </td>
+                                <td> {line.user}</td>
+                                <td> {line.punctuation}</td>
+                            </tr>
+                            ))
+                          )
+                          }
                 </tbody>
               </table>              
             </div>

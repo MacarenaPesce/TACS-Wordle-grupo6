@@ -54,7 +54,7 @@ function BotonesTorneos(data){
             else{
                 return(
                     <div>
-                        <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
+                        <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
                             <BsInfoLg/> 
                         </Button>
                     </div>  )                      
@@ -70,7 +70,7 @@ function BotonesTorneos(data){
                     <button className="btn btn-danger" type="button">
                         <HiLogout/> 
                     </button>*/}
-                    <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
+                    <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
                     </Button>
 
@@ -78,8 +78,7 @@ function BotonesTorneos(data){
                      y se deshabilita si ya estas en el torneo*/}
 
                     {disableButton ?
-                            (<div><button className="btn btn-info" type="button" disabled><AiOutlineUserAdd/></button>
-                            <button className="btn btn-success" type="submit" disabled> <GoCheck/></button></div>) :
+                            (<button className="btn btn-info" type="button" disabled><AiOutlineUserAdd/></button>) :
                             (<button className="btn btn-info" type="button" onClick={()=>clickAgregarme()}> <AiOutlineUserAdd/> </button>)
                     }
                 </div>
@@ -93,13 +92,14 @@ function BotonesTorneos(data){
                     <button className="btn btn-danger" type="button">
                         <HiLogout/> 
                     </button>*/}
-                    <Button className="btn btn-primary" type="button" href="/info" onClick={()=>console.log("acabas de tocar el boton info")}>
+                    <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
                     </Button>
                 </div>                
             )
         }
     }
+    /*
     else{
         return(
             <div>
@@ -109,7 +109,7 @@ function BotonesTorneos(data){
                 </button>
             </div>
         )
-    }
+    }*/
 }
 
 export default BotonesTorneos;

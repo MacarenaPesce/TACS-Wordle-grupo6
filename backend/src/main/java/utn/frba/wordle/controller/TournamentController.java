@@ -71,7 +71,7 @@ public class TournamentController {
     }
 
     @GetMapping("/info/{tournamentId}")
-    public ResponseEntity<TournamentResponse> getTournamentFromId(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId){
+    public ResponseEntity<TournamentResponse> getTournamentFromId(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
         logger.info("Method: getTournament - Request: token={}, tournamentId={}", token, tournamentId);
 
         //Session session = AuthService.getSession(token);
