@@ -90,7 +90,7 @@ const ComponenteTabs = () => {
                         {/*<TabIntro />*/}
                         {botonAyuda}
                         {mostrar && Ayuda.ayudaMis}
-                        <TabsTourneys
+                        <TabsTourneys min={tomorrow.slice(0,10)}
                             nombreTabla={nombres.misTorneos}
                         />
                     </div>
@@ -104,7 +104,7 @@ const ComponenteTabs = () => {
                                 <p>para revelar los resultados del día de la fecha</p>
                                 <TourneySubmit modal={false}/>
                                 <p></p>
-                                <TourneyCreate modal={false}/>
+                                <TourneyCreate modal={false} min={tomorrow.slice(0,10)}/>
                             </div>
                         </Collapse>
                     </div>
