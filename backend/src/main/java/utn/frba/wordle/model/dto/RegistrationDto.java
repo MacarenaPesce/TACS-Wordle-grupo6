@@ -18,5 +18,14 @@ public class RegistrationDto {
     private final Long tournamentId;
     private final Date registered;
     private final List<PunctuationEntity> punctuations;
+    private Long totalScore;
+    private Long daysPlayed;
 
+    public void setTotalScore(Long totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    public void setDaysPlayed(Long daysPlayed) {
+        this.daysPlayed = daysPlayed;
+    }
 }

@@ -15,4 +15,5 @@ public interface RegistrationRepository extends CrudRepository<RegistrationEntit
     @Query(value = "select r from RegistrationEntity r \n" +
             "where r.tournament.id = :tourneyId ")
     List<RegistrationEntity> getAllByTournament(Long tourneyId);
+
 }

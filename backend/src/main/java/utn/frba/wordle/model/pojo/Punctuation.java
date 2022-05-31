@@ -6,6 +6,8 @@ import lombok.*;
 @EqualsAndHashCode
 @Builder
 public class Punctuation {
-    private final String user;
+    private final Long position;
     private final Long punctuation;
+    private final String user;
+
 }

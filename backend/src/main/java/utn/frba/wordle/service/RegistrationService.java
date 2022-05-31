@@ -41,16 +41,24 @@ public class RegistrationService {
         return mapToDto(registrationRepository.getAllByTournament(tourneyId));
     }
 
-
     public RegistrationEntity addMember(Long tournamentId, Long userId, Date date) {
         TournamentEntity tournamentEntity = tournamentRepository.findById(tournamentId).orElseThrow();
         UserEntity userEntity = userRepository.findById(userId).orElseThrow();
         RegistrationEntity entity = RegistrationEntity.builder()
                 .registered(new Date())
                 .tournament(tournamentEntity)
+                .totalScore(0L)
+                .daysPlayed(0L)
                 .user(userEntity)
                 .build();
         return registrationRepository.save(entity);
+    }
+
+    public void updateValues(RegistrationDto registration) {
+        RegistrationEntity entity = registrationRepository.findById(registration.getId()).orElseThrow();
+        entity.setTotalScore(registration.getTotalScore());
+        entity.setDaysPlayed(registration.getDaysPlayed());
+        registrationRepository.save(entity);
     }
 
     public RegistrationDto mapToDto(RegistrationEntity entity) {
@@ -63,6 +71,8 @@ public class RegistrationService {
                 .id(entity.getId())
                 .tournamentId(entity.getTournament().getId())
                 .punctuations(punctuations)
+                .totalScore(entity.getTotalScore())
+                .daysPlayed(entity.getDaysPlayed())
                 .registered(entity.getRegistered())
                 .user(entity.getUser())
                 .build();

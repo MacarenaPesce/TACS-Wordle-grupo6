@@ -161,7 +161,7 @@ public class TournamentController {
     public ResponseEntity<RankingResponse> getRanking(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
         logger.info("Method: getRanking - Request: token={}, tournamentId={}", token, tournamentId);
 
-        List<Punctuation> orderedPunctuations = tournamentService.orderedPunctuations(tournamentId);
+        List<Punctuation> orderedPunctuations = tournamentService.getRanking(tournamentId);
 
         RankingResponse response = RankingResponse.builder()
                 .idTournament(tournamentId)

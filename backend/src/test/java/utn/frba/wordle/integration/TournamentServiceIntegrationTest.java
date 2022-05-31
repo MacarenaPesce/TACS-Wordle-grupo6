@@ -21,6 +21,7 @@ import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.controller.TournamentController;
 import utn.frba.wordle.utils.TestUtils;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -315,10 +316,12 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         UserDto player1 = getUserDto("mail1@mail.com", "player1");
         UserDto player2 = getUserDto("mail2@mail.com", "player2");
         UserDto player3 = getUserDto("mail3@mail.com", "player3");
+        UserDto player4 = getUserDto("mail4@mail.com", "player4");
         TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney");
         //tournamentService.addMember(player1.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player2.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player3.getId(), tournamentDto.getTourneyId(), player1.getId());
+        tournamentService.addMember(player4.getId(), tournamentDto.getTourneyId(), player1.getId());
         ResultDto result = ResultDto.builder().result(5L).language(Language.ES).build();
         ResultDto result2 = ResultDto.builder().result(2L).language(Language.ES).build();
         ResultDto result3 = ResultDto.builder().result(3L).language(Language.ES).build();
@@ -326,12 +329,21 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         tournamentService.submitResults(player2.getId(), result2);
         tournamentService.submitResults(player3.getId(), result3);
 
-        List<Punctuation> punctuations = tournamentService.orderedPunctuations(tournamentDto.getTourneyId());
+        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
 
         assertThat(punctuations).isNotEmpty();
         assertThat(punctuations.get(0)).isNotEqualTo(0);
-        assertTrue(punctuations.get(0).getPunctuation() > punctuations.get(1).getPunctuation());
-        assertTrue(punctuations.get(1).getPunctuation() > punctuations.get(2).getPunctuation());
+        assertTrue(punctuations.get(0).getPunctuation() < punctuations.get(1).getPunctuation());
+        assertTrue(punctuations.get(1).getPunctuation() < punctuations.get(2).getPunctuation());
+        assertTrue(punctuations.get(2).getPunctuation() < punctuations.get(3).getPunctuation());
+        assertEquals(punctuations.get(0).getPosition(), 1L);
+        assertEquals(punctuations.get(1).getPosition(), 2L);
+        assertEquals(punctuations.get(2).getPosition(), 3L);
+        assertEquals(punctuations.get(3).getPosition(), 4L);
+        assertEquals(punctuations.get(0).getPunctuation(), 9L);
+        assertEquals(punctuations.get(1).getPunctuation(), 10L);
+        assertEquals(punctuations.get(2).getPunctuation(), 12L);
+        assertEquals(punctuations.get(3).getPunctuation(), 14L);
     }
 
     @Test
@@ -417,10 +429,17 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     private TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName) {
+        Date currentDate = new Date();
+        // convert date to calendar
+        Calendar c = Calendar.getInstance();
+        c.setTime(currentDate);
+        c.add(Calendar.DATE, 2); //same with c.add(Calendar.DAY_OF_MONTH, 1);
+        Date currentDatePlusOne = c.getTime();
+
         TournamentDto tournamentDto = TournamentDto.builder()
                 .type(TournamentType.PUBLIC)
-                .start(new Date())
-                .finish(new Date())
+                .start(currentDate)
+                .finish(currentDatePlusOne)
                 .name(tournamentName)
                 .language(Language.ES)
                 .owner(owner)

@@ -4,19 +4,23 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import utn.frba.wordle.model.dto.*;
-import utn.frba.wordle.model.entity.RegistrationEntity;
-import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
+import utn.frba.wordle.model.dto.RegistrationDto;
+import utn.frba.wordle.model.dto.ResultDto;
+import utn.frba.wordle.model.dto.TournamentDto;
+import utn.frba.wordle.model.dto.UserDto;
+import utn.frba.wordle.model.entity.RankingEntity;
+import utn.frba.wordle.model.entity.RegistrationEntity;
+import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.model.entity.UserEntity;
-import utn.frba.wordle.model.http.UserResponse;
-import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.enums.State;
+import utn.frba.wordle.model.pojo.Punctuation;
+import utn.frba.wordle.repository.RankingRepository;
 import utn.frba.wordle.repository.TournamentRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @NoArgsConstructor
@@ -27,6 +31,9 @@ public class TournamentService {
 
     @Autowired
     RegistrationService registrationService;
+
+    @Autowired
+    RankingRepository rankingRepository;
 
     @Autowired
     UserService userService;
@@ -122,26 +129,42 @@ public class TournamentService {
         punctuationService.submitResults(userId, result);
     }
 
-    public List<Punctuation> orderedPunctuations(Long tourneyId) {
-        List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
+    public List<Punctuation> getRanking(Long tourneyId) {
+        updateTournamentScores(tourneyId);
+
+        List<RankingEntity> rankingEntities = rankingRepository.getScores(tourneyId);
+
+        return mapRankingToDto(rankingEntities);
+    }
+
+    private List<Punctuation> mapRankingToDto(List<RankingEntity> rankingEntities) {
         List<Punctuation> punctuations = new ArrayList<>();
-        registrations.forEach(
-            registration -> {
-                Integer sum = registration.getPunctuations().stream()
-                        .reduce(0,
-                                (acum, punctuation) ->
-                                        acum + punctuation.getPunctuation().intValue(),
-                                Integer::sum);
-                Punctuation punctuation = Punctuation.builder()
-                        .punctuation(sum.longValue())
-                        .user(registration.getUser().getUsername())
-                        .build();
-                punctuations.add(punctuation);
+        rankingEntities.forEach(entity -> {
+            Punctuation punctuation = Punctuation.builder()
+                    .punctuation(entity.getTotalScore())
+                    .user(entity.getUsername())
+                    .position(entity.getPosition())
+                    .build();
+            punctuations.add(punctuation);
+        });
+        return punctuations;
+    }
+
+    private void updateTournamentScores(Long tourneyId) {
+        List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
+
+        TournamentDto tournament = getTournamentFromId(tourneyId);
+        long diff = tournament.getFinish().getTime() - tournament.getStart().getTime();
+        TimeUnit time = TimeUnit.DAYS;
+        long tournamentDuration = time.convert(diff, TimeUnit.MILLISECONDS);
+        registrations.forEach(registration -> {
+            long notPlayedDays = (tournamentDuration - registration.getDaysPlayed());
+            if (notPlayedDays > 0) {
+                registration.setTotalScore(registration.getTotalScore() + notPlayedDays * 7);
+                registration.setDaysPlayed(registration.getDaysPlayed() + notPlayedDays);
+                registrationService.updateValues(registration);
             }
-        );
-        return punctuations.stream()
-                .sorted(Comparator.comparingLong(Punctuation::getPunctuation).reversed())
-                .collect(Collectors.toList());
+        });
     }
 
     public List<TournamentDto> findUserTournamentsByState(Long userId, State state) {

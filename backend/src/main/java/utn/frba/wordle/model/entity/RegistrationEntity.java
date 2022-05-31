@@ -8,6 +8,7 @@ import java.util.Set;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,4 +34,11 @@ public class RegistrationEntity {
 
     @Column
     private Date registered;
+
+    @Column
+    private Long daysPlayed;
+
+    @Column
+    private Long totalScore;
+
 }
