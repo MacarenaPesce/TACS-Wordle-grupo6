@@ -118,6 +118,20 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
 
     @SneakyThrows
     @Test
+    public void iCanFindPublicTournaments() {
+        Session session = TestUtils.getMockSession();
+
+        String urlController = "/api/tournaments/public?name=eaea";
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).findPublicActiveTournaments("eaea");
+    }
+
+    @SneakyThrows
+    @Test
     public void iCanPublishResults() {
         ResultDto request = ResultDto.builder()
                 .userId(1L)
@@ -192,5 +206,19 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
                 .andExpect(status().isOk());
 
         verify(tournamentService).getActiveTournamentsFromUser(session.getUserId());
+    }
+
+    @SneakyThrows
+    @Test
+    public void aUserCanFilterTheirTournaments() {
+        Session session = TestUtils.getMockSession();
+
+        String urlController = "/api/tournaments/myTournaments?name=asdas";
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).findActiveTournamentsFromUser(session.getUserId(), "asdas");
     }
 }

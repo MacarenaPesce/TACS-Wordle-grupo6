@@ -164,8 +164,12 @@ public class TournamentService {
         return mapToDto(tournamentRepository.findUserTournamentsByState(userId, state.name()));
     }
 
+    public List<TournamentDto> findActiveTournamentsFromUser(Long userId, String name) {
+        return mapToDto(tournamentRepository.findActiveTournamentsFromUser(userId, name.toLowerCase()));
+    }
+
     public List<TournamentDto> getActiveTournamentsFromUser(Long userId) {
-        return mapToDto(tournamentRepository.findActiveTournamentsFromUser(userId));
+        return mapToDto(tournamentRepository.getActiveTournamentsFromUser(userId));
     }
 
     public TournamentDto getTournamentFromId(Long tournamentId) {
