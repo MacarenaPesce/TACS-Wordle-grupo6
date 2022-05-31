@@ -479,6 +479,35 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         assertThat(tournaments).containsExactlyInAnyOrder(tournamentReady, tournamentStarted);
     }
 
+    @Test
+    @Transactional
+    public void aUserCanFilterTheirTournaments(){
+        UserDto owner = getUserDto("owner@mail.com", "owner");
+        UserDto player1 = getUserDto("player1@mail.com", "player1");
+        TournamentDto tournamentReady = getPublicTournamentDto(owner, "T12");
+        tournamentReady.setState(State.READY);
+        TournamentEntity tournament1entity = tournamentService.mapToEntity(tournamentReady);
+        tournamentRepository.save(tournament1entity);
+        tournamentService.addMember(player1.getId(), tournamentReady.getTourneyId(), owner.getId());
+        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Tournament2");
+        tournamentStarted.setState(State.STARTED);
+        TournamentEntity tournament2entity = tournamentService.mapToEntity(tournamentStarted);
+        tournamentRepository.save(tournament2entity);
+        tournamentService.addMember(player1.getId(), tournamentStarted.getTourneyId(), owner.getId());
+        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "T23");
+        tournamentFinished.setState(State.FINISHED);
+        TournamentEntity tournament3entity = tournamentService.mapToEntity(tournamentFinished);
+        tournamentRepository.save(tournament3entity);
+        tournamentService.addMember(player1.getId(), tournamentFinished.getTourneyId(), owner.getId());
+
+        List<TournamentDto> tournaments = tournamentService.findActiveTournamentsFromUser(player1.getId(), "T2");
+
+        assertThat(tournaments).isNotEmpty();
+        assertEquals(tournaments.size(), 1);
+        tournaments.forEach(tournamentDto -> assertThat(tournamentDto).hasNoNullFieldsOrProperties());
+        assertThat(tournaments).containsExactlyInAnyOrder(tournamentStarted);
+    }
+
     private void inabilityTournament(TournamentDto tournament1) {
         TournamentEntity entity = tournamentRepository.findById(tournament1.getTourneyId()).orElseThrow();
         entity.setState(State.FINISHED);
