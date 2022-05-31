@@ -119,6 +119,12 @@ public class TournamentService {
         return registrationService.mapToDto(registrationEntity);
     }
 
+    public List<TournamentDto> findPublicActiveTournaments(String name) {
+        List<TournamentEntity> tournaments = tournamentRepository.findPublicActiveTournamentsByName(name.toLowerCase());
+
+        return mapToDto(tournaments);
+    }
+
     public List<TournamentDto> listPublicActiveTournaments() {
         List<TournamentEntity> tournaments = tournamentRepository.getPublicActiveTournaments();
 
