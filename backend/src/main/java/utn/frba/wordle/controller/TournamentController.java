@@ -49,11 +49,19 @@ public class TournamentController {
     }
 
     @GetMapping("/myTournaments")
-    public ResponseEntity<List<TournamentResponse>> getTournamentsFromUser(@RequestHeader("Authorization") String token){
+    public ResponseEntity<List<TournamentResponse>> getActiveTournamentsFromUser(
+            @RequestHeader("Authorization") String token,
+            @RequestParam(required = false) String name){
         logger.info("Method: getTournamentsFromUser - Request: token={}", token);
 
         Session session = AuthService.getSession(token);
-        List<TournamentDto> tournamentsDto = tournamentService.getTournamentsFromUser(session.getUserId());
+        List<TournamentDto> tournamentsDto;
+        if(name == null) {
+            tournamentsDto = tournamentService.getActiveTournamentsFromUser(session.getUserId());
+        }
+        else {
+            tournamentsDto = tournamentService.findActiveTournamentsFromUser(session.getUserId(), name);
+        }
 
         List<TournamentResponse> response = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());
@@ -63,7 +71,7 @@ public class TournamentController {
     }
 
     @GetMapping("/info/{tournamentId}")
-    public ResponseEntity<TournamentResponse> getTournamentFromId(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId){
+    public ResponseEntity<TournamentResponse> getTournamentFromId(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
         logger.info("Method: getTournament - Request: token={}, tournamentId={}", token, tournamentId);
 
         //Session session = AuthService.getSession(token);
@@ -124,9 +132,17 @@ public class TournamentController {
     }
 
     @GetMapping("public")
-    public ResponseEntity<List<TournamentResponse>> listPublicTournaments(@RequestHeader("Authorization") String token){
+    public ResponseEntity<List<TournamentResponse>> listPublicActiveTournaments(
+            @RequestHeader("Authorization") String token,
+            @RequestParam(required = false) String name){
         logger.info("Method: listPublicTournaments - Request: token={}", token);
-        List<TournamentDto> tournamentsDto = tournamentService.listPublicTournaments();
+        List<TournamentDto> tournamentsDto;
+        if(name == null) {
+            tournamentsDto = tournamentService.listPublicActiveTournaments();
+        }
+        else {
+            tournamentsDto = tournamentService.findPublicActiveTournaments(name);
+        }
 
         List<TournamentResponse> response = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());
@@ -160,7 +176,7 @@ public class TournamentController {
     public ResponseEntity<RankingResponse> getRanking(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
         logger.info("Method: getRanking - Request: token={}, tournamentId={}", token, tournamentId);
 
-        List<Punctuation> orderedPunctuations = tournamentService.orderedPunctuations(tournamentId);
+        List<Punctuation> orderedPunctuations = tournamentService.getRanking(tournamentId);
 
         RankingResponse response = RankingResponse.builder()
                 .idTournament(tournamentId)
@@ -168,6 +184,18 @@ public class TournamentController {
                 .build();
 
         logger.info("Method: getRanking - Response: {}", response);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{tournamentId}/ranking/myScore")
+    public ResponseEntity<Punctuation> getMyScore(@RequestHeader("Authorization") String token, @PathVariable Long tournamentId) {
+        logger.info("Method: getMyScore - Request: token={}, tournamentId={}", token, tournamentId);
+
+        Session session = AuthService.getSession(token);
+        Punctuation response = tournamentService.getScoreFromUser(tournamentId, session.getUsername());
+
+        logger.info("Method: getMyScore - Response: {}", response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

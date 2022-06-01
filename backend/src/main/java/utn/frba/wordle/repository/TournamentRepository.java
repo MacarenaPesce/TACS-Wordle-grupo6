@@ -1,21 +1,17 @@
 package utn.frba.wordle.repository;
 
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import utn.frba.wordle.model.entity.TournamentEntity;
 
-import java.util.Date;
 import java.util.List;
 
 public interface TournamentRepository extends CrudRepository<TournamentEntity, Long> {
 
-    @Modifying
-    @Query(value = "insert into registration (Id_Tournament, Id_User, registered) values (:tournamentId, :userId, :date)", nativeQuery = true)
-    void addMember(Long tournamentId, Long userId, Date date);
-
-    @Query(value = "select * from tournament where type = 'PUBLIC'", nativeQuery = true)
-    List<TournamentEntity> getPublicTournaments();
+    @Query(value = "select * from tournament \n" +
+            "where type = 'PUBLIC' \n" +
+            "and state in('READY', 'STARTED')", nativeQuery = true)
+    List<TournamentEntity> getPublicActiveTournaments();
 
     @Query(value = "select * from tournament where name = :name and state = 'READY'", nativeQuery = true)
     TournamentEntity findByName(String name);
@@ -28,7 +24,20 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
 
     @Query(value = "select t.* from registration r, tournament t \n" +
             "where r.id_user = :userId \n" +
-            "and r.id_tournament = t.id", nativeQuery = true)
-    List<TournamentEntity> findTournamentsFromUser(Long userId);
+            "and r.id_tournament = t.id\n" +
+            "and state in('READY', 'STARTED')", nativeQuery = true)
+    List<TournamentEntity> getActiveTournamentsFromUser(Long userId);
 
+    @Query(value = "select t.* from registration r, tournament t \n" +
+            "where r.id_user = :userId \n" +
+            "and r.id_tournament = t.id\n" +
+            "and state in('READY', 'STARTED')\n" +
+            "and LOWER(t.name) like %:tournamentName%", nativeQuery = true)
+    List<TournamentEntity> findActiveTournamentsFromUser(Long userId, String tournamentName);
+
+    @Query(value = "select * from tournament \n" +
+            "where type = 'PUBLIC' \n" +
+            "and state in('READY', 'STARTED') \n" +
+            "and LOWER(name) like %:name%", nativeQuery = true)
+    List<TournamentEntity> findPublicActiveTournamentsByName(String name);
 }

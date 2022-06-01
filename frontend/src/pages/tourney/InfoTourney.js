@@ -7,15 +7,14 @@ import TourneyService from '../../service/TourneyService';
 import Tourney from "./Tourney";
 
 export default function InfoTourney() {
-    //debugger
     let { id } = useParams();
-    console.log(id);
+    //console.log(id);
     const [tourney, setTourney] = useState({owner: ""});
-    console.log(tourney);
+    //console.log(tourney);
     const [ranking, setRanking] = useState({punctuations: []});
     const [members, setMembers] = useState({members: []});
     const [username, setUsername] = useState('');
-    const [puntuacion, setPuntuacion] =useState([]);
+    const [puntuacion, setPuntuacion] = useState([]);
     const [puntaje, setPuntaje] = useState(0);
 
     const getTourney=() =>{
@@ -54,7 +53,6 @@ export default function InfoTourney() {
           }
 
     useEffect(() => {
-      //debugger
       getTourney();
       getRanking();
       getMember();
@@ -141,14 +139,16 @@ export default function InfoTourney() {
                     <td>{tourney.language}</td>
                   </tr>
                   <tr>
-                    <td colSpan={2}>Inicio: {formatDate(tourney.start)} - Fin: {formatDate(tourney.finish)} </td>
+                    <td>Inicio: {formatDate(tourney.start)}</td>
+                    <td>Fin: {formatDate(tourney.finish)}</td>
                   </tr>
                   <tr>
                     <td>Creador: </td>
                     <td>{tourney.owner.username}</td>
                   </tr>
                   <tr>
-                    <td  colSpan={2}>Puntaje: "puntaje" - Puesto: "puesto"</td>
+                    <td>Puntaje: "puntaje"</td>
+                    <td>Puesto: "puesto"</td>
                   </tr>
                   <tr>
                     <td>Integrantes: </td>
@@ -208,14 +208,14 @@ export default function InfoTourney() {
                   {puntuacion && puntuacion.length > 0 ? (
                             puntuacion.map((line) =>(
                             <tr key={line.user}>
-                                <td> ?? </td>
+                                <td> {line.position} </td>
                                 <td> {line.user}</td>
                                 <td> {line.punctuation}</td>
                             </tr>
                             ))
                           ):(ranking.punctuations.map((line) =>(
                             <tr key={line.user}>
-                                <td> ?? </td>
+                                <td> {line.position} </td>
                                 <td> {line.user}</td>
                                 <td> {line.punctuation}</td>
                             </tr>

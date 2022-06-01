@@ -33,7 +33,9 @@ Si aún no tenemos creada la BD localmente:
 2- Creamos la BD
 >CREATE DATABASE wordle;
 
-3- Cerramos la BD
+3- Luego de levantar el proyecto backend, se debe ejecutar el script `backend\src\main\resources\data.sql` sobre la base de datos, en caso de no hacerlo automáticamente.
+
+4- Cerramos la BD
 >exit;
 
 ## Docker

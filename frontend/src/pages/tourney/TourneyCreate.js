@@ -103,14 +103,14 @@ export default class TourneyCreate extends Component{
                     <div className="opciones">
                         <div className="">
                             <label><h5>Inicio</h5></label>
-                            <input type="date" className="form-control" placeholder="HRS" name="start" onChange={this.changeHandler} />
+                            <input type="date" min={this.props.min} className="form-control" placeholder="HRS" name="start" onChange={this.changeHandler} />
                         </div>
                     </div>
 
                     <div className="opciones">
                         <div className="">
                             <label><h5>Fin</h5></label>
-                            <input type="date" className="form-control" placeholder="HRS" name="finish" onChange={this.changeHandler} />
+                            <input type="date" min={this.props.min} className="form-control" placeholder="HRS" name="finish" onChange={this.changeHandler} />
                         </div>
                     </div>
 

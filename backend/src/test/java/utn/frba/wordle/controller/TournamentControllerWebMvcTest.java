@@ -113,7 +113,21 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).listPublicTournaments();
+        verify(tournamentService).listPublicActiveTournaments();
+    }
+
+    @SneakyThrows
+    @Test
+    public void iCanFindPublicTournaments() {
+        Session session = TestUtils.getMockSession();
+
+        String urlController = "/api/tournaments/public?name=eaea";
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).findPublicActiveTournaments("eaea");
     }
 
     @SneakyThrows
@@ -148,7 +162,22 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).orderedPunctuations(idTournament);
+        verify(tournamentService).getRanking(idTournament);
+    }
+
+    @SneakyThrows
+    @Test
+    public void aUserCanGetTheirScoreFromATourney() {
+        Long idTournament = 22L;
+        Session session = TestUtils.getMockSession();
+
+        String urlController = String.format("/api/tournaments/%s/ranking/myScore", idTournament);
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).getScoreFromUser(idTournament, session.getUsername());
     }
 
     @SneakyThrows
@@ -176,6 +205,20 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).getTournamentsFromUser(session.getUserId());
+        verify(tournamentService).getActiveTournamentsFromUser(session.getUserId());
+    }
+
+    @SneakyThrows
+    @Test
+    public void aUserCanFilterTheirTournaments() {
+        Session session = TestUtils.getMockSession();
+
+        String urlController = "/api/tournaments/myTournaments?name=asdas";
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).findActiveTournamentsFromUser(session.getUserId(), "asdas");
     }
 }
