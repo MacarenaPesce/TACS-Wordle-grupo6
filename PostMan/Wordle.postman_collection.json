@@ -280,7 +280,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"La champion priv\",\r\n    \"type\": \"PRIVADO\",\r\n    \"start\": \"2022-04-25T06:53:14.562+00:00\",\r\n    \"finish\": \"2022-05-25T06:53:14.562+00:00\",\r\n    \"language\": \"ES\"\r\n}",
+					"raw": "{\r\n    \"name\": \"La champion priv\",\r\n    \"type\": \"PRIVATE\",\r\n    \"start\": \"2022-04-25T06:53:14.562+00:00\",\r\n    \"finish\": \"2022-05-25T06:53:14.562+00:00\",\r\n    \"language\": \"ES\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

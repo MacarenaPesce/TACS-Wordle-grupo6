@@ -141,14 +141,16 @@ export default function InfoTourney() {
                     <td>{tourney.language}</td>
                   </tr>
                   <tr>
-                    <td colSpan={2}>Inicio: {formatDate(tourney.start)} - Fin: {formatDate(tourney.finish)} </td>
+                    <td>Inicio: {formatDate(tourney.start)}</td>
+                    <td>Fin: {formatDate(tourney.finish)}</td>
                   </tr>
                   <tr>
                     <td>Creador: </td>
                     <td>{tourney.owner.username}</td>
                   </tr>
                   <tr>
-                    <td  colSpan={2}>Puntaje: "puntaje" - Puesto: "puesto"</td>
+                    <td>Puntaje: "puntaje"</td>
+                    <td>Puesto: "puesto"</td>
                   </tr>
                   <tr>
                     <td>Integrantes: </td>
@@ -208,14 +210,14 @@ export default function InfoTourney() {
                   {puntuacion && puntuacion.length > 0 ? (
                             puntuacion.map((line) =>(
                             <tr key={line.user}>
-                                <td> ?? </td>
+                                <td> {line.position} </td>
                                 <td> {line.user}</td>
                                 <td> {line.punctuation}</td>
                             </tr>
                             ))
                           ):(ranking.punctuations.map((line) =>(
                             <tr key={line.user}>
-                                <td> ?? </td>
+                                <td> {line.position} </td>
                                 <td> {line.user}</td>
                                 <td> {line.punctuation}</td>
                             </tr>
