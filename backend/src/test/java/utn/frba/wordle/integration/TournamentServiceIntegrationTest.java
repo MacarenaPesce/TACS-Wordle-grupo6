@@ -417,8 +417,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void anActiveTournamentWithDuplicatedNameCanBeCreatedIfTheDuplicatedIsNotActive() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1", State.READY);
-        inabilityTournament(tournament1);
+        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1", State.FINISHED);
         TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament1", State.READY);
 
         assertNotEquals(tournament1.getTourneyId(), tournament2.getTourneyId());
@@ -509,11 +508,6 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         assertEquals(tournaments.size(), 1);
         tournaments.forEach(tournamentDto -> assertThat(tournamentDto).hasNoNullFieldsOrProperties());
         assertThat(tournaments).containsExactlyInAnyOrder(tournamentStarted);
-    }
-
-    private void inabilityTournament(TournamentDto tournament1) {
-        TournamentEntity entity = tournamentRepository.findById(tournament1.getTourneyId()).orElseThrow();
-        tournamentRepository.save(entity);
     }
 
     private TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state) {
