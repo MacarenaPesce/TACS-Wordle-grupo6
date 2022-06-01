@@ -139,7 +139,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     public void aUserCantBeAddedToATournamentTwice(){
         UserDto owner = getUserDto("mail2@mail.com", "usernameTest2");
         UserDto user = getUserDto("mailPlayer@mail.com", "usernamePlayer");
-        TournamentDto tournamentDto = getPublicTournamentDto(owner, "Public Tourney");
+        TournamentDto tournamentDto = getPublicTournamentDto(owner, "Public Tourney", State.READY);
 
         tournamentService.join(user.getId(), tournamentDto.getTourneyId());
 
@@ -179,15 +179,15 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanListAllPublicTournaments() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournamentReady = getPublicTournamentDto(owner, "Tournament1");
+        TournamentDto tournamentReady = getPublicTournamentDto(owner, "Tournament1", State.READY);
         tournamentReady.setState(State.READY);
         TournamentEntity tournament1entity = tournamentService.mapToEntity(tournamentReady);
         tournamentRepository.save(tournament1entity);
-        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Tournament2");
+        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Tournament2", State.STARTED);
         tournamentStarted.setState(State.STARTED);
         TournamentEntity tournament2entity = tournamentService.mapToEntity(tournamentStarted);
         tournamentRepository.save(tournament2entity);
-        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "Tournament3");
+        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "Tournament3", State.FINISHED);
         tournamentFinished.setState(State.FINISHED);
         TournamentEntity tournament3entity = tournamentService.mapToEntity(tournamentFinished);
         tournamentRepository.save(tournament3entity);
@@ -200,19 +200,19 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanFindByTournamentName() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournamentReady = getPublicTournamentDto(owner, "Alpha");
+        TournamentDto tournamentReady = getPublicTournamentDto(owner, "Alpha", State.READY);
         tournamentReady.setState(State.READY);
         TournamentEntity tournament1entity = tournamentService.mapToEntity(tournamentReady);
         tournamentRepository.save(tournament1entity);
-        TournamentDto tournamentAlphabet = getPublicTournamentDto(owner, "Alphabet");
+        TournamentDto tournamentAlphabet = getPublicTournamentDto(owner, "Alphabet", State.READY);
         tournamentAlphabet.setState(State.READY);
         TournamentEntity tournamentAentity = tournamentService.mapToEntity(tournamentAlphabet);
         tournamentRepository.save(tournamentAentity);
-        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Beta");
+        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Beta", State.READY);
         tournamentStarted.setState(State.STARTED);
         TournamentEntity tournament2entity = tournamentService.mapToEntity(tournamentStarted);
         tournamentRepository.save(tournament2entity);
-        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "Gamma");
+        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "Gamma", State.READY);
         tournamentFinished.setState(State.FINISHED);
         TournamentEntity tournament3entity = tournamentService.mapToEntity(tournamentFinished);
         tournamentRepository.save(tournament3entity);
@@ -355,7 +355,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         UserDto player2 = getUserDto("mail2@mail.com", "player2");
         UserDto player3 = getUserDto("mail3@mail.com", "player3");
         UserDto player4 = getUserDto("mail4@mail.com", "player4");
-        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney");
+        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney", State.STARTED);
         tournamentService.addMember(player2.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player3.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player4.getId(), tournamentDto.getTourneyId(), player1.getId());
@@ -368,7 +368,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
 
         Punctuation score = tournamentService.getScoreFromUser(tournamentDto.getTourneyId(), player1.getUsername());
 
-        assertEquals(score.getPunctuation(), 12L);
+        assertEquals(score.getPunctuation(), 19L);
         assertEquals(score.getPosition(), 3L);
     }
 
@@ -378,7 +378,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         UserDto player2 = getUserDto("mail2@mail.com", "player2");
         UserDto player3 = getUserDto("mail3@mail.com", "player3");
         UserDto player4 = getUserDto("mail4@mail.com", "player4");
-        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney");
+        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney", State.STARTED);
         tournamentService.addMember(player2.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player3.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player4.getId(), tournamentDto.getTourneyId(), player1.getId());
@@ -400,26 +400,26 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         assertEquals(2L, punctuations.get(1).getPosition());
         assertEquals(3L, punctuations.get(2).getPosition());
         assertEquals(4L, punctuations.get(3).getPosition());
-        assertEquals(9L, punctuations.get(0).getPunctuation() );
-        assertEquals(10L, punctuations.get(1).getPunctuation());
-        assertEquals(12L, punctuations.get(2).getPunctuation());
-        assertEquals(14L, punctuations.get(3).getPunctuation());
+        assertEquals(16L, punctuations.get(0).getPunctuation());
+        assertEquals(17L, punctuations.get(1).getPunctuation());
+        assertEquals(19L, punctuations.get(2).getPunctuation());
+        assertEquals(21L, punctuations.get(3).getPunctuation());
     }
 
     @Test
     public void anActiveTournamentWithDuplicatedNameCantBeCreated() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        getPublicTournamentDto(owner, "Tournament1");
+        getPublicTournamentDto(owner, "Tournament1", State.READY);
 
-        assertThrows(BusinessException.class, () -> getPublicTournamentDto(owner, "Tournament1"));
+        assertThrows(BusinessException.class, () -> getPublicTournamentDto(owner, "Tournament1", State.READY));
     }
 
     @Test
     public void anActiveTournamentWithDuplicatedNameCanBeCreatedIfTheDuplicatedIsNotActive() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1");
+        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1", State.READY);
         inabilityTournament(tournament1);
-        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament1");
+        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament1", State.READY);
 
         assertNotEquals(tournament1.getTourneyId(), tournament2.getTourneyId());
     }
@@ -431,14 +431,14 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         UserDto owner = getUserDto("owner@mail.com", "owner");
         UserDto player1 = getUserDto("player1@mail.com", "player1");
         UserDto player2 = getUserDto("player2@mail.com", "player2");
-        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1");
+        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1", State.FINISHED);
         tournament1.setState(state);
         TournamentEntity tournament1entity = tournamentService.mapToEntity(tournament1);
         tournamentRepository.save(tournament1entity);
         tournamentService.addMember(player1.getId(), tournament1.getTourneyId(), owner.getId());
         tournamentService.addMember(player2.getId(), tournament1.getTourneyId(), owner.getId());
         tournamentRepository.findById(tournament1.getTourneyId()).orElseThrow();
-        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament2");
+        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament2", State.STARTED);
         tournament2.setState(State.STARTED);
         TournamentEntity tournament2entity = tournamentService.mapToEntity(tournament2);
         tournamentRepository.save(tournament2entity);
@@ -458,17 +458,17 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     public void aUserCanListAllTheirTournaments(){
         UserDto owner = getUserDto("owner@mail.com", "owner");
         UserDto player1 = getUserDto("player1@mail.com", "player1");
-        TournamentDto tournamentReady = getPublicTournamentDto(owner, "Tournament1");
+        TournamentDto tournamentReady = getPublicTournamentDto(owner, "Tournament1", State.READY);
         tournamentReady.setState(State.READY);
         TournamentEntity tournament1entity = tournamentService.mapToEntity(tournamentReady);
         tournamentRepository.save(tournament1entity);
         tournamentService.addMember(player1.getId(), tournamentReady.getTourneyId(), owner.getId());
-        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Tournament2");
+        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Tournament2", State.STARTED);
         tournamentStarted.setState(State.STARTED);
         TournamentEntity tournament2entity = tournamentService.mapToEntity(tournamentStarted);
         tournamentRepository.save(tournament2entity);
         tournamentService.addMember(player1.getId(), tournamentStarted.getTourneyId(), owner.getId());
-        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "Tournament3");
+        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "Tournament3", State.FINISHED);
         tournamentFinished.setState(State.FINISHED);
         TournamentEntity tournament3entity = tournamentService.mapToEntity(tournamentFinished);
         tournamentRepository.save(tournament3entity);
@@ -487,17 +487,17 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     public void aUserCanFilterTheirTournaments(){
         UserDto owner = getUserDto("owner@mail.com", "owner");
         UserDto player1 = getUserDto("player1@mail.com", "player1");
-        TournamentDto tournamentReady = getPublicTournamentDto(owner, "T12");
+        TournamentDto tournamentReady = getPublicTournamentDto(owner, "T12", State.READY);
         tournamentReady.setState(State.READY);
         TournamentEntity tournament1entity = tournamentService.mapToEntity(tournamentReady);
         tournamentRepository.save(tournament1entity);
         tournamentService.addMember(player1.getId(), tournamentReady.getTourneyId(), owner.getId());
-        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Tournament2");
+        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Tournament2", State.STARTED);
         tournamentStarted.setState(State.STARTED);
         TournamentEntity tournament2entity = tournamentService.mapToEntity(tournamentStarted);
         tournamentRepository.save(tournament2entity);
         tournamentService.addMember(player1.getId(), tournamentStarted.getTourneyId(), owner.getId());
-        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "T23");
+        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "T23", State.FINISHED);
         tournamentFinished.setState(State.FINISHED);
         TournamentEntity tournament3entity = tournamentService.mapToEntity(tournamentFinished);
         tournamentRepository.save(tournament3entity);
@@ -513,28 +513,47 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
 
     private void inabilityTournament(TournamentDto tournament1) {
         TournamentEntity entity = tournamentRepository.findById(tournament1.getTourneyId()).orElseThrow();
-        entity.setState(State.FINISHED);
-
         tournamentRepository.save(entity);
     }
 
-    private TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName) {
-        Date currentDate = new Date();
-        // convert date to calendar
-        Calendar c = Calendar.getInstance();
-        c.setTime(currentDate);
-        c.add(Calendar.DATE, -1); //same with c.add(Calendar.DAY_OF_MONTH, 1);
-        Date currentDateMinusOne = c.getTime();
+    private TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state) {
+        Date startDate;
+        Date finishDate;
+        switch (state){
+            case READY:
+                startDate = getTodayWithOffset(5);
+                finishDate = getTodayWithOffset(10);
+                break;
+            case STARTED:
+                startDate = getTodayWithOffset(-2);
+                finishDate = getTodayWithOffset(5);
+                break;
+            case FINISHED:
+                startDate = getTodayWithOffset(-10);
+                finishDate = getTodayWithOffset(-3);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + state);
+        }
 
         TournamentDto tournamentDto = TournamentDto.builder()
                 .type(TournamentType.PUBLIC)
-                .start(currentDateMinusOne)
-                .finish(currentDate)
+                .start(startDate)
+                .finish(finishDate)
+                .state(state)
                 .name(tournamentName)
                 .language(Language.ES)
                 .owner(owner)
                 .build();
         return tournamentService.create(tournamentDto, owner.getId());
+    }
+
+    private Date getTodayWithOffset(int offset) {
+        Date currentDate = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(currentDate);
+        c.add(Calendar.DATE, offset); //same with c.add(Calendar.DAY_OF_MONTH, 1);
+        return c.getTime();
     }
 
     private TournamentDto getPrivateTournamentDto(UserDto ownerUser, String tournamentName, Language language) {

@@ -2,7 +2,6 @@ package utn.frba.wordle.model.entity;
 
 import lombok.*;
 import utn.frba.wordle.model.enums.Language;
-import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.model.enums.TournamentType;
 
 import javax.persistence.*;
@@ -30,9 +29,6 @@ public class TournamentEntity {
 
     @Enumerated(EnumType.STRING)
     TournamentType type;
-
-    @Enumerated(EnumType.STRING)
-    State state;
 
     @Column
     Date start;
