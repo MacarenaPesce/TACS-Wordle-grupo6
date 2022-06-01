@@ -7,15 +7,14 @@ import TourneyService from '../../service/TourneyService';
 import Tourney from "./Tourney";
 
 export default function InfoTourney() {
-    //debugger
     let { id } = useParams();
-    console.log(id);
+    //console.log(id);
     const [tourney, setTourney] = useState({owner: ""});
-    console.log(tourney);
+    //console.log(tourney);
     const [ranking, setRanking] = useState({punctuations: []});
     const [members, setMembers] = useState({members: []});
     const [username, setUsername] = useState('');
-    const [puntuacion, setPuntuacion] =useState([]);
+    const [puntuacion, setPuntuacion] = useState([]);
     const [puntaje, setPuntaje] = useState(0);
 
     const getTourney=() =>{
@@ -54,7 +53,6 @@ export default function InfoTourney() {
           }
 
     useEffect(() => {
-      //debugger
       getTourney();
       getRanking();
       getMember();
