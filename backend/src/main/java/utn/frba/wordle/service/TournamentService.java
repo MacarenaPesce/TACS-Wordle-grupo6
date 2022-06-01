@@ -50,13 +50,12 @@ public class TournamentService {
         } catch (NoSuchElementException e) {
             throw new SessionJWTException("El token de sesion jwt enviado, no coincide con usuarios existentes");
         }
-        TournamentEntity existingActiveTournament = tournamentRepository.findByName(dto.getName());
+        TournamentEntity existingActiveTournament = tournamentRepository.getActiveTournamentsByName(dto.getName());
         if (existingActiveTournament != null) {
             throw new BusinessException("There is already an active Tournament with this name.");
         }
         TournamentEntity newTournament = mapToEntity(dto);
         newTournament.setRegistrations(new HashSet<>());
-        newTournament.setState(State.READY);
         newTournament.setOwner(owner);
         newTournament = tournamentRepository.save(newTournament);
 
@@ -164,7 +163,21 @@ public class TournamentService {
     }
 
     public List<TournamentDto> findUserTournamentsByState(Long userId, State state) {
-        return mapToDto(tournamentRepository.findUserTournamentsByState(userId, state.name()));
+        List<TournamentEntity> entities;
+        switch (state){
+            case READY:
+                entities = tournamentRepository.findUserReadyTournaments(userId);
+                break;
+            case STARTED:
+                entities = tournamentRepository.findUserStartedTournaments(userId);
+                break;
+            case FINISHED:
+                entities = tournamentRepository.findUserFinishedTournaments(userId);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + state);
+        }
+        return mapToDto(entities);
     }
 
     public List<TournamentDto> findActiveTournamentsFromUser(Long userId, String name) {
@@ -213,19 +226,30 @@ public class TournamentService {
                 .start(dto.getStart())
                 .language(dto.getLanguage())
                 .name(dto.getName())
-                .state(dto.getState())
                 .type(dto.getType())
                 .owner(user)
                 .build();
     }
 
     private TournamentDto mapToDto(TournamentEntity entity) {
+        State state;
+        Date now = new Date();
+        if(now.before(entity.getStart())){
+            state = State.READY;
+        }
+        else if(now.after(entity.getFinish())){
+            state = State.FINISHED;
+        }
+        else {
+            state = State.STARTED;
+        }
+
         return TournamentDto.builder()
                 .language(entity.getLanguage())
                 .name(entity.getName())
                 .finish(entity.getFinish())
                 .start(entity.getStart())
-                .state(entity.getState())
+                .state(state)
                 .tourneyId(entity.getId())
                 .type(entity.getType())
                 .owner(UserService.mapToDto(entity.getOwner()))
