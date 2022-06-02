@@ -58,7 +58,8 @@ public class WordleBackendApplication {
                     .antMatchers(HttpMethod.POST,
                             "/api/auth/login",
                             "/api/auth/register",
-                            "/api/help/**/*").permitAll()
+                            "/api/help/**/*",
+                            "/api/telegram/**/*", "/api/telegram/").permitAll()
                     .antMatchers(HttpMethod.GET,
                             "/api/dictionary/**/*",
                             "/", "/csrf", "/*.html", "/favicon.ico",
