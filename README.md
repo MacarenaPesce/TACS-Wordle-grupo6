@@ -42,6 +42,7 @@ Si aún no tenemos creada la BD localmente:
 
 - Crear bot con BotFather y copiar el token
 - Guardar el token en `backend\botToken.txt`
+- Reiniciar el backend
 - Correr ngrok con `ngrok http 8080` y copiar la URL
 - Abrir en el navegador: `https://api.telegram.org/bot<botToken>/setWebhook?url=<URLngrok>/api/telegram/`
 - Escribirle al bot

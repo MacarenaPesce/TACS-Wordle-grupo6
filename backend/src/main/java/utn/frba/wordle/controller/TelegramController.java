@@ -35,11 +35,39 @@ public class TelegramController {
         String myString = new GsonBuilder().setPrettyPrinting().create().toJson(update);
         System.out.println("Update recibido: \n"+myString);
 
-        String mensaje = update.getMessage().getFrom().getFirst_name()+", su mensaje "+update.getMessage().getMessage_id()+" dice: \n"+update.getMessage().getText();
-        enviarMensaje(mensaje, update.getMessage().getChat().getId());
+        String text = update.getMessage().getText();
+        Long chat_id = update.getMessage().getChat().getId();
+
+        if(text.matches("/[^ ](.*)")){
+            //enviarMensaje("se recibe el comando: \n"+text.substring(1), chat_id);
+
+            String[] params = text.substring(1).split("\\s+");
+            processCommand(params, chat_id);
+
+        }else {
+            String mensajeEnvio = update.getMessage().getFrom().getFirst_name()+", su mensaje "+update.getMessage().getMessage_id()+" dice: \n"+text;
+            enviarMensaje(mensajeEnvio, chat_id);
+        }
 
         return new ResponseEntity<>(myString, HttpStatus.OK);
     }
+
+    private void processCommand(String[] params, Long chat_id) throws IOException, URISyntaxException {
+        switch(params[0])
+        {
+            case "help" :
+                enviarMensaje("Comando help solicitado", chat_id);
+                break;
+
+            case "login" :
+                enviarMensaje("Ejemplo de otro comando", chat_id);
+                break;
+
+            default :
+                enviarMensaje("Comando no reconocido: \n"+params[0], chat_id);
+        }
+    }
+
 
     private void enviarMensaje(String mensaje, Long chat_id) throws IOException, URISyntaxException {
         String destinationUrl = API_URL + TOKEN + "/sendMessage";
@@ -57,7 +85,6 @@ public class TelegramController {
         HttpEntity entity = response.getEntity();
         //if (entity != null)
             System.out.println("Response del get sendMessage: "+EntityUtils.toString(entity));
-
 
     }
 
