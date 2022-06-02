@@ -46,6 +46,8 @@ Si aún no tenemos creada la BD localmente:
 - Correr ngrok con `ngrok http 8080` y copiar la URL
 - Abrir en el navegador: `https://api.telegram.org/bot<botToken>/setWebhook?url=<URLngrok>/api/telegram/`
 - Escribirle al bot
+Hacer los comandos visibles en el menu de comandos bot:
+- En BotFather, con `/setcommands` crear el `/help` (y los futuros que existan) (o usar el method `setMyCommands` en una request)
 
 ## Docker
 
