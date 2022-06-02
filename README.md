@@ -38,6 +38,14 @@ Si aún no tenemos creada la BD localmente:
 4- Cerramos la BD
 >exit;
 
+## Telegram
+
+- Crear bot con BotFather y copiar el token
+- Guardar el token en `backend\botToken.txt`
+- Correr ngrok con `ngrok http 8080` y copiar la URL
+- Abrir en el navegador: `https://api.telegram.org/bot<botToken>/setWebhook?url=<URLngrok>/api/telegram/`
+- Escribirle al bot
+
 ## Docker
 
 Crear una imagen:

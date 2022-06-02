@@ -1,7 +1,5 @@
 package utn.frba.wordle.controller;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -19,6 +17,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static utn.frba.wordle.utils.RunAfterStartup.TOKEN;
+
 @RestController
 @RequestMapping("/api/telegram")
 @CrossOrigin
@@ -26,8 +26,7 @@ public class TelegramController {
     //usar esta dependencia en el caso de necesitar todos los objetos ya modelados:
     //https://github.com/pengrad/java-telegram-bot-api/tree/master/library/src/main/java/com/pengrad/telegrambot/model
 
-    String TOKEN = "";
-    String API_URL = "https://api.telegram.org/bot"+TOKEN+"/";
+    private static final String API_URL = "https://api.telegram.org/bot";
 
 
     @PostMapping("/")
@@ -36,13 +35,14 @@ public class TelegramController {
         String myString = new GsonBuilder().setPrettyPrinting().create().toJson(update);
         System.out.println("Update recibido: \n"+myString);
 
-        enviarMensaje(myString, update.getMessage().getChat().getId());
+        String mensaje = update.getMessage().getFrom().getFirst_name()+", su mensaje "+update.getMessage().getMessage_id()+" dice: \n"+update.getMessage().getText();
+        enviarMensaje(mensaje, update.getMessage().getChat().getId());
 
         return new ResponseEntity<>(myString, HttpStatus.OK);
     }
 
     private void enviarMensaje(String mensaje, Long chat_id) throws IOException, URISyntaxException {
-        String destinationUrl = API_URL + "sendMessage";
+        String destinationUrl = API_URL + TOKEN + "/sendMessage";
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
         HttpGet request = new HttpGet(destinationUrl);
