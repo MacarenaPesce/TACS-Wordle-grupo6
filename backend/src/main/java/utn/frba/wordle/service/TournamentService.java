@@ -15,6 +15,7 @@ import utn.frba.wordle.model.entity.RegistrationEntity;
 import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.model.enums.State;
+import utn.frba.wordle.model.enums.TournamentType;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.repository.RankingRepository;
 import utn.frba.wordle.repository.TournamentRepository;
@@ -100,9 +101,12 @@ public class TournamentService {
     @Transactional
     public RegistrationDto join(Long userId, Long tournamentId) {
         TournamentEntity tournamentEntity = tournamentRepository.findById(tournamentId).orElse(null);
-        //TODO verificar que solo pueda entrar a torneos publicos
+
         if (tournamentEntity == null) {
             throw new BusinessException("The specified Tournament doesn't exist.");
+        }
+        if (tournamentEntity.getType().equals(TournamentType.PRIVATE)) {
+            throw new BusinessException("You can not join a PRIVATE tournament.");
         }
 
         List<RegistrationDto> registrations = registrationService.getRegistrationsFromUser(userId);
