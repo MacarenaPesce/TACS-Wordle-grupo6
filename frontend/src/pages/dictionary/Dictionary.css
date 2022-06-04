@@ -1,6 +1,10 @@
-.body-diccionario{
+.fondo-diccionario{
     background-image:url("./../../img/dicfondo3.png");
     min-height: 100vh;  
+}
+.body-diccionario{
+    background-image:url("./../../img/dicfondo3.png");
+    min-height: 460px;
 }
 
 label{

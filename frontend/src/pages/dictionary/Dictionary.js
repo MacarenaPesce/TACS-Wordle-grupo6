@@ -49,45 +49,47 @@ render(){
                 </div>);
 
     return (
-      <div className='body-diccionario'>
-        <header className="navGeneral">
-          <NavbarAut />
-        </header>
-        <form onSubmit={this.submitCambio}>
-           <div className="form-groupo"  >
-             <div className='contenedor-busqueda' >
-                <input 
-                  type="text" 
-                  pattern="[A-ZÑa-źñáéíóú]*"
-                  title="Solo letras" 
-                  className="buscar-input" 
-                  placeholder="Ingrese palabra a buscar"
-                  name='word'
-                  onChange={this.manejarCambio}
-                />
-                <button className='boton-busqueda' type="submit" onClick={() => this.setState({significado: []})}>
-                  Buscar
-                </button>
-              </div>
-              <div className='contenedor-idioma'>
-              <div><label><h5>Idioma</h5></label></div>
-              <select className="form-select" name="language" onChange={this.manejarCambio} >
-                <option value="ES">Español</option>
-                <option value="EN">English</option>
-              </select> 
-              </div> 
-               {this.state.loading ? (
-                   <div className='contenedor-respuesta scrollbar-lady-lips'>
-                       {spinner}{spinner}{spinner}{spinner}{spinner}
-                   </div>
-               ) : (
-                   <div className='contenedor-respuesta scrollbar-lady-lips'>
-                       {listDef}
-                   </div>
-               )}
-           </div>
-        </form>
-        <Footer />
+      <div className='fondo-diccionario'>
+          <div className='body-diccionario'>
+            <header className="navGeneral">
+              <NavbarAut />
+            </header>
+            <form onSubmit={this.submitCambio}>
+               <div className="form-groupo"  >
+                 <div className='contenedor-busqueda' >
+                    <input
+                      type="text"
+                      pattern="[A-ZÑa-źñáéíóú]*"
+                      title="Solo letras"
+                      className="buscar-input"
+                      placeholder="Ingrese palabra a buscar"
+                      name='word'
+                      onChange={this.manejarCambio}
+                    />
+                    <button className='boton-busqueda' type="submit" onClick={() => this.setState({significado: []})}>
+                      Buscar
+                    </button>
+                  </div>
+                  <div className='contenedor-idioma'>
+                  <div><label><h5>Idioma</h5></label></div>
+                  <select className="form-select" name="language" onChange={this.manejarCambio} >
+                    <option value="ES">Español</option>
+                    <option value="EN">English</option>
+                  </select>
+                  </div>
+                   {this.state.loading ? (
+                       <div className='contenedor-respuesta scrollbar-lady-lips'>
+                           {spinner}{spinner}{spinner}{spinner}{spinner}
+                       </div>
+                   ) : (
+                       <div className='contenedor-respuesta scrollbar-lady-lips'>
+                           {listDef}
+                       </div>
+                   )}
+               </div>
+            </form>
+            <Footer />
+          </div>
       </div>
     );
   }
