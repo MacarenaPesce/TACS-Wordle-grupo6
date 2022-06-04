@@ -109,125 +109,127 @@ export default function InfoTourney() {
             <NavbarAut />
         </header>
 
-        <h1 className='titleInfo'> Torneo N° {id}</h1>
-        {/*<button> volver atras</button>*/}
+          <div className='body-info'>
+            <h1 className='titleInfo'> Torneo N° {id}</h1>
+            {/*<button> volver atras</button>*/}
 
-        <container> 
-          <div className="row">
-            <div className="col-5">
-              <table id="customers">
-                <thead>
-                  <tr> 
-                    <th colSpan={2}  className='thTitulo'>Informacion</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Nombre:  </td>
-                    <td>{tourney.name}</td>
-                  </tr>
-                  <tr>
-                    <td>Estado:  </td>
-                    <td>{tourney.state}</td>
-                  </tr>
-                  <tr>
-                    <td>Tipo: </td>
-                    <td>{tourney.type}</td>
-                  </tr>
-                  <tr>
-                    <td>Lenguaje: </td>
-                    <td>{tourney.language}</td>
-                  </tr>
-                  <tr>
-                    <td>Inicio: {formatDate(tourney.start)}</td>
-                    <td>Fin: {formatDate(tourney.finish)}</td>
-                  </tr>
-                  <tr>
-                    <td>Creador: </td>
-                    <td>{tourney.owner.username}</td>
-                  </tr>
-                  <tr>
-                    <td>Puntaje: "puntaje"</td>
-                    <td>Puesto: "puesto"</td>
-                  </tr>
-                  <tr>
-                    <td>Integrantes: </td>
-                    <td>
-                      <ul className="list-group scrollbar-success">
-                        {listMembers}
-                      </ul>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="col-7 table-ranking">
-              <table id="customers">
-                <thead>
-                  <tr> 
-                    <th colSpan={3} className='thTitulo'>Ranking</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td colSpan={2} className="searchUsername">
-                      <div>
-                        <form className="form-inline">
-                          <input className="form-control " type="search" 
-                                  placeholder="Ingrese nombre del usuario"
-                                  aria-label="Search"
-                                  value={username}
-                                  onChange={filtroUser}
-                                  />
-                        </form>
-                      </div>
-                    </td>
-                    <td className='searchPunctuation'> 
-                      <div>
-                        <form className="form-inline">
-                          <input className="form-control" type="search" 
-                                  placeholder="Ingrese puntaje"
-                                  aria-label="Search"
-                                  value={puntaje}
-                                  onChange={filtroPuntaje}/>
-                        </form>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className='encabezado'> 
-                      Puesto
-                    </th>
-                    <th className='encabezado'> 
-                      Miembro
-                    </th>
-                    <th className='encabezado'> 
-                      Puntaje
-                    </th>
-                  </tr>
-                  {puntuacion && puntuacion.length > 0 ? (
-                            puntuacion.map((line) =>(
-                            <tr key={line.user}>
-                                <td> {line.position} </td>
-                                <td> {line.user}</td>
-                                <td> {line.punctuation}</td>
-                            </tr>
-                            ))
-                          ):(ranking.punctuations.map((line) =>(
-                            <tr key={line.user}>
-                                <td> {line.position} </td>
-                                <td> {line.user}</td>
-                                <td> {line.punctuation}</td>
-                            </tr>
-                            ))
-                          )
-                          }
-                </tbody>
-              </table>              
-            </div>
+            <container>
+              <div className="row">
+                <div className="col-5 table-info">
+                  <table id="customers">
+                    <thead>
+                      <tr>
+                        <th colSpan={2}  className='thTitulo'>Informacion</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Nombre:  </td>
+                        <td>{tourney.name}</td>
+                      </tr>
+                      <tr>
+                        <td>Estado:  </td>
+                        <td>{tourney.state}</td>
+                      </tr>
+                      <tr>
+                        <td>Tipo: </td>
+                        <td>{tourney.type}</td>
+                      </tr>
+                      <tr>
+                        <td>Lenguaje: </td>
+                        <td>{tourney.language}</td>
+                      </tr>
+                      <tr>
+                        <td>Inicio: {formatDate(tourney.start)}</td>
+                        <td>Fin: {formatDate(tourney.finish)}</td>
+                      </tr>
+                      <tr>
+                        <td>Creador: </td>
+                        <td>{tourney.owner.username}</td>
+                      </tr>
+                      <tr>
+                        <td>Puntaje: "puntaje"</td>
+                        <td>Puesto: "puesto"</td>
+                      </tr>
+                      <tr>
+                        <td>Integrantes: </td>
+                        <td>
+                          <ul className="list-group scrollbar-success">
+                            {listMembers}
+                          </ul>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="col-7 table-ranking">
+                  <table id="customers">
+                    <thead>
+                      <tr>
+                        <th colSpan={3} className='thTitulo'>Ranking</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colSpan={2} className="searchUsername">
+                          <div>
+                            <form className="form-inline">
+                              <input className="form-control " type="search"
+                                      placeholder="Ingrese nombre del usuario"
+                                      aria-label="Search"
+                                      value={username}
+                                      onChange={filtroUser}
+                                      />
+                            </form>
+                          </div>
+                        </td>
+                        <td className='searchPunctuation'>
+                          <div>
+                            <form className="form-inline">
+                              <input className="form-control" type="search"
+                                      placeholder="Ingrese puntaje"
+                                      aria-label="Search"
+                                      value={puntaje}
+                                      onChange={filtroPuntaje}/>
+                            </form>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th className='encabezado'>
+                          Puesto
+                        </th>
+                        <th className='encabezado'>
+                          Miembro
+                        </th>
+                        <th className='encabezado'>
+                          Puntaje
+                        </th>
+                      </tr>
+                      {puntuacion && puntuacion.length > 0 ? (
+                                puntuacion.map((line) =>(
+                                <tr key={line.user}>
+                                    <td> {line.position} </td>
+                                    <td> {line.user}</td>
+                                    <td> {line.punctuation}</td>
+                                </tr>
+                                ))
+                              ):(ranking.punctuations.map((line) =>(
+                                <tr key={line.user}>
+                                    <td> {line.position} </td>
+                                    <td> {line.user}</td>
+                                    <td> {line.punctuation}</td>
+                                </tr>
+                                ))
+                              )
+                              }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </container>
           </div>
-        </container>
-        <Footer />
+          <Footer />
       </div>
   );
 }

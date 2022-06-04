@@ -50,10 +50,10 @@ render(){
 
     return (
       <div className='fondo-diccionario'>
-          <div className='body-diccionario'>
             <header className="navGeneral">
               <NavbarAut />
             </header>
+          <div className='body-diccionario'>
             <form onSubmit={this.submitCambio}>
                <div className="form-groupo"  >
                  <div className='contenedor-busqueda' >
@@ -88,8 +88,8 @@ render(){
                    )}
                </div>
             </form>
-            <Footer />
           </div>
+          <Footer />
       </div>
     );
   }

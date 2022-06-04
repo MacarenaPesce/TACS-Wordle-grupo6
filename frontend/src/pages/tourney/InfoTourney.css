@@ -9,7 +9,7 @@
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
-    margin-bottom: 70px;
+
   }
   
 #customers td, #customers th {
@@ -64,8 +64,12 @@
 }
 
 .table-ranking{
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 69vh;
+  margin-bottom: 70px;
+}
+.table-info{
+  margin-bottom: 70px;
 }
 
 .encabezado{
