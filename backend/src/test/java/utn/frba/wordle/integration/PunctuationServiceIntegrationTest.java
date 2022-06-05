@@ -63,4 +63,25 @@ public class PunctuationServiceIntegrationTest extends AbstractIntegrationTest {
         assertEquals(1L, punctuations.get(0).getPosition());
         assertEquals(14L, punctuations.get(0).getPunctuation());
     }
+
+    @Test
+    public void aUserCantPublishTheirPunctuationOnNotStartedTournament() {
+        UserDto user = getUserDto("email@email.com", "usernameTest");
+        Date startDate = getTodayWithOffset(1);
+        Date finishDate = getTodayWithOffset(2);
+        TournamentDto tournamentDto = getPublicTournamentDto(user, "Public Tourney", State.READY, startDate, finishDate);
+        ResultDto resultESDto = ResultDto.builder()
+                .language(Language.ES)
+                .result(2L)
+                .userId(user.getId())
+                .build();
+
+        punctuationService.submitResults(user.getId(), resultESDto);
+
+        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
+        assertThat(punctuations).isNotEmpty();
+        AssertionsForClassTypes.assertThat(punctuations.get(0)).isNotNull();
+        assertEquals(1L, punctuations.get(0).getPosition());
+        assertEquals(0L, punctuations.get(0).getPunctuation());
+    }
 }
