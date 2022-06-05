@@ -2,10 +2,7 @@ package utn.frba.wordle.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import utn.frba.wordle.model.entity.PunctuationEntity;
 import utn.frba.wordle.model.entity.RankingEntity;
-import utn.frba.wordle.model.entity.TournamentEntity;
-import utn.frba.wordle.model.pojo.Punctuation;
 
 import java.util.List;
 

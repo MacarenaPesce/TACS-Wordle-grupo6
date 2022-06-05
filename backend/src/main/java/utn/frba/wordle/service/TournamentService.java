@@ -153,6 +153,10 @@ public class TournamentService {
         long todayTime = new Date().getTime();
         long startTime = tournament.getStart().getTime();
         long finishTime = tournament.getFinish().getTime();
+        if(startTime > todayTime){
+            //The tournament didn't started, don't update scores
+            return;
+        }
         long diff = Long.min(todayTime, finishTime) - startTime;
         TimeUnit time = TimeUnit.DAYS;
         long tournamentDuration = time.convert(diff, TimeUnit.MILLISECONDS) + 1L;

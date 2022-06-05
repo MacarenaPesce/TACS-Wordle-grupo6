@@ -373,6 +373,48 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void ifATournamentStartedTwoDaysAgoAndEndedYesterdayMyScoreShouldBeFourteen(){
+        UserDto player1 = getUserDto("mail1@mail.com", "player1");
+        Date startDate = getTodayWithOffset(-2);
+        Date finishDate = getTodayWithOffset(-1);
+        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney", State.READY, startDate, finishDate);
+
+        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
+
+        assertThat(punctuations).isNotEmpty();
+        assertThat(punctuations.get(0)).isNotNull();
+        assertEquals(1L, punctuations.get(0).getPosition());
+        assertEquals(14L, punctuations.get(0).getPunctuation());
+    }
+
+    @Test
+    public void ifATournamentStartsAndEndsTomorrowMyScoreShouldBeZero(){
+        UserDto player1 = getUserDto("mail1@mail.com", "player1");
+        Date startDate = getTodayWithOffset(1);
+        Date finishDate = getTodayWithOffset(1);
+        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney", State.READY, startDate, finishDate);
+
+        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
+
+        assertThat(punctuations).isNotEmpty();
+        assertThat(punctuations.get(0)).isNotNull();
+        assertEquals(1L, punctuations.get(0).getPosition());
+        assertEquals(0L, punctuations.get(0).getPunctuation());
+    }
+
+    @Test
+    public void ifATournamentStartsInTheFutureMyScoreShouldBeZero(){
+        UserDto player1 = getUserDto("mail1@mail.com", "player1");
+        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney", State.READY);
+        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
+
+        assertThat(punctuations).isNotEmpty();
+        assertThat(punctuations.get(0)).isNotNull();
+        assertEquals(1L, punctuations.get(0).getPosition());
+        assertEquals(0L, punctuations.get(0).getPunctuation());
+    }
+
+    @Test
     public void aUserCanSeeThePositionsTableOfATournament(){
         UserDto player1 = getUserDto("mail1@mail.com", "player1");
         UserDto player2 = getUserDto("mail2@mail.com", "player2");
@@ -392,7 +434,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
 
         assertThat(punctuations).isNotEmpty();
-        assertThat(punctuations.get(0)).isNotEqualTo(0);
+        assertThat(punctuations.get(0)).isNotNull();
         assertTrue(punctuations.get(0).getPunctuation() < punctuations.get(1).getPunctuation());
         assertTrue(punctuations.get(1).getPunctuation() < punctuations.get(2).getPunctuation());
         assertTrue(punctuations.get(2).getPunctuation() < punctuations.get(3).getPunctuation());
@@ -510,9 +552,24 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         assertThat(tournaments).containsExactlyInAnyOrder(tournamentStarted);
     }
 
+    private TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state, Date startDate, Date finishDate) {
+
+        TournamentDto tournamentDto = TournamentDto.builder()
+                .type(TournamentType.PUBLIC)
+                .start(startDate)
+                .finish(finishDate)
+                .state(state)
+                .name(tournamentName)
+                .language(Language.ES)
+                .owner(owner)
+                .build();
+        return tournamentService.create(tournamentDto, owner.getId());
+    }
+
     private TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state) {
         Date startDate;
         Date finishDate;
+
         switch (state){
             case READY:
                 startDate = getTodayWithOffset(5);
@@ -529,17 +586,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
             default:
                 throw new IllegalStateException("Unexpected value: " + state);
         }
-
-        TournamentDto tournamentDto = TournamentDto.builder()
-                .type(TournamentType.PUBLIC)
-                .start(startDate)
-                .finish(finishDate)
-                .state(state)
-                .name(tournamentName)
-                .language(Language.ES)
-                .owner(owner)
-                .build();
-        return tournamentService.create(tournamentDto, owner.getId());
+        return getPublicTournamentDto(owner, tournamentName, state, startDate, finishDate);
     }
 
     private Date getTodayWithOffset(int offset) {
