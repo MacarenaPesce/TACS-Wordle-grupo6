@@ -46,7 +46,7 @@ public class PunctuationService {
             throw new BusinessException("The user already submitted his results.");
         }
         
-        List<RegistrationEntity> registrations = registrationService.getRegistrationsEntityFromUser(userId)
+        List<RegistrationEntity> registrations = registrationService.getActiveRegistrationsEntityFromUser(userId)
                 .stream().filter(reg -> reg.getTournament().getLanguage().equals(result.getLanguage())).collect(Collectors.toList());
 
         PunctuationEntity punctuation = PunctuationEntity.builder()

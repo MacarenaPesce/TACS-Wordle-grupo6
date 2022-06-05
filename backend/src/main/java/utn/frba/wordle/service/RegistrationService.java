@@ -37,6 +37,11 @@ public class RegistrationService {
         return registrationRepository.getAllByUser(userId);
     }
 
+    public List<RegistrationEntity> getActiveRegistrationsEntityFromUser(Long userId) {
+        Date dateToday = new Date();
+        return registrationRepository.getActiveRegistrationsFromUser(userId, dateToday);
+    }
+
     public List<RegistrationDto> getRegistrationsFromTournament(Long tourneyId) {
         return mapToDto(registrationRepository.getAllByTournament(tourneyId));
     }

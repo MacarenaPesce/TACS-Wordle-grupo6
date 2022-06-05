@@ -21,10 +21,8 @@ import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.service.PunctuationService;
 import utn.frba.wordle.service.RegistrationService;
-import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -33,9 +31,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
-
-    @Autowired
-    TournamentService tournamentService;
 
     @Autowired
     TournamentRepository tournamentRepository;
@@ -230,7 +225,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
                 .result(2L)
                 .language(Language.ES)
                 .build();
-        TournamentDto tournamentDto = getPrivateTournamentDto(user, "Private Tourney");
+        TournamentDto tournamentDto = getPublicTournamentDto(user, "T23", State.STARTED);
         tournamentService.addMember(player.getId(), tournamentDto.getTourneyId(), user.getId());
 
         tournamentService.submitResults(player.getId(), resultDto);
@@ -550,51 +545,6 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         assertEquals(tournaments.size(), 1);
         tournaments.forEach(tournamentDto -> assertThat(tournamentDto).hasNoNullFieldsOrProperties());
         assertThat(tournaments).containsExactlyInAnyOrder(tournamentStarted);
-    }
-
-    private TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state, Date startDate, Date finishDate) {
-
-        TournamentDto tournamentDto = TournamentDto.builder()
-                .type(TournamentType.PUBLIC)
-                .start(startDate)
-                .finish(finishDate)
-                .state(state)
-                .name(tournamentName)
-                .language(Language.ES)
-                .owner(owner)
-                .build();
-        return tournamentService.create(tournamentDto, owner.getId());
-    }
-
-    private TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state) {
-        Date startDate;
-        Date finishDate;
-
-        switch (state){
-            case READY:
-                startDate = getTodayWithOffset(5);
-                finishDate = getTodayWithOffset(10);
-                break;
-            case STARTED:
-                startDate = getTodayWithOffset(-2);
-                finishDate = getTodayWithOffset(5);
-                break;
-            case FINISHED:
-                startDate = getTodayWithOffset(-10);
-                finishDate = getTodayWithOffset(-3);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + state);
-        }
-        return getPublicTournamentDto(owner, tournamentName, state, startDate, finishDate);
-    }
-
-    private Date getTodayWithOffset(int offset) {
-        Date currentDate = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(currentDate);
-        c.add(Calendar.DATE, offset); //same with c.add(Calendar.DAY_OF_MONTH, 1);
-        return c.getTime();
     }
 
     private TournamentDto getPrivateTournamentDto(UserDto ownerUser, String tournamentName, Language language) {
