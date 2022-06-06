@@ -8,9 +8,7 @@ import Tourney from "./Tourney";
 
 export default function InfoTourney() {
   let { id } = useParams();
-  //console.log(id);
   const [tourney, setTourney] = useState({owner: ""});
-  //console.log(tourney);
   const [ranking, setRanking] = useState({punctuations: []});
   const [members, setMembers] = useState({members: []});
   const [myScore, setMyScore] = useState([]);
@@ -22,102 +20,106 @@ export default function InfoTourney() {
 
   const getTourney=() =>{
     TourneyService.getTournamentFromId(id)
-      .then(response => {
-        setTourney(response.data);
-        console.log('Response de torneo obtenida: ')
-        console.log(response.data)
-      })
-      .catch(error => {
-        console.log(error)
-        //Tourney.handleSessionError(this, error) //todo esto no hace nada sin usar las variables de estado sessionError y errorMessage, solo funciona en class
+    .then(response => {
+      setTourney(response.data);
+      console.log('Response de torneo obtenida: ')
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error)
+      //Tourney.handleSessionError(this, error) //todo esto no hace nada sin usar las variables de estado sessionError y errorMessage, solo funciona en class
     })
   }
   
   const getRanking =() => {      
     TourneyService.getRanking(id)
-            .then(response => {
-                setRanking(response.data);
-                console.log('Response de ranking obtenida: ')
-                console.log(response.data)
-            })
-            .catch(error => {
-                console.log(error)
-            })
-          }
-     const getMember =() => {
-        TourneyService.getMembers(id)
-            .then(response => {
-              setMembers(response.data);
-              console.log('Response de Members obtenida: ')
-              console.log(response.data)
-            })
-            .catch(error => {
-                console.log(error)
-            })
-          }
-      const getMyScore =() => {
-        TourneyService.getMyScore(id)
-            .then(response => {
-              setMyScore(response.data);
-              console.log('Response de MyScore obtenida: ')
-              console.log(response.data)
-            })
-            .catch(error => {
-                console.log(error)
-            })
-          }    
+    .then(response => {
+      setRanking(response.data);
+      console.log('Response de ranking obtenida: ')
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }
+  
+  const getMember =() => {
+    TourneyService.getMembers(id)
+    .then(response => {
+      setMembers(response.data);
+      console.log('Response de Members obtenida: ')
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }
+  
+  const getMyScore =() => {
+    TourneyService.getMyScore(id)
+    .then(response => {
+      setMyScore(response.data);
+      console.log('Response de MyScore obtenida: ')
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }    
 
+  function loadData(){
+    getTourney();
+    getRanking();
+    getMember();
+    getMyScore();
+  }
     
+  useEffect(() => {
+    loadData();
+    setPuntuacion(ranking.punctuations);
+    console.log("torneo actual:",tourney);
+  }, []);
 
-    useEffect(() => {
-      getTourney();
+  let listMembers = (members.members.map((member) =>
+    <li className="list-group-item disabled" key={member.username}> {member.username}</li>
+  ));
+
+  const filtroUser = (e) => {
+    const keyword = e.target.value;
+
+    if (keyword !== '') {
+      const results = ranking.punctuations.filter((puntuacion) => {
+        return puntuacion.user.toLowerCase().startsWith(keyword.toLowerCase());
+        // Use the toLowerCase() method to make it case-insensitive
+      });
+      setPuntuacion(results);
+    } else {
       getRanking();
-      getMember();
-      getMyScore();
       setPuntuacion(ranking.punctuations);
-      console.log("torneo actual:",tourney);
-    }, []);
-
-    let listMembers = (members.members.map((member) =>
-      <li className="list-group-item disabled" key={member.username}> {member.username}</li>
-    ));
-
-    const filtroUser = (e) => {
-      const keyword = e.target.value;
-  
-      if (keyword !== '') {
-        const results = ranking.punctuations.filter((puntuacion) => {
-          return puntuacion.user.toLowerCase().startsWith(keyword.toLowerCase());
-          // Use the toLowerCase() method to make it case-insensitive
-        });
-        setPuntuacion(results);
-      } else {
-        getRanking();
-        setPuntuacion(ranking.punctuations);
-      }
-      setUsername(keyword);
-    };  
+    }
+    setUsername(keyword);
+  };  
     
-    const filtroPuntaje = (e) => {
-      const keyword = e.target.value;
-  
-      if (keyword !== '') {
-        const results = ranking.punctuations.filter((puntuacion) => 
-           puntuacion.punctuation == keyword  );
-        setPuntuacion(results);
-      } else {
-        getRanking();
-        setPuntuacion(ranking.punctuations);
-      }
-      setPuntaje(keyword);
-    };
+  const filtroPuntaje = (e) => {
+    const keyword = e.target.value;
+
+    if (keyword !== '') {
+      const results = ranking.punctuations.filter((puntuacion) => 
+          puntuacion.punctuation == keyword  );
+      setPuntuacion(results);
+    } else {
+      getRanking();
+      setPuntuacion(ranking.punctuations);
+    }
+    setPuntaje(keyword);
+  };
     
-    const formatDate =(start)=> {
-      let fecha = new Date(start) ;
-      let day = fecha.getDate()+1 ;
-      let month = (fecha.getMonth() +1)>10?(fecha.getMonth() +1) : '0'+(fecha.getMonth() +1)  ; 
-      let year = fecha.getFullYear();
-      return day + '/' + month + '/' + year ;
+  const formatDate =(start)=> {
+    let fecha = new Date(start) ;
+    let day = fecha.getDate()+1 ;
+    let month = (fecha.getMonth() +1)>10?(fecha.getMonth() +1) : '0'+(fecha.getMonth() +1)  ; 
+    let year = fecha.getFullYear();
+    return day + '/' + month + '/' + year ;
   };    
 
     return (
