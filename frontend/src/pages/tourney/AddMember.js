@@ -9,6 +9,7 @@ import Member from './Member.js';
 import TourneyService from '../../service/TourneyService';
 import AuthService from "../../service/AuthService";
 import Tourney from "./Tourney";
+import Handler from "../sesion/Handler";
 
 export default class AddMember extends Component  {
 
@@ -61,7 +62,7 @@ export default class AddMember extends Component  {
             .catch(error => {
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
-                Tourney.handleSessionError(this, error)
+                Handler.handleSessionError(this, error)
         })
     }
 
@@ -78,7 +79,7 @@ export default class AddMember extends Component  {
             .catch(error => {
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
-                Tourney.handleSessionError(this, error)
+                Handler.handleSessionError(this, error)
             })
     }
 

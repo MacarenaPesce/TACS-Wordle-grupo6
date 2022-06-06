@@ -8,7 +8,7 @@ import BotonesTorneos from './BotonesTorneos.js'
 import Not from "../../components/not/Not";
 import AuthService from "../../service/AuthService";
 import TourneySubmit from "./TourneySubmit";
-import Tourney from "./Tourney";
+import Handler from "../sesion/Handler";
 
 
 export default class TabsTourneys extends Component{ 
@@ -41,6 +41,7 @@ export default class TabsTourneys extends Component{
     }
 
     submitTourneys() {
+        console.log("se pide actualizar la lista de torneos")
         UserService.getMyTourneys(this.props.nombreTabla) /*todo: como lo mando si no recibe parametros ._. mandar aca el tipo de torneos */ //mis torneos es el nombre del metodo, para otra tabla es otro metodo
             .then(response => {
                 this.setState({myTourneys: response.data})
@@ -50,7 +51,7 @@ export default class TabsTourneys extends Component{
             })
             .catch(error => {
                 console.log(error)
-                Tourney.handleSessionError(this, error)
+                Handler.handleSessionError(this, error)
             })
     }
 

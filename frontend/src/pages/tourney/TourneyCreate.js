@@ -9,6 +9,7 @@ import Tourney from "./Tourney";
 import Ayuda from "./Ayuda";
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
+import Handler from "../sesion/Handler";
 
 export default class TourneyCreate extends Component{
 
@@ -67,7 +68,7 @@ export default class TourneyCreate extends Component{
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
 
-                Tourney.handleSessionError(this, error)
+                Handler.handleSessionError(this, error)
             })
     }
 
