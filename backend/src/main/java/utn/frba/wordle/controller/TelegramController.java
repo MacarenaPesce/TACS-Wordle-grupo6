@@ -28,6 +28,17 @@ public class TelegramController {
     @Autowired
     HelpChat helpChat;
 
+    String start = "Wordle ♟\n\n" +
+                    "/register - Elija su nombre de usuario\n" +
+                    "/help - Generar trampas para Wordle\n" +
+                    "/definition - Obtener definicion de una palabra\n" +
+                    "/submit - Cargar los resultados del dia\n" +
+                    "/create - Crear un torneo\n" +
+                    "/addmember - Agregar un usuario a uno de mis torneos\n" +
+                    "/join - Unirme a un torneo publico pendiente de empezar\n" +
+                    "/ranking - Visualizar el ranking de un torneo\n" +
+                    "/tournaments - Obtener listas de torneos existentes\n" +
+                    "/tournament - Obtener informacion de un torneo";
     @PostMapping("/")
     public ResponseEntity<String> postUpdate(@RequestBody Update update) throws IOException, URISyntaxException {
 
@@ -68,6 +79,10 @@ public class TelegramController {
 
             case "create" :
                 sender.sendMessage("Crear un torneo", chat_id);
+                break;
+
+            case "start" :
+                sender.sendMessage(start, chat_id);
                 break;
 
             case "addmember" :
