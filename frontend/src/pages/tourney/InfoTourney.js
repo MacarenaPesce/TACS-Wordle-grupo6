@@ -4,9 +4,9 @@ import NavbarAut from '../../components/navbar/Navbar';
 import Footer from '../../components/footer/Footer';
 import './InfoTourney.css'
 import TourneyService from '../../service/TourneyService';
-import Tourney from "./Tourney";
 import Not from "../../components/not/Not";
 import Handler from "../sesion/Handler";
+import AuthService from "../../service/AuthService";
 
 export default function InfoTourney() {
     let { id } = useParams();
@@ -66,7 +66,20 @@ export default function InfoTourney() {
       setPuntuacion(ranking.punctuations);
       console.log(tourney);
       console.log("daleeeeeeeeeee")
+      validarToken()
     }, []);
+
+    function validarToken() {
+        console.log('Ping del token en el store...')
+        AuthService.ping()
+            .then(response => {
+                console.log('Response del ping: ' + response.status)
+            })
+            .catch(error => {
+                console.log(error)
+                Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
+            })
+    }
 
     let listMembers = (members.members.map((member) =>
       <li className="list-group-item disabled" key={member.username}> {member.username}</li>

@@ -6,6 +6,7 @@ import ComponenteTabs from './ComponenteTabs';
 import Not from "../../components/not/Not";
 import AuthService from "../../service/AuthService";
 import StatusCheck from "../sesion/StatusCheck";
+import Handler from "../sesion/Handler";
 
 
 export default class Tourney extends Component{
@@ -14,18 +15,25 @@ export default class Tourney extends Component{
         super()
         this.state = {
             logueado: false,
-            missingCredentials: false
+            errorMessage: '',
+            sessionError: false
         }
     }
 
-    componentDidMount(){ //todo analizar si se prefiere cambiar por componentDidUpdate() / useEffect()
-        //todo mirar si es necesario hacer una llamada a la api, para verificar que el logueo sea válido
-        if(localStorage.getItem('token')){
+    componentDidMount() {
+        if (localStorage.getItem('token')) {
             this.setState({logueado: true});
-        } else {
-            this.setState({missingCredentials: true});
-            AuthService.logout();
         }
+        console.log('Ping del token en el store...')
+        AuthService.ping()
+            .then(response => {
+                console.log('Response del ping: ' + response.status)
+            })
+            .catch(error => {
+                console.log(error)
+                Handler.handleSessionError(this, error)
+            })
+
     }
 
 
@@ -33,8 +41,8 @@ export default class Tourney extends Component{
     render() {
         return(
             <div className='tourney'>
-                {this.state.missingCredentials &&
-                    <Not message="Olvidó traer sus credenciales."/>}
+                {this.state.sessionError &&
+                    <Not message={this.state.errorMessage}/>}
 
                 {this.state.logueado ? (
                     <React.Fragment>
