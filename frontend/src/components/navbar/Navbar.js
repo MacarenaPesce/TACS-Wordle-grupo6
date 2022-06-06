@@ -6,6 +6,7 @@ import './Navbar.css';
 import useUser from '../../hooks/useUser';
 import IconButton from '@mui/material/IconButton'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import NotificationBar from '../notificationBar/NotificationBar';
 
 export default function NavbarAut() {
    
@@ -41,6 +42,7 @@ export default function NavbarAut() {
                   <Nav.Link href="/help" >Ayuda</Nav.Link>
                   <Nav.Link href="/dictionary">Diccionario</Nav.Link>
                   <Nav.Link href="/tourney">Torneo</Nav.Link>
+                  <NotificationBar />
                 </Nav>
               </Container>
               <Button href="/" onClick={clickLogout} variant="outline-success" className="btn-dark but-log">Salir</Button>
