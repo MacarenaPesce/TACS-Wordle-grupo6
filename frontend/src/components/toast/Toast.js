@@ -9,6 +9,7 @@ import ToastHeader from 'react-bootstrap/ToastHeader'
 import ToastBody from 'react-bootstrap/ToastBody'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import { Container, Row, Col } from 'react-bootstrap';
+import {Toaster, toast} from 'react-hot-toast'
 
 function ToastComponent(props) {
 
@@ -17,25 +18,18 @@ function ToastComponent(props) {
   const toggleShowA = () => setShowA(!showA);
 
   return (
-    <div>
-      <Row>
-        <Col md={6} className="mb-2">
-          <Button onClick={toggleShowA} className="mb-2">
-            nombre boton
-          </Button>
-          <Toast show={showA} onClose={toggleShowA}>
-            <Toast.Header>
-              <img
-                src="holder.js/20x20?text=%20"
-                className="rounded me-2"
-                alt=""
-              />
-              <strong className="me-auto">titulo</strong>
-            </Toast.Header>
-            <Toast.Body>{props.message}</Toast.Body>
-          </Toast>
-        </Col>
-      </Row>      
+    <div>    
+      <Toast show={showA} onClose={toggleShowA}>
+        <Toast.Header>
+          <img
+            src="holder.js/20x20?text=%20"
+            className="rounded me-2"
+            alt=""
+          />
+          <strong className="me-auto">{props.tittle}Titulo</strong>
+        </Toast.Header>
+        <Toast.Body>{props.message}</Toast.Body>
+      </Toast>
     </div>
   );
 }

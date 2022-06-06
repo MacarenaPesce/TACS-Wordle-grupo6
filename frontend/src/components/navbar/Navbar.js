@@ -42,7 +42,6 @@ export default function NavbarAut() {
                   <Nav.Link href="/help" >Ayuda</Nav.Link>
                   <Nav.Link href="/dictionary">Diccionario</Nav.Link>
                   <Nav.Link href="/tourney">Torneo</Nav.Link>
-                  <NotificationBar />
                 </Nav>
               </Container>
               <Button href="/" onClick={clickLogout} variant="outline-success" className="btn-dark but-log">Salir</Button>
