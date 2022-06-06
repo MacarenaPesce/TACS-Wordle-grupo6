@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.model.dto.RegistrationDto;
+import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.entity.PunctuationEntity;
 import utn.frba.wordle.model.entity.RegistrationEntity;
 import utn.frba.wordle.model.entity.TournamentEntity;
@@ -12,9 +13,7 @@ import utn.frba.wordle.repository.RegistrationRepository;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.repository.UserRepository;
 
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -44,8 +43,8 @@ public class RegistrationService {
         return registrationRepository.getActiveRegistrationsFromUser(userId, dateToday);
     }
 
-    public List<RegistrationDto> getRegistrationsFromTournament(Long tourneyId) {
-        return mapToDto(registrationRepository.getAllByTournament(tourneyId));
+    public List<RegistrationDto> getOutdatedRegistrationsFromTournament(TournamentDto tournamentDto) {
+        return mapToDto(registrationRepository.getOutdatedRegistrationsByTournament(tournamentDto.getTourneyId(), tournamentDto.getTournamentDuration()));
     }
 
     public RegistrationEntity addMember(Long tournamentId, Long userId, Date date) {

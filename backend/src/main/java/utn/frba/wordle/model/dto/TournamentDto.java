@@ -28,6 +28,7 @@ public class TournamentDto {
     private final Date start;
     private final Date finish;
     private final UserDto owner;
+    private final Long tournamentDuration;
 
     @Override
     public boolean equals(Object o) {

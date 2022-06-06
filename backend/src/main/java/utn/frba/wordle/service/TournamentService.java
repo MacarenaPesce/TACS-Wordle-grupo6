@@ -146,24 +146,18 @@ public class TournamentService {
     }
 
     private void updateTournamentScores(Long tourneyId) {
-        List<RegistrationDto> registrations = registrationService.getRegistrationsFromTournament(tourneyId);
-
         TournamentDto tournament = getTournamentFromId(tourneyId);
-        long todayTime = new Date().getTime();
-        long startTime = tournament.getStart().getTime();
-        long finishTime = tournament.getFinish().getTime();
-        final boolean isFinished = todayTime > finishTime;
-        if(startTime > todayTime){
+
+        if(tournament.getState().equals(State.READY)){
             //The tournament didn't started, don't update scores
             return;
         }
-        long diff = Long.min(todayTime, finishTime) - startTime;
-        TimeUnit time = TimeUnit.DAYS;
-        long tournamentDuration = time.convert(diff, TimeUnit.MILLISECONDS) + 1L;
+
+        List<RegistrationDto> registrations = registrationService.getOutdatedRegistrationsFromTournament(tournament);
         registrations.forEach(registration -> {
             LocalDate lastScoreDate = registration.getPunctuations().stream().map(PunctuationEntity::getDate).max(LocalDate::compareTo).orElse(null);
-            long notPlayedDays = (tournamentDuration - registration.getDaysPlayed());
-            if(!isFinished && (lastScoreDate==null || !isToday(lastScoreDate))){
+            long notPlayedDays = (tournament.getTournamentDuration() - registration.getDaysPlayed());
+            if(!tournament.getState().equals(State.FINISHED) && (lastScoreDate == null || !isToday(lastScoreDate))){
                 notPlayedDays = notPlayedDays - 1;
             }
             if (notPlayedDays > 0) {
@@ -295,6 +289,13 @@ public class TournamentService {
             state = State.STARTED;
         }
 
+        long todayTime = new Date().getTime();
+        long startTime = entity.getStart().getTime();
+        long finishTime = entity.getFinish().getTime();
+        long diff = Long.min(todayTime, finishTime) - startTime;
+        TimeUnit time = TimeUnit.DAYS;
+        long tournamentDuration = time.convert(diff, TimeUnit.MILLISECONDS) + 1L;
+
         return TournamentDto.builder()
                 .language(entity.getLanguage())
                 .name(entity.getName())
@@ -303,6 +304,7 @@ public class TournamentService {
                 .state(state)
                 .tourneyId(entity.getId())
                 .type(entity.getType())
+                .tournamentDuration(tournamentDuration)
                 .owner(UserService.mapToDto(entity.getOwner()))
                 .build();
     }
