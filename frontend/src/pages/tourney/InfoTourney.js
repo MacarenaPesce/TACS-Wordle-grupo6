@@ -167,11 +167,11 @@ export default function InfoTourney() {
                         <td>{tourney.owner.username}</td>
                       </tr>
                       <tr>
-                        <td>Puntaje: "puntaje"</td>
-                        <td>Puesto: "puesto"</td>
+                        <td>Puntaje: {myScore.punctuation}</td>
+                        <td>Puesto: {myScore.position}</td>
                       </tr>
                       <tr>
-                        <td>Integrantes: </td>
+                        <td>Integrantes: {members.members.length}</td>
                         <td>
                           <ul className="list-group scrollbar-success">
                             {listMembers}

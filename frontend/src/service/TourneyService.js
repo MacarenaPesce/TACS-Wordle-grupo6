@@ -5,7 +5,6 @@ import AuthService from "./AuthService";
 const API_URL = "http://localhost:8080/api/tournaments/";
 const API_PUNCTUATION = "http://localhost:8080/api/punctuation/";
 
-
 const createTourney = (body) => {
 
     /*const token = authHeader()
@@ -50,7 +49,7 @@ const getMembers = (tournamentId) => {
 }
 
 const getMyScore = (tournamentId) => {
-    return axios.get(API_URL+tournamentId+"/ranking/myScore")
+    return axios.get(API_URL+tournamentId+"/ranking/myScore", { headers: authHeader() })
 }
 
 export default {
