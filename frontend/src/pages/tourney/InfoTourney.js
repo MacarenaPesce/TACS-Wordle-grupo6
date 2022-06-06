@@ -5,6 +5,8 @@ import Footer from '../../components/footer/Footer';
 import './InfoTourney.css'
 import TourneyService from '../../service/TourneyService';
 import Tourney from "./Tourney";
+import Not from "../../components/not/Not";
+import Handler from "../sesion/Handler";
 
 export default function InfoTourney() {
     let { id } = useParams();
@@ -17,6 +19,9 @@ export default function InfoTourney() {
     const [puntuacion, setPuntuacion] = useState([]);
     const [puntaje, setPuntaje] = useState(0);
 
+    const [sessionError, setSessionError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
     const getTourney=() =>{
         TourneyService.getTournamentFromId(id)
             .then(response => {
@@ -26,7 +31,7 @@ export default function InfoTourney() {
             })
             .catch(error => {
                 console.log(error)
-                //Tourney.handleSessionError(this, error) //todo esto no hace nada sin usar las variables de estado sessionError y errorMessage, solo funciona en class
+                Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
             })
           }
      const getRanking =() => {      
@@ -38,6 +43,7 @@ export default function InfoTourney() {
             })
             .catch(error => {
                 console.log(error)
+                Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
             })
           }
      const getMember =() => {
@@ -49,6 +55,7 @@ export default function InfoTourney() {
             })
             .catch(error => {
                 console.log(error)
+                Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
             })
           }
 
@@ -108,6 +115,9 @@ export default function InfoTourney() {
         <header className='NavTourney'>
             <NavbarAut />
         </header>
+
+          {sessionError &&
+              <Not message={errorMessage}/>}
 
           <div className='body-info'>
             <h1 className='titleInfo'> Torneo N° {id}</h1>

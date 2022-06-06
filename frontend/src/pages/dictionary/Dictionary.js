@@ -3,6 +3,9 @@ import NavbarAut from '../../components/navbar/Navbar';
 import Footer from '../../components/footer/Footer';
 import './Dictionary.css'
 import DictionaryService from '../../service/DictionaryService';
+import Not from "../../components/not/Not";
+import Tourney from "../tourney/Tourney";
+import Handler from "../sesion/Handler";
 
 export default class Dictionary extends React.Component {
 
@@ -13,7 +16,9 @@ constructor(){
         word: '',
         significado: [],
         visibility: "none",
-        loading: false
+        loading: false,
+        errorMessage: '',
+        sessionError: false
     }
 }
 
@@ -37,6 +42,7 @@ submitCambio = e => {
           this.setState({loading: false})
           {/*todo: informar errores modal */}
           console.log(error)
+          Handler.handleSessionError(this, error)
       })
 }
 
@@ -53,6 +59,8 @@ render(){
             <header className="navGeneral">
               <NavbarAut />
             </header>
+          {this.state.sessionError &&
+              <Not message={this.state.errorMessage}/>}
           <div className='body-diccionario'>
             <form onSubmit={this.submitCambio}>
                <div className="form-groupo"  >

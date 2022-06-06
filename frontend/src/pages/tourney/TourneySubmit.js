@@ -7,6 +7,7 @@ import StatusCheck from "../sesion/StatusCheck";
 import AuthService from "../../service/AuthService";
 import Tourney from "./Tourney";
 import Collapse from "react-bootstrap/Collapse";
+import Handler from "../sesion/Handler";
 
 export default class TourneySubmit extends Component{
 
@@ -59,7 +60,7 @@ export default class TourneySubmit extends Component{
                 this.setState({loading: false});
                 console.log(error)
 
-                Tourney.handleSessionError(this, error)
+                Handler.handleSessionError(this, error)
             })
     }
 
@@ -100,7 +101,7 @@ export default class TourneySubmit extends Component{
                 console.log(error)
                 this.setState({loading: false});
 
-                Tourney.handleSessionError(this, error)
+                Handler.handleSessionError(this, error)
             })
     }
 

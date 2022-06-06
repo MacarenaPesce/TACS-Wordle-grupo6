@@ -4,6 +4,8 @@ import Footer from "../../components/footer/Footer";
 import HelpService from "../../service/HelpService";
 import './Help.css';
 import { ListGroup } from "react-bootstrap";
+import Handler from "../sesion/Handler";
+import Not from "../../components/not/Not";
 
 export default class Help extends Component{
 
@@ -17,7 +19,9 @@ export default class Help extends Component{
             wordsResponse: [],
             visibility: "none",
             loading: false,
-            error: false
+            error: false,
+            errorMessage: '',
+            sessionError: false
         }
     }
 
@@ -44,6 +48,7 @@ export default class Help extends Component{
             .catch(error => {
                 this.setState({loading: false, error: true})
                 console.log(error)
+                Handler.handleSessionError(this, error)
             })
     }
 
@@ -94,6 +99,9 @@ export default class Help extends Component{
                     <header className="navGeneral">
                         <NavbarAut />
                     </header>
+
+                {this.state.sessionError &&
+                    <Not message={this.state.errorMessage}/>}
 
                     <div className="container">
                         <div className="row">

@@ -28,20 +28,7 @@ export default class Tourney extends Component{
         }
     }
 
-    static handleSessionError(component, error){
-        if(error.response === undefined){
-            AuthService.logout()
-            component.setState({sessionError: true, errorMessage: "No hay conexión con el back"})
-            return;
-        }
 
-        const status = JSON.stringify(error.response.status)
-        const message = StatusCheck(status,JSON.stringify(error.response.data.message));
-        if(status === "401" || status === "403"){
-            AuthService.logout()
-            component.setState({sessionError: true, errorMessage: message})
-        }
-    }
 
     render() {
         return(

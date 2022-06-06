@@ -10,6 +10,8 @@ import Collapse from "react-bootstrap/Collapse";
 import Countdown from "react-countdown";
 import TourneyService from "../../service/TourneyService";
 import Tourney from "./Tourney";
+import Handler from "../sesion/Handler";
+import Not from "../../components/not/Not";
 
 const ComponenteTabs = () => {
 
@@ -19,6 +21,10 @@ const ComponenteTabs = () => {
         finalizados: 'Finalizados',
     }
     const [open, setOpen] = useState(true);
+
+    const [sessionError, setSessionError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
 
     const [tabla, setTabla] = useState("col-md-9");
     const [panel, setPanel] = useState("col-md-3");
@@ -61,6 +67,7 @@ const ComponenteTabs = () => {
             })
             .catch(error => {
                 console.log(error)
+                Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
             })
         TourneyService.getDayOfTheDate()
             .then(response => {
@@ -70,12 +77,15 @@ const ComponenteTabs = () => {
             })
             .catch(error => {
                 console.log(error)
+                Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
             })
     }
 
     //TODO logica de volver a cargar / request de lista de torneos cada vez que cambias de tab
     return(
         <div>
+            {sessionError &&
+                <Not message={errorMessage}/>}
         <Tabs defaultActiveKey="myTourney" id="uncontrolled-tab-example" className="mb-3">
             <Tab eventKey="myTourney" title={nombres.misTorneos}>
                 <div className="row">
