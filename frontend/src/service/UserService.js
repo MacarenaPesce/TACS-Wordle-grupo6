@@ -30,8 +30,7 @@ const getMyTourneys = (nombreTabla) => {
   }
   else{
     return getTourneysFinished();
-  }
-  
+  }  
 };
 
 const getTodaysResult = (language) => {

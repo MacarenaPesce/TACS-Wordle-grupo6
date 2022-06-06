@@ -31,10 +31,11 @@ function BotonesTorneos(data){
         TourneyService.join(tourney.tourneyId);
     }
 
-    if(tourney.owner.id == userId){
-        if(tourney.type === 'PUBLIC' || tourney.type === 'PRIVATE'){
-            if(tourney.state!= 'FINISHED'){
-                return(
+
+    if(tourney.owner.id == userId){ //es mi torneo
+        if(tourney.type === 'PUBLIC' || tourney.type === 'PRIVATE'){ // es publico o privado
+            if(tourney.state!= 'FINISHED'){  // no esta finalizado
+                return( //tabla mis torneos
                     <div> 
                         {/* como soy el creador lo puedo eliminar*/}
                         {/** 
@@ -51,7 +52,7 @@ function BotonesTorneos(data){
                     </div>
                 )
             }
-            else{
+            else{ // esta finalizado
                 return(
                     <div>
                         <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
@@ -61,10 +62,10 @@ function BotonesTorneos(data){
             }
         }
     }
-    else if(tourney.owner.id != userId){
-        if(tourney.type === 'PUBLIC'){
+    else if(tourney.owner.id != userId){ // no es mi torneo
+        if(tourney.type === 'PUBLIC'){ // es publico
             return(
-                <div> {/*es un torneo publico al que entraste o te agregaron y no sos el creador */}
+                <div>
                         {/* si no soy el creador, me puedo salir */}
                     {/*
                     <button className="btn btn-danger" type="button">
@@ -84,12 +85,11 @@ function BotonesTorneos(data){
                 </div>
             )
         }
-        else{
+        else{ // es privado pero no es mi torneo (me agregaron)
             return(
-                <div> {/* es un torneo privado (al que te agregaron) y no sos el creador*/}
+                <div>
                     {/* si no soy el creador, me puedo salir */}
-                    {/*
-                    <button className="btn btn-danger" type="button">
+                    {/*<button className="btn btn-danger" type="button">
                         <HiLogout/> 
                     </button>*/}
                     <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
