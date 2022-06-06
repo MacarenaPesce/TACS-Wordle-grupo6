@@ -50,7 +50,7 @@ const getMembers = (tournamentId) => {
 }
 
 const getMyScore = (tournamentId) => {
-    return axios.get(API_URL+tournamentId+"/ranking/myScore", { headers: authHeader() });
+    return axios.get(API_URL+tournamentId+"/ranking/myScore")
 }
 
 export default {
