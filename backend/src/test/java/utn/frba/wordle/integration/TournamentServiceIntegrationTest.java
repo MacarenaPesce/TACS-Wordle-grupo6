@@ -144,7 +144,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCantSubmitHisResultsOfTheSameLanguageTwiceInADay(){
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournamentDto = getPrivateTournamentDto(owner);
+        TournamentDto tournamentDto = getPublicTournamentDto(owner, "T1", State.STARTED);
         UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
         tournamentService.join(user.getId(), tournamentDto.getTourneyId());
         ResultDto dto = ResultDto.builder()
@@ -161,7 +161,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanJoinAPublicTournament() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournamentDto = getPrivateTournamentDto(owner);
+        TournamentDto tournamentDto = getPublicTournamentDto(owner, "T1", State.READY);
         UserDto user = getUserDto("mail2@mail.com", "usernameTest2");
         //SessionDto sessionDto = TestUtils.getValidSessionFromUser(user);
 
