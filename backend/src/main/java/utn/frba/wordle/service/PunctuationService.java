@@ -14,6 +14,7 @@ import utn.frba.wordle.repository.PunctuationRepository;
 import utn.frba.wordle.repository.RegistrationRepository;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,6 +63,7 @@ public class PunctuationService {
             registration.getPunctuations().add(punctuation);
             registration.setDaysPlayed(registration.getDaysPlayed() + 1L);
             registration.setTotalScore(registration.getTotalScore() + punctuation.getPunctuation());
+            registration.setLastSubmittedScore(new Date());
             registrationRepository.save(registration);
             punctuation.getRegistrations().add(registration);
             punctuationRepository.save(punctuation);

@@ -361,10 +361,19 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         tournamentService.submitResults(player2.getId(), result2);
         tournamentService.submitResults(player3.getId(), result3);
 
-        Punctuation score = tournamentService.getScoreFromUser(tournamentDto.getTourneyId(), player1.getUsername());
+        Punctuation scorePlayer1 = tournamentService.getScoreFromUser(tournamentDto.getTourneyId(), player1.getUsername());
+        Punctuation scorePlayer2 = tournamentService.getScoreFromUser(tournamentDto.getTourneyId(), player2.getUsername());
+        Punctuation scorePlayer3 = tournamentService.getScoreFromUser(tournamentDto.getTourneyId(), player3.getUsername());
+        Punctuation scorePlayer4 = tournamentService.getScoreFromUser(tournamentDto.getTourneyId(), player4.getUsername());
 
-        assertEquals(score.getPunctuation(), 19L);
-        assertEquals(score.getPosition(), 3L);
+        assertEquals(scorePlayer1.getPunctuation(), 19L);
+        assertEquals(scorePlayer1.getPosition(), 4L);
+        assertEquals(scorePlayer2.getPunctuation(), 16L);
+        assertEquals(scorePlayer2.getPosition(), 2L);
+        assertEquals(scorePlayer3.getPunctuation(), 17L);
+        assertEquals(scorePlayer3.getPosition(), 3L);
+        assertEquals(scorePlayer4.getPunctuation(), 14L);
+        assertEquals(scorePlayer4.getPosition(), 1L);
     }
 
     @Test
@@ -437,10 +446,14 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         assertEquals(2L, punctuations.get(1).getPosition());
         assertEquals(3L, punctuations.get(2).getPosition());
         assertEquals(4L, punctuations.get(3).getPosition());
-        assertEquals(16L, punctuations.get(0).getPunctuation());
-        assertEquals(17L, punctuations.get(1).getPunctuation());
-        assertEquals(19L, punctuations.get(2).getPunctuation());
-        assertEquals(21L, punctuations.get(3).getPunctuation());
+        assertEquals(14L, punctuations.get(0).getPunctuation());
+        assertEquals(16L, punctuations.get(1).getPunctuation());
+        assertEquals(17L, punctuations.get(2).getPunctuation());
+        assertEquals(19L, punctuations.get(3).getPunctuation());
+        assertFalse(punctuations.get(0).getSubmittedScoreToday());
+        assertTrue(punctuations.get(1).getSubmittedScoreToday());
+        assertTrue(punctuations.get(2).getSubmittedScoreToday());
+        assertTrue(punctuations.get(3).getSubmittedScoreToday());
     }
 
     @Test

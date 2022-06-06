@@ -41,4 +41,7 @@ public class RegistrationEntity {
     @Column
     private Long totalScore;
 
+    @Column
+    private Date lastSubmittedScore;
+
 }
