@@ -8,8 +8,6 @@ import AddMember from "./AddMember"
 import UserService from "../../service/UserService";
 import {GoCheck} from "react-icons/go";
 
-
-
 function BotonesTorneos(data){
     let tourney = data.tourney;
     let userId = localStorage.getItem("userId");
