@@ -21,6 +21,10 @@ const getAdminBoard = () => {
   return axios.get(API_URL + "admin", { headers: authHeader() });
 };
 
+const getTodaysResult = (language) => {
+  return axios.get(API + "punctuation/todaysResult/" + language, { headers: authHeader() });
+};
+
 const getMyTourneys = (nombreTabla) => {
   if(nombreTabla === 'Mis torneos'){
     return getMyTourneysActive();
@@ -31,10 +35,6 @@ const getMyTourneys = (nombreTabla) => {
   else{
     return getTourneysFinished();
   }  
-};
-
-const getTodaysResult = (language) => {
-  return axios.get(API + "punctuation/todaysResult/" + language, { headers: authHeader() });
 };
 
 const getMyTourneysActive = () => {
