@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import utn.frba.wordle.model.entity.RegistrationEntity;
 import utn.frba.wordle.model.entity.UserEntity;
 
+import java.util.Date;
 import java.util.List;
 
 public interface RegistrationRepository extends CrudRepository<RegistrationEntity, Long> {
@@ -17,4 +18,9 @@ public interface RegistrationRepository extends CrudRepository<RegistrationEntit
             "where r.tournament.id = :tourneyId ")
     List<RegistrationEntity> getAllByTournament(Long tourneyId);
 
+    @Query(value = "select r from RegistrationEntity r \n" +
+            "where r.user.id = :userId \n" +
+            "and r.tournament.start < :dateToday \n" +
+            "and r.tournament.finish > :dateToday")
+    List<RegistrationEntity> getActiveRegistrationsFromUser(Long userId, Date dateToday );
 }

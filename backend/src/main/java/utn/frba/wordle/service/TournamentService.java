@@ -10,18 +10,17 @@ import utn.frba.wordle.model.dto.RegistrationDto;
 import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.dto.UserDto;
-import utn.frba.wordle.model.entity.RankingEntity;
-import utn.frba.wordle.model.entity.RegistrationEntity;
-import utn.frba.wordle.model.entity.TournamentEntity;
-import utn.frba.wordle.model.entity.UserEntity;
+import utn.frba.wordle.model.entity.*;
 import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.model.enums.TournamentType;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.repository.RankingRepository;
 import utn.frba.wordle.repository.TournamentRepository;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -141,9 +140,9 @@ public class TournamentService {
     public List<Punctuation> getRanking(Long tourneyId) {
         updateTournamentScores(tourneyId);
 
-        List<RankingEntity> rankingEntities = rankingRepository.getScores(tourneyId);
+        Set<RankingEntity> rankingEntities = rankingRepository.getScores(tourneyId);
 
-        return mapRankingToDto(rankingEntities);
+        return mapRankingToDto(new ArrayList<>(rankingEntities));
     }
 
     private void updateTournamentScores(Long tourneyId) {
@@ -153,11 +152,20 @@ public class TournamentService {
         long todayTime = new Date().getTime();
         long startTime = tournament.getStart().getTime();
         long finishTime = tournament.getFinish().getTime();
+        final boolean isFinished = todayTime > finishTime;
+        if(startTime > todayTime){
+            //The tournament didn't started, don't update scores
+            return;
+        }
         long diff = Long.min(todayTime, finishTime) - startTime;
         TimeUnit time = TimeUnit.DAYS;
         long tournamentDuration = time.convert(diff, TimeUnit.MILLISECONDS) + 1L;
         registrations.forEach(registration -> {
+            LocalDate lastScoreDate = registration.getPunctuations().stream().map(PunctuationEntity::getDate).max(LocalDate::compareTo).orElse(null);
             long notPlayedDays = (tournamentDuration - registration.getDaysPlayed());
+            if(!isFinished && (lastScoreDate==null || !isToday(lastScoreDate))){
+                notPlayedDays = notPlayedDays - 1;
+            }
             if (notPlayedDays > 0) {
                 registration.setTotalScore(registration.getTotalScore() + notPlayedDays * 7);
                 registration.setDaysPlayed(registration.getDaysPlayed() + notPlayedDays);
@@ -212,11 +220,50 @@ public class TournamentService {
     }
 
     private Punctuation mapRankingToDto(RankingEntity entity) {
+
+        Boolean scoreSubmittedToday = hasSubmittedScoreToday(entity);
+
         return Punctuation.builder()
                 .punctuation(entity.getTotalScore())
                 .user(entity.getUsername())
                 .position(entity.getPosition())
+                .submittedScoreToday(scoreSubmittedToday)
                 .build();
+    }
+
+    private Boolean hasSubmittedScoreToday(RankingEntity rankingEntity) {
+
+        if(rankingEntity.getLastSubmittedScore() == null){
+            return false;
+        }
+
+        Date date = rankingEntity.getLastSubmittedScore();
+        Calendar entityDate = Calendar.getInstance();
+        entityDate.setTime(date);
+        int year = entityDate.get(Calendar.YEAR);
+        int month = entityDate.get(Calendar.MONTH) + 1;
+        int day = entityDate.get(Calendar.DAY_OF_MONTH);
+
+        return isToday(year, month, day);
+    }
+
+    private boolean isToday(LocalDate lastScoreDate) {
+        int year = lastScoreDate.getYear();
+        int month = lastScoreDate.getMonthValue();
+        int day = lastScoreDate.getDayOfMonth();
+
+        return isToday(year, month, day);
+    }
+
+    private boolean isToday(int year, int month, int day) {
+        Date now = new Date();
+        Calendar calendarDate = Calendar.getInstance();
+        calendarDate.setTime(now);
+        int actualYear = calendarDate.get(Calendar.YEAR);
+        int actualMonth = calendarDate.get(Calendar.MONTH) + 1;
+        int actualDay = calendarDate.get(Calendar.DAY_OF_MONTH);
+
+        return year == actualYear && month == actualMonth && day == actualDay;
     }
 
     public TournamentEntity mapToEntity(TournamentDto dto) {

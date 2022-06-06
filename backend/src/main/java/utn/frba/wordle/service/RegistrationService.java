@@ -12,7 +12,9 @@ import utn.frba.wordle.repository.RegistrationRepository;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.repository.UserRepository;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +39,11 @@ public class RegistrationService {
         return registrationRepository.getAllByUser(userId);
     }
 
+    public List<RegistrationEntity> getActiveRegistrationsEntityFromUser(Long userId) {
+        Date dateToday = new Date();
+        return registrationRepository.getActiveRegistrationsFromUser(userId, dateToday);
+    }
+
     public List<RegistrationDto> getRegistrationsFromTournament(Long tourneyId) {
         return mapToDto(registrationRepository.getAllByTournament(tourneyId));
     }
@@ -50,6 +57,7 @@ public class RegistrationService {
                 .totalScore(0L)
                 .daysPlayed(0L)
                 .user(userEntity)
+                .lastSubmittedScore(new Date(0))
                 .build();
         return registrationRepository.save(entity);
     }
