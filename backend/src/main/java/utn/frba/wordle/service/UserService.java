@@ -65,6 +65,18 @@ public class UserService {
         return mapToDto(users);
     }
 
+    public List<UserDto> findByNameWithPagination(String username, Integer maxResults, Integer actualPage) {
+        Integer offset = (actualPage - 1) * maxResults;
+        List<UserEntity> users = userRepository.findByPartialUsernameWithPagination(username.toLowerCase(), offset, maxResults);
+        return mapToDto(users);
+    }
+
+    public Integer totalUserPages(Integer maxResults) {
+        Integer totalResults = userRepository.getTotalUsers();
+        int pages = totalResults / maxResults;
+        return Math.toIntExact(Math.round(Math.ceil(pages)));
+    }
+
     public static UserEntity mapToEntity(UserDto user) {
         return UserEntity.builder()
                 .email(user.getEmail())
