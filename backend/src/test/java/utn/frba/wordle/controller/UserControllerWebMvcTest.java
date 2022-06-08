@@ -47,4 +47,21 @@ public class UserControllerWebMvcTest extends AbstractWebMvcTest {
 
         verify(userService).findByName(filter);
     }
+
+    @SneakyThrows
+    @Test
+    public void iCanFindUsersByTheirNamesWithPagination() {
+        Session session = TestUtils.getMockSession();
+        String filter = "aFilter";
+        Integer maxResults = 2;
+        Integer pageNumber = 1;
+
+        String urlController = String.format("/api/users?username=%s&pageNumber=%s&maxResults=%s", filter, pageNumber, maxResults);
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(userService).findByNameWithPagination(filter, maxResults, pageNumber);
+    }
 }
