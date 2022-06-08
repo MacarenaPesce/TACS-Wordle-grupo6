@@ -6,6 +6,9 @@
 https://docs.google.com/document/d/e/2PACX-1vS850Wxcrs3LThOAQamtTEhG6IEMmebXJxV3xXo-iPqCWHDI9LlncGyUONLx-hbIOBblutYCisS5aXh/pub
 
 
+### Dcoumentacion asociada al proyecto
+https://docs.google.com/document/d/11ClJBshXqy4Gd_h9j42n2G0AOld9yTBFamIOkuuGPr0/edit?usp=sharing
+
 ### Para Deployar la aplicación:
 Se asume que tiene instalado Docker en su ambiente.
 Luego de Clonar el proyecto, puede ejecutar el siguiente script de acuerdo a si su ambiente es Windows o Linux
