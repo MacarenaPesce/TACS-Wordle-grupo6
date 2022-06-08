@@ -26,6 +26,8 @@ y la aplicaciòn **Wordle-Helper** se abrirá
 ## FRONTEND
 Frontend This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+http://localhost:3000/
+
 ## BACKEND
 ### BD MySQL
 Si aún no tenemos creada la BD localmente:
@@ -40,6 +42,13 @@ Si aún no tenemos creada la BD localmente:
 
 4- Cerramos la BD
 >exit;
+
+### Reporte de Cobertura
+Para ejecutar los tests de la aplicación, y generar el reporte de cobertura, en la carpeta backend ejecutar
+>mvn clean verify
+
+Esto generará el reporte en la carpeta target, el mismo puede verse en el navegador accediendo a:
+> http://localhost:63342/backend/target/site/jacoco-unit-test-coverage-report/index.html
 
 ## Telegram
 
@@ -75,10 +84,3 @@ CONTAINER ID   IMAGE                   COMMAND                  CREATED         
 Parar la imagen
 docker stop <NAME>
 
-
-## Backend - Reporte de Cobertura
-Para ejecutar los tests de la aplicación, y generar el reporte de cobertura, en la carpeta backend ejecutar
->mvn clean verify
-
-Esto generará el reporte en la carpeta target, el mismo puede verse en el navegador accediendo a:
-> http://localhost:63342/backend/target/site/jacoco-unit-test-coverage-report/index.html
