@@ -1,5 +1,7 @@
 package utn.frba.wordle.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +22,15 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @GetMapping
-    public ResponseEntity<FindUsersResponse> findAll(@RequestParam(required = false) String username,
+    public ResponseEntity<FindUsersResponse> findAll(@RequestHeader("Authorization") String token,
+                                                      @RequestParam(required = false) String username,
                                                       @RequestParam(required = false) Integer pageNumber,
                                                       @RequestParam(required = false) Integer maxResults) {
+        logger.info("Method: findAll - Request: token={}, username={}, pageNumber={}, maxResults={}", token, username, pageNumber, maxResults);
+
         List<UserDto> usersDto;
         Integer totalPages = null;
         if (username == null){
@@ -36,6 +43,8 @@ public class UserController {
             totalPages = userService.totalUserPages(maxResults);
         }
         FindUsersResponse response = buildResponse(pageNumber, maxResults, usersDto, totalPages);
+
+        logger.info("Method: findAll - Response: {}", response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

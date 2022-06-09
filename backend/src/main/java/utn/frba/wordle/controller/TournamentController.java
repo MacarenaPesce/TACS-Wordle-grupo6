@@ -201,7 +201,10 @@ public class TournamentController {
     }
 
     @GetMapping("/{state}")
-    public ResponseEntity<List<TournamentResponse>> findUserTournamentsByState(@RequestHeader("Authorization") String token, @PathVariable State state){
+    public ResponseEntity<List<TournamentResponse>> findUserTournamentsByState(@RequestHeader("Authorization") String token,
+                                                                               @PathVariable State state,
+                                                                               @RequestParam(required = false) Integer pageNumber,
+                                                                               @RequestParam(required = false) Integer maxResults){
         logger.info("Method: findUserTournamentsByState - Request: token={}, state={}", token, state);
 
         Session session = AuthService.getSession(token);
