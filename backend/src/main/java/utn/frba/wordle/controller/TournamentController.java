@@ -201,16 +201,32 @@ public class TournamentController {
     }
 
     @GetMapping("/{state}")
-    public ResponseEntity<List<TournamentResponse>> findUserTournamentsByState(@RequestHeader("Authorization") String token, @PathVariable State state){
-        logger.info("Method: findUserTournamentsByState - Request: token={}, state={}", token, state);
+    public ResponseEntity<FindUserTournamentsResponse> findUserTournamentsByStateWithPagination(@RequestHeader("Authorization") String token,
+                                                                               @PathVariable State state,
+                                                                               @RequestParam(required = false) Integer pageNumber,
+                                                                               @RequestParam(required = false) Integer maxResults){
+        logger.info("Method: findUserTournamentsByStateWithPagination - Request: token={}, state={}, pageNumber={}, maxResults={}", token, state, pageNumber, maxResults);
 
         Session session = AuthService.getSession(token);
-        List<TournamentDto> tournamentsDto = tournamentService.findUserTournamentsByState(session.getUserId(), state);
+        if(pageNumber == null || maxResults == null){
+            pageNumber = 1;
+            maxResults = 100;
+        }
 
-        List<TournamentResponse> response = tournamentsDto
+        Integer totalPages = tournamentService.userTournamentsByStateTotalPages(session.getUserId(), state, maxResults);
+        List<TournamentDto> tournamentsDto = tournamentService.findUserTournamentsByStateWithPagination(session.getUserId(), state, pageNumber, maxResults);
+
+        List<TournamentResponse> tournaments = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());
 
-        logger.info("Method: findUserTournamentsByState - Response: {}", response);
+        FindUserTournamentsResponse response = FindUserTournamentsResponse.builder()
+                .tournaments(tournaments)
+                .maxResults(maxResults)
+                .pageNumber(pageNumber)
+                .totalPages(totalPages)
+                .build();
+
+        logger.info("Method: findUserTournamentsByStateWithPagination - Response: {}", response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

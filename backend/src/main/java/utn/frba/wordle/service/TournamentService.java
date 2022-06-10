@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.dto.RegistrationDto;
@@ -168,17 +169,18 @@ public class TournamentService {
         });
     }
 
-    public List<TournamentDto> findUserTournamentsByState(Long userId, State state) {
+    public List<TournamentDto> findUserTournamentsByStateWithPagination(Long userId, State state, Integer pageNumber, Integer maxResults) {
         List<TournamentEntity> entities;
+        Integer offset = (pageNumber - 1) * maxResults;
         switch (state){
             case READY:
-                entities = tournamentRepository.findUserReadyTournaments(userId);
+                entities = tournamentRepository.findUserReadyTournaments(userId, offset, maxResults);
                 break;
             case STARTED:
-                entities = tournamentRepository.findUserStartedTournaments(userId);
+                entities = tournamentRepository.findUserStartedTournaments(userId, offset, maxResults);
                 break;
             case FINISHED:
-                entities = tournamentRepository.findUserFinishedTournaments(userId);
+                entities = tournamentRepository.findUserFinishedTournaments(userId, offset, maxResults);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + state);
@@ -315,5 +317,25 @@ public class TournamentService {
             dtos.add(mapToDto(tournament));
         }
         return dtos;
+    }
+
+    public Integer userTournamentsByStateTotalPages(Long userId, State state, Integer maxResults) {
+        Integer totalResults;
+        switch (state){
+            case READY:
+                totalResults = tournamentRepository.userTournamentsReadyTotalPages(userId);
+                break;
+            case STARTED:
+                totalResults = tournamentRepository.userTournamentsStartedTotalPages(userId);
+                break;
+            case FINISHED:
+                totalResults = tournamentRepository.userTournamentsFinishedTotalPages(userId);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + state);
+        }
+
+        int pages = totalResults / maxResults;
+        return Math.toIntExact(Math.round(Math.ceil(pages)));
     }
 }

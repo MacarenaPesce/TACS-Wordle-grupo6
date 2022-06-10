@@ -71,8 +71,8 @@ public class UserService {
         return mapToDto(users);
     }
 
-    public Integer totalUserPages(Integer maxResults) {
-        Integer totalResults = userRepository.getTotalUsers();
+    public Integer findByNameTotalPages(String username, Integer maxResults) {
+        Integer totalResults = userRepository.findByNameTotalPages(username);
         int pages = totalResults / maxResults;
         return Math.toIntExact(Math.round(Math.ceil(pages)));
     }

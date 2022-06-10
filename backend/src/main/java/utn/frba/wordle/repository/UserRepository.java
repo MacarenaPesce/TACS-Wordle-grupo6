@@ -28,6 +28,6 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     @Query(value = "SELECT * FROM user u WHERE u.username like %:username% order by username asc LIMIT :offset,:maxResults", nativeQuery = true)
     List<UserEntity> findByPartialUsernameWithPagination(String username, Integer offset, Integer maxResults);
 
-    @Query(value = "SELECT count(*) FROM user", nativeQuery = true)
-    Integer getTotalUsers();
+    @Query(value = "SELECT count(*) FROM user u WHERE u.username like %:username%", nativeQuery = true)
+    Integer findByNameTotalPages(String username);
 }
