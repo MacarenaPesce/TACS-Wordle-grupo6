@@ -318,4 +318,24 @@ public class TournamentService {
         }
         return dtos;
     }
+
+    public Integer userTournamentsByStateTotalPages(Long userId, State state, Integer maxResults) {
+        Integer totalResults;
+        switch (state){
+            case READY:
+                totalResults = tournamentRepository.userTournamentsReadyTotalPages(userId);
+                break;
+            case STARTED:
+                totalResults = tournamentRepository.userTournamentsStartedTotalPages(userId);
+                break;
+            case FINISHED:
+                totalResults = tournamentRepository.userTournamentsFinishedTotalPages(userId);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + state);
+        }
+
+        int pages = totalResults / maxResults;
+        return Math.toIntExact(Math.round(Math.ceil(pages)));
+    }
 }

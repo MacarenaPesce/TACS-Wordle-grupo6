@@ -213,6 +213,7 @@ public class TournamentController {
             maxResults = 100;
         }
 
+        Integer totalPages = tournamentService.userTournamentsByStateTotalPages(session.getUserId(), state, maxResults);
         List<TournamentDto> tournamentsDto = tournamentService.findUserTournamentsByStateWithPagination(session.getUserId(), state, pageNumber, maxResults);
 
         List<TournamentResponse> response = tournamentsDto

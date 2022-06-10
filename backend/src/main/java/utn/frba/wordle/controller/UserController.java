@@ -40,7 +40,7 @@ public class UserController {
         }
         else{
             usersDto = userService.findByNameWithPagination(username, maxResults, pageNumber);
-            totalPages = userService.totalUserPages(maxResults);
+            totalPages = userService.findByNameTotalPages(username, maxResults);
         }
         FindUsersResponse response = buildResponse(pageNumber, maxResults, usersDto, totalPages);
 
