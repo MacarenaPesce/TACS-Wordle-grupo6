@@ -201,7 +201,7 @@ public class TournamentController {
     }
 
     @GetMapping("/{state}")
-    public ResponseEntity<List<TournamentResponse>> findUserTournamentsByStateWithPagination(@RequestHeader("Authorization") String token,
+    public ResponseEntity<FindUserTournamentsResponse> findUserTournamentsByStateWithPagination(@RequestHeader("Authorization") String token,
                                                                                @PathVariable State state,
                                                                                @RequestParam(required = false) Integer pageNumber,
                                                                                @RequestParam(required = false) Integer maxResults){
@@ -216,8 +216,15 @@ public class TournamentController {
         Integer totalPages = tournamentService.userTournamentsByStateTotalPages(session.getUserId(), state, maxResults);
         List<TournamentDto> tournamentsDto = tournamentService.findUserTournamentsByStateWithPagination(session.getUserId(), state, pageNumber, maxResults);
 
-        List<TournamentResponse> response = tournamentsDto
+        List<TournamentResponse> tournaments = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());
+
+        FindUserTournamentsResponse response = FindUserTournamentsResponse.builder()
+                .tournaments(tournaments)
+                .maxResults(maxResults)
+                .pageNumber(pageNumber)
+                .totalPages(totalPages)
+                .build();
 
         logger.info("Method: findUserTournamentsByStateWithPagination - Response: {}", response);
 
