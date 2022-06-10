@@ -201,25 +201,24 @@ public class TournamentController {
     }
 
     @GetMapping("/{state}")
-    public ResponseEntity<List<TournamentResponse>> findUserTournamentsByState(@RequestHeader("Authorization") String token,
+    public ResponseEntity<List<TournamentResponse>> findUserTournamentsByStateWithPagination(@RequestHeader("Authorization") String token,
                                                                                @PathVariable State state,
                                                                                @RequestParam(required = false) Integer pageNumber,
                                                                                @RequestParam(required = false) Integer maxResults){
-        logger.info("Method: findUserTournamentsByState - Request: token={}, state={}, pageNumber={}, maxResults={}", token, state, pageNumber, maxResults);
+        logger.info("Method: findUserTournamentsByStateWithPagination - Request: token={}, state={}, pageNumber={}, maxResults={}", token, state, pageNumber, maxResults);
 
         Session session = AuthService.getSession(token);
-        List<TournamentDto> tournamentsDto;
         if(pageNumber == null || maxResults == null){
-            tournamentsDto = tournamentService.findUserTournamentsByState(session.getUserId(), state);
+            pageNumber = 1;
+            maxResults = 100;
         }
-        else{
-            tournamentsDto = tournamentService.findUserTournamentsByStateWithPagination(session.getUserId(), state, pageNumber, maxResults);
-        }
+
+        List<TournamentDto> tournamentsDto = tournamentService.findUserTournamentsByStateWithPagination(session.getUserId(), state, pageNumber, maxResults);
 
         List<TournamentResponse> response = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());
 
-        logger.info("Method: findUserTournamentsByState - Response: {}", response);
+        logger.info("Method: findUserTournamentsByStateWithPagination - Response: {}", response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -169,13 +169,9 @@ public class TournamentService {
         });
     }
 
-    public List<TournamentDto> findUserTournamentsByState(Long userId, State state) {
-        return findUserTournamentsByStateWithPagination(userId, state, 1, 200);
-    }
-
-    public List<TournamentDto> findUserTournamentsByStateWithPagination(Long userId, State state, Integer actualPage, Integer maxResults) {
+    public List<TournamentDto> findUserTournamentsByStateWithPagination(Long userId, State state, Integer pageNumber, Integer maxResults) {
         List<TournamentEntity> entities;
-        Integer offset = (actualPage - 1) * maxResults;
+        Integer offset = (pageNumber - 1) * maxResults;
         switch (state){
             case READY:
                 entities = tournamentRepository.findUserReadyTournaments(userId, offset, maxResults);

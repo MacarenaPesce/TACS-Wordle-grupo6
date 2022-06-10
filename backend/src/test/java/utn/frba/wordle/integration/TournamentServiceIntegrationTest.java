@@ -174,18 +174,9 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanListAllPublicTournaments() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournamentReady = getPublicTournamentDto(owner, "Tournament1", State.READY);
-        tournamentReady.setState(State.READY);
-        TournamentEntity tournament1entity = tournamentService.mapToEntity(tournamentReady);
-        tournamentRepository.save(tournament1entity);
-        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Tournament2", State.STARTED);
-        tournamentStarted.setState(State.STARTED);
-        TournamentEntity tournament2entity = tournamentService.mapToEntity(tournamentStarted);
-        tournamentRepository.save(tournament2entity);
-        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "Tournament3", State.FINISHED);
-        tournamentFinished.setState(State.FINISHED);
-        TournamentEntity tournament3entity = tournamentService.mapToEntity(tournamentFinished);
-        tournamentRepository.save(tournament3entity);
+        TournamentDto tournamentReady = saveTournament(owner, "Tournament1", State.READY);
+        TournamentDto tournamentStarted = saveTournament(owner, "Tournament2", State.STARTED);
+        saveTournament(owner, "Tournament3", State.FINISHED);
 
         List<TournamentDto> tournaments = tournamentService.listPublicActiveTournaments();
 
@@ -195,22 +186,10 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanFindByTournamentName() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
-        TournamentDto tournamentReady = getPublicTournamentDto(owner, "Alpha", State.READY);
-        tournamentReady.setState(State.READY);
-        TournamentEntity tournament1entity = tournamentService.mapToEntity(tournamentReady);
-        tournamentRepository.save(tournament1entity);
-        TournamentDto tournamentAlphabet = getPublicTournamentDto(owner, "Alphabet", State.READY);
-        tournamentAlphabet.setState(State.READY);
-        TournamentEntity tournamentAentity = tournamentService.mapToEntity(tournamentAlphabet);
-        tournamentRepository.save(tournamentAentity);
-        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Beta", State.READY);
-        tournamentStarted.setState(State.STARTED);
-        TournamentEntity tournament2entity = tournamentService.mapToEntity(tournamentStarted);
-        tournamentRepository.save(tournament2entity);
-        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "Gamma", State.READY);
-        tournamentFinished.setState(State.FINISHED);
-        TournamentEntity tournament3entity = tournamentService.mapToEntity(tournamentFinished);
-        tournamentRepository.save(tournament3entity);
+        TournamentDto tournamentReady = saveTournament(owner, "Alpha", State.READY);
+        TournamentDto tournamentAlphabet = saveTournament(owner, "Alphabet", State.READY);
+        saveTournament(owner, "Beta", State.READY);
+        saveTournament(owner, "Gamma", State.READY);
 
         List<TournamentDto> tournaments = tournamentService.findPublicActiveTournaments("alph");
 
@@ -282,7 +261,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
                 .result(2L)
                 .language(Language.ES)
                 .build();
-        TournamentDto tournamentDto = getPrivateTournamentDto(user, "Private Tourney");
+        TournamentDto tournamentDto = getPrivateTournamentDto(user);
         tournamentService.addMember(player.getId(), tournamentDto.getTourneyId(), user.getId());
         tournamentService.submitResults(player.getId(), resultDto);
 
@@ -476,30 +455,167 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     @Transactional
     public void aUserCanListTheirFinishedTournaments(){
-        State state = State.FINISHED;
         UserDto owner = getUserDto("owner@mail.com", "owner");
         UserDto player1 = getUserDto("player1@mail.com", "player1");
         UserDto player2 = getUserDto("player2@mail.com", "player2");
-        TournamentDto tournament1 = getPublicTournamentDto(owner, "Tournament1", State.FINISHED);
-        tournament1.setState(state);
-        TournamentEntity tournament1entity = tournamentService.mapToEntity(tournament1);
-        tournamentRepository.save(tournament1entity);
+        TournamentDto tournament1 = saveTournament(owner, "Tournament1", State.FINISHED);
         tournamentService.addMember(player1.getId(), tournament1.getTourneyId(), owner.getId());
         tournamentService.addMember(player2.getId(), tournament1.getTourneyId(), owner.getId());
-        tournamentRepository.findById(tournament1.getTourneyId()).orElseThrow();
-        TournamentDto tournament2 = getPublicTournamentDto(owner, "Tournament2", State.STARTED);
-        tournament2.setState(State.STARTED);
-        TournamentEntity tournament2entity = tournamentService.mapToEntity(tournament2);
-        tournamentRepository.save(tournament2entity);
+        TournamentDto tournament2 = saveTournament(owner, "Tournament2", State.STARTED);
         tournamentService.addMember(player2.getId(), tournament2.getTourneyId(), owner.getId());
-        tournamentRepository.findById(tournament2.getTourneyId()).orElseThrow();
+        TournamentDto tournament3 = saveTournament(owner, "Tournament3", State.FINISHED);
+        tournamentService.addMember(player2.getId(), tournament3.getTourneyId(), owner.getId());
+        Integer actualPage = 1;
+        Integer maxResults = 100;
 
-        List<TournamentDto> tournaments = tournamentService.findUserTournamentsByState(player2.getId(), state);
+        List<TournamentDto> tournaments = tournamentService.findUserTournamentsByStateWithPagination(player2.getId(), State.FINISHED, actualPage, maxResults);
+
+        assertThat(tournaments).isNotEmpty();
+        assertEquals(2, tournaments.size());
+        assertThat(tournaments.get(0)).hasNoNullFieldsOrProperties();
+        assertEquals(tournaments.get(0).getState(), State.FINISHED);
+    }
+
+    @Test
+    @Transactional
+    public void aUserCanListTheirStartedTournaments(){
+        UserDto owner = getUserDto("owner@mail.com", "owner");
+        UserDto player1 = getUserDto("player1@mail.com", "player1");
+        UserDto player2 = getUserDto("player2@mail.com", "player2");
+        TournamentDto tournament1 = saveTournament(owner, "Tournament1", State.FINISHED);
+        tournamentService.addMember(player1.getId(), tournament1.getTourneyId(), owner.getId());
+        tournamentService.addMember(player2.getId(), tournament1.getTourneyId(), owner.getId());
+        TournamentDto tournament2 = saveTournament(owner, "Tournament2", State.STARTED);
+        tournamentService.addMember(player2.getId(), tournament2.getTourneyId(), owner.getId());
+        Integer actualPage = 1;
+        Integer maxResults = 100;
+
+        List<TournamentDto> tournaments = tournamentService.findUserTournamentsByStateWithPagination(player2.getId(), State.STARTED, actualPage, maxResults);
 
         assertThat(tournaments).isNotEmpty();
         assertEquals(1, tournaments.size());
         assertThat(tournaments.get(0)).hasNoNullFieldsOrProperties();
-        assertEquals(tournaments.get(0).getState(), state);
+        assertEquals(tournaments.get(0).getState(), State.STARTED);
+    }
+
+    @Test
+    @Transactional
+    public void aUserCanListTheirReadyTournaments(){
+        UserDto owner = getUserDto("owner@mail.com", "owner");
+        UserDto player1 = getUserDto("player1@mail.com", "player1");
+        UserDto player2 = getUserDto("player2@mail.com", "player2");
+        TournamentDto tournament1 = saveTournament(owner, "Tournament1", State.FINISHED);
+        tournamentService.addMember(player1.getId(), tournament1.getTourneyId(), owner.getId());
+        tournamentService.addMember(player2.getId(), tournament1.getTourneyId(), owner.getId());
+        TournamentDto tournament2 = saveTournament(owner, "Tournament2", State.STARTED);
+        tournamentService.addMember(player2.getId(), tournament2.getTourneyId(), owner.getId());
+        TournamentDto tournament3 = saveTournament(owner, "Tournament3", State.FINISHED);
+        tournamentService.addMember(player2.getId(), tournament3.getTourneyId(), owner.getId());
+        TournamentDto tournament4 = saveTournament(owner, "Tournament4", State.READY);
+        tournamentService.addMember(player1.getId(), tournament4.getTourneyId(), owner.getId());
+        tournamentService.addMember(player2.getId(), tournament4.getTourneyId(), owner.getId());
+        TournamentDto tournament5 = saveTournament(owner, "Tournament5", State.READY);
+        tournamentService.addMember(player2.getId(), tournament5.getTourneyId(), owner.getId());
+        TournamentDto tournament6 = saveTournament(owner, "Tournament6", State.READY);
+        tournamentService.addMember(player2.getId(), tournament6.getTourneyId(), owner.getId());
+        Integer actualPage = 1;
+        Integer maxResults = 100;
+
+        List<TournamentDto> tournaments = tournamentService.findUserTournamentsByStateWithPagination(player2.getId(), State.READY, actualPage, maxResults);
+
+        assertThat(tournaments).isNotEmpty();
+        assertEquals(3, tournaments.size());
+        assertThat(tournaments.get(0)).hasNoNullFieldsOrProperties();
+        assertEquals(tournaments.get(0).getState(), State.READY);
+    }
+
+    @Test
+    @Transactional
+    public void aUserCanListTheirReadyTournamentsWithPagination(){
+        UserDto owner = getUserDto("owner@mail.com", "owner");
+        UserDto player1 = getUserDto("player1@mail.com", "player1");
+        UserDto player2 = getUserDto("player2@mail.com", "player2");
+        TournamentDto tournament1 = saveTournament(owner, "Tournament1", State.READY);
+        tournamentService.addMember(player1.getId(), tournament1.getTourneyId(), owner.getId());
+        tournamentService.addMember(player2.getId(), tournament1.getTourneyId(), owner.getId());
+        TournamentDto tournament2 = saveTournament(owner, "Tournament2", State.READY);
+        tournamentService.addMember(player2.getId(), tournament2.getTourneyId(), owner.getId());
+        TournamentDto tournament3 = saveTournament(owner, "Tournament3", State.READY);
+        tournamentService.addMember(player2.getId(), tournament3.getTourneyId(), owner.getId());
+        TournamentDto tournament4 = saveTournament(owner, "Tournament4", State.READY);
+        tournamentService.addMember(player1.getId(), tournament4.getTourneyId(), owner.getId());
+        tournamentService.addMember(player2.getId(), tournament4.getTourneyId(), owner.getId());
+        TournamentDto tournament5 = saveTournament(owner, "Tournament5", State.READY);
+        tournamentService.addMember(player2.getId(), tournament5.getTourneyId(), owner.getId());
+        TournamentDto tournament6 = saveTournament(owner, "Tournament6", State.READY);
+        tournamentService.addMember(player2.getId(), tournament6.getTourneyId(), owner.getId());
+        Integer actualPage = 2;
+        Integer maxResults = 4;
+
+        List<TournamentDto> tournaments = tournamentService.findUserTournamentsByStateWithPagination(player2.getId(), State.READY, actualPage, maxResults);
+
+        assertThat(tournaments).isNotEmpty();
+        assertEquals(2, tournaments.size());
+        assertThat(tournaments.get(0)).hasNoNullFieldsOrProperties();
+        assertEquals(tournaments.get(0).getState(), State.READY);
+    }
+
+    @Test
+    @Transactional
+    public void aUserCanListTheirStartedTournamentsWithPagination(){
+        UserDto owner = getUserDto("owner@mail.com", "owner");
+        UserDto player1 = getUserDto("player1@mail.com", "player1");
+        UserDto player2 = getUserDto("player2@mail.com", "player2");
+        TournamentDto tournament1 = saveTournament(owner, "Tournament1", State.STARTED);
+        tournamentService.addMember(player1.getId(), tournament1.getTourneyId(), owner.getId());
+        tournamentService.addMember(player2.getId(), tournament1.getTourneyId(), owner.getId());
+        TournamentDto tournament2 = saveTournament(owner, "Tournament2", State.STARTED);
+        tournamentService.addMember(player2.getId(), tournament2.getTourneyId(), owner.getId());
+        TournamentDto tournament3 = saveTournament(owner, "Tournament3", State.STARTED);
+        tournamentService.addMember(player2.getId(), tournament3.getTourneyId(), owner.getId());
+        TournamentDto tournament4 = saveTournament(owner, "Tournament4", State.STARTED);
+        tournamentService.addMember(player1.getId(), tournament4.getTourneyId(), owner.getId());
+        tournamentService.addMember(player2.getId(), tournament4.getTourneyId(), owner.getId());
+        TournamentDto tournament5 = saveTournament(owner, "Tournament5", State.STARTED);
+        tournamentService.addMember(player2.getId(), tournament5.getTourneyId(), owner.getId());
+        Integer actualPage = 2;
+        Integer maxResults = 4;
+
+        List<TournamentDto> tournaments = tournamentService.findUserTournamentsByStateWithPagination(player2.getId(), State.STARTED, actualPage, maxResults);
+
+        assertThat(tournaments).isNotEmpty();
+        assertEquals(1, tournaments.size());
+        assertThat(tournaments.get(0)).hasNoNullFieldsOrProperties();
+        assertEquals(tournaments.get(0).getState(), State.STARTED);
+    }
+
+    @Test
+    @Transactional
+    public void aUserCanListTheirFinishedTournamentsWithPagination(){
+        UserDto owner = getUserDto("owner@mail.com", "owner");
+        UserDto player1 = getUserDto("player1@mail.com", "player1");
+        UserDto player2 = getUserDto("player2@mail.com", "player2");
+        TournamentDto tournament1 = saveTournament(owner, "Tournament1", State.FINISHED);
+        tournamentService.addMember(player1.getId(), tournament1.getTourneyId(), owner.getId());
+        tournamentService.addMember(player2.getId(), tournament1.getTourneyId(), owner.getId());
+        TournamentDto tournament2 = saveTournament(owner, "Tournament2", State.FINISHED);
+        tournamentService.addMember(player2.getId(), tournament2.getTourneyId(), owner.getId());
+        TournamentDto tournament3 = saveTournament(owner, "Tournament3", State.FINISHED);
+        tournamentService.addMember(player2.getId(), tournament3.getTourneyId(), owner.getId());
+        TournamentDto tournament4 = saveTournament(owner, "Tournament4", State.FINISHED);
+        tournamentService.addMember(player1.getId(), tournament4.getTourneyId(), owner.getId());
+        tournamentService.addMember(player2.getId(), tournament4.getTourneyId(), owner.getId());
+        TournamentDto tournament5 = saveTournament(owner, "Tournament5", State.FINISHED);
+        tournamentService.addMember(player2.getId(), tournament5.getTourneyId(), owner.getId());
+        Integer actualPage = 2;
+        Integer maxResults = 3;
+
+        List<TournamentDto> tournaments = tournamentService.findUserTournamentsByStateWithPagination(player2.getId(), State.FINISHED, actualPage, maxResults);
+
+        assertThat(tournaments).isNotEmpty();
+        assertEquals(2, tournaments.size());
+        assertThat(tournaments.get(0)).hasNoNullFieldsOrProperties();
+        assertEquals(tournaments.get(0).getState(), State.FINISHED);
     }
 
     @Test
@@ -507,20 +623,11 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     public void aUserCanListAllTheirTournaments(){
         UserDto owner = getUserDto("owner@mail.com", "owner");
         UserDto player1 = getUserDto("player1@mail.com", "player1");
-        TournamentDto tournamentReady = getPublicTournamentDto(owner, "Tournament1", State.READY);
-        tournamentReady.setState(State.READY);
-        TournamentEntity tournament1entity = tournamentService.mapToEntity(tournamentReady);
-        tournamentRepository.save(tournament1entity);
+        TournamentDto tournamentReady = saveTournament(owner, "Tournament1", State.READY);
         tournamentService.addMember(player1.getId(), tournamentReady.getTourneyId(), owner.getId());
-        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Tournament2", State.STARTED);
-        tournamentStarted.setState(State.STARTED);
-        TournamentEntity tournament2entity = tournamentService.mapToEntity(tournamentStarted);
-        tournamentRepository.save(tournament2entity);
+        TournamentDto tournamentStarted = saveTournament(owner, "Tournament2", State.STARTED);
         tournamentService.addMember(player1.getId(), tournamentStarted.getTourneyId(), owner.getId());
-        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "Tournament3", State.FINISHED);
-        tournamentFinished.setState(State.FINISHED);
-        TournamentEntity tournament3entity = tournamentService.mapToEntity(tournamentFinished);
-        tournamentRepository.save(tournament3entity);
+        TournamentDto tournamentFinished = saveTournament(owner, "Tournament3", State.FINISHED);
         tournamentService.addMember(player1.getId(), tournamentFinished.getTourneyId(), owner.getId());
 
         List<TournamentDto> tournaments = tournamentService.getActiveTournamentsFromUser(player1.getId());
@@ -536,20 +643,11 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     public void aUserCanFilterTheirTournaments(){
         UserDto owner = getUserDto("owner@mail.com", "owner");
         UserDto player1 = getUserDto("player1@mail.com", "player1");
-        TournamentDto tournamentReady = getPublicTournamentDto(owner, "T12", State.READY);
-        tournamentReady.setState(State.READY);
-        TournamentEntity tournament1entity = tournamentService.mapToEntity(tournamentReady);
-        tournamentRepository.save(tournament1entity);
+        TournamentDto tournamentReady = saveTournament(owner, "T12", State.READY);
         tournamentService.addMember(player1.getId(), tournamentReady.getTourneyId(), owner.getId());
-        TournamentDto tournamentStarted = getPublicTournamentDto(owner, "Tournament2", State.STARTED);
-        tournamentStarted.setState(State.STARTED);
-        TournamentEntity tournament2entity = tournamentService.mapToEntity(tournamentStarted);
-        tournamentRepository.save(tournament2entity);
+        TournamentDto tournamentStarted = saveTournament(owner, "Tournament2", State.STARTED);
         tournamentService.addMember(player1.getId(), tournamentStarted.getTourneyId(), owner.getId());
-        TournamentDto tournamentFinished = getPublicTournamentDto(owner, "T23", State.FINISHED);
-        tournamentFinished.setState(State.FINISHED);
-        TournamentEntity tournament3entity = tournamentService.mapToEntity(tournamentFinished);
-        tournamentRepository.save(tournament3entity);
+        TournamentDto tournamentFinished = saveTournament(owner, "T23", State.FINISHED);
         tournamentService.addMember(player1.getId(), tournamentFinished.getTourneyId(), owner.getId());
 
         List<TournamentDto> tournaments = tournamentService.findActiveTournamentsFromUser(player1.getId(), "T2");
@@ -559,6 +657,14 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         tournaments.forEach(tournamentDto -> assertThat(tournamentDto).hasNoNullFieldsOrProperties());
         assertThat(tournaments).containsExactlyInAnyOrder(tournamentStarted);
     }
+
+    private TournamentDto saveTournament(UserDto owner, String tournament22, State state) {
+        TournamentDto tournamentDto = getPublicTournamentDto(owner, tournament22, state);
+        TournamentEntity tournamentEntity = tournamentService.mapToEntity(tournamentDto);
+        tournamentRepository.save(tournamentEntity);
+        return tournamentDto;
+    }
+
 
     private TournamentDto getPrivateTournamentDto(UserDto ownerUser, String tournamentName, Language language) {
         TournamentDto tournamentDto = TournamentDto.builder()
@@ -572,13 +678,8 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         return tournamentService.create(tournamentDto, ownerUser.getId());
     }
 
-    private TournamentDto getPrivateTournamentDto(UserDto ownerUser, String tournamentName) {
-        return getPrivateTournamentDto(ownerUser, tournamentName, Language.ES);
-    }
-
     private TournamentDto getPrivateTournamentDto(UserDto ownerUser) {
-        String tournamentName = "TestTournament";
-        return getPrivateTournamentDto(ownerUser, tournamentName);
+        return getPrivateTournamentDto(ownerUser, "Private Tourney", Language.ES);
     }
 }
 
