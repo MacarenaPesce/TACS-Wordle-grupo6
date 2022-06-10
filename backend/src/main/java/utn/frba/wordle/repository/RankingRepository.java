@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface RankingRepository extends CrudRepository<RankingEntity, Long> {
 
-    @Query(value = "SELECT r.* FROM Ranking r \n" +
+    @Query(value = "SELECT r.* FROM wordle.Ranking r \n" +
             "where r.id_Tournament = :idTournament \n" +
             "order by position asc", nativeQuery = true)
     Set<RankingEntity> getScores(Long idTournament);
