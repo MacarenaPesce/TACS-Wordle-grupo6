@@ -205,10 +205,16 @@ public class TournamentController {
                                                                                @PathVariable State state,
                                                                                @RequestParam(required = false) Integer pageNumber,
                                                                                @RequestParam(required = false) Integer maxResults){
-        logger.info("Method: findUserTournamentsByState - Request: token={}, state={}", token, state);
+        logger.info("Method: findUserTournamentsByState - Request: token={}, state={}, pageNumber={}, maxResults={}", token, state, pageNumber, maxResults);
 
         Session session = AuthService.getSession(token);
-        List<TournamentDto> tournamentsDto = tournamentService.findUserTournamentsByState(session.getUserId(), state);
+        List<TournamentDto> tournamentsDto;
+        if(pageNumber == null || maxResults == null){
+            tournamentsDto = tournamentService.findUserTournamentsByState(session.getUserId(), state);
+        }
+        else{
+            tournamentsDto = tournamentService.findUserTournamentsByStateWithPagination(session.getUserId(), state, pageNumber, maxResults);
+        }
 
         List<TournamentResponse> response = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());

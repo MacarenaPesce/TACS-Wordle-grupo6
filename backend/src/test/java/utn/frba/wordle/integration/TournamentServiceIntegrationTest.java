@@ -497,7 +497,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         List<TournamentDto> tournaments = tournamentService.findUserTournamentsByState(player2.getId(), state);
 
         assertThat(tournaments).isNotEmpty();
-        assertEquals(tournaments.size(), 1);
+        assertEquals(1, tournaments.size());
         assertThat(tournaments.get(0)).hasNoNullFieldsOrProperties();
         assertEquals(tournaments.get(0).getState(), state);
     }
