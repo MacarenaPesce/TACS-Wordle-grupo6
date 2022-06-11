@@ -45,7 +45,7 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
             "LIMIT :offset,:maxResults", nativeQuery = true)
     List<TournamentEntity> findUserReadyTournaments(Long userId, Integer offset, Integer maxResults);
 
-    @Query(value = "select count(t.*) from wordle.registration r, wordle.tournament t \n" +
+    @Query(value = "select count(*) from wordle.registration r, wordle.tournament t \n" +
             "where r.id_user = :userId \n" +
             "and r.id_tournament = t.id \n" +
             "and curdate() < t.start ", nativeQuery = true)
@@ -60,7 +60,7 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
             "LIMIT :offset,:maxResults", nativeQuery = true)
     List<TournamentEntity> findUserStartedTournaments(Long userId, Integer offset, Integer maxResults);
 
-    @Query(value = "select t.* from wordle.registration r, wordle.tournament t \n" +
+    @Query(value = "select count(*) from wordle.registration r, wordle.tournament t \n" +
             "where r.id_user = :userId \n" +
             "and r.id_tournament = t.id \n" +
             "and curdate() < t.finish \n" +
@@ -75,7 +75,7 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
             "LIMIT :offset,:maxResults", nativeQuery = true)
     List<TournamentEntity> findUserFinishedTournaments(Long userId, Integer offset, Integer maxResults);
 
-    @Query(value = "select t.* from wordle.registration r, wordle.tournament t \n" +
+    @Query(value = "select count(*) from wordle.registration r, wordle.tournament t \n" +
             "where r.id_user = :userId \n" +
             "and r.id_tournament = t.id \n" +
             "and t.finish < curdate()", nativeQuery = true)

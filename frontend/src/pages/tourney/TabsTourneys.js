@@ -44,7 +44,12 @@ export default class TabsTourneys extends Component{
         console.log("se pide actualizar la lista de torneos")
         UserService.getMyTourneys(this.props.nombreTabla) /*todo: como lo mando si no recibe parametros ._. mandar aca el tipo de torneos */ //mis torneos es el nombre del metodo, para otra tabla es otro metodo
             .then(response => {
-                this.setState({myTourneys: response.data})
+                if(response.data.tournaments){
+                    this.setState({myTourneys: response.data.tournaments})
+                } else {
+                    this.setState({myTourneys: response.data})
+                }
+
                 if(JSON.stringify(this.state.myTourneys[0]) === undefined){
                     //todo: mostrar mensaje de tabla vacia
                 }
