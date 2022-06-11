@@ -30,6 +30,7 @@ http://localhost:3000/
 
 ## BACKEND
 ### BD MySQL
+Instancia solo para desarrollo local
 Si aún no tenemos creada la BD localmente:
 
 1- Accedemos a la consola de MySQL (pass: root)
@@ -64,23 +65,22 @@ Hacer visibles los comandos en el menu de comandos del bot:
 
 ## Docker
 
+Las imagenes, redes, volumenes, contenedores necesarios para el despliegue de la aplicación, se generarán automaticamente con la ejecución del script.sh
+
+A continuación algunos comandos básicos: 
+
 Crear una imagen:
 
 docker build -t grupo6/backend .
+docker build -t grupo6/frontend .
 
 Correr la imagen:
 
--P ejecuta la imagen y mapeale puertos random a todo lo expuesto del docker
-docker run -d -p8080:8080 grupo6/backend:latest
-docker run -d -P grupo6/backend:latest
+docker run -d --name backend  -p8080:8080 grupo6/backend
+docker run -d --name frontend -p3000:3000 grupo6/frontend
 
 
-docker run -it grupo6/backend:latest
+Parar la imagen:
 
-docker ps
-CONTAINER ID   IMAGE                   COMMAND                  CREATED         STATUS         PORTS                                         NAMES
-27db3aee37e8   grupo6/backend:latest   "java -jar target/wo…"   4 seconds ago   Up 4 seconds   0.0.0.0:49153->8080/tcp, :::49153->8080/tcp   elastic_swartz
-
-Parar la imagen
 docker stop <NAME>
 
