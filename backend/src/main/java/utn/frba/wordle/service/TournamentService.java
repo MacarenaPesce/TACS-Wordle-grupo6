@@ -120,14 +120,23 @@ public class TournamentService {
         return registrationService.mapToDto(registrationEntity);
     }
 
-    public List<TournamentDto> findPublicActiveTournaments(String name) {
-        List<TournamentEntity> tournaments = tournamentRepository.findPublicActiveTournamentsByName(name.toLowerCase());
+    public List<TournamentDto> findPublicActiveTournaments(String name, Integer pageNumber, Integer maxResults) {
+        Integer offset = (pageNumber - 1) * maxResults;
+        List<TournamentEntity> tournaments = tournamentRepository.findPublicActiveTournamentsByName(name.toLowerCase(), offset, maxResults);
 
         return mapToDto(tournaments);
     }
 
-    public List<TournamentDto> listPublicActiveTournaments() {
-        List<TournamentEntity> tournaments = tournamentRepository.getPublicActiveTournaments();
+
+    public Integer findPublicActiveTournamentsTotalPages(String name, Integer maxResults) {
+        Integer totalResults = tournamentRepository.findPublicActiveTournamentsByNameTotalPages(name.toLowerCase());
+        int pages = totalResults / maxResults;
+        return Math.toIntExact(Math.round(Math.ceil(pages)));
+    }
+
+    public List<TournamentDto> listPublicActiveTournaments(Integer pageNumber, Integer maxResults) {
+        Integer offset = (pageNumber - 1) * maxResults;
+        List<TournamentEntity> tournaments = tournamentRepository.getPublicActiveTournaments(offset, maxResults);
 
         return mapToDto(tournaments);
     }
@@ -347,6 +356,12 @@ public class TournamentService {
 
     public Integer findActiveTournamentsFromUserTotalPages(Long userId, String name, Integer maxResults) {
         Integer totalResults = tournamentRepository.findActiveTournamentsFromUserTotalPages(userId, name);
+        int pages = totalResults / maxResults;
+        return Math.toIntExact(Math.round(Math.ceil(pages)));
+    }
+
+    public Integer listPublicActiveTournamentsTotalPages(Integer maxResults) {
+        Integer totalResults = tournamentRepository.listPublicActiveTournamentsTotalPages();
         int pages = totalResults / maxResults;
         return Math.toIntExact(Math.round(Math.ceil(pages)));
     }
