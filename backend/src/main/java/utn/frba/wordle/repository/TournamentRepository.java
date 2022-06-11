@@ -21,15 +21,30 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
     @Query(value = "select t.* from wordle.registration r, wordle.tournament t \n" +
             "where r.id_user = :userId \n" +
             "and r.id_tournament = t.id \n" +
+            "and curdate() < finish \n" +
+            "LIMIT :offset,:maxResults", nativeQuery = true)
+    List<TournamentEntity> getActiveTournamentsFromUser(Long userId, Integer offset, Integer maxResults);
+
+    @Query(value = "select count(*) from wordle.registration r, wordle.tournament t \n" +
+            "where r.id_user = :userId \n" +
+            "and r.id_tournament = t.id \n" +
             "and curdate() < finish", nativeQuery = true)
-    List<TournamentEntity> getActiveTournamentsFromUser(Long userId);
+    Integer getActiveTournamentsFromUserTotalPages(Long userId);
 
     @Query(value = "select t.* from wordle.registration r, wordle.tournament t \n" +
             "where r.id_user = :userId \n" +
             "and r.id_tournament = t.id\n" +
             "and curdate() < finish \n" +
-            "and LOWER(t.name) like %:tournamentName%", nativeQuery = true)
-    List<TournamentEntity> findActiveTournamentsFromUser(Long userId, String tournamentName);
+            "and LOWER(t.name) like %:tournamentName% \n" +
+            "LIMIT :offset,:maxResults", nativeQuery = true)
+    List<TournamentEntity> findActiveTournamentsFromUser(Long userId, String tournamentName, Integer offset, Integer maxResults);
+
+    @Query(value = "select count(*) from wordle.registration r, wordle.tournament t \n" +
+            "where r.id_user = :userId \n" +
+            "and r.id_tournament = t.id\n" +
+            "and curdate() < finish \n" +
+            "and LOWER(t.name) like %:name%", nativeQuery = true)
+    Integer findActiveTournamentsFromUserTotalPages(Long userId, String name);
 
     @Query(value = "select * from wordle.tournament \n" +
             "where type = 'PUBLIC' \n" +
