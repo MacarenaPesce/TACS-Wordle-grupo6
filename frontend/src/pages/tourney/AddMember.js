@@ -72,7 +72,7 @@ export default class AddMember extends Component  {
         UserService.getUsers(this.state.searchUser)
             .then(response => {console.log(response.data)
                 this.setState({successVisible: true, nameDisplay: this.state.name, loading: false,
-                users: response.data.filter(user => user.id != this.props.ownerId )});
+                users: response.data.users.filter(user => user.id != this.props.ownerId )});
                 this.setState({clear:false})
                 this.setState({searchUser: ''})
             })
