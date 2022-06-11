@@ -49,22 +49,40 @@ public class TournamentController {
     }
 
     @GetMapping("/myTournaments")
-    public ResponseEntity<List<TournamentResponse>> getActiveTournamentsFromUser(
+    public ResponseEntity<FindUserTournamentsResponse> getActiveTournamentsFromUser(
             @RequestHeader("Authorization") String token,
-            @RequestParam(required = false) String name){
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer pageNumber,
+            @RequestParam(required = false) Integer maxResults){
         logger.info("Method: getTournamentsFromUser - Request: token={}", token);
 
         Session session = AuthService.getSession(token);
-        List<TournamentDto> tournamentsDto;
-        if(name == null) {
-            tournamentsDto = tournamentService.getActiveTournamentsFromUser(session.getUserId());
-        }
-        else {
-            tournamentsDto = tournamentService.findActiveTournamentsFromUser(session.getUserId(), name);
+        if(pageNumber == null || maxResults == null){
+            pageNumber = 1;
+            maxResults = 100;
         }
 
-        List<TournamentResponse> response = tournamentsDto
+        Integer totalPages;
+        List<TournamentDto> tournamentsDto;
+        if(name == null) {
+            tournamentsDto = tournamentService.getActiveTournamentsFromUser(session.getUserId(), pageNumber, maxResults);
+            totalPages =  tournamentService.getActiveTournamentsFromUserTotalPages(session.getUserId(), maxResults);
+        }
+        else {
+            tournamentsDto = tournamentService.findActiveTournamentsFromUser(session.getUserId(), name, pageNumber, maxResults);
+            totalPages =  tournamentService.findActiveTournamentsFromUserTotalPages(session.getUserId(), name, maxResults);
+        }
+
+        List<TournamentResponse> tournaments = tournamentsDto
                 .stream().map(this::buildResponse).collect(Collectors.toList());
+
+
+        FindUserTournamentsResponse response = FindUserTournamentsResponse.builder()
+                .tournaments(tournaments)
+                .maxResults(maxResults)
+                .pageNumber(pageNumber)
+                .totalPages(totalPages)
+                .build();
 
         logger.info("Method: getTournamentsFromUser - Response: {}", response);
         return new ResponseEntity<>(response, HttpStatus.OK);

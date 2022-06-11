@@ -630,7 +630,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         TournamentDto tournamentFinished = saveTournament(owner, "Tournament3", State.FINISHED);
         tournamentService.addMember(player1.getId(), tournamentFinished.getTourneyId(), owner.getId());
 
-        List<TournamentDto> tournaments = tournamentService.getActiveTournamentsFromUser(player1.getId());
+        List<TournamentDto> tournaments = tournamentService.getActiveTournamentsFromUser(player1.getId(), 1, 20);
 
         assertThat(tournaments).isNotEmpty();
         assertEquals(tournaments.size(), 2);
@@ -650,7 +650,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         TournamentDto tournamentFinished = saveTournament(owner, "T23", State.FINISHED);
         tournamentService.addMember(player1.getId(), tournamentFinished.getTourneyId(), owner.getId());
 
-        List<TournamentDto> tournaments = tournamentService.findActiveTournamentsFromUser(player1.getId(), "T2");
+        List<TournamentDto> tournaments = tournamentService.findActiveTournamentsFromUser(player1.getId(), "T2", 1, 20);
 
         assertThat(tournaments).isNotEmpty();
         assertEquals(tournaments.size(), 1);

@@ -247,7 +247,21 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).getActiveTournamentsFromUser(session.getUserId());
+        verify(tournamentService).getActiveTournamentsFromUser(session.getUserId(), 1, 100);
+    }
+
+    @SneakyThrows
+    @Test
+    public void aUserCanGetTheListTheirTournamentsWithPagination() {
+        Session session = TestUtils.getMockSession();
+
+        String urlController = "/api/tournaments/myTournaments?pageNumber=3&maxResults=7";
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).getActiveTournamentsFromUser(session.getUserId(), 3, 7);
     }
 
     @SneakyThrows
@@ -261,6 +275,19 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).findActiveTournamentsFromUser(session.getUserId(), "asdas");
+        verify(tournamentService).findActiveTournamentsFromUser(session.getUserId(), "asdas", 1, 100);
+    }
+    @SneakyThrows
+    @Test
+    public void aUserCanFilterTheirTournamentsWithPagination() {
+        Session session = TestUtils.getMockSession();
+
+        String urlController = "/api/tournaments/myTournaments?name=asdas&pageNumber=3&maxResults=7";
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).findActiveTournamentsFromUser(session.getUserId(), "asdas", 3, 7);
     }
 }

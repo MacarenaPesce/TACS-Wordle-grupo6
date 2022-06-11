@@ -4,7 +4,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.exception.SessionJWTException;
 import utn.frba.wordle.model.dto.RegistrationDto;
@@ -21,7 +20,6 @@ import utn.frba.wordle.repository.TournamentRepository;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -188,12 +186,14 @@ public class TournamentService {
         return mapToDto(entities);
     }
 
-    public List<TournamentDto> findActiveTournamentsFromUser(Long userId, String name) {
-        return mapToDto(tournamentRepository.findActiveTournamentsFromUser(userId, name.toLowerCase()));
+    public List<TournamentDto> findActiveTournamentsFromUser(Long userId, String name, Integer pageNumber, Integer maxResults) {
+        Integer offset = (pageNumber - 1) * maxResults;
+        return mapToDto(tournamentRepository.findActiveTournamentsFromUser(userId, name.toLowerCase(), offset, maxResults));
     }
 
-    public List<TournamentDto> getActiveTournamentsFromUser(Long userId) {
-        return mapToDto(tournamentRepository.getActiveTournamentsFromUser(userId));
+    public List<TournamentDto> getActiveTournamentsFromUser(Long userId, Integer pageNumber, Integer maxResults) {
+        Integer offset = (pageNumber - 1) * maxResults;
+        return mapToDto(tournamentRepository.getActiveTournamentsFromUser(userId, offset, maxResults));
     }
 
     public TournamentDto getTournamentFromId(Long tournamentId) {
@@ -335,6 +335,18 @@ public class TournamentService {
                 throw new IllegalStateException("Unexpected value: " + state);
         }
 
+        int pages = totalResults / maxResults;
+        return Math.toIntExact(Math.round(Math.ceil(pages)));
+    }
+
+    public Integer getActiveTournamentsFromUserTotalPages(Long userId, Integer maxResults) {
+        Integer totalResults = tournamentRepository.getActiveTournamentsFromUserTotalPages(userId);
+        int pages = totalResults / maxResults;
+        return Math.toIntExact(Math.round(Math.ceil(pages)));
+    }
+
+    public Integer findActiveTournamentsFromUserTotalPages(Long userId, String name, Integer maxResults) {
+        Integer totalResults = tournamentRepository.findActiveTournamentsFromUserTotalPages(userId, name);
         int pages = totalResults / maxResults;
         return Math.toIntExact(Math.round(Math.ceil(pages)));
     }
