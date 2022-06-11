@@ -270,12 +270,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void aUserCanSubmitTheirResultsWithoutAnyRegistration() {
         UserDto player = getUserDto("mailPlayer@mail.com", "usernamePlayer");
-        ResultDto resultDto = ResultDto.builder()
-                .result(2L)
-                .language(Language.ES)
-                .build();
-
-        tournamentService.submitResults(player.getId(), resultDto);
+        submitResult(player, 2L, Language.ES);
 
         Long punctuation = punctuationService.getTodaysResult(player.getId(), Language.ES);
         assertEquals(punctuation, 2L);
@@ -303,18 +298,10 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         UserDto player = getUserDto("mailPlayer@mail.com", "usernamePlayer");
         TournamentDto tournamentDtoSpanish = getPrivateTournamentDto(user, "Private Tourney ES", Language.ES);
         tournamentService.addMember(player.getId(), tournamentDtoSpanish.getTourneyId(), user.getId());
-        ResultDto resultDtoSpanish = ResultDto.builder()
-                .result(3L)
-                .language(Language.ES)
-                .build();
-        tournamentService.submitResults(player.getId(), resultDtoSpanish);
+        submitResult(player, 3L, Language.ES);
         TournamentDto tournamentDtoEnglish = getPrivateTournamentDto(user, "Private Tourney EN", Language.EN);
         tournamentService.addMember(player.getId(), tournamentDtoEnglish.getTourneyId(), user.getId());
-        ResultDto resultDtoEnglish = ResultDto.builder()
-                .result(5L)
-                .language(Language.EN)
-                .build();
-        tournamentService.submitResults(player.getId(), resultDtoEnglish);
+        submitResult(player, 5L, Language.EN);
 
 
         Long punctuationEnglish = punctuationService.getTodaysResult(player.getId(), Language.EN);
@@ -388,7 +375,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         UserDto player1 = getUserDto("mail1@mail.com", "player1");
         Date startDate = getTodayWithOffset(-2);
         Date finishDate = getTodayWithOffset(-1);
-        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney", State.READY, startDate, finishDate);
+        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney", State.FINISHED, startDate, finishDate);
 
         List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
 
@@ -414,6 +401,40 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void ifATournamentStartsAndEndsInTheFutureTheScoreShouldBeZeroForAllParticipants(){
+        UserDto player1 = getUserDto("mail1@mail.com", "player1");
+        UserDto player2 = getUserDto("mail1@mail2.com", "player2");
+        UserDto player3 = getUserDto("mail1@mail3.com", "player3");
+        UserDto player4 = getUserDto("mail1@mail4.com", "player4");
+        Date startDate = getTodayWithOffset(3);
+        Date finishDate = getTodayWithOffset(10);
+        getPublicTournamentDto(player1, "Tournament1", State.READY);
+        getPublicTournamentDto(player1, "Tournament2", State.STARTED);
+        getPublicTournamentDto(player1, "Tournament3", State.STARTED);
+        getPublicTournamentDto(player1, "Tournament4", State.FINISHED);
+        TournamentDto futureTournament = getPublicTournamentDto(player1, "Public Tourney", State.READY, startDate, finishDate);
+        tournamentService.addMember(player2.getId(), futureTournament.getTourneyId(), player1.getId());
+        tournamentService.addMember(player3.getId(), futureTournament.getTourneyId(), player1.getId());
+        tournamentService.addMember(player4.getId(), futureTournament.getTourneyId(), player1.getId());
+
+        List<Punctuation> punctuations = tournamentService.getRanking(futureTournament.getTourneyId());
+
+        assertThat(punctuations).isNotEmpty();
+        assertThat(punctuations.get(0)).isNotNull();
+        assertThat(punctuations.get(1)).isNotNull();
+        assertThat(punctuations.get(2)).isNotNull();
+        assertThat(punctuations.get(3)).isNotNull();
+        assertEquals(1L, punctuations.get(0).getPosition());
+        assertEquals(0L, punctuations.get(0).getPunctuation());
+        assertEquals(2L, punctuations.get(1).getPosition());
+        assertEquals(0L, punctuations.get(1).getPunctuation());
+        assertEquals(3L, punctuations.get(2).getPosition());
+        assertEquals(0L, punctuations.get(2).getPunctuation());
+        assertEquals(4L, punctuations.get(3).getPosition());
+        assertEquals(0L, punctuations.get(3).getPunctuation());
+    }
+
+    @Test
     public void ifATournamentStartsInTheFutureMyScoreShouldBeZero(){
         UserDto player1 = getUserDto("mail1@mail.com", "player1");
         TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney", State.READY);
@@ -435,12 +456,9 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         tournamentService.addMember(player2.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player3.getId(), tournamentDto.getTourneyId(), player1.getId());
         tournamentService.addMember(player4.getId(), tournamentDto.getTourneyId(), player1.getId());
-        ResultDto result = ResultDto.builder().result(5L).language(Language.ES).build();
-        ResultDto result2 = ResultDto.builder().result(2L).language(Language.ES).build();
-        ResultDto result3 = ResultDto.builder().result(3L).language(Language.ES).build();
-        tournamentService.submitResults(player1.getId(), result);
-        tournamentService.submitResults(player2.getId(), result2);
-        tournamentService.submitResults(player3.getId(), result3);
+        submitResult(player1, 5L, Language.ES);
+        submitResult(player2, 2L, Language.ES);
+        submitResult(player3, 3L, Language.ES);
 
         List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
 
@@ -461,6 +479,11 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         assertTrue(punctuations.get(1).getSubmittedScoreToday());
         assertTrue(punctuations.get(2).getSubmittedScoreToday());
         assertTrue(punctuations.get(3).getSubmittedScoreToday());
+    }
+
+    private void submitResult(UserDto player, long score, Language language) {
+        ResultDto result = ResultDto.builder().result(score).language(language).build();
+        tournamentService.submitResults(player.getId(), result);
     }
 
     @Test
