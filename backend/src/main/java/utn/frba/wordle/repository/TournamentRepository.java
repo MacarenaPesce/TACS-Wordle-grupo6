@@ -10,8 +10,14 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
 
     @Query(value = "select * from wordle.tournament \n" +
             "where type = 'PUBLIC' \n" +
+            "and curdate() < finish \n" +
+            "LIMIT :offset,:maxResults", nativeQuery = true)
+    List<TournamentEntity> getPublicActiveTournaments(Integer offset, Integer maxResults);
+
+    @Query(value = "select count(*) from wordle.tournament \n" +
+            "where type = 'PUBLIC' \n" +
             "and curdate() < finish", nativeQuery = true)
-    List<TournamentEntity> getPublicActiveTournaments();
+    Integer listPublicActiveTournamentsTotalPages();
 
     @Query(value = "select * from wordle.tournament \n" +
             "where name = :name \n" +
@@ -49,8 +55,15 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
     @Query(value = "select * from wordle.tournament \n" +
             "where type = 'PUBLIC' \n" +
             "and curdate() < finish \n" +
+            "and LOWER(name) like %:name% \n" +
+            "LIMIT :offset,:maxResults", nativeQuery = true)
+    List<TournamentEntity> findPublicActiveTournamentsByName(String name, Integer offset, Integer maxResults);
+
+    @Query(value = "select count(*) from wordle.tournament \n" +
+            "where type = 'PUBLIC' \n" +
+            "and curdate() < finish \n" +
             "and LOWER(name) like %:name%", nativeQuery = true)
-    List<TournamentEntity> findPublicActiveTournamentsByName(String name);
+    Integer findPublicActiveTournamentsByNameTotalPages(String name);
 
     @Query(value = "select t.* from wordle.registration r, wordle.tournament t \n" +
             "where r.id_user = :userId \n" +

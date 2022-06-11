@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Builder
 @ToString
-public class FindUserTournamentsResponse {
+public class TournamentsListResponse {
     List<TournamentResponse> tournaments;
     private final Integer maxResults;
     private final Integer pageNumber;

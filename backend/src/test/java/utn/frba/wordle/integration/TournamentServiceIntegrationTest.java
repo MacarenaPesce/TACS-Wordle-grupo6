@@ -178,9 +178,23 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         TournamentDto tournamentStarted = saveTournament(owner, "Tournament2", State.STARTED);
         saveTournament(owner, "Tournament3", State.FINISHED);
 
-        List<TournamentDto> tournaments = tournamentService.listPublicActiveTournaments();
+        List<TournamentDto> tournaments = tournamentService.listPublicActiveTournaments(1, 100);
 
         assertThat(tournaments).containsExactlyInAnyOrder(tournamentReady, tournamentStarted);
+    }
+
+    @Test
+    public void aUserCanListAllPublicTournamentsWithPagination() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        saveTournament(owner, "Tournament1", State.FINISHED);
+        saveTournament(owner, "Tournament1", State.READY);
+        saveTournament(owner, "Tournament2", State.STARTED);
+        TournamentDto tournamentStarted3 = saveTournament(owner, "Tournament3", State.STARTED);
+        saveTournament(owner, "Tournament4", State.FINISHED);
+
+        List<TournamentDto> tournaments = tournamentService.listPublicActiveTournaments(2, 2);
+
+        assertThat(tournaments).containsExactlyInAnyOrder(tournamentStarted3);
     }
 
     @Test
@@ -191,9 +205,23 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         saveTournament(owner, "Beta", State.READY);
         saveTournament(owner, "Gamma", State.READY);
 
-        List<TournamentDto> tournaments = tournamentService.findPublicActiveTournaments("alph");
+        List<TournamentDto> tournaments = tournamentService.findPublicActiveTournaments("alph", 1, 100);
 
         assertThat(tournaments).containsExactlyInAnyOrder(tournamentReady, tournamentAlphabet);
+    }
+
+    @Test
+    public void aUserCanFindByTournamentNameWithPagination() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        saveTournament(owner, "Alpha", State.READY);
+        saveTournament(owner, "Alphabet", State.READY);
+        TournamentDto tournamentAlphys = saveTournament(owner, "Alphys Tournament", State.READY);
+        saveTournament(owner, "Beta", State.READY);
+        saveTournament(owner, "Gamma", State.READY);
+
+        List<TournamentDto> tournaments = tournamentService.findPublicActiveTournaments("alph", 2, 2);
+
+        assertThat(tournaments).containsExactlyInAnyOrder(tournamentAlphys);
     }
 
     @Test
@@ -658,8 +686,8 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         assertThat(tournaments).containsExactlyInAnyOrder(tournamentStarted);
     }
 
-    private TournamentDto saveTournament(UserDto owner, String tournament22, State state) {
-        TournamentDto tournamentDto = getPublicTournamentDto(owner, tournament22, state);
+    private TournamentDto saveTournament(UserDto owner, String tournamentName, State state) {
+        TournamentDto tournamentDto = getPublicTournamentDto(owner, tournamentName, state);
         TournamentEntity tournamentEntity = tournamentService.mapToEntity(tournamentDto);
         tournamentRepository.save(tournamentEntity);
         return tournamentDto;
