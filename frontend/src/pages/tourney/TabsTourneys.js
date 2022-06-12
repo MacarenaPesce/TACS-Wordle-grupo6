@@ -100,7 +100,7 @@ export default class TabsTourneys extends Component{
                         <td> {this.formatDate(tourney.finish)}</td>
                         <td> {tourney.owner.username}</td>
                         <td>
-                            <BotonesTorneos tourney={tourney} dataTourneys={this.state.myTourneys.map((torneo)=>torneo.tourneyId)} />   
+                            <BotonesTorneos tourney={tourney} />   
                         </td>
                     </tr>
                 );}

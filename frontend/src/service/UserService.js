@@ -37,8 +37,8 @@ const getMyTourneys = (nombreTabla) => {
   }  
 };
 
-const getMyTourneysActive = () => {
-  return axios.get(API + "tournaments/myTournaments", { headers: authHeader() });
+const getMyTourneysActive = async () => {
+  return await axios.get(API + "tournaments/myTournaments", { headers: authHeader() });
 };
 
 const getTourneysPublic = () => {
