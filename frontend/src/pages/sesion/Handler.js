@@ -6,7 +6,7 @@ import StatusCheck from "./StatusCheck";
  * Solo se puede llamar desde class.
  * La class debe tener los estados sessionError y errorMessage creados. Y debe incluir la siguiente linea en el return del render:
  *               {this.state.sessionError && <Not message={this.state.errorMessage}/>}
- * @param component comoponente con esas dos variables creadas, para mandar como 'this'
+ * @param component componente con esas dos variables creadas, para mandar como 'this'
  * @param error error atrapado por el catch de una request de axios
  */
 const handleSessionError = (component, error) => {
