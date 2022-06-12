@@ -7,7 +7,7 @@ rem   hacemos un Clean up del ambiente
 docker stop test-mysql backend frontend
 docker rm test-mysql backend frontend
 docker network rm mired
-docker volume rm mysql-db-data
+rem docker volume rm mysql-db-data
 
 rem Creamos la red mired
 docker network create mired
