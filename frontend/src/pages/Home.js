@@ -5,8 +5,8 @@ import Footer from '../components/footer/Footer';
 import AuthService from "../service/AuthService";
 import Tourney from "./tourney/Tourney";
 import Not from "../components/not/Not";
+import ToastComponent from '../components/toast/Toast';
 import Handler from "./sesion/Handler";
-
 
 export default class Home extends React.Component{
   constructor(props){
@@ -44,7 +44,7 @@ export default class Home extends React.Component{
         <div className="navGeneral">
           <NavbarAut />
         </div>
-      
+        
         <Footer />
 
       </div>

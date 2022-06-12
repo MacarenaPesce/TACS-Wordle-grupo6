@@ -9,118 +9,138 @@ import Handler from "../sesion/Handler";
 import AuthService from "../../service/AuthService";
 
 export default function InfoTourney() {
-    let { id } = useParams();
-    //console.log(id);
-    const [tourney, setTourney] = useState({owner: ""});
-    //console.log(tourney);
-    const [ranking, setRanking] = useState({punctuations: []});
-    const [members, setMembers] = useState({members: []});
-    const [username, setUsername] = useState('');
-    const [puntuacion, setPuntuacion] = useState([]);
-    const [puntaje, setPuntaje] = useState(0);
+  let { id } = useParams();
+  const [tourney, setTourney] = useState({owner: ""});
+  const [ranking, setRanking] = useState({punctuations: []});
+  const [members, setMembers] = useState({members: []});
+  const [myScore, setMyScore] = useState([]);
+  
+  const [sessionError, setSessionError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-    const [sessionError, setSessionError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+  //se usan para los filtros
+  const [username, setUsername] = useState('');
+  const [puntuacion, setPuntuacion] = useState([]);
+  const [puntaje, setPuntaje] = useState(0);
 
-    const getTourney=() =>{
-        TourneyService.getTournamentFromId(id)
-            .then(response => {
-                setTourney(response.data);
-                console.log('Response de torneo obtenida: ')
-                console.log(response.data)
-            })
-            .catch(error => {
-                console.log(error)
-                Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
-            })
-          }
-     const getRanking =() => {      
-        TourneyService.getRanking(id)
-            .then(response => {
-                setRanking(response.data);
-                console.log('Response de ranking obtenida: ')
-                console.log(response.data)
-            })
-            .catch(error => {
-                console.log(error)
-                Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
-            })
-          }
-     const getMember =() => {
-        TourneyService.getMembers(id)
-            .then(response => {
-              setMembers(response.data);
-              console.log('Response de Members obtenida: ')
-              console.log(response.data)
-            })
-            .catch(error => {
-                console.log(error)
-                Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
-            })
-          }
+  const getTourney=() =>{
+    TourneyService.getTournamentFromId(id)
+    .then(response => {
+      setTourney(response.data);
+      console.log('Response de torneo obtenida: ')
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error)
+      Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
+    })
+  }
+  
+  const getRanking =() => {      
+    TourneyService.getRanking(id)
+    .then(response => {
+      setRanking(response.data);
+      console.log('Response de ranking obtenida: ')
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error)
+      Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
+    })
+  }
+  
+  const getMember =() => {
+    TourneyService.getMembers(id)
+    .then(response => {
+      setMembers(response.data);
+      console.log('Response de Members obtenida: ')
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error)
+      Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
+    })
+  }
+  
+  const getMyScore =() => {
+    TourneyService.getMyScore(id)
+    .then(response => {
+      setMyScore(response.data);
+      console.log('Response de MyScore obtenida: ')
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error)
+      Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
+    })
+  }    
 
-    useEffect(() => {
-      getTourney();
-      getRanking();
-      getMember();
-      setPuntuacion(ranking.punctuations);
-      console.log(tourney);
-      console.log("daleeeeeeeeeee")
-      validarToken()
-    }, []);
-
-    function validarToken() {
-        console.log('Ping del token en el store...')
-        AuthService.ping()
-            .then(response => {
-                console.log('Response del ping: ' + response.status)
-            })
-            .catch(error => {
-                console.log(error)
-                Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
-            })
+  function loadData(){
+    getTourney();
+    getRanking();
+    getMember();
+    getMyScore();
+  }
+    
+  useEffect(() => {
+    loadData();
+    setPuntuacion(ranking.punctuations);
+    console.log("torneo actual:",tourney);
+    validarToken();
+  }, []);
+  
+  function validarToken() {
+    console.log('Ping del token en el store...')
+    AuthService.ping()
+        .then(response => {
+            console.log('Response del ping: ' + response.status)
+        })
+        .catch(error => {
+            console.log(error)
+            Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
+        })
     }
 
-    let listMembers = (members.members.map((member) =>
-      <li className="list-group-item disabled" key={member.username}> {member.username}</li>
-    ));
+  let listMembers = (members.members.map((member) =>
+    <li className="list-group-item disabled" key={member.username}> {member.username}</li>
+  ));
 
-    const filtroUser = (e) => {
-      const keyword = e.target.value;
-  
-      if (keyword !== '') {
-        const results = ranking.punctuations.filter((puntuacion) => {
-          return puntuacion.user.toLowerCase().startsWith(keyword.toLowerCase());
-          // Use the toLowerCase() method to make it case-insensitive
-        });
-        setPuntuacion(results);
-      } else {
-        getRanking();
-        setPuntuacion(ranking.punctuations);
-      }
-      setUsername(keyword);
-    };  
+  const filtroUser = (e) => {
+    const keyword = e.target.value;
+
+    if (keyword !== '') {
+      const results = ranking.punctuations.filter((puntuacion) => {
+        return puntuacion.user.toLowerCase().startsWith(keyword.toLowerCase());
+        // Use the toLowerCase() method to make it case-insensitive
+      });
+      setPuntuacion(results);
+    } else {
+      getRanking();
+      setPuntuacion(ranking.punctuations);
+    }
+    setUsername(keyword);
+  };  
     
-    const filtroPuntaje = (e) => {
-      const keyword = e.target.value;
-  
-      if (keyword !== '') {
-        const results = ranking.punctuations.filter((puntuacion) => 
-           puntuacion.punctuation == keyword  );
-        setPuntuacion(results);
-      } else {
-        getRanking();
-        setPuntuacion(ranking.punctuations);
-      }
-      setPuntaje(keyword);
-    };
+  const filtroPuntaje = (e) => {
+    const keyword = e.target.value;
+
+    if (keyword !== '') {
+      const results = ranking.punctuations.filter((puntuacion) => 
+          puntuacion.punctuation == keyword  );
+      setPuntuacion(results);
+    } else {
+      getRanking();
+      setPuntuacion(ranking.punctuations);
+    }
+    setPuntaje(keyword);
+  };
     
-    const formatDate =(start)=> {
-      let fecha = new Date(start)
-      let day = fecha.getDate()+1 ;
-      let month = (fecha.getMonth() +1)>10?(fecha.getMonth() +1) : '0'+(fecha.getMonth() +1)  ; 
-      let year = fecha.getFullYear();
-      return day+'/'+month + '/' + year ;
+  const formatDate =(start)=> {
+    let fecha = new Date(start) ;
+    let day = fecha.getDate()+1 ;
+    let month = (fecha.getMonth() +1)>10?(fecha.getMonth() +1) : '0'+(fecha.getMonth() +1)  ; 
+    let year = fecha.getFullYear();
+    return day + '/' + month + '/' + year ;
   };    
 
     return (
@@ -171,11 +191,11 @@ export default function InfoTourney() {
                         <td>{tourney.owner.username}</td>
                       </tr>
                       <tr>
-                        <td>Puntaje: "puntaje"</td>
-                        <td>Puesto: "puesto"</td>
+                        <td>Puntaje: {myScore.punctuation}</td>
+                        <td>Puesto: {myScore.position}</td>
                       </tr>
                       <tr>
-                        <td>Integrantes: </td>
+                        <td>Integrantes: {members.members.length}</td>
                         <td>
                           <ul className="list-group scrollbar-success">
                             {listMembers}

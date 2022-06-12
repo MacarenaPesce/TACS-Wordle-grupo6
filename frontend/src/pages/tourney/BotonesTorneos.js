@@ -8,8 +8,6 @@ import AddMember from "./AddMember"
 import UserService from "../../service/UserService";
 import {GoCheck} from "react-icons/go";
 
-
-
 function BotonesTorneos(data){
     let tourney = data.tourney;
     let userId = localStorage.getItem("userId");
@@ -31,9 +29,10 @@ function BotonesTorneos(data){
         TourneyService.join(tourney.tourneyId);
     }
 
-    if(tourney.owner.id == userId){
-        if(tourney.type === 'PUBLIC' || tourney.type === 'PRIVATE'){
-            if(tourney.state!= 'FINISHED'){
+
+    if(tourney.owner.id == userId){ //es mi torneo
+        if(tourney.type === 'PUBLIC' || tourney.type === 'PRIVATE'){ // es publico o privado
+            if(tourney.state== 'READY'){  // esta por empezar
                 return(
                     <div> 
                         {/* como soy el creador lo puedo eliminar*/}
@@ -45,13 +44,28 @@ function BotonesTorneos(data){
                         <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
                             <BsInfoLg/> 
                         </Button>
-                        {/* si sos el creador agregas personas ya sea publico o privado */}
+                        {/* si sos el creador agregas personas ya sea publico o privado SI NO ESTA EMPEZADO*/}
                         <AddMember tourneyId ={tourney.tourneyId} 
                                      ownerId ={tourney.owner.id}/> 
                     </div>
                 )
             }
-            else{
+            if(tourney.state== 'STARTED'){  // esta empezado
+                return( 
+                    <div> 
+                        {/* como soy el creador lo puedo eliminar*/}
+                        {/** 
+                        <button className="btn btn-danger" type="button">
+                            <BsTrashFill/> 
+                        </button>
+                        */}
+                        <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
+                            <BsInfoLg/> 
+                        </Button>
+                    </div>
+                )
+            }
+            else{ // esta finalizado
                 return(
                     <div>
                         <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
@@ -61,10 +75,10 @@ function BotonesTorneos(data){
             }
         }
     }
-    else if(tourney.owner.id != userId){
-        if(tourney.type === 'PUBLIC'){
+    else if(tourney.owner.id != userId){ // no es mi torneo
+        if(tourney.type === 'PUBLIC'){ // es publico
             return(
-                <div> {/*es un torneo publico al que entraste o te agregaron y no sos el creador */}
+                <div>
                         {/* si no soy el creador, me puedo salir */}
                     {/*
                     <button className="btn btn-danger" type="button">
@@ -84,12 +98,11 @@ function BotonesTorneos(data){
                 </div>
             )
         }
-        else{
+        else{ // es privado pero no es mi torneo (me agregaron)
             return(
-                <div> {/* es un torneo privado (al que te agregaron) y no sos el creador*/}
+                <div>
                     {/* si no soy el creador, me puedo salir */}
-                    {/*
-                    <button className="btn btn-danger" type="button">
+                    {/*<button className="btn btn-danger" type="button">
                         <HiLogout/> 
                     </button>*/}
                     <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
