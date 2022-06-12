@@ -1,29 +1,49 @@
-import React from "react";
+import React, { useEffect } from 'react'
 import Button from 'react-bootstrap/Button'
-import { BsTrashFill, BsInfoLg, BsCheckLg, BsPersonPlusFill } from "react-icons/bs";
-import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
-import { HiLogout } from "react-icons/hi";
-import TourneyService from '../../service/TourneyService';
+import { BsInfoLg } from "react-icons/bs";
+import { AiOutlineUserAdd } from "react-icons/ai";
 import AddMember from "./AddMember"
 import UserService from "../../service/UserService";
-import {GoCheck} from "react-icons/go";
+import TourneyService from "../../service/TourneyService";
+
 
 function BotonesTorneos(data){
     let tourney = data.tourney;
     let userId = localStorage.getItem("userId");
+    
+    console.log("data:",data);
     console.log("id torneo actual", tourney.tourneyId);
-    console.log("dataTourneys", data.dataTourneys);
 
     let disableButton = false;
-    console.log(disableButton);
-    
-    if(data.dataTourneys.includes(tourney.tourneyId))
-        disableButton= true;
-    else 
-        disableButton= false;
+    console.log("disable button 1:", disableButton);
 
-    console.log(disableButton);    
-    
+    let myTourneysid = [];
+
+    const getTourney= async () =>{
+        await UserService.getMyTourneysActive()
+            .then(response => {
+                console.log("data de torneos activos del user:",response.data)
+                myTourneysid = response.data.map((torneo)=>torneo.tourneyId)
+                console.log("mis torneos id:", myTourneysid);
+
+                if(myTourneysid.includes(tourney.tourneyId))
+                    disableButton= true;
+                else 
+                    disableButton= false;
+        
+                console.log("disableButton 2:", disableButton); 
+                console.log("include:", myTourneysid.includes(tourney.tourneyId))
+
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+            
+    useEffect(() => {
+        getTourney();
+    }, []);
+
     const clickAgregarme = () => {
         console.log("te agregaste a un torneo". tourney)
         TourneyService.join(tourney.tourneyId);
@@ -32,15 +52,9 @@ function BotonesTorneos(data){
 
     if(tourney.owner.id == userId){ //es mi torneo
         if(tourney.type === 'PUBLIC' || tourney.type === 'PRIVATE'){ // es publico o privado
-            if(tourney.state== 'READY'){  // esta por empezar
+            if(tourney.state == 'READY'){  // esta por empezar
                 return(
                     <div> 
-                        {/* como soy el creador lo puedo eliminar*/}
-                        {/** 
-                        <button className="btn btn-danger" type="button">
-                            <BsTrashFill/> 
-                        </button>
-                        */}
                         <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
                             <BsInfoLg/> 
                         </Button>
@@ -50,15 +64,9 @@ function BotonesTorneos(data){
                     </div>
                 )
             }
-            if(tourney.state== 'STARTED'){  // esta empezado
+            if(tourney.state == 'STARTED'){  // esta empezado
                 return( 
                     <div> 
-                        {/* como soy el creador lo puedo eliminar*/}
-                        {/** 
-                        <button className="btn btn-danger" type="button">
-                            <BsTrashFill/> 
-                        </button>
-                        */}
                         <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
                             <BsInfoLg/> 
                         </Button>
@@ -77,13 +85,9 @@ function BotonesTorneos(data){
     }
     else if(tourney.owner.id != userId){ // no es mi torneo
         if(tourney.type === 'PUBLIC'){ // es publico
+            console.log("el disable puto",disableButton);
             return(
                 <div>
-                        {/* si no soy el creador, me puedo salir */}
-                    {/*
-                    <button className="btn btn-danger" type="button">
-                        <HiLogout/> 
-                    </button>*/}
                     <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
                     </Button>
@@ -101,10 +105,6 @@ function BotonesTorneos(data){
         else{ // es privado pero no es mi torneo (me agregaron)
             return(
                 <div>
-                    {/* si no soy el creador, me puedo salir */}
-                    {/*<button className="btn btn-danger" type="button">
-                        <HiLogout/> 
-                    </button>*/}
                     <Button className="btn btn-primary" type="button" href={'info/' + tourney.tourneyId} onClick={()=>console.log("acabas de tocar el boton info")}>
                         <BsInfoLg/> 
                     </Button>
@@ -112,17 +112,6 @@ function BotonesTorneos(data){
             )
         }
     }
-    /*
-    else{
-        return(
-            <div>
-                <p> no estoy tomando la condicion :))) (aca tendria que ir la condicion de finalizados)</p>
-                <button className="btn btn-primary" type="button">
-                    <BsInfoLg/>
-                </button>
-            </div>
-        )
-    }*/
 }
 
 export default BotonesTorneos;
