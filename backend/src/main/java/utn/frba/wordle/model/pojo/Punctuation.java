@@ -9,5 +9,5 @@ public class Punctuation {
     private final Long position;
     private final Long punctuation;
     private final String user;
-
+    private final Boolean submittedScoreToday;
 }

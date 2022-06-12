@@ -1,30 +1,19 @@
 package utn.frba.wordle.controller;
 
 import com.google.gson.GsonBuilder;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.model.dto.HelpDto;
-import utn.frba.wordle.model.enums.Language;
+import utn.frba.wordle.chat.HelpChat;
+import utn.frba.wordle.client.TeleSender;
+
 import utn.frba.wordle.model.tele.Update;
-import utn.frba.wordle.service.HelpService;
+
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import static utn.frba.wordle.utils.RunAfterStartup.TOKEN;
 
 @RestController
 @RequestMapping("/api/telegram")
@@ -33,13 +22,25 @@ public class TelegramController {
     //usar esta dependencia en el caso de necesitar todos los objetos ya modelados:
     //https://github.com/pengrad/java-telegram-bot-api/tree/master/library/src/main/java/com/pengrad/telegrambot/model
 
-    private static final String API_URL = "https://api.telegram.org/bot";
 
     @Autowired
-    HelpService helpService;
+    TeleSender sender;
+    @Autowired
+    HelpChat helpChat;
 
+    String start = "Wordle ♟\n\n" +
+                    "/register - Elija su nombre de usuario\n" +
+                    "/help - Generar trampas para Wordle\n" +
+                    "/definition - Obtener definicion de una palabra\n" +
+                    "/submit - Cargar los resultados del dia\n" +
+                    "/create - Crear un torneo\n" +
+                    "/addmember - Agregar un usuario a uno de mis torneos\n" +
+                    "/join - Unirme a un torneo publico pendiente de empezar\n" +
+                    "/ranking - Visualizar el ranking de un torneo\n" +
+                    "/tournaments - Obtener listas de torneos existentes\n" +
+                    "/tournament - Obtener informacion de un torneo";
     @PostMapping("/")
-    public ResponseEntity<String> postUpdates(@RequestBody Update update) throws IOException, URISyntaxException {
+    public ResponseEntity<String> postUpdate(@RequestBody Update update) throws IOException, URISyntaxException {
 
         String myString = new GsonBuilder().setPrettyPrinting().create().toJson(update);
         System.out.println("Update recibido: \n"+myString);
@@ -47,15 +48,15 @@ public class TelegramController {
         String text = update.getMessage().getText();
         Long chat_id = update.getMessage().getChat().getId();
 
-        if(text.matches("/[^ ](.*)")){
-            //enviarMensaje("se recibe el comando: \n"+text.substring(1), chat_id);
+        //interpretar mensaje
+        if(text.matches("/[^ ](.*)")){  //es comando
 
             String[] params = text.substring(1).split("\\s+");
             processCommand(params, chat_id);
 
-        }else {
+        }else { //no es comando
             String mensajeEnvio = update.getMessage().getFrom().getFirst_name()+", su mensaje "+update.getMessage().getMessage_id()+" dice: \n"+text;
-            enviarMensaje(mensajeEnvio, chat_id);
+            sender.sendMessage(mensajeEnvio, chat_id);
         }
 
         return new ResponseEntity<>(myString, HttpStatus.OK);
@@ -65,91 +66,52 @@ public class TelegramController {
         switch(params[0])
         {
             case "help" :
-                processHelp(params, chat_id);
+                helpChat.processHelp(params, chat_id);
                 break;
 
-            case "login" :
-                enviarMensaje("Ejemplo de otro comando", chat_id);
+            case "definition" :
+                sender.sendMessage("Obtener definicion de una palabra", chat_id);
+                break;
+
+            case "submit" :
+                sender.sendMessage("Cargar los resultados del dia", chat_id);
+                break;
+
+            case "create" :
+                sender.sendMessage("Crear un torneo", chat_id);
+                break;
+
+            case "start" :
+                sender.sendMessage(start, chat_id);
+                break;
+
+            case "addmember" :
+                sender.sendMessage("Agregar un usuario a uno de mis torneos", chat_id);
+                break;
+
+            case "join" :
+                sender.sendMessage("Unirme a un torneo publico pendiente de empezar", chat_id);
+                break;
+
+            case "ranking" :
+                sender.sendMessage("Visualizar el ranking de un torneo", chat_id);
+                break;
+
+            case "tournaments" :
+                sender.sendMessage("Obtener listas de torneos existentes", chat_id);
+                break;
+
+            case "tournament" :
+                sender.sendMessage("Obtener informacion de un torneo", chat_id);
+                break;
+
+            case "register" :
+                sender.sendMessage("Elija su nombre de usuario", chat_id);
                 break;
 
             default :
-                enviarMensaje("Comando no reconocido: \n"+params[0], chat_id);
+                sender.sendMessage("Comando no reconocido: \n"+params[0], chat_id);
         }
-    }
-
-    private void processHelp(String[] params, Long chat_id) throws IOException, URISyntaxException {
-        String sintaxis = "Sintaxis: \n/help es|en _|amarillas _|grises _a_a_";
-        if(params.length != 5 || !params[1].matches("es|en") || !params[2].matches("_|[A-Za-z]+") || !params[3].matches("_|[A-Za-z]+") || !params[4].matches("[A-Za-z_]{5}")){
-            enviarMensaje(sintaxis, chat_id);
-            return;
-        }
-
-        String yellow = params[2].toLowerCase();
-        String grey = params[3].toLowerCase();
-        String solution = params[4].toLowerCase();
-
-        if(yellow.equals("_"))
-            yellow = "";
-        if(grey.equals("_"))
-            grey = "";
-
-        //remove duplicates     //todo juntar codigo con helpController
-        yellow = Arrays.stream(yellow.split(""))
-                .distinct()
-                .collect(Collectors.joining());
-        grey = Arrays.stream(grey.split(""))
-                .distinct()
-                .collect(Collectors.joining());
-
-        HelpDto dto = HelpDto.builder()
-                        .solution(solution)
-                        .grey(grey)
-                        .yellow(yellow)
-                        .build();
-
-        Language language = null;
-        if(params[1].equals("es"))
-            language = Language.ES;
-        if(params[1].equals("en"))
-            language = Language.EN;
-
-        Set<String> possibleSolutions = helpService.solution(dto, language);
-
-        StringBuilder strbul = new StringBuilder();
-        for(String str : possibleSolutions)
-        {
-            strbul.append(str);
-            strbul.append("\n");
-        }
-        //just for removing last comma
-            strbul.setLength(strbul.length()-1);
-        String str = strbul.toString();
-
-        enviarMensaje(str, chat_id);
-    }
-
-    private void enviarMensaje(String mensaje, Long chat_id) throws IOException, URISyntaxException {
-        String destinationUrl = API_URL + TOKEN + "/sendMessage";
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-
-        HttpGet request = new HttpGet(destinationUrl);
-        URI uri = new URIBuilder(request.getURI())
-                .addParameter("chat_id", chat_id.toString())
-                .addParameter("text", mensaje)
-                .build();
-        request.setURI(uri);
-
-        CloseableHttpResponse responseHttp = httpClient.execute(request);
-
-        HttpEntity entity = responseHttp.getEntity();
-        //if (entity != null)
-            String response = EntityUtils.toString(entity);
-            System.out.println("Response del get sendMessage: "+response);
-
-        if(response.equals("{\"ok\":false,\"error_code\":400,\"description\":\"Bad Request: message is too long\"}")){
-            enviarMensaje(response, chat_id);
-        }
-
     }
 
 

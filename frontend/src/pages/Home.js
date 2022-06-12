@@ -6,7 +6,7 @@ import AuthService from "../service/AuthService";
 import Tourney from "./tourney/Tourney";
 import Not from "../components/not/Not";
 import ToastComponent from '../components/toast/Toast';
-
+import Handler from "./sesion/Handler";
 
 export default class Home extends React.Component{
   constructor(props){
@@ -29,7 +29,7 @@ export default class Home extends React.Component{
           .catch(error => {
             console.log(error)
 
-            Tourney.handleSessionError(this, error) //Todo mover funcion de tourney, a AuthService? o a donde?
+              Handler.handleSessionError(this, error)
           })
     }
   }

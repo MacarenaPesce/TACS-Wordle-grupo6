@@ -29,6 +29,9 @@ export default function useUser () {
         localStorage.removeItem('username')
         localStorage.removeItem('userId')
         setState({loading: false, error: true })
+          if(error.response === undefined){
+              console.log("No hay conexión con el back")
+          }
       });
     })
 
@@ -46,11 +49,15 @@ export default function useUser () {
         }
       })
       .catch(error => {
+          //TODO ponemos una toast aca?
           console.log(error)
           localStorage.removeItem('token')
           localStorage.removeItem('username')
           localStorage.removeItem('userId')
           setState({loading: false, error: true })
+          if(error.response === undefined){
+              console.log("No hay conexión con el back")
+          }
       });
     })
       

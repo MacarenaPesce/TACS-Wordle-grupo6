@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.model.dto.RegistrationDto;
+import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.entity.PunctuationEntity;
 import utn.frba.wordle.model.entity.RegistrationEntity;
 import utn.frba.wordle.model.entity.TournamentEntity;
@@ -37,8 +38,13 @@ public class RegistrationService {
         return registrationRepository.getAllByUser(userId);
     }
 
-    public List<RegistrationDto> getRegistrationsFromTournament(Long tourneyId) {
-        return mapToDto(registrationRepository.getAllByTournament(tourneyId));
+    public List<RegistrationEntity> getActiveRegistrationsEntityFromUser(Long userId) {
+        Date dateToday = new Date();
+        return registrationRepository.getActiveRegistrationsFromUser(userId, dateToday);
+    }
+
+    public List<RegistrationDto> getOutdatedRegistrationsFromTournament(TournamentDto tournamentDto) {
+        return mapToDto(registrationRepository.getOutdatedRegistrationsByTournament(tournamentDto.getTourneyId(), tournamentDto.getTournamentDuration()));
     }
 
     public RegistrationEntity addMember(Long tournamentId, Long userId, Date date) {
@@ -50,6 +56,7 @@ public class RegistrationService {
                 .totalScore(0L)
                 .daysPlayed(0L)
                 .user(userEntity)
+                .lastSubmittedScore(new Date(0))
                 .build();
         return registrationRepository.save(entity);
     }

@@ -9,6 +9,7 @@ import Member from './Member.js';
 import TourneyService from '../../service/TourneyService';
 import AuthService from "../../service/AuthService";
 import Tourney from "./Tourney";
+import Handler from "../sesion/Handler";
 
 export default class AddMember extends Component  {
 
@@ -61,7 +62,7 @@ export default class AddMember extends Component  {
             .catch(error => {
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
-                Tourney.handleSessionError(this, error)
+                Handler.handleSessionError(this, error)
         })
     }
 
@@ -71,14 +72,14 @@ export default class AddMember extends Component  {
         UserService.getUsers(this.state.searchUser)
             .then(response => {console.log(response.data)
                 this.setState({successVisible: true, nameDisplay: this.state.name, loading: false,
-                users: response.data.filter(user => user.id != this.props.ownerId )});
+                users: response.data.users.filter(user => user.id != this.props.ownerId )});
                 this.setState({clear:false})
                 this.setState({searchUser: ''})
             })
             .catch(error => {
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
-                Tourney.handleSessionError(this, error)
+                Handler.handleSessionError(this, error)
             })
     }
 

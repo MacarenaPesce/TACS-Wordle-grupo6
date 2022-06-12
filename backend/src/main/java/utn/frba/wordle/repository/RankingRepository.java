@@ -2,18 +2,16 @@ package utn.frba.wordle.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import utn.frba.wordle.model.entity.PunctuationEntity;
 import utn.frba.wordle.model.entity.RankingEntity;
-import utn.frba.wordle.model.entity.TournamentEntity;
-import utn.frba.wordle.model.pojo.Punctuation;
 
-import java.util.List;
+import java.util.Set;
 
 public interface RankingRepository extends CrudRepository<RankingEntity, Long> {
 
-    @Query(value = "SELECT r FROM RankingEntity r \n" +
-            "where r.idTournament = :idTournament")
-    List<RankingEntity> getScores(Long idTournament);
+    @Query(value = "SELECT r.* FROM wordle.ranking r \n" +
+            "where r.id_Tournament = :idTournament \n" +
+            "order by position asc", nativeQuery = true)
+    Set<RankingEntity> getScores(Long idTournament);
 
     @Query(value= "SELECT r from RankingEntity r \n" +
             "where r.idTournament = :idTournament \n" +

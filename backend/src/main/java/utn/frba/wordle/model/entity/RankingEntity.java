@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
-@Entity @IdClass(RankingEntity.class)
+@Entity
 @Getter
 @Builder
 @NoArgsConstructor
@@ -20,14 +20,15 @@ import java.io.Serializable;
 public class RankingEntity implements Serializable {
 
     @Id
+    private Long id;
+
     private Long position;
 
-    @Id
     private Long totalScore;
 
-    @Id
     private String username;
 
-    @Id
     private Long idTournament;
+
+    private Date lastSubmittedScore;
 }

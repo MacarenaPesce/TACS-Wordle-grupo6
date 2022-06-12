@@ -6,6 +6,9 @@
 https://docs.google.com/document/d/e/2PACX-1vS850Wxcrs3LThOAQamtTEhG6IEMmebXJxV3xXo-iPqCWHDI9LlncGyUONLx-hbIOBblutYCisS5aXh/pub
 
 
+### Dcoumentacion asociada al proyecto
+https://docs.google.com/document/d/11ClJBshXqy4Gd_h9j42n2G0AOld9yTBFamIOkuuGPr0/edit?usp=sharing
+
 ### Para Deployar la aplicación:
 Se asume que tiene instalado Docker en su ambiente.
 Luego de Clonar el proyecto, puede ejecutar el siguiente script de acuerdo a si su ambiente es Windows o Linux
@@ -23,8 +26,11 @@ y la aplicaciòn **Wordle-Helper** se abrirá
 ## FRONTEND
 Frontend This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+http://localhost:3000/
+
 ## BACKEND
 ### BD MySQL
+Instancia solo para desarrollo local
 Si aún no tenemos creada la BD localmente:
 
 1- Accedemos a la consola de MySQL (pass: root)
@@ -37,6 +43,13 @@ Si aún no tenemos creada la BD localmente:
 
 4- Cerramos la BD
 >exit;
+
+### Reporte de Cobertura
+Para ejecutar los tests de la aplicación, y generar el reporte de cobertura, en la carpeta backend ejecutar
+>mvn clean verify
+
+Esto generará el reporte en la carpeta target, el mismo puede verse en el navegador accediendo a:
+> http://localhost:63342/backend/target/site/jacoco-unit-test-coverage-report/index.html
 
 ## Telegram
 
@@ -52,30 +65,22 @@ Hacer visibles los comandos en el menu de comandos del bot:
 
 ## Docker
 
+Las imagenes, redes, volumenes, contenedores necesarios para el despliegue de la aplicación, se generarán automaticamente con la ejecución del script.sh
+
+A continuación algunos comandos básicos: 
+
 Crear una imagen:
 
 docker build -t grupo6/backend .
+docker build -t grupo6/frontend .
 
 Correr la imagen:
 
--P ejecuta la imagen y mapeale puertos random a todo lo expuesto del docker
-docker run -d -p8080:8080 grupo6/backend:latest
-docker run -d -P grupo6/backend:latest
+docker run -d --name backend  -p8080:8080 grupo6/backend
+docker run -d --name frontend -p3000:3000 grupo6/frontend
 
 
-docker run -it grupo6/backend:latest
+Parar la imagen:
 
-docker ps
-CONTAINER ID   IMAGE                   COMMAND                  CREATED         STATUS         PORTS                                         NAMES
-27db3aee37e8   grupo6/backend:latest   "java -jar target/wo…"   4 seconds ago   Up 4 seconds   0.0.0.0:49153->8080/tcp, :::49153->8080/tcp   elastic_swartz
-
-Parar la imagen
 docker stop <NAME>
 
-
-## Backend - Reporte de Cobertura
-Para ejecutar los tests de la aplicación, y generar el reporte de cobertura, en la carpeta backend ejecutar
->mvn clean verify
-
-Esto generará el reporte en la carpeta target, el mismo puede verse en el navegador accediendo a:
-> http://localhost:63342/backend/target/site/jacoco-unit-test-coverage-report/index.html

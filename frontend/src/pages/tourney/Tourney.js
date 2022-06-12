@@ -6,6 +6,7 @@ import ComponenteTabs from './ComponenteTabs';
 import Not from "../../components/not/Not";
 import AuthService from "../../service/AuthService";
 import StatusCheck from "../sesion/StatusCheck";
+import Handler from "../sesion/Handler";
 
 
 export default class Tourney extends Component{
@@ -14,40 +15,34 @@ export default class Tourney extends Component{
         super()
         this.state = {
             logueado: false,
-            missingCredentials: false
+            errorMessage: '',
+            sessionError: false
         }
     }
 
-    componentDidMount(){ //todo analizar si se prefiere cambiar por componentDidUpdate() / useEffect()
-        //todo mirar si es necesario hacer una llamada a la api, para verificar que el logueo sea válido
-        if(localStorage.getItem('token')){
+    componentDidMount() {
+        if (localStorage.getItem('token')) {
             this.setState({logueado: true});
-        } else {
-            this.setState({missingCredentials: true});
-            AuthService.logout();
         }
+        console.log('Ping del token en el store...')
+        AuthService.ping()
+            .then(response => {
+                console.log('Response del ping: ' + response.status)
+            })
+            .catch(error => {
+                console.log(error)
+                Handler.handleSessionError(this, error)
+            })
+
     }
 
-    static handleSessionError(component, error){
-        if(error.response === undefined){
-            AuthService.logout()
-            component.setState({sessionError: true, errorMessage: "No hay conexión con el back"})
-            return;
-        }
 
-        const status = JSON.stringify(error.response.status)
-        const message = StatusCheck(status,JSON.stringify(error.response.data.message));
-        if(status === "401" || status === "403"){
-            AuthService.logout()
-            component.setState({sessionError: true, errorMessage: message})
-        }
-    }
 
     render() {
         return(
             <div className='tourney'>
-                {this.state.missingCredentials &&
-                    <Not message="Olvidó traer sus credenciales."/>}
+                {this.state.sessionError &&
+                    <Not message={this.state.errorMessage}/>}
 
                 {this.state.logueado ? (
                     <React.Fragment>

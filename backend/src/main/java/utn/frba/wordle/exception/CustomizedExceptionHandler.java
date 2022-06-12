@@ -39,17 +39,28 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception exception, WebRequest request, HttpSession session) {
 
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        logException(exception, request, httpStatus);
 
-        return getAndLogExceptionResponse(exception, request, httpStatus);
-    }
-
-    private ResponseEntity<ExceptionResponse> getAndLogExceptionResponse(Exception ex, WebRequest req, HttpStatus httpStatus) {
-        ExceptionResponse response = new ExceptionResponse(new Date(), ex.getMessage(), req.getDescription(false), httpStatus.value());
-
-        logger.error("Error Response: {}", response);
-        logger.debug("Stacktrace:", ex);
+        ExceptionResponse response = new ExceptionResponse(new Date(),
+                "Ha ocurrido un error Inesperado",
+                request.getDescription(false),
+                httpStatus.value());
 
         return ResponseEntity.status(httpStatus).body(response);
+    }
+
+    private ResponseEntity<ExceptionResponse> getAndLogExceptionResponse(Exception exception, WebRequest request, HttpStatus httpStatus) {
+        ExceptionResponse response = logException(exception, request, httpStatus);
+
+        return ResponseEntity.status(httpStatus).body(response);
+    }
+
+    private ExceptionResponse logException(Exception exception, WebRequest request, HttpStatus httpStatus) {
+        ExceptionResponse response = new ExceptionResponse(new Date(), exception.getMessage(), request.getDescription(false), httpStatus.value());
+
+        logger.error("Error Response: {}", response);
+        logger.debug("Stacktrace:", exception);
+        return response;
     }
 
 }
