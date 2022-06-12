@@ -11,4 +11,7 @@ import java.util.List;
 public class RankingResponse {
     private final List<Punctuation> punctuations;
     private final Long idTournament;
+    private final Integer maxResults;
+    private final Integer pageNumber;
+    private final Integer totalPages;
 }

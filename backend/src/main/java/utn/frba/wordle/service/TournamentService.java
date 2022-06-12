@@ -145,10 +145,17 @@ public class TournamentService {
         punctuationService.submitResults(userId, result);
     }
 
-    public List<Punctuation> getRanking(Long tourneyId) {
+    public Integer getRankingTotalPages(Long tournamentId, Integer maxResults) {
+        Integer totalResults = rankingRepository.getScoresTotalPages(tournamentId);
+        int pages = totalResults / maxResults;
+        return Math.toIntExact(Math.round(Math.ceil(pages)));
+    }
+
+    public List<Punctuation> getRanking(Long tourneyId, Integer pageNumber, Integer maxResults) {
+        Integer offset = (pageNumber - 1) * maxResults;
         updateTournamentScores(tourneyId);
 
-        Set<RankingEntity> rankingEntities = rankingRepository.getScores(tourneyId);
+        Set<RankingEntity> rankingEntities = rankingRepository.getScores(tourneyId, offset, maxResults);
 
         return mapRankingToDto(new ArrayList<>(rankingEntities));
     }

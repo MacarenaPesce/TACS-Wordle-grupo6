@@ -10,8 +10,13 @@ public interface RankingRepository extends CrudRepository<RankingEntity, Long> {
 
     @Query(value = "SELECT r.* FROM wordle.ranking r \n" +
             "where r.id_Tournament = :idTournament \n" +
-            "order by position asc", nativeQuery = true)
-    Set<RankingEntity> getScores(Long idTournament);
+            "order by position asc \n" +
+            "LIMIT :offset,:maxResults", nativeQuery = true)
+    Set<RankingEntity> getScores(Long idTournament, Integer offset, Integer maxResults);
+
+    @Query(value = "SELECT count(*) FROM wordle.ranking r \n" +
+            "where r.id_Tournament = :tournamentId \n", nativeQuery = true)
+    Integer getScoresTotalPages(Long tournamentId);
 
     @Query(value= "SELECT r from RankingEntity r \n" +
             "where r.idTournament = :idTournament \n" +

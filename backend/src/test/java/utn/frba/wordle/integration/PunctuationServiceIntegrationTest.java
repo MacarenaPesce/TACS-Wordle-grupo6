@@ -57,7 +57,7 @@ public class PunctuationServiceIntegrationTest extends AbstractIntegrationTest {
 
         punctuationService.submitResults(user.getId(), resultESDto);
 
-        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
+        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId(), 1, 100);
         assertThat(punctuations).isNotEmpty();
         AssertionsForClassTypes.assertThat(punctuations.get(0)).isNotNull();
         assertEquals(1L, punctuations.get(0).getPosition());
@@ -78,7 +78,7 @@ public class PunctuationServiceIntegrationTest extends AbstractIntegrationTest {
 
         punctuationService.submitResults(user.getId(), resultESDto);
 
-        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
+        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId(), 1, 100);
         assertThat(punctuations).isNotEmpty();
         AssertionsForClassTypes.assertThat(punctuations.get(0)).isNotNull();
         assertEquals(1L, punctuations.get(0).getPosition());

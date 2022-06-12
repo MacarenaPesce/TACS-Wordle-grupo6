@@ -218,14 +218,26 @@ public class TournamentController {
 
     @GetMapping("/{tournamentId}/ranking")
     public ResponseEntity<RankingResponse> getRanking(@RequestHeader("Authorization") String token,
-                                                      @PathVariable Long tournamentId) {
+                                                      @PathVariable Long tournamentId,
+                                                      @RequestParam(required = false) Integer pageNumber,
+                                                      @RequestParam(required = false) Integer maxResults
+                                                      ) {
         logger.info("Method: getRanking - Request: token={}, tournamentId={}", token, tournamentId);
 
-        List<Punctuation> orderedPunctuations = tournamentService.getRanking(tournamentId);
+        if(pageNumber == null || maxResults == null){
+            pageNumber = 1;
+            maxResults = 100;
+        }
+
+        Integer totalPages = tournamentService.getRankingTotalPages(tournamentId, maxResults);
+        List<Punctuation> orderedPunctuations = tournamentService.getRanking(tournamentId, pageNumber, maxResults);
 
         RankingResponse response = RankingResponse.builder()
                 .idTournament(tournamentId)
                 .punctuations(orderedPunctuations)
+                .pageNumber(pageNumber)
+                .maxResults(maxResults)
+                .totalPages(totalPages)
                 .build();
 
         logger.info("Method: getRanking - Response: {}", response);

@@ -377,7 +377,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         Date finishDate = getTodayWithOffset(-1);
         TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney", State.FINISHED, startDate, finishDate);
 
-        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
+        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId(), 1, 100);
 
         assertThat(punctuations).isNotEmpty();
         assertThat(punctuations.get(0)).isNotNull();
@@ -392,7 +392,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         Date finishDate = getTodayWithOffset(1);
         TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney", State.READY, startDate, finishDate);
 
-        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
+        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId(), 1, 100);
 
         assertThat(punctuations).isNotEmpty();
         assertThat(punctuations.get(0)).isNotNull();
@@ -417,7 +417,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         tournamentService.addMember(player3.getId(), futureTournament.getTourneyId(), player1.getId());
         tournamentService.addMember(player4.getId(), futureTournament.getTourneyId(), player1.getId());
 
-        List<Punctuation> punctuations = tournamentService.getRanking(futureTournament.getTourneyId());
+        List<Punctuation> punctuations = tournamentService.getRanking(futureTournament.getTourneyId(), 1, 100);
 
         assertThat(punctuations).isNotEmpty();
         assertThat(punctuations.get(0)).isNotNull();
@@ -435,10 +435,38 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void aUserCanGetRankingWithPagination(){
+        UserDto player1 = getUserDto("mail1@mail.com", "player1");
+        UserDto player2 = getUserDto("mail1@mail2.com", "player2");
+        UserDto player3 = getUserDto("mail1@mail3.com", "player3");
+        UserDto player4 = getUserDto("mail1@mail4.com", "player4");
+        Date startDate = getTodayWithOffset(0);
+        Date finishDate = getTodayWithOffset(3);
+        TournamentDto futureTournament = getPublicTournamentDto(player1, "Public Tourney", State.STARTED, startDate, finishDate);
+        tournamentService.addMember(player2.getId(), futureTournament.getTourneyId(), player1.getId());
+        tournamentService.addMember(player3.getId(), futureTournament.getTourneyId(), player1.getId());
+        tournamentService.addMember(player4.getId(), futureTournament.getTourneyId(), player1.getId());
+        submitResult(player1, 5L, Language.ES);
+        submitResult(player2, 4L, Language.ES);
+        submitResult(player3, 3L, Language.ES);
+        submitResult(player4, 2L, Language.ES);
+
+        List<Punctuation> punctuations = tournamentService.getRanking(futureTournament.getTourneyId(), 2, 2);
+
+        assertEquals(punctuations.size(), 2);
+        assertThat(punctuations.get(0)).isNotNull();
+        assertThat(punctuations.get(1)).isNotNull();
+        assertEquals(3L, punctuations.get(0).getPosition());
+        assertEquals(4L, punctuations.get(0).getPunctuation());
+        assertEquals(4L, punctuations.get(1).getPosition());
+        assertEquals(5L, punctuations.get(1).getPunctuation());
+    }
+
+    @Test
     public void ifATournamentStartsInTheFutureMyScoreShouldBeZero(){
         UserDto player1 = getUserDto("mail1@mail.com", "player1");
         TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney", State.READY);
-        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
+        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId(), 1, 100);
 
         assertThat(punctuations).isNotEmpty();
         assertThat(punctuations.get(0)).isNotNull();
@@ -460,7 +488,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         submitResult(player2, 2L, Language.ES);
         submitResult(player3, 3L, Language.ES);
 
-        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId());
+        List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId(), 1, 100);
 
         assertThat(punctuations).isNotEmpty();
         assertThat(punctuations.get(0)).isNotNull();
