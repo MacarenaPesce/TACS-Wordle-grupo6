@@ -2,9 +2,9 @@ import React, { useEffect } from 'react'
 import Button from 'react-bootstrap/Button'
 import { BsInfoLg } from "react-icons/bs";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import AddMember from "./AddMember"
-import UserService from "../../service/UserService";
-import TourneyService from "../../service/TourneyService";
+import AddMember from "../addMember/AddMember"
+import UserService from "../../../../service/UserService";
+import TourneyService from "../../../../service/TourneyService";
 
 export default function BotonesTorneos(data){
     debugger

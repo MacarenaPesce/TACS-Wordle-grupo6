@@ -2,12 +2,11 @@ import React, {Component} from 'react'
 import NavbarAut from '../../components/navbar/Navbar';
 import Footer from '../../components/footer/Footer';
 import './Tourney.css'
-import ComponenteTabs from './ComponenteTabs';
+import ComponenteTabs from './components/tabsTourneys/ComponenteTabs';
 import Not from "../../components/not/Not";
 import AuthService from "../../service/AuthService";
 import StatusCheck from "../sesion/StatusCheck";
 import Handler from "../sesion/Handler";
-
 
 export default class Tourney extends Component{
 
@@ -33,10 +32,7 @@ export default class Tourney extends Component{
                 console.log(error)
                 Handler.handleSessionError(this, error)
             })
-
     }
-
-
 
     render() {
         return(
@@ -53,6 +49,7 @@ export default class Tourney extends Component{
                         <ComponenteTabs />
 
                         <Footer />
+
                     </React.Fragment>
                     ) : (
                        <div> Cargando!! ∞ ∞ ∞ ∞ ∞ </div>
@@ -61,8 +58,6 @@ export default class Tourney extends Component{
             </div>
         );
     }
-
-
 }
 
 

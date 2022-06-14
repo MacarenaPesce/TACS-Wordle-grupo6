@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import NavbarAut from '../../components/navbar/Navbar';
-import Footer from '../../components/footer/Footer';
+import NavbarAut from '../../../../components/navbar/Navbar';
+import Footer from '../../../../components/footer/Footer';
 import './InfoTourney.css'
-import TourneyService from '../../service/TourneyService';
-import Not from "../../components/not/Not";
-import Handler from "../sesion/Handler";
-import AuthService from "../../service/AuthService";
+import TourneyService from '../../../../service/TourneyService';
+import Not from "../../../../components/not/Not";
+import Handler from "../../../sesion/Handler";
+import AuthService from "../../../../service/AuthService";
 
 
 export default function InfoTourney() {
