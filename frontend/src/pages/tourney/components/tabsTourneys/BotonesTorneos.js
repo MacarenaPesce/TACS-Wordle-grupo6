@@ -10,7 +10,7 @@ export default function BotonesTorneos(data){
     debugger
     let tourney = data.tourney;
     let userId = localStorage.getItem("userId");
-    let myTourneysid = [];
+    let myTourneysid = data.tournaments.map((torneo)=>torneo.tourneyId);
     
     console.log("data:",data);
     console.log("id torneo actual", tourney.tourneyId);
@@ -22,25 +22,13 @@ export default function BotonesTorneos(data){
         TourneyService.join(tourney.tourneyId);
     }
 
-    const getTourney= () =>{
-        UserService.getMyTourneysActive()
-            .then(response => {
-                myTourneysid = response.data.map((torneo)=>torneo.tourneyId)
-                console.log(myTourneysid);
-                disableButtons();
-            })
-            .catch(error => {
-                console.log(error)
-            })
-    }
-
     const disableButtons= () =>{
         debugger
         console.log("disableButton 1:", disableButtonUserAdd); 
 
         if(tourney.owner.id == userId){ //es mi torneo
             if(tourney.type === 'PUBLIC' || tourney.type === 'PRIVATE'){ // es publico o privado
-                console.log("esta en ready?",tourney.state == 'READY');
+                console.log("torneo ",tourney.name," esta en ready?",tourney.state == 'READY');
 
                 if(tourney.state == 'READY'){  // esta por empezar
                     /* si sos el creador agregas personas ya sea publico o privado SI NO ESTA EMPEZADO*/
@@ -69,7 +57,7 @@ export default function BotonesTorneos(data){
     }
             
     useEffect(() => {
-        getTourney();
+        disableButtons();
     }, []);
 
     return(
