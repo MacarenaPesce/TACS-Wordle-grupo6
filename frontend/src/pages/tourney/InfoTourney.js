@@ -7,6 +7,8 @@ import TourneyService from '../../service/TourneyService';
 import Not from "../../components/not/Not";
 import Handler from "../sesion/Handler";
 import AuthService from "../../service/AuthService";
+import { Container } from "react-bootstrap";
+
 
 export default function InfoTourney() {
   let { id } = useParams();
@@ -156,7 +158,7 @@ export default function InfoTourney() {
             <h1 className='titleInfo'> Torneo N° {id}</h1>
             {/*<button> volver atras</button>*/}
 
-            <container>
+            <Container>
               <div className="row">
                 <div className="col-5 table-info">
                   <table id="customers">
@@ -270,7 +272,7 @@ export default function InfoTourney() {
                   </table>
                 </div>
               </div>
-            </container>
+            </Container>
           </div>
           <Footer />
       </div>
