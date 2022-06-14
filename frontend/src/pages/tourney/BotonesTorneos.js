@@ -22,10 +22,11 @@ export default function BotonesTorneos(data){
         TourneyService.join(tourney.tourneyId);
     }
 
-    const getTourney= async () =>{
-        await UserService.getMyTourneysActive()
+    const getTourney= () =>{
+        UserService.getMyTourneysActive()
             .then(response => {
                 myTourneysid = response.data.map((torneo)=>torneo.tourneyId)
+                console.log(myTourneysid);
                 disableButtons();
             })
             .catch(error => {
@@ -35,6 +36,8 @@ export default function BotonesTorneos(data){
 
     const disableButtons= () =>{
         debugger
+        console.log("disableButton 1:", disableButtonUserAdd); 
+
         if(tourney.owner.id == userId){ //es mi torneo
             if(tourney.type === 'PUBLIC' || tourney.type === 'PRIVATE'){ // es publico o privado
                 console.log("esta en ready?",tourney.state == 'READY');
