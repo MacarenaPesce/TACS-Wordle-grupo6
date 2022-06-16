@@ -7,9 +7,13 @@ services:
   backend:
     build:
         context: ./backend
-        dockerfile: Dockerfile
+        dockerfile: Dockerfile-sinTest
     ports:
       - 8080:8080
+    restart: on-failure
+    
+#otra opcion para el retry del backend (esperar a que levante la bd para crear las tablas):
+# https://stackoverflow.com/questions/52322800/docker-compose-how-to-wait-for-other-service-to-be-ready/64921431#64921431
 
   frontend:
     build:
@@ -17,9 +21,8 @@ services:
         dockerfile: Dockerfile
     ports:
       - 3000:3000
-      
-#falta hacer en el backend que espere a que exista la base de datos para crear las tablas (como alternativa se puede volver a dar play manualmente al backend)
-#falta hacer que el backend ejecute su script de la view de ranking
+
+
   mysql:
     container_name: test-mysql
     image: mysql:8.0
