@@ -20,7 +20,7 @@ export default function BotonesTorneos(data){
         TourneyService.join(tourney.tourneyId);
     }
 
-    const disableButtons= () =>{
+    const disableButtons= (tourney) =>{
         if(tourney.type === 'PUBLIC' || tourney.type === 'PRIVATE'){ // es publico o privado
             if(tourney.owner.id == userId){ //es mi torneo
                 if(tourney.state == 'READY'){  // esta por empezar
@@ -57,21 +57,24 @@ export default function BotonesTorneos(data){
     const getTourneysId = () =>{
         UserService.getMyTourneysActive()
         .then(response => {
-            setTourneysId(response.data.tournaments.map((torneo)=>torneo.tourneyId));
+            let ids = response.data.tournaments.map((torneo)=>torneo.tourneyId)
+            setTourneysId(ids);
+            console.log("Torneos id: ", ids);
+            //console.log(myTourneysid.includes(tourney.tourneyId));
         })
         .catch(error => {
             console.log(error)
         })
     }
-    
+
     function loadData(){
-        console.log("data: ",data.tourney);
+        console.log("tourney para el disable: ",data.tourney);
+        getTourneysId();  //todo esto no te va responder a tiempo, te conviene pasarle la lista como prop directo de TabsTourney.js. Haciendo eso ademas, te ahorras tener que hacer 1000 request en el caso de tener 1000 torneos en la tabla, reducis a 1
+
+        console.log("Torneo: ", data.tourney.name);
+
+        disableButtons(data.tourney);
         setTourney(data.tourney);
-        getTourneysId();
-        console.log("Torneo: ", tourney.name);
-        console.log("Torneos id: ", myTourneysid);
-        //console.log(myTourneysid.includes(tourney.tourneyId));
-        disableButtons();
     }
 
     useEffect(() => {
