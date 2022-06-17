@@ -8,7 +8,7 @@ import UserService from '../../../../service/UserService';
 
 export default function BotonesTorneos(data){
     //debugger
-    const [tourney,setTourney] = useState({owner: ""});
+    const [tourney,setTourney] = useState(data.tourney);
     const [myTourneysid, setTourneysId] = useState([]); 
 
     let userId = localStorage.getItem("userId");
@@ -23,7 +23,7 @@ export default function BotonesTorneos(data){
     const disableButtons= () =>{
         if(tourney.type === 'PUBLIC' || tourney.type === 'PRIVATE'){ // es publico o privado
             if(tourney.owner.id == userId){ //es mi torneo
-                if(tourney.state == 'READY'){  // esta por empezar
+                if(tourney.state === 'READY'){  // esta por empezar
                     setDisButAddMember(false); //si sos el creador agregas personas ya sea publico o privado SI NO ESTA EMPEZADO
                 }
                 else{
@@ -32,7 +32,7 @@ export default function BotonesTorneos(data){
                 setDisButUserAdd(true); //no puedo agregarme porque es mi torneo
             }
             else if(tourney.owner.id != userId){ // no es mi torneo
-                if(tourney.type === 'PUBLIC'){ // es publico
+                if(tourney.state === 'READY'){ // es publico
                     /* te permite agregarte al torneo si el torneo es de tipo publico y vos NO sos el creador y se deshabilita si ya estas en el torneo*/
                     if(myTourneysid.includes(tourney.tourneyId)){
                         setDisButUserAdd(true);  //si ya esta en mis torneos lo deshabilito
@@ -47,11 +47,7 @@ export default function BotonesTorneos(data){
                 }
                 setDisButAddMember(true);
             }
-        }
-        else{ //esta finalizado 
-            setDisButAddMember(true);
-            setDisButUserAdd(true);
-        }    
+        }  
     }
 
     const getTourneysId = () =>{
@@ -66,7 +62,7 @@ export default function BotonesTorneos(data){
     
     function loadData(){
         console.log("data: ",data.tourney);
-        setTourney(data.tourney);
+ //       setTourney(data.tourney);
         getTourneysId();
         console.log("Torneo: ", tourney.name);
         console.log("Torneos id: ", myTourneysid);
@@ -85,7 +81,7 @@ export default function BotonesTorneos(data){
             </Button>
 
             {disableButtonUserAdd ?
-                (<button className="btn btn-info" type="button" disabled><AiOutlineUserAdd/></button>) :
+                (<div></div>):
                 (<button className="btn btn-info" type="button" onClick={()=>clickAgregarme()}> <AiOutlineUserAdd/> </button>)
             }
 
