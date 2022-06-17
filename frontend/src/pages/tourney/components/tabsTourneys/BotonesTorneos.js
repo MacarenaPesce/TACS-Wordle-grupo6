@@ -53,13 +53,16 @@ export default function BotonesTorneos(data){
     const getTourneysId = () =>{
         UserService.getMyTourneysActive()
         .then(response => {
-            setTourneysId(response.data.tournaments.map((torneo)=>torneo.tourneyId));
+            let ids = response.data.tournaments.map((torneo)=>torneo.tourneyId)
+            setTourneysId(ids);
+            console.log("Torneos id: ", ids);
+            //console.log(myTourneysid.includes(tourney.tourneyId));
         })
         .catch(error => {
             console.log(error)
         })
     }
-    
+
     function loadData(){
         console.log("data: ",data.tourney);
  //       setTourney(data.tourney);
@@ -68,6 +71,7 @@ export default function BotonesTorneos(data){
         console.log("Torneos id: ", myTourneysid);
         //console.log(myTourneysid.includes(tourney.tourneyId));
         disableButtons();
+
     }
 
     useEffect(() => {
