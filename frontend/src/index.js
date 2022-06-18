@@ -15,7 +15,7 @@ import {
 } from "react-router-dom";
 import Dictionary from './pages/dictionary/Dictionary';
 import Tourney from './pages/tourney/Tourney';
-import InfoTourney from './pages/tourney/InfoTourney';
+import InfoTourney from './pages/tourney/components/infoTourney/InfoTourney';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

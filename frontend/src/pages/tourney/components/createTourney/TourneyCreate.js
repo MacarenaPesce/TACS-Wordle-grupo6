@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import ReactModal from 'react-modal-resizable-draggable';
 import './TourneyCreate.css'
-import TourneyService from "../../service/TourneyService";
-import StatusCheck from "../sesion/StatusCheck";
-import Not from "../../components/not/Not";
-import AuthService from "../../service/AuthService";
-import Tourney from "./Tourney";
-import Ayuda from "./Ayuda";
+import TourneyService from "../../../../service/TourneyService";
+import Not from "../../../../components/not/Not";
 import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
-import Handler from "../sesion/Handler";
+import Handler from "../../../sesion/Handler";
 
 export default class TourneyCreate extends Component{
 

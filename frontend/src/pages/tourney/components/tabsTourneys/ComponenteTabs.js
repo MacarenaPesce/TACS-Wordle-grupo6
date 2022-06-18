@@ -2,16 +2,15 @@ import React, {useEffect, useState} from 'react';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import TabsTourneys from './TabsTourneys';
-import Ayuda from "./Ayuda";
-import TourneyCreate from "./TourneyCreate";
-import TourneySubmit from "./TourneySubmit";
-import './Panel.css';
+import Ayuda from "../ayuda/Ayuda";
+import TourneyCreate from "./../createTourney/TourneyCreate";
+import TourneySubmit from "../../components/submitResults/TourneySubmit";
+import '../panel/Panel.css';
 import Collapse from "react-bootstrap/Collapse";
 import Countdown from "react-countdown";
-import TourneyService from "../../service/TourneyService";
-import Tourney from "./Tourney";
-import Handler from "../sesion/Handler";
-import Not from "../../components/not/Not";
+import TourneyService from "../../../../service/TourneyService";
+import Handler from "../../../sesion/Handler";
+import Not from "../../../../components/not/Not";
 
 const ComponenteTabs = () => {
 

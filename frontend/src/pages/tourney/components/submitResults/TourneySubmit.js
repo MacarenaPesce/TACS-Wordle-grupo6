@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import ReactModal from "react-modal-resizable-draggable";
-import UserService from "../../service/UserService";
-import Not from "../../components/not/Not";
-import TourneyService from "../../service/TourneyService";
-import StatusCheck from "../sesion/StatusCheck";
-import AuthService from "../../service/AuthService";
-import Tourney from "./Tourney";
+import UserService from "../../../../service/UserService";
+import Not from "../../../../components/not/Not";
+import TourneyService from "../../../../service/TourneyService";
 import Collapse from "react-bootstrap/Collapse";
-import Handler from "../sesion/Handler";
+import Handler from "../../../../pages/sesion/Handler";
 
 export default class TourneySubmit extends Component{
 
@@ -28,7 +25,6 @@ export default class TourneySubmit extends Component{
 
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
-
     }
 
     openModal() {
@@ -36,6 +32,7 @@ export default class TourneySubmit extends Component{
         this.getTodaysResults("EN")
         this.getTodaysResults("ES")
     }
+
     closeModal() {
         this.setState({modalIsOpen: false});
     }
@@ -49,8 +46,8 @@ export default class TourneySubmit extends Component{
         UserService.getTodaysResult(language)
             .then(response => {
                 this.setState({loading: false});
-                console.log(language + ' results: ')
-                console.log(response.data)
+                //console.log(language + ' results: ')
+                //console.log(response.data)
                 if(response.data.punctuation === 0)
                     this.showMissingValue(language)
                 else
@@ -58,8 +55,6 @@ export default class TourneySubmit extends Component{
             })
             .catch(error => {
                 this.setState({loading: false});
-                console.log(error)
-
                 Handler.handleSessionError(this, error)
             })
     }
@@ -83,24 +78,22 @@ export default class TourneySubmit extends Component{
     submitHandler = e => {
         e.preventDefault()
         this.setState({loading: true});
-        console.log('Boton presionado, se intenta cargar resultados con los datos: ')
+        //console.log('Boton presionado, se intenta cargar resultados con los datos: ')
         const lang = this.state.language;
         let body = {
             result: this.state.punctuation,
             language: lang,
         }
-        console.log(body)
+        //console.log(body)
         TourneyService.submitResults(body)
             .then(response => {
                 this.setState({loading: false});
-                console.log('Response del submit obtenida: ')
-                console.log(response.data)
+                //console.log('Response del submit obtenida: ')
+                //console.log(response.data)
                 this.getTodaysResults(lang)
             })
             .catch(error => {
-                console.log(error)
                 this.setState({loading: false});
-
                 Handler.handleSessionError(this, error)
             })
     }
@@ -114,7 +107,6 @@ export default class TourneySubmit extends Component{
     }
 
     render() {
-
         let englishDisplay
         if (this.state.availableEnglishResult){
             englishDisplay = <p style={{fontSize: "6em"}}>{this.state.englishValue}</p>
@@ -240,7 +232,4 @@ export default class TourneySubmit extends Component{
             </div>
         )
     }
-
-
-
 }

@@ -1,15 +1,12 @@
 import React, {Component, useState} from 'react'
 import Tab from 'react-bootstrap/Tab';
-import UserService from "./../../service/UserService"
-import TourneyCreate from './TourneyCreate'
-import './Tourney.css'
-import StatusCheck from "../sesion/StatusCheck";
+import UserService from "../../../../service/UserService"
+import TourneyCreate from './../createTourney/TourneyCreate'
+import './../../Tourney.css'
 import BotonesTorneos from './BotonesTorneos.js'
-import Not from "../../components/not/Not";
-import AuthService from "../../service/AuthService";
-import TourneySubmit from "./TourneySubmit";
-import Handler from "../sesion/Handler";
-
+import Not from "../../../../components/not/Not";
+import TourneySubmit from "../../components/submitResults/TourneySubmit";
+import Handler from "../../../sesion/Handler";
 
 export default class TabsTourneys extends Component{ 
 
@@ -46,7 +43,6 @@ export default class TabsTourneys extends Component{
             .then(response => {
                 if(this.props.nombreTabla == 'Publicos'){
                     let tourneysResponse = response.data.tournaments.filter(torneo => torneo.state == 'READY');
-                    console.log("torneos publicos:",tourneysResponse);
                     this.setState({myTourneys: tourneysResponse});
                 }
                 else{
@@ -64,7 +60,6 @@ export default class TabsTourneys extends Component{
     }
 
     filtro =(e) =>{
-
         const keyword = e.target.value;
 
         if(keyword !==''){
@@ -90,21 +85,21 @@ export default class TabsTourneys extends Component{
         let listTourneys = []
       if(this.state.myTourneys){
         listTourneys = this.state.myTourneys.map((tourney) =>
-                    <tr key={tourney.tourneyId}>
-                        <td> {tourney.tourneyId}</td>
-                        <td> {tourney.name}</td>
-                        <td> {tourney.type}</td>
-                        <td> {tourney.language}</td>
-                        <td> {tourney.state}</td>
-                        <td> {this.formatDate(tourney.start)}</td>
-                        <td> {this.formatDate(tourney.finish)}</td>
-                        <td> {tourney.owner.username}</td>
-                        <td>
-                            <BotonesTorneos tourney={tourney} dataTourneys={this.state.myTourneys.map((torneo)=>torneo.tourneyId)} />   
-                        </td>
-                    </tr>
-                );}
-                
+                <tr key={tourney.tourneyId}>
+                    <td> {tourney.tourneyId}</td>
+                    <td> {tourney.name}</td>
+                    <td> {tourney.type}</td>
+                    <td> {tourney.language}</td>
+                    <td> {tourney.state}</td>
+                    <td> {this.formatDate(tourney.start)}</td>
+                    <td> {this.formatDate(tourney.finish)}</td>
+                    <td> {tourney.owner.username}</td>
+                    <td>
+                        <BotonesTorneos tourney={tourney}/>   
+                    </td>
+                </tr>
+            );
+        }     
 
         return (
             <div className="col-md-12 search-table-col">
