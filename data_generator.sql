@@ -1,6 +1,11 @@
 -- todo tomar el ultimo id actual de todas las tablas, para poder crear sin afectar los datos existentes, en caso de ejecutar sin la bd vacia
+-- todo ver si se pueden cambiar los cursores por insert directos
+-- todo agregar opcion de config, para fecha inicial a partir de la cual cargar puntajes y cargar torneos, fecha final hasta la cual crear torneos, y cantidad de usuarios a registrar por torneo. Para no prender fuego sus pc.
+-- todo poner un random mas performante en generate_registrations para elegir usuarios
 
+-- configurar mysql para que no haga timeout a los 30 segundos de query
 
+use wordle;
 /*
 GENERAR USUARIOS
 generar un user por cada uno en la temp_users
@@ -10,6 +15,7 @@ username@wordle.com
 */
 
 
+DROP PROCEDURE IF EXISTS `generate_users`;
 DELIMITER //
 CREATE PROCEDURE generate_users()
 BEGIN
@@ -26,25 +32,18 @@ BEGIN
       LEAVE read_loop;
     END IF;
 	
-	IF _username not in (select username from user) THEN
+--	IF _username not in (select username from user) THEN
       insert into user(username,password,email) VALUES (_username, md5(_username), concat(_username,'@wordle.com'));
-	ELSE
-		select concat(_username, ' ya existe') as ' ';
-		-- no deberia haber asumiendo que se ejecuta el script con la bd vacia
-		-- no hay print en mysql
-		-- cambiar a que muestre una sola tabla con los ya existentes
-    END IF;
+--  END IF;
 	
   END LOOP;
 
   CLOSE cur;
 
-END;
+END //
 DELIMITER ;
 
-
--- CALL generate_users();
-
+CALL generate_users();
 
 
 /*
@@ -54,14 +53,16 @@ fecha, todos los dias desde hace un año hasta dia actual-1
 puntuacion, random entre 1 y 7
 */
 
+DROP FUNCTION IF EXISTS `score`;
 CREATE FUNCTION score()
 RETURNS INT
 NO SQL
 RETURN FLOOR(1 + RAND()*7);
 
 
+DROP PROCEDURE IF EXISTS `generate_scores`;
 DELIMITER //
-CREATE PROCEDURE generate_scores()
+CREATE PROCEDURE generate_scores()		-- lleva 346 segundos
 BEGIN
   DECLARE done INT DEFAULT FALSE;
   DECLARE id_user bigint;
@@ -83,7 +84,7 @@ BEGIN
 
 	start transaction;
 	while date_counter < DATE_ADD(end_date, INTERVAL 1 DAY) DO
-		insert into punctuation(id_user,date,language,punctuation) VALUES (id_user,date_counter,'ES',score());	--WARNING no ejecutar dos veces porque esto no tiene unique constraint
+		insert into punctuation(id_user,date,language,punctuation) VALUES (id_user,date_counter,'ES',score());	-- WARNING no ejecutar dos veces porque esto no tiene unique constraint
 		insert into punctuation(id_user,date,language,punctuation) VALUES (id_user,date_counter,'EN',score());
 		set date_counter=DATE_ADD(date_counter, INTERVAL 1 DAY);
 	end while;
@@ -95,10 +96,10 @@ BEGIN
 
   CLOSE cur;
 
-END;
+END //
 DELIMITER ;
 
--- call generate_scores();
+call generate_scores();
 
 
 /*
@@ -109,17 +110,19 @@ id user, aleatorio de la lista.
 nombre, un torneo por cada uno de la temp_tourneys.
 */
 
+DROP FUNCTION IF EXISTS `tourdate`;
 CREATE FUNCTION tourdate()
 RETURNS date
 NO SQL
 RETURN DATE_SUB(curdate(), INTERVAL 1 YEAR) + INTERVAL FLOOR(1 + RAND() * 365 * 2) DAY;
 
 -- WARNING no ejecutar dos veces porque el name del tournament no tiene unique constraint
+DROP PROCEDURE IF EXISTS `generate_tourneys`;
 DELIMITER //
 CREATE PROCEDURE generate_tourneys()
 BEGIN
   DECLARE done INT DEFAULT FALSE;
-  DECLARE tourneyname varchar(40);
+  DECLARE tourneyname varchar(60);
   DECLARE fecha_1 date;
   DECLARE fecha_2 date;
   DECLARE random_user bigint;
@@ -165,9 +168,10 @@ BEGIN
 
   CLOSE cur;
 
-END;
+END //
 DELIMITER ;
 
+call generate_tourneys();
 
 
 /*
@@ -179,6 +183,7 @@ registered, un dia antes de empezar el torneo, o fecha actual-1, lo que sea meno
 total score, sumar todas las puntuaciones del usuario, desde la fecha de inicio del torneo. Hasta fin o hasta dia actual-1, lo que sea menor. Asegurar por otro medio que no haya duplicados.
 */
 
+DROP FUNCTION IF EXISTS `days_played`;
 DELIMITER //
 CREATE FUNCTION days_played(tourney_start date, tourney_end date)
 RETURNS bigint
@@ -199,9 +204,10 @@ BEGIN
 	END IF;
 
 	RETURN DATEDIFF(end_date, tourney_start);
-END;
+END //
 DELIMITER ;
 
+DROP FUNCTION IF EXISTS `last_submitted`;
 DELIMITER //
 CREATE FUNCTION last_submitted(tourney_start date, tourney_end date)
 RETURNS datetime
@@ -222,9 +228,10 @@ BEGIN
 	END IF;
 
 	RETURN ADDTIME(CONVERT(end_date, DATETIME), '09:00:00');
-END;
+END //
 DELIMITER ;
 
+DROP FUNCTION IF EXISTS `get_register_date`;
 DELIMITER //
 CREATE FUNCTION get_register_date(tourney_start date)
 RETURNS datetime
@@ -238,9 +245,10 @@ BEGIN
 
 	-- si el torneo comenzaba hoy o antes
 	RETURN ADDTIME(CONVERT(DATE_SUB(tourney_start, INTERVAL 1 DAY), DATETIME), '09:00:00');
-END;
+END //
 DELIMITER ;
 
+DROP FUNCTION IF EXISTS `get_user_score`;
 DELIMITER //
 CREATE FUNCTION get_user_score(userid bigint, lang char(2), inicio date, fin date)
 RETURNS bigint
@@ -251,11 +259,12 @@ BEGIN
 				(select sum(punctuation) from punctuation
 						where language = lang and id_user = userid and (date between inicio and fin))
 			, 0));
-END;
+END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS `generate_registrations`;
 DELIMITER //
-CREATE PROCEDURE generate_registrations()
+CREATE PROCEDURE generate_registrations()	-- lleva 159 segundos
 BEGIN
   DECLARE done INT DEFAULT FALSE;
   DECLARE id_tourney bigint;
@@ -263,6 +272,7 @@ BEGIN
   DECLARE lang char(2);
   DECLARE inicio date;
   DECLARE fin date;
+  DECLARE cant_users int;
   DECLARE cur CURSOR FOR SELECT id FROM tournament;
   DECLARE cur2 CURSOR FOR SELECT * FROM users_to_register;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
@@ -275,11 +285,14 @@ BEGIN
     IF done THEN
       LEAVE read_loop;
     END IF;
+	
+--	SET cant_users = FLOOR( RAND() * (6000-2000) + 2000); -- con este logra solo generar 80.000 registraciones en 10 minutos
+	SET cant_users = 10;
 
 		-- elegir un random de usuarios para meter al torneo
 	DROP TABLE IF EXISTS `users_to_register`;
 	CREATE TEMPORARY TABLE users_to_register(userid bigint);
-	INSERT INTO users_to_register SELECT id FROM user order by rand() limit 10;
+	INSERT INTO users_to_register SELECT id FROM user order by rand() limit cant_users;
 
 
 	SELECT start, finish, language INTO inicio, fin, lang FROM tournament where id = id_tourney;
@@ -311,10 +324,10 @@ BEGIN
 
   CLOSE cur;
 
-END;
+END //
 DELIMITER ;
 
-
+call generate_registrations();
 
 
 
