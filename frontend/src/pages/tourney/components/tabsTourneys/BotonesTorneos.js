@@ -7,7 +7,7 @@ import UserService from "../../../../service/UserService";
 import TourneyService from "../../../../service/TourneyService";
 
 export default function BotonesTorneos(data){
-    debugger
+
     let tourney = data.tourney;
     let userId = localStorage.getItem("userId");
     let myTourneysid = data.tournaments.map((torneo)=>torneo.tourneyId);
@@ -23,7 +23,7 @@ export default function BotonesTorneos(data){
     }
 
     const disableButtons= () =>{
-        debugger
+
         console.log("disableButton 1:", disableButtonUserAdd); 
 
         if(tourney.owner.id == userId){ //es mi torneo

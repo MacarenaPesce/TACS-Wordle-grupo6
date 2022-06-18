@@ -1,11 +1,17 @@
 -- todo tomar el ultimo id actual de todas las tablas, para poder crear sin afectar los datos existentes, en caso de ejecutar sin la bd vacia
 -- todo ver si se pueden cambiar los cursores por insert directos
--- todo agregar opcion de config, para fecha inicial a partir de la cual cargar puntajes y cargar torneos, fecha final hasta la cual crear torneos, y cantidad de usuarios a registrar por torneo. Para no prender fuego sus pc.
 -- todo poner un random mas performante en generate_registrations para elegir usuarios
 
 -- configurar mysql para que no haga timeout a los 30 segundos de query
 
 use wordle;
+
+-- fecha inicial a partir de la cual cargar puntajes y crear torneos, fecha final hasta la cual crear torneos, y cantidad de usuarios a registrar por torneo
+DROP TABLE IF EXISTS `opciones`;
+CREATE TEMPORARY TABLE opciones(dia_pri date, dia_ulti date, cant_users int);
+INSERT INTO opciones VALUES 
+(DATE_SUB(curdate(), INTERVAL 1 MONTH), DATE_ADD(curdate(), INTERVAL 1 MONTH), 12);
+
 /*
 GENERAR USUARIOS
 generar un user por cada uno en la temp_users
@@ -13,7 +19,6 @@ username
 SELECT md5('aaa')
 username@wordle.com
 */
-
 
 DROP PROCEDURE IF EXISTS `generate_users`;
 DELIMITER //
@@ -62,11 +67,11 @@ RETURN FLOOR(1 + RAND()*7);
 
 DROP PROCEDURE IF EXISTS `generate_scores`;
 DELIMITER //
-CREATE PROCEDURE generate_scores()		-- lleva 346 segundos
+CREATE PROCEDURE generate_scores()
 BEGIN
   DECLARE done INT DEFAULT FALSE;
   DECLARE id_user bigint;
-  DECLARE start_date date DEFAULT DATE_SUB(curdate(), INTERVAL 1 YEAR);
+  DECLARE start_date date DEFAULT (select dia_pri from opciones);
   DECLARE end_date date DEFAULT DATE_SUB(curdate(), INTERVAL 1 DAY);
   DECLARE date_counter date DEFAULT start_date;
   DECLARE cur CURSOR FOR SELECT id FROM user;
@@ -110,11 +115,18 @@ id user, aleatorio de la lista.
 nombre, un torneo por cada uno de la temp_tourneys.
 */
 
+DELIMITER //
 DROP FUNCTION IF EXISTS `tourdate`;
 CREATE FUNCTION tourdate()
 RETURNS date
-NO SQL
-RETURN DATE_SUB(curdate(), INTERVAL 1 YEAR) + INTERVAL FLOOR(1 + RAND() * 365 * 2) DAY;
+READS SQL DATA
+BEGIN
+	DECLARE inicio date DEFAULT (select dia_pri from opciones);
+	DECLARE fin date DEFAULT (select dia_ulti from opciones);
+	
+	RETURN inicio + INTERVAL FLOOR(RAND() * DATEDIFF(fin,inicio)) DAY;
+END //
+DELIMITER ;
 
 -- WARNING no ejecutar dos veces porque el name del tournament no tiene unique constraint
 DROP PROCEDURE IF EXISTS `generate_tourneys`;
@@ -264,7 +276,7 @@ DELIMITER ;
 
 DROP PROCEDURE IF EXISTS `generate_registrations`;
 DELIMITER //
-CREATE PROCEDURE generate_registrations()	-- lleva 159 segundos
+CREATE PROCEDURE generate_registrations()
 BEGIN
   DECLARE done INT DEFAULT FALSE;
   DECLARE id_tourney bigint;
@@ -272,7 +284,7 @@ BEGIN
   DECLARE lang char(2);
   DECLARE inicio date;
   DECLARE fin date;
-  DECLARE cant_users int;
+  DECLARE cant_users int DEFAULT (select cant_users from opciones);
   DECLARE cur CURSOR FOR SELECT id FROM tournament;
   DECLARE cur2 CURSOR FOR SELECT * FROM users_to_register;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
@@ -286,8 +298,6 @@ BEGIN
       LEAVE read_loop;
     END IF;
 	
---	SET cant_users = FLOOR( RAND() * (6000-2000) + 2000); -- con este logra solo generar 80.000 registraciones en 10 minutos
-	SET cant_users = 10;
 
 		-- elegir un random de usuarios para meter al torneo
 	DROP TABLE IF EXISTS `users_to_register`;
