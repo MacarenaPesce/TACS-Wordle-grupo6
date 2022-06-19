@@ -197,22 +197,14 @@ public class TournamentService {
     }
 
     public List<TournamentDto> findUserTournamentsByStateWithPagination(Long userId, State state, Integer pageNumber, Integer maxResults) {
-        List<TournamentEntity> entities;
-        Integer offset = (pageNumber - 1) * maxResults;
-        switch (state){
-            case READY:
-                entities = tournamentRepository.findUserReadyTournaments(userId, offset, maxResults);
-                break;
-            case STARTED:
-                entities = tournamentRepository.findUserStartedTournaments(userId, offset, maxResults);
-                break;
-            case FINISHED:
-                entities = tournamentRepository.findUserFinishedTournaments(userId, offset, maxResults);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + state);
-        }
-        return mapToDto(entities);
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .state(state)
+                .userId(userId)
+                .pageNumber(pageNumber)
+                .maxResults(maxResults)
+                .build();
+
+        return findTournaments(filters);
     }
 
     public List<TournamentDto> findActiveTournamentsFromUser(Long userId, String name, Integer pageNumber, Integer maxResults) {

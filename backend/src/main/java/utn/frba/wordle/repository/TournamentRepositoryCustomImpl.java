@@ -2,6 +2,7 @@ package utn.frba.wordle.repository;
 
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
+import utn.frba.wordle.model.entity.RegistrationEntity;
 import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.model.enums.TournamentType;
@@ -28,11 +29,7 @@ public class TournamentRepositoryCustomImpl implements TournamentRepositoryCusto
     @Override
     public Integer findTournamentsGetTotalPages(FindTournamentsFilters params){
         cb = entityManager.getCriteriaBuilder();
-        predicates = new ArrayList<>();
-
-        addPredicateCaseInsensitive(params.getName());
-        addPredicate(params.getType());
-        addPredicate(params.getState());
+        setPredicates(params);
 
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         entityRoot = query.from(TournamentEntity.class);
@@ -51,12 +48,7 @@ public class TournamentRepositoryCustomImpl implements TournamentRepositoryCusto
         cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<TournamentEntity> query = cb.createQuery(TournamentEntity.class);
         entityRoot = query.from(TournamentEntity.class);
-
-        predicates = new ArrayList<>();
-
-        addPredicateCaseInsensitive(params.getName());
-        addPredicate(params.getType());
-        addPredicate(params.getState());
+        setPredicates(params);
 
         query.select(entityRoot).where(cb.and(predicates.toArray(new Predicate[0])));
 
@@ -64,6 +56,22 @@ public class TournamentRepositoryCustomImpl implements TournamentRepositoryCusto
                 .setMaxResults(params.getMaxResults())
                 .setFirstResult(offset)
                 .getResultList();
+    }
+
+    private void setPredicates(FindTournamentsFilters params) {
+        predicates = new ArrayList<>();
+
+        addPredicateCaseInsensitive(params.getName());
+        addPredicate(params.getType());
+        addPredicate(params.getState());
+        addPredicate(params.getUserId());
+    }
+
+    private void addPredicate(Long pattern) {
+        if(pattern != null){
+            Join<TournamentEntity, RegistrationEntity> joinCourse = entityRoot.join("registrations",JoinType.INNER);
+            predicates.add(cb.equal(joinCourse.get("user").get("id"), pattern));
+        }
     }
 
     private void addPredicate(TournamentType pattern) {

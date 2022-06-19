@@ -11,6 +11,7 @@ import utn.frba.wordle.model.enums.TournamentType;
 @ToString
 public class FindTournamentsFilters {
     String name;
+    Long userId;
     TournamentType type;
     State state;
     Integer pageNumber;
