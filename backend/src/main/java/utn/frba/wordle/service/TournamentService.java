@@ -13,9 +13,11 @@ import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.*;
 import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.model.enums.TournamentType;
+import utn.frba.wordle.model.http.FindTournamentsFilters;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.repository.RankingRepository;
 import utn.frba.wordle.repository.TournamentRepository;
+import utn.frba.wordle.repository.TournamentRepositoryCustomImpl;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -27,6 +29,9 @@ public class TournamentService {
 
     @Autowired
     TournamentRepository tournamentRepository;
+
+    @Autowired
+    TournamentRepositoryCustomImpl tournamentRepositoryCustom;
 
     @Autowired
     RegistrationService registrationService;
@@ -127,6 +132,12 @@ public class TournamentService {
         return mapToDto(tournaments);
     }
 
+    public List<TournamentDto> findTournaments(FindTournamentsFilters filters) {
+
+        List<TournamentEntity> tournaments = tournamentRepositoryCustom.findTournaments(filters);
+
+        return mapToDto(tournaments);
+    }
 
     public Integer findPublicActiveTournamentsTotalPages(String name, Integer maxResults) {
         Integer totalResults = tournamentRepository.findPublicActiveTournamentsByNameTotalPages(name.toLowerCase());

@@ -12,6 +12,7 @@ import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.enums.State;
+import utn.frba.wordle.model.enums.TournamentType;
 import utn.frba.wordle.model.http.*;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.pojo.Session;
@@ -30,6 +31,48 @@ public class TournamentController {
     TournamentService tournamentService;
 
     private static final Logger logger = LoggerFactory.getLogger(TournamentController.class);
+
+    @GetMapping
+    public ResponseEntity<TournamentsListResponse> findTournaments(@RequestHeader("Authorization") String token,
+                                                                   @RequestParam(required = false) String name,
+                                                                   @RequestParam(required = false) TournamentType type,
+                                                                   @RequestParam(required = false) State state,
+                                                                   @RequestParam(required = false) Integer pageNumber,
+                                                                   @RequestParam(required = false) Integer maxResults){
+        FindTournamentsFilters findTournamentsFilters = FindTournamentsFilters.builder()
+                .name(name)
+                .type(type)
+                .state(state)
+                .pageNumber(pageNumber)
+                .maxResults(maxResults)
+                .build();
+
+        List<TournamentDto> tournaments = tournamentService.findTournaments(findTournamentsFilters);
+
+        if(name != null && state != null && type != null) {
+            //busco todo
+        }
+        if(name != null && state != null) {
+
+        }
+        if(state != null && type != null) {
+
+        }
+        if(name != null && type != null) {
+
+        }
+        if(name != null) {
+
+        }
+        if(type != null) {
+
+        }
+        if(state != null) {
+
+        }
+        return null;
+    }
+
 
     @PostMapping
     public ResponseEntity<TournamentResponse> create(@RequestHeader("Authorization") String token,

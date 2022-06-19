@@ -35,21 +35,8 @@ public abstract class AbstractIntegrationTest {
         return userService.createUser(username, "123asd", email);
     }
 
-    protected TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state, Date startDate, Date finishDate) {
 
-        TournamentDto tournamentDto = TournamentDto.builder()
-                .type(TournamentType.PUBLIC)
-                .start(startDate)
-                .finish(finishDate)
-                .state(state)
-                .name(tournamentName)
-                .language(Language.ES)
-                .owner(owner)
-                .build();
-        return tournamentService.create(tournamentDto, owner.getId());
-    }
-
-    protected TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state) {
+    protected TournamentDto getTournamentDto(UserDto owner, String tournamentName, State state, TournamentType type, Language language) {
         Date startDate;
         Date finishDate;
 
@@ -69,7 +56,35 @@ public abstract class AbstractIntegrationTest {
             default:
                 throw new IllegalStateException("Unexpected value: " + state);
         }
-        return getPublicTournamentDto(owner, tournamentName, state, startDate, finishDate);
+        return getTournamentDto(owner, tournamentName, type, language, startDate, finishDate);
+    }
+
+    protected TournamentDto getTournamentDto(UserDto owner, String tournamentName, TournamentType type, Language language, Date startDate, Date finishDate) {
+        TournamentDto tournamentDto = TournamentDto.builder()
+                .type(type)
+                .start(startDate)
+                .finish(finishDate)
+                .name(tournamentName)
+                .language(language)
+                .owner(owner)
+                .build();
+        return tournamentService.create(tournamentDto, owner.getId());
+    }
+
+    protected TournamentDto getTournamentDto(UserDto ownerUser, String tournamentName, Language language) {
+        return getTournamentDto(ownerUser, tournamentName, State.STARTED, TournamentType.PRIVATE, language);
+    }
+
+    protected TournamentDto getTournamentDto(UserDto ownerUser) {
+        return getTournamentDto(ownerUser, "Private Tourney", Language.ES);
+    }
+
+    protected TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state, Date startDate, Date finishDate) {
+        return getTournamentDto(owner, tournamentName, TournamentType.PUBLIC, Language.ES, startDate, finishDate);
+    }
+
+    protected TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state) {
+        return getTournamentDto(owner, tournamentName, state, TournamentType.PUBLIC, Language.ES);
     }
 
     protected Date getTodayWithOffset(int offset) {
