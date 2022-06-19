@@ -26,8 +26,27 @@ public class TournamentRepositoryCustomImpl implements TournamentRepositoryCusto
     Root<TournamentEntity> entityRoot;
 
     @Override
+    public Integer findTournamentsGetTotalPages(FindTournamentsFilters params){
+        cb = entityManager.getCriteriaBuilder();
+        predicates = new ArrayList<>();
+
+        addPredicateCaseInsensitive(params.getName());
+        addPredicate(params.getType());
+        addPredicate(params.getState());
+
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        entityRoot = query.from(TournamentEntity.class);
+        query.select(cb.count(entityRoot)).where(cb.and(predicates.toArray(new Predicate[0])));
+
+        Long totalResults = entityManager.createQuery(query).getSingleResult();
+
+        double pages = totalResults.intValue() / (double) params.getMaxResults();
+        return Math.toIntExact(Math.round(Math.ceil(pages)));
+    }
+
+    @Override
     public List<TournamentEntity> findTournaments(FindTournamentsFilters params){
-        //Integer offset = (params.getPageNumber() - 1) * params.getMaxResults();
+        int offset = (params.getPageNumber() - 1) * params.getMaxResults();
 
         cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<TournamentEntity> query = cb.createQuery(TournamentEntity.class);
@@ -41,7 +60,10 @@ public class TournamentRepositoryCustomImpl implements TournamentRepositoryCusto
 
         query.select(entityRoot).where(cb.and(predicates.toArray(new Predicate[0])));
 
-        return entityManager.createQuery(query).getResultList();
+        return entityManager.createQuery(query)
+                .setMaxResults(params.getMaxResults())
+                .setFirstResult(offset)
+                .getResultList();
     }
 
     private void addPredicate(TournamentType pattern) {

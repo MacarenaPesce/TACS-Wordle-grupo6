@@ -229,8 +229,10 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
                 .build();
 
         List<TournamentDto> tournaments = tournamentService.findTournaments(filters);
+        Integer totalPages = tournamentService.findTournamentsGetTotalPages(filters);
 
         assertThat(tournaments).containsExactlyInAnyOrder(tournamentReady, tournamentAlphabet, tournamentAlphis);
+        assertEquals(1, totalPages);
     }
 
     @Test

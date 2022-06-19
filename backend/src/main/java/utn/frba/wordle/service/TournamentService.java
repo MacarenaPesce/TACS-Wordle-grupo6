@@ -133,10 +133,12 @@ public class TournamentService {
     }
 
     public List<TournamentDto> findTournaments(FindTournamentsFilters filters) {
-
         List<TournamentEntity> tournaments = tournamentRepositoryCustom.findTournaments(filters);
-
         return mapToDto(tournaments);
+    }
+
+    public Integer findTournamentsGetTotalPages(FindTournamentsFilters filters) {
+        return tournamentRepositoryCustom.findTournamentsGetTotalPages(filters);
     }
 
     public Integer findPublicActiveTournamentsTotalPages(String name, Integer maxResults) {
