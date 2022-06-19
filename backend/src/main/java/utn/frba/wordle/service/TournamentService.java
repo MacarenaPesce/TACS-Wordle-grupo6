@@ -13,9 +13,11 @@ import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.*;
 import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.model.enums.TournamentType;
+import utn.frba.wordle.model.http.FindTournamentsFilters;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.repository.RankingRepository;
 import utn.frba.wordle.repository.TournamentRepository;
+import utn.frba.wordle.repository.TournamentRepositoryCustomImpl;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -27,6 +29,9 @@ public class TournamentService {
 
     @Autowired
     TournamentRepository tournamentRepository;
+
+    @Autowired
+    TournamentRepositoryCustomImpl tournamentRepositoryCustom;
 
     @Autowired
     RegistrationService registrationService;
@@ -127,6 +132,14 @@ public class TournamentService {
         return mapToDto(tournaments);
     }
 
+    public List<TournamentDto> findTournaments(FindTournamentsFilters filters) {
+        List<TournamentEntity> tournaments = tournamentRepositoryCustom.findTournaments(filters);
+        return mapToDto(tournaments);
+    }
+
+    public Integer findTournamentsGetTotalPages(FindTournamentsFilters filters) {
+        return tournamentRepositoryCustom.findTournamentsGetTotalPages(filters);
+    }
 
     public Integer findPublicActiveTournamentsTotalPages(String name, Integer maxResults) {
         Integer totalResults = tournamentRepository.findPublicActiveTournamentsByNameTotalPages(name.toLowerCase());
@@ -145,10 +158,17 @@ public class TournamentService {
         punctuationService.submitResults(userId, result);
     }
 
-    public List<Punctuation> getRanking(Long tourneyId) {
+    public Integer getRankingTotalPages(Long tournamentId, Integer maxResults) {
+        Integer totalResults = rankingRepository.getScoresTotalPages(tournamentId);
+        int pages = totalResults / maxResults;
+        return Math.toIntExact(Math.round(Math.ceil(pages)));
+    }
+
+    public List<Punctuation> getRanking(Long tourneyId, Integer pageNumber, Integer maxResults) {
+        Integer offset = (pageNumber - 1) * maxResults;
         updateTournamentScores(tourneyId);
 
-        Set<RankingEntity> rankingEntities = rankingRepository.getScores(tourneyId);
+        Set<RankingEntity> rankingEntities = rankingRepository.getScores(tourneyId, offset, maxResults);
 
         return mapRankingToDto(new ArrayList<>(rankingEntities));
     }
@@ -177,22 +197,14 @@ public class TournamentService {
     }
 
     public List<TournamentDto> findUserTournamentsByStateWithPagination(Long userId, State state, Integer pageNumber, Integer maxResults) {
-        List<TournamentEntity> entities;
-        Integer offset = (pageNumber - 1) * maxResults;
-        switch (state){
-            case READY:
-                entities = tournamentRepository.findUserReadyTournaments(userId, offset, maxResults);
-                break;
-            case STARTED:
-                entities = tournamentRepository.findUserStartedTournaments(userId, offset, maxResults);
-                break;
-            case FINISHED:
-                entities = tournamentRepository.findUserFinishedTournaments(userId, offset, maxResults);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + state);
-        }
-        return mapToDto(entities);
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .state(state)
+                .userId(userId)
+                .pageNumber(pageNumber)
+                .maxResults(maxResults)
+                .build();
+
+        return findTournaments(filters);
     }
 
     public List<TournamentDto> findActiveTournamentsFromUser(Long userId, String name, Integer pageNumber, Integer maxResults) {
@@ -329,23 +341,13 @@ public class TournamentService {
     }
 
     public Integer userTournamentsByStateTotalPages(Long userId, State state, Integer maxResults) {
-        Integer totalResults;
-        switch (state){
-            case READY:
-                totalResults = tournamentRepository.userTournamentsReadyTotalPages(userId);
-                break;
-            case STARTED:
-                totalResults = tournamentRepository.userTournamentsStartedTotalPages(userId);
-                break;
-            case FINISHED:
-                totalResults = tournamentRepository.userTournamentsFinishedTotalPages(userId);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + state);
-        }
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .state(state)
+                .userId(userId)
+                .maxResults(maxResults)
+                .build();
 
-        int pages = totalResults / maxResults;
-        return Math.toIntExact(Math.round(Math.ceil(pages)));
+        return findTournamentsGetTotalPages(filters);
     }
 
     public Integer getActiveTournamentsFromUserTotalPages(Long userId, Integer maxResults) {

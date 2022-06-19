@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+#todo cambiar para levantar todo de 0 en lugar de usar los Dockerfile
+#acordarse de usar docker-compose build antes de docker-compose up
+
+  backend:
+    build:
+        context: ./backend
+        dockerfile: Dockerfile-sinTest
+    ports:
+      - 8080:8080
+    restart: on-failure
+    
+#otra opcion para el retry del backend (esperar a que levante la bd para crear las tablas):
+# https://stackoverflow.com/questions/52322800/docker-compose-how-to-wait-for-other-service-to-be-ready/64921431#64921431
+
+  frontend:
+    build:
+        context: ./frontend
+        dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+
+
+  mysql:
+    container_name: test-mysql
+    image: mysql:8.0
+    ports:
+      - 3333:3306
+    volumes:
+      - mysql-data-db-01:/var/lib/mysql
+    environment: 
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordle
+
+
+volumes:
+  mysql-data-db-01:
+  
+  
+  

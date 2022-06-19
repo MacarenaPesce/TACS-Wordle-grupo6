@@ -190,7 +190,22 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).getRanking(idTournament);
+        verify(tournamentService).getRanking(idTournament, 1, 100);
+    }
+
+    @SneakyThrows
+    @Test
+    public void aUserCanGetTheRankingOfATourneyWithPagination() {
+        Long idTournament = 22L;
+        Session session = TestUtils.getMockSession();
+
+        String urlController = String.format("/api/tournaments/%s/ranking?pageNumber=3&maxResults=7", idTournament);
+        mvc.perform(get(urlController)
+                .header(AUTHORIZATION_HEADER_NAME, session.getToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(tournamentService).getRanking(idTournament, 3, 7);
     }
 
     @SneakyThrows

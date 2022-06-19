@@ -12,6 +12,7 @@ import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.enums.State;
+import utn.frba.wordle.model.enums.TournamentType;
 import utn.frba.wordle.model.http.*;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.pojo.Session;
@@ -30,6 +31,42 @@ public class TournamentController {
     TournamentService tournamentService;
 
     private static final Logger logger = LoggerFactory.getLogger(TournamentController.class);
+
+    @GetMapping
+    public ResponseEntity<TournamentsListResponse> findTournaments(@RequestHeader("Authorization") String token,
+                                                                   @RequestParam(required = false) String name,
+                                                                   @RequestParam(required = false) TournamentType type,
+                                                                   @RequestParam(required = false) State state,
+                                                                   @RequestParam(required = false) Integer pageNumber,
+                                                                   @RequestParam(required = false) Integer maxResults){
+
+        logger.info("Method: findTournaments - Request: token={}, " +
+                "name={}, type={}, state={}, pageNumber={}, maxResults={}", token, name, type, state, pageNumber, maxResults);
+        FindTournamentsFilters findTournamentsFilters = FindTournamentsFilters.builder()
+                .name(name)
+                .type(type)
+                .state(state)
+                .pageNumber(pageNumber)
+                .maxResults(maxResults)
+                .build();
+
+        List<TournamentDto> tournamentsDto = tournamentService.findTournaments(findTournamentsFilters);
+        Integer totalPages =  tournamentService.findTournamentsGetTotalPages(findTournamentsFilters);
+
+        List<TournamentResponse> tournaments = tournamentsDto
+                .stream().map(this::buildResponse).collect(Collectors.toList());
+
+        TournamentsListResponse response = TournamentsListResponse.builder()
+                .tournaments(tournaments)
+                .maxResults(maxResults)
+                .pageNumber(pageNumber)
+                .totalPages(totalPages)
+                .build();
+
+        logger.info("Method: findTournaments - Response: {}", response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     @PostMapping
     public ResponseEntity<TournamentResponse> create(@RequestHeader("Authorization") String token,
@@ -218,14 +255,26 @@ public class TournamentController {
 
     @GetMapping("/{tournamentId}/ranking")
     public ResponseEntity<RankingResponse> getRanking(@RequestHeader("Authorization") String token,
-                                                      @PathVariable Long tournamentId) {
+                                                      @PathVariable Long tournamentId,
+                                                      @RequestParam(required = false) Integer pageNumber,
+                                                      @RequestParam(required = false) Integer maxResults
+                                                      ) {
         logger.info("Method: getRanking - Request: token={}, tournamentId={}", token, tournamentId);
 
-        List<Punctuation> orderedPunctuations = tournamentService.getRanking(tournamentId);
+        if(pageNumber == null || maxResults == null){
+            pageNumber = 1;
+            maxResults = 100;
+        }
+
+        Integer totalPages = tournamentService.getRankingTotalPages(tournamentId, maxResults);
+        List<Punctuation> orderedPunctuations = tournamentService.getRanking(tournamentId, pageNumber, maxResults);
 
         RankingResponse response = RankingResponse.builder()
                 .idTournament(tournamentId)
                 .punctuations(orderedPunctuations)
+                .pageNumber(pageNumber)
+                .maxResults(maxResults)
+                .totalPages(totalPages)
                 .build();
 
         logger.info("Method: getRanking - Response: {}", response);
