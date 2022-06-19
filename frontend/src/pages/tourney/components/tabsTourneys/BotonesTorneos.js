@@ -29,9 +29,9 @@ export default function BotonesTorneos(data){
             }
             setDisButUserAdd(true); //no puedo agregarme porque es mi torneo
         }
-        else if(tourney.owner.id != userId){ // no es mi torneo
-            if(tourney.state === 'READY'){ // es publico
-                /* te permite agregarte al torneo si el torneo es de tipo publico y vos NO sos el creador y se deshabilita si ya estas en el torneo*/
+        else if(tourney.owner.id != userId){
+            setDisButAddMember(true); //No es mi torneo, no puedo agregar a nadie
+            if(tourney.state === 'READY' && tourney.type === 'PUBLIC'){ // esta en ready y no empezado, y es publico
                 if(myTourneysid.includes(tourney.tourneyId)){
                     setDisButUserAdd(true);  //si ya esta en mis torneos lo deshabilito
                 }
@@ -39,11 +39,9 @@ export default function BotonesTorneos(data){
                     setDisButUserAdd(false); //si no estoy incluido lo dejo disponible para agregarme
                 }                        
             }
-            else{ // es privado pero no es mi torneo (me agregaron)
-                /*No es mi torneo, no puedo agregar a nadie*/
-                setDisButUserAdd(true);
+            else{ 
+                setDisButUserAdd(true); // es privado pero no es mi torneo (me agregaron)
             }
-            setDisButAddMember(true);
         }  
     }
 
