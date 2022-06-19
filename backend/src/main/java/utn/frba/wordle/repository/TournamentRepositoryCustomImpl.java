@@ -52,22 +52,28 @@ public class TournamentRepositoryCustomImpl implements TournamentRepositoryCusto
     }
 
     private void addPredicate(State statePattern) {
-        if(statePattern != null){
-            if(statePattern.equals(State.READY)) {
-                Predicate date = cb.greaterThan(entityRoot.get("start"), new Date());
+        if(statePattern == null) {
+            return;
+        }
+        Predicate date;
+        switch (statePattern){
+            case READY:
+                date = cb.greaterThan(entityRoot.get("start"), new Date());
                 predicates.add(date);
-            }
-            else if(statePattern.equals(State.FINISHED)){
-                Predicate date = cb.lessThan(entityRoot.get("finish"), new Date());
+                break;
+            case FINISHED:
+                date = cb.lessThan(entityRoot.get("finish"), new Date());
                 predicates.add(date);
-            }
-            else if(statePattern.equals(State.STARTED)){
-                Predicate date = cb.and(
+                break;
+            case STARTED:
+                date = cb.and(
                         cb.lessThan(entityRoot.get("start"), new Date()),
                         cb.greaterThan(entityRoot.get("finish"), new Date())
                 );
                 predicates.add(date);
-            }
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + statePattern);
         }
     }
 
