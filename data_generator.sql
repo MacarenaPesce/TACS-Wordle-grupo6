@@ -1,6 +1,5 @@
 -- todo tomar el ultimo id actual de todas las tablas, para poder crear sin afectar los datos existentes, en caso de ejecutar sin la bd vacia
--- todo ver si se pueden cambiar los cursores por insert directos
--- todo poner un random mas performante en generate_registrations para elegir usuarios
+-- todo poner un random mas performante en generate_registrations para elegir usuarios	https://stackoverflow.com/questions/4329396/mysql-select-10-random-rows-from-600k-rows-fast
 
 -- configurar mysql para que no haga timeout a los 30 segundos de query
 
@@ -10,7 +9,7 @@ use wordle;
 DROP TABLE IF EXISTS `opciones`;
 CREATE TEMPORARY TABLE opciones(dia_pri date, dia_ulti date, cant_users int);
 INSERT INTO opciones VALUES 
-(DATE_SUB(curdate(), INTERVAL 1 MONTH), DATE_ADD(curdate(), INTERVAL 1 MONTH), 12);
+(DATE_SUB(curdate(), INTERVAL 1 MONTH), DATE_ADD(curdate(), INTERVAL 1 MONTH), 16);
 
 /*
 GENERAR USUARIOS
@@ -24,26 +23,11 @@ DROP PROCEDURE IF EXISTS `generate_users`;
 DELIMITER //
 CREATE PROCEDURE generate_users()
 BEGIN
-  DECLARE done INT DEFAULT FALSE;
-  DECLARE _username varchar(40);
-  DECLARE cur CURSOR FOR SELECT * FROM temp_users;
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-  OPEN cur;
-
-  read_loop: LOOP
-    FETCH cur INTO _username;
-    IF done THEN
-      LEAVE read_loop;
-    END IF;
-	
 --	IF _username not in (select username from user) THEN
-      insert into user(username,password,email) VALUES (_username, md5(_username), concat(_username,'@wordle.com'));
 --  END IF;
-	
-  END LOOP;
 
-  CLOSE cur;
+	  insert into user(username,password,email) SELECT username, md5(username), concat(username,'@wordle.com') from temp_users;
 
 END //
 DELIMITER ;
@@ -69,37 +53,21 @@ DROP PROCEDURE IF EXISTS `generate_scores`;
 DELIMITER //
 CREATE PROCEDURE generate_scores()
 BEGIN
-  DECLARE done INT DEFAULT FALSE;
-  DECLARE id_user bigint;
+
   DECLARE start_date date DEFAULT (select dia_pri from opciones);
   DECLARE end_date date DEFAULT DATE_SUB(curdate(), INTERVAL 1 DAY);
   DECLARE date_counter date DEFAULT start_date;
-  DECLARE cur CURSOR FOR SELECT id FROM user;
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-
-  OPEN cur;
-
-  read_loop: LOOP
-    FETCH cur INTO id_user;
-    IF done THEN
-      LEAVE read_loop;
-    END IF;
-
+  
 	-- todo generar IQ para cada usuario para que no queden tan parejos los resultados
+	-- WARNING no ejecutar dos veces porque esto no tiene unique constraint
 
-	start transaction;
 	while date_counter < DATE_ADD(end_date, INTERVAL 1 DAY) DO
-		insert into punctuation(id_user,date,language,punctuation) VALUES (id_user,date_counter,'ES',score());	-- WARNING no ejecutar dos veces porque esto no tiene unique constraint
-		insert into punctuation(id_user,date,language,punctuation) VALUES (id_user,date_counter,'EN',score());
+		insert into punctuation(id_user,date,language,punctuation) SELECT id, date_counter, 'ES', score() from user;
+		insert into punctuation(id_user,date,language,punctuation) SELECT id, date_counter, 'EN', score() from user;
 		set date_counter=DATE_ADD(date_counter, INTERVAL 1 DAY);
 	end while;
-	set date_counter=start_date;
-	commit;
-  
 	
-  END LOOP;
-
-  CLOSE cur;
+	set date_counter=start_date;
 
 END //
 DELIMITER ;
@@ -138,8 +106,6 @@ BEGIN
   DECLARE fecha_1 date;
   DECLARE fecha_2 date;
   DECLARE random_user bigint;
-  DECLARE tipo varchar(7);
-  DECLARE lang char(2);
   DECLARE cur CURSOR FOR SELECT * FROM temp_tourneys;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
@@ -150,31 +116,23 @@ BEGIN
     IF done THEN
       LEAVE read_loop;
     END IF;
-	
-	
-	IF ROUND(RAND()) THEN
-		SET lang='ES';
-	ELSE
-		SET lang='EN';
-	END IF;
-	
-	IF ROUND(RAND()) THEN
-		SET tipo='PUBLIC';
-	ELSE
-		SET tipo='PRIVATE';
-	END IF;
-	
+		
 	SET random_user = (select id from user order by rand() limit 1);
 	
 	SET fecha_1 = tourdate();
 	SET fecha_2 = tourdate();	
 		
 	IF fecha_1 < fecha_2 THEN
-		insert into tournament(name,type,language, id_user, start, finish) VALUES (tourneyname, tipo, lang, random_user, ADDTIME(CONVERT(fecha_1, DATETIME), '00:00:00'), ADDTIME(CONVERT(fecha_2, DATETIME), '23:59:59.99'));
+		insert into tournament(name,type,language, id_user, start, finish) VALUES (tourneyname, IF(ROUND(RAND()), 'PUBLIC', 'PRIVATE'), IF(ROUND(RAND()), 'ES', 'EN'), random_user, 
+																					ADDTIME(CONVERT(fecha_1, DATETIME), '00:00:00'), ADDTIME(CONVERT(fecha_2, DATETIME), '23:59:59.99'));
 	ELSE
-		insert into tournament(name,type,language, id_user, start, finish) VALUES (tourneyname, tipo, lang, random_user, ADDTIME(CONVERT(fecha_2, DATETIME), '00:00:00'), ADDTIME(CONVERT(fecha_1, DATETIME), '23:59:59.99'));
+		insert into tournament(name,type,language, id_user, start, finish) VALUES (tourneyname, IF(ROUND(RAND()), 'PUBLIC', 'PRIVATE'), IF(ROUND(RAND()), 'ES', 'EN'), random_user, 
+																					ADDTIME(CONVERT(fecha_2, DATETIME), '00:00:00'), ADDTIME(CONVERT(fecha_1, DATETIME), '23:59:59.99'));
 	END IF;
+	
 
+	-- se podria cambiar a la siguiente query, pero no se como hacer la comparacion de fechas sin cursor. Igual este procedure no tiene mala performance para solo 1000 torneos.
+	-- insert into tournament(name,type,language, id_user, start, finish) SELECT tourneyname, IF(ROUND(RAND()), 'PUBLIC', 'PRIVATE'), IF(ROUND(RAND()), 'ES', 'EN'), random_user, ____, ____ from temp_tourneys;
 	
   END LOOP;
 
@@ -286,9 +244,69 @@ BEGIN
   DECLARE fin date;
   DECLARE cant_users int DEFAULT (select cant_users from opciones);
   DECLARE cur CURSOR FOR SELECT id FROM tournament;
-  DECLARE cur2 CURSOR FOR SELECT * FROM users_to_register;
+  DECLARE cur2 CURSOR FOR SELECT * FROM torneo_usuario;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
+
+  -- crear tabla que tenga todos los torneos, y para cada uno, una cantidad random de usuarios distintos
+  DROP TABLE IF EXISTS `torneo_usuario`;
+  CREATE TEMPORARY TABLE torneo_usuario(tourneyid bigint, userid bigint);
+	
+  OPEN cur;
+
+  read_loop: LOOP
+    FETCH cur INTO id_tourney;
+    IF done THEN
+      LEAVE read_loop;
+    END IF;
+	
+	INSERT INTO torneo_usuario(tourneyid, userid) SELECT id_tourney, id FROM user order by rand() limit cant_users;
+  
+  END LOOP;
+
+  CLOSE cur;
+  SET done=0;
+    
+	
+  -- iterar la tabla anterior para crear registraciones y sus tablas intermedias
+  OPEN cur2;
+
+  read_loop2: LOOP
+    FETCH cur2 INTO id_tourney, userid;
+    IF done THEN
+      LEAVE read_loop2;
+    END IF;
+	
+	SELECT start, finish, language INTO inicio, fin, lang FROM tournament where id = id_tourney;
+
+			-- crear registracion
+		insert into registration(id_tournament, id_user, days_played, last_submitted_score, registered, total_score) 
+				VALUES (id_tourney, userid, days_played(inicio, fin), last_submitted(inicio, fin), get_register_date(inicio), get_user_score(userid, lang, inicio, fin));		
+				
+			-- tabla de hibernate
+		insert into tournament_registrations(tournament_entity_id, registrations_id) VALUES (id_tourney, last_insert_id());
+		
+			-- tabla registration_punctuation
+			-- mete a la vez todas las puntuaciones que tenga ya cargadas el usuario
+		INSERT INTO registration_punctuation select id, last_insert_id() from punctuation
+												where language = lang and id_user = userid;
+    
+  END LOOP;
+
+  CLOSE cur2;
+
+END //
+DELIMITER ;
+
+call generate_registrations();
+
+
+
+-- cursor doble
+/*
+  DECLARE cur CURSOR FOR SELECT id FROM tournament;
+  DECLARE cur2 CURSOR FOR SELECT * FROM users_to_register;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
   OPEN cur;
 
@@ -298,15 +316,8 @@ BEGIN
       LEAVE read_loop;
     END IF;
 	
+	-- nivel 1
 
-		-- elegir un random de usuarios para meter al torneo
-	DROP TABLE IF EXISTS `users_to_register`;
-	CREATE TEMPORARY TABLE users_to_register(userid bigint);
-	INSERT INTO users_to_register SELECT id FROM user order by rand() limit cant_users;
-
-
-	SELECT start, finish, language INTO inicio, fin, lang FROM tournament where id = id_tourney;
-	
 	OPEN cur2;
 	read_loop2: LOOP
 		FETCH cur2 INTO userid;
@@ -314,17 +325,7 @@ BEGIN
 			LEAVE read_loop2;
 		END IF;
 		
-			-- crear registracion
-		insert into registration(id_tournament, id_user, days_played, last_submitted_score, registered, total_score) 
-				VALUES (id_tourney, userid, days_played(inicio, fin), last_submitted(inicio, fin), get_register_date(inicio), get_user_score(userid, lang, inicio, fin));
-				
-			-- tabla de hibernate
-		insert into tournament_registrations(tournament_entity_id, registrations_id) VALUES (id_tourney, last_insert_id());
-		
-			-- tabla registration_punctuation
-			-- mete a la vez todas las puntuaciones que tenga ya cargadas el usuario
-		INSERT INTO registration_punctuation select id, last_insert_id() from punctuation
-												where language = lang and id_user = userid;
+		-- nivel 2
   
 	END LOOP;
 	CLOSE cur2;
@@ -333,11 +334,7 @@ BEGIN
   END LOOP;
 
   CLOSE cur;
-
-END //
-DELIMITER ;
-
-call generate_registrations();
+*/
 
 
 
