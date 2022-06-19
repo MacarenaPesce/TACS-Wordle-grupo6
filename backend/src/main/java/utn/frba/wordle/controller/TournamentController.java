@@ -39,6 +39,9 @@ public class TournamentController {
                                                                    @RequestParam(required = false) State state,
                                                                    @RequestParam(required = false) Integer pageNumber,
                                                                    @RequestParam(required = false) Integer maxResults){
+
+        logger.info("Method: findTournaments - Request: token={}, " +
+                "name={}, type={}, state={}, pageNumber={}, maxResults={}", token, name, type, state, pageNumber, maxResults);
         FindTournamentsFilters findTournamentsFilters = FindTournamentsFilters.builder()
                 .name(name)
                 .type(type)
@@ -47,30 +50,21 @@ public class TournamentController {
                 .maxResults(maxResults)
                 .build();
 
-        List<TournamentDto> tournaments = tournamentService.findTournaments(findTournamentsFilters);
+        List<TournamentDto> tournamentsDto = tournamentService.findTournaments(findTournamentsFilters);
+        Integer totalPages =  tournamentService.findTournamentsGetTotalPages(findTournamentsFilters);
 
-        if(name != null && state != null && type != null) {
-            //busco todo
-        }
-        if(name != null && state != null) {
+        List<TournamentResponse> tournaments = tournamentsDto
+                .stream().map(this::buildResponse).collect(Collectors.toList());
 
-        }
-        if(state != null && type != null) {
+        TournamentsListResponse response = TournamentsListResponse.builder()
+                .tournaments(tournaments)
+                .maxResults(maxResults)
+                .pageNumber(pageNumber)
+                .totalPages(totalPages)
+                .build();
 
-        }
-        if(name != null && type != null) {
-
-        }
-        if(name != null) {
-
-        }
-        if(type != null) {
-
-        }
-        if(state != null) {
-
-        }
-        return null;
+        logger.info("Method: findTournaments - Response: {}", response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
