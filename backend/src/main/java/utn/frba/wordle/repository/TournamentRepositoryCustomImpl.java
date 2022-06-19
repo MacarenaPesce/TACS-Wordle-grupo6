@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -50,9 +51,23 @@ public class TournamentRepositoryCustomImpl implements TournamentRepositoryCusto
         }
     }
 
-    private void addPredicate(State pattern) {
-        if(pattern != null){
-            addPredicate("state", pattern.name());
+    private void addPredicate(State statePattern) {
+        if(statePattern != null){
+            if(statePattern.equals(State.READY)) {
+                Predicate date = cb.greaterThan(entityRoot.get("start"), new Date());
+                predicates.add(date);
+            }
+            else if(statePattern.equals(State.FINISHED)){
+                Predicate date = cb.lessThan(entityRoot.get("finish"), new Date());
+                predicates.add(date);
+            }
+            else if(statePattern.equals(State.STARTED)){
+                Predicate date = cb.and(
+                        cb.lessThan(entityRoot.get("start"), new Date()),
+                        cb.greaterThan(entityRoot.get("finish"), new Date())
+                );
+                predicates.add(date);
+            }
         }
     }
 
@@ -60,13 +75,6 @@ public class TournamentRepositoryCustomImpl implements TournamentRepositoryCusto
         Path<String> namePath = entityRoot.get("name");
         if (pattern != null) {
             predicates.add(cb.like(cb.lower(namePath), "%"+pattern+"%"));
-        }
-    }
-
-    private void addPredicate(String field, String pattern) {
-        Path<String> namePath = entityRoot.get(field);
-        if (pattern != null) {
-            predicates.add(cb.like(namePath, pattern));
         }
     }
 }

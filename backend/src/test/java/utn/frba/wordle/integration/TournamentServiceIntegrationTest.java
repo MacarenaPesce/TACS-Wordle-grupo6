@@ -212,7 +212,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void aUserCanFindByTournamentNameWithMultipleFilters() {
+    public void aUserCanFindByTournamentNameWithTypeAndNameFilters() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
         TournamentDto tournamentReady = savePublicTournament(owner, "Alpha", State.READY);
         savePrivateTournament(owner, "Alpha2", State.READY);
@@ -231,6 +231,72 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         List<TournamentDto> tournaments = tournamentService.findTournaments(filters);
 
         assertThat(tournaments).containsExactlyInAnyOrder(tournamentReady, tournamentAlphabet, tournamentAlphis);
+    }
+
+    @Test
+    public void aUserCanFindByTournamentNameWithStateReadyAndNameFilters() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        TournamentDto tournamentAlpha = savePublicTournament(owner, "Alpha", State.READY);
+        TournamentDto tournamentAlpha2 = savePrivateTournament(owner, "Alpha2", State.READY);
+        savePrivateTournament(owner, "alPhi$", State.STARTED);
+        savePublicTournament(owner, "Alphabet", State.STARTED);
+        TournamentDto tournamentAlphis = savePublicTournament(owner, "alPhi$$", State.READY);
+        savePublicTournament(owner, "Beta", State.READY);
+        savePublicTournament(owner, "Gamma", State.READY);
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .name("alph")
+                .state(State.READY)
+                .maxResults(100)
+                .pageNumber(1)
+                .build();
+
+        List<TournamentDto> tournaments = tournamentService.findTournaments(filters);
+
+        assertThat(tournaments).containsExactlyInAnyOrder(tournamentAlpha, tournamentAlpha2, tournamentAlphis);
+    }
+
+    @Test
+    public void aUserCanFindByTournamentNameWithFinishedAndNameFilters() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        savePublicTournament(owner, "Alpha", State.READY);
+        TournamentDto tournamentAlpha2 = savePrivateTournament(owner, "Alpha2", State.FINISHED);
+        savePrivateTournament(owner, "alPhi$", State.STARTED);
+        savePublicTournament(owner, "Alphabet", State.STARTED);
+        savePublicTournament(owner, "alPhi$$", State.READY);
+        savePublicTournament(owner, "Beta", State.READY);
+        savePublicTournament(owner, "Gamma", State.FINISHED);
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .name("alph")
+                .state(State.FINISHED)
+                .maxResults(100)
+                .pageNumber(1)
+                .build();
+
+        List<TournamentDto> tournaments = tournamentService.findTournaments(filters);
+
+        assertThat(tournaments).containsExactlyInAnyOrder(tournamentAlpha2);
+    }
+
+    @Test
+    public void aUserCanFindByTournamentNameWithStartedAndNameFilters() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        savePublicTournament(owner, "Alpha", State.READY);
+        savePrivateTournament(owner, "Alpha2", State.FINISHED);
+        TournamentDto tournamentAlphis = savePrivateTournament(owner, "alPhi$", State.STARTED);
+        TournamentDto tournamentAlphabet = savePublicTournament(owner, "Alphabet", State.STARTED);
+        savePublicTournament(owner, "alPhi$$", State.READY);
+        savePublicTournament(owner, "Beta", State.STARTED);
+        savePublicTournament(owner, "Gamma", State.FINISHED);
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .name("alph")
+                .state(State.STARTED)
+                .maxResults(100)
+                .pageNumber(1)
+                .build();
+
+        List<TournamentDto> tournaments = tournamentService.findTournaments(filters);
+
+        assertThat(tournaments).containsExactlyInAnyOrder(tournamentAlphis, tournamentAlphabet);
     }
 
     @Test
