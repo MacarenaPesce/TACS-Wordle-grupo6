@@ -13,6 +13,7 @@ import utn.frba.wordle.model.tele.Update;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 
 @RestController
@@ -39,6 +40,12 @@ public class TelegramController {
                     "/ranking - Visualizar el ranking de un torneo\n" +
                     "/tournaments - Obtener listas de torneos existentes\n" +
                     "/tournament - Obtener informacion de un torneo";
+
+    /**
+     * Caso de uso en el que se encuentra el usuario.
+     */
+    HashMap<Long, String> casoActual = new HashMap<>(); //todo debe tener algun tipo de proteccion contra concurrencia? esta cache en forma de array
+
     @PostMapping("/")
     public ResponseEntity<String> postUpdate(@RequestBody Update update) throws IOException, URISyntaxException {
 
@@ -51,26 +58,45 @@ public class TelegramController {
         //interpretar mensaje
         if(text.matches("/[^ ](.*)")){  //es comando
 
-            String[] params = text.substring(1).split("\\s+");
-            processCommand(params, chat_id);
+            String[] arr = text.substring(1).split(" ", 2);
+            String caso = arr[0];   //help
+            String params_string;
+            if(arr.length > 1){
+                params_string = arr[1];    //es amarillas grises _a_a_
+            }else{
+                params_string = "";
+            }
+
+            String[] params = params_string.split("\\s+");
+            processCommand(caso, params, chat_id, true);
 
         }else { //no es comando
-            String mensajeEnvio = update.getMessage().getFrom().getFirst_name()+", su mensaje "+update.getMessage().getMessage_id()+" dice: \n"+text;
-            sender.sendMessage(mensajeEnvio, chat_id);
+            if(!casoActual.containsKey(chat_id)){
+                String mensajeEnvio = update.getMessage().getFrom().getFirst_name()+", su mensaje "+update.getMessage().getMessage_id()+" dice: \n"+text;
+                sender.sendMessage(mensajeEnvio, chat_id);
+            }else{  // si el usuario se encuentra dentro de un mensaje interactivo
+                String[] params = text.split("\\s+");
+                processCommand(casoActual.get(chat_id), params, chat_id, false);
+            }
         }
 
         return new ResponseEntity<>(myString, HttpStatus.OK);
     }
 
-    private void processCommand(String[] params, Long chat_id) throws IOException, URISyntaxException {
-        switch(params[0])
+    private void processCommand(String caso, String[] params, Long chat_id, boolean restart) throws IOException, URISyntaxException {
+        switch(caso)
         {
             case "help" :
-                helpChat.processHelp(params, chat_id);
+                helpChat.processHelp(params, chat_id, restart, casoActual);
                 break;
 
             case "definition" :
                 sender.sendMessage("Obtener definicion de una palabra", chat_id);
+                break;
+
+            case "exit" :
+                casoActual.remove(chat_id);
+                sender.sendMessage(start, chat_id);
                 break;
 
             case "submit" :
