@@ -20,10 +20,10 @@ import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.TournamentService;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static utn.frba.wordle.model.enums.ErrorMessages.INVALID_RESULT_VALUE;
 
 @RestController
 @RequestMapping("/api/tournaments")
@@ -242,7 +242,7 @@ public class TournamentController {
         Session session = AuthService.getSession(token);
 
         if(request.getResult() > 7 || request.getResult() < 1){
-            throw new BusinessException("Solo se pueden cargar resultados del 1 al 7");
+            throw new BusinessException(INVALID_RESULT_VALUE);
         }
 
         ResultDto dto = ResultDto.builder()

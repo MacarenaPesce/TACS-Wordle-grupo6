@@ -12,6 +12,7 @@ import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.*;
+import utn.frba.wordle.model.enums.ErrorMessages;
 import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.model.enums.TournamentType;
 import utn.frba.wordle.model.http.FindTournamentsFilters;
@@ -25,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import static utn.frba.wordle.model.enums.ErrorMessages.*;
 
 @Service
 @NoArgsConstructor
@@ -60,7 +63,7 @@ public class TournamentService {
         }
         TournamentEntity existingActiveTournament = tournamentRepository.getActiveTournamentsByName(dto.getName());
         if (existingActiveTournament != null) {
-            throw new BusinessException("There is already an active Tournament with this name.");
+            throw new BusinessException(TOURNAMENT_WITH_SAME_NAME_EXISTS);
         }
         Date startDate = parseStartDate(dto.getStart());
         Date finishDate = parseFinishDate(dto.getFinish());
@@ -83,21 +86,21 @@ public class TournamentService {
         TournamentEntity tournamentEntity = tournamentRepository.findById(tourneyID).orElse(null);
 
         if (tournamentEntity == null) {
-            throw new BusinessException("El torneo especificado no existe.");
+            throw new BusinessException(TOURNAMENT_DONT_EXISTS);
         }
         if (!tournamentEntity.getOwner().getId().equals(ownerUserId)) {
-            throw new BusinessException("Solo puedes agregar miembros a un torneo que tu hayas creado.");
+            throw new BusinessException(YOU_ONLY_CAN_ADD_MEMBERS_TO_YOUR_TOURNAMENTS);
         }
 
         UserDto userEntity = userService.findUser(userId);
         if(userEntity == null){
-            throw new BusinessException("El usuario especificado no se encuentra registrado en el sistema");
+            throw new BusinessException(USER_DONT_EXISTS);
         }
 
         List<UserDto> members = userService.getTournamentMembers(tournamentEntity.getId());
         UserDto existingUser = members.stream().filter(member -> member.getUsername().equals(userEntity.getUsername())).findAny().orElse(null); //TODO hacer la busqueda directo en la query a la base de datos?
         if (existingUser != null) {
-            throw new BusinessException("The user '"+userEntity.getUsername()+"' is already a member of the tournament "+tournamentEntity.getName());
+            throw new BusinessException(String.format(ErrorMessages.USER_ALREADY_MEMBER_OF_TOURNAMENT.getDescription(),  userEntity.getUsername(), tournamentEntity.getName()));
         }
 
         RegistrationEntity registrationEntity = registrationService.addMember(tournamentEntity.getId(), userEntity.getId(), new Date());
@@ -115,10 +118,10 @@ public class TournamentService {
         TournamentEntity tournamentEntity = tournamentRepository.findById(tournamentId).orElse(null);
 
         if (tournamentEntity == null) {
-            throw new BusinessException("The specified Tournament doesn't exist.");
+            throw new BusinessException(TOURNAMENT_DONT_EXISTS);
         }
         if (tournamentEntity.getType().equals(TournamentType.PRIVATE)) {
-            throw new BusinessException("You can not join a PRIVATE tournament.");
+            throw new BusinessException(CANNOT_JOIN_PRIVATE_TOURNAMENT);
         }
 
         List<RegistrationDto> registrations = registrationService.getRegistrationsFromUser(userId);
@@ -126,7 +129,7 @@ public class TournamentService {
                             .filter(registrationDto -> registrationDto.getTournamentId().equals(tournamentId))
                             .anyMatch(m -> m.getUser().getId().equals(userId));
         if(userAlreadyJoined){
-            throw new BusinessException("The user already joined the Tournament.");
+            throw new BusinessException(ErrorMessages.USER_ALREADY_JOINED_TOURNAMENT);
         }
 
         RegistrationEntity registrationEntity = registrationService.addMember(tournamentEntity.getId(), userId, new Date());
