@@ -36,7 +36,7 @@ submitCambio = e => {
       .then(response => {
           console.log('Response obtenida: ')
           console.log(response.data)
-          this.setState({significado: response.data.definition, loading:false})
+          this.setState({significado: response.data.definitions, loading:false})
       })
       .catch(error => {
           this.setState({loading: false})
