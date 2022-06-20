@@ -1,7 +1,5 @@
 package utn.frba.wordle.model.enums;
 
-import java.util.Locale;
-
 public enum ErrorMessages {
     RESULTS_ALREADY_SUBMITTED("El usuario ya ha publicado sus resultados en el día."),
     TOURNAMENT_WITH_SAME_NAME_EXISTS ("Ya existe un torneo con este nombre."),
