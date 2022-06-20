@@ -7,7 +7,7 @@ import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.enums.Language;
-import utn.frba.wordle.model.enums.State;
+import utn.frba.wordle.model.enums.TournamentType;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.service.PunctuationService;
 
@@ -48,7 +48,7 @@ public class PunctuationServiceIntegrationTest extends AbstractIntegrationTest {
         UserDto user = getUserDto("email@email.com", "usernameTest");
         Date startDate = getTodayWithOffset(-2);
         Date finishDate = getTodayWithOffset(-1);
-        TournamentDto tournamentDto = getPublicTournamentDto(user, "Public Tourney", State.FINISHED, startDate, finishDate);
+        TournamentDto tournamentDto = getTournamentDto(user, "Public Tourney", TournamentType.PUBLIC, Language.ES, startDate, finishDate);
         ResultDto resultESDto = ResultDto.builder()
                 .language(Language.ES)
                 .result(2L)
@@ -69,7 +69,7 @@ public class PunctuationServiceIntegrationTest extends AbstractIntegrationTest {
         UserDto user = getUserDto("email@email.com", "usernameTest");
         Date startDate = getTodayWithOffset(1);
         Date finishDate = getTodayWithOffset(2);
-        TournamentDto tournamentDto = getPublicTournamentDto(user, "Public Tourney", State.READY, startDate, finishDate);
+        TournamentDto tournamentDto = getTournamentDto(user, "Public Tourney", TournamentType.PUBLIC, Language.ES, startDate, finishDate);
         ResultDto resultESDto = ResultDto.builder()
                 .language(Language.ES)
                 .result(2L)

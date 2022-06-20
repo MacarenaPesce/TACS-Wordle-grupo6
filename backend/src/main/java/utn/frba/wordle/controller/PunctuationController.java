@@ -48,22 +48,26 @@ public class PunctuationController {
     @GetMapping("/endOfTheDay")
     public ResponseEntity<Object> getEndOfTheDay(@RequestHeader("Authorization") String token){
 
+        logger.info("Method: endOfTheDay - Request: token={}", token);
+
         Gson gson = new Gson();
 
         Object response = gson.toJson(LocalDate.now().plusDays(1).atStartOfDay().toString());
 
-        logger.info("Requested end of the day time "+response, response);
+        logger.info("Method: endOfTheDay - Response: {}", response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/dayOfTheDate")
     public ResponseEntity<Object> getDayOfTheDate(@RequestHeader("Authorization") String token){
 
+        logger.info("Method: getDayOfTheDate - Request: token={}", token);
+
         Gson gson = new Gson();
 
         Object response = gson.toJson(LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)));
 
-        logger.info("Requested day of the date "+response, response);
+        logger.info("Method: getDayOfTheDate - Response: {}", response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

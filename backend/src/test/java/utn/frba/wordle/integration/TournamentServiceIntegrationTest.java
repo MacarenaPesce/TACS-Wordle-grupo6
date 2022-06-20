@@ -18,7 +18,6 @@ import utn.frba.wordle.model.http.FindTournamentsFilters;
 import utn.frba.wordle.model.http.SubmitResultRequest;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.pojo.Session;
-import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.service.PunctuationService;
 import utn.frba.wordle.service.RegistrationService;
 import utn.frba.wordle.utils.TestUtils;
@@ -31,9 +30,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
-
-    @Autowired
-    TournamentRepository tournamentRepository;
 
     @Autowired
     RegistrationService registrationService;
@@ -510,10 +506,10 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void ifATournamentStartedTwoDaysAgoAndEndedYesterdayMyScoreShouldBeFourteen(){
-        UserDto player1 = getUserDto("mail1@mail.com", "player1");
+        UserDto user = getUserDto("mail1@mail.com", "player1");
         Date startDate = getTodayWithOffset(-2);
         Date finishDate = getTodayWithOffset(-1);
-        TournamentDto tournamentDto = getPublicTournamentDto(player1, "My Public Tourney", State.FINISHED, startDate, finishDate);
+        TournamentDto tournamentDto = getTournamentDto(user, "My Public Tourney", TournamentType.PUBLIC, Language.ES, startDate, finishDate);
 
         List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId(), 1, 100);
 
@@ -528,7 +524,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         UserDto player1 = getUserDto("mail1@mail.com", "player1");
         Date startDate = getTodayWithOffset(1);
         Date finishDate = getTodayWithOffset(1);
-        TournamentDto tournamentDto = getPublicTournamentDto(player1, "Public Tourney", State.READY, startDate, finishDate);
+        TournamentDto tournamentDto = getTournamentDto(player1, "Public Tourney", TournamentType.PUBLIC, Language.ES, startDate, finishDate);
 
         List<Punctuation> punctuations = tournamentService.getRanking(tournamentDto.getTourneyId(), 1, 100);
 
@@ -550,7 +546,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         getPublicTournamentDto(player1, "Tournament2", State.STARTED);
         getPublicTournamentDto(player1, "Tournament3", State.STARTED);
         getPublicTournamentDto(player1, "Tournament4", State.FINISHED);
-        TournamentDto futureTournament = getPublicTournamentDto(player1, "Public Tourney", State.READY, startDate, finishDate);
+        TournamentDto futureTournament = getTournamentDto(player1, "Public Tourney", TournamentType.PUBLIC, Language.ES, startDate, finishDate);
         tournamentService.addMember(player2.getId(), futureTournament.getTourneyId(), player1.getId());
         tournamentService.addMember(player3.getId(), futureTournament.getTourneyId(), player1.getId());
         tournamentService.addMember(player4.getId(), futureTournament.getTourneyId(), player1.getId());
@@ -580,7 +576,7 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
         UserDto player4 = getUserDto("mail1@mail4.com", "player4");
         Date startDate = getTodayWithOffset(0);
         Date finishDate = getTodayWithOffset(3);
-        TournamentDto futureTournament = getPublicTournamentDto(player1, "Public Tourney", State.STARTED, startDate, finishDate);
+        TournamentDto futureTournament = getTournamentDto(player1, "Public Tourney", TournamentType.PUBLIC, Language.ES, startDate, finishDate);
         tournamentService.addMember(player2.getId(), futureTournament.getTourneyId(), player1.getId());
         tournamentService.addMember(player3.getId(), futureTournament.getTourneyId(), player1.getId());
         tournamentService.addMember(player4.getId(), futureTournament.getTourneyId(), player1.getId());
@@ -876,17 +872,11 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     private TournamentDto savePrivateTournament(UserDto owner, String tournamentName, State state) {
-        TournamentDto tournamentDto = getTournamentDto(owner, tournamentName, state, TournamentType.PRIVATE, Language.ES);
-        //TournamentEntity tournamentEntity = tournamentService.mapToEntity(tournamentDto);
-        //tournamentRepository.save(tournamentEntity);
-        return tournamentDto;
+        return getTournamentDto(owner, tournamentName, state, TournamentType.PRIVATE, Language.ES);
     }
 
     private TournamentDto savePublicTournament(UserDto owner, String tournamentName, State state) {
-        TournamentDto tournamentDto = getTournamentDto(owner, tournamentName, state, TournamentType.PUBLIC, Language.ES);
-        //TournamentEntity tournamentEntity = tournamentService.mapToEntity(tournamentDto);
-        //tournamentRepository.save(tournamentEntity);
-        return tournamentDto;
+        return getTournamentDto(owner, tournamentName, state, TournamentType.PUBLIC, Language.ES);
     }
 }
 
