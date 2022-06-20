@@ -11,7 +11,6 @@ import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.PunctuationEntity;
-import utn.frba.wordle.model.entity.TournamentEntity;
 import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.model.enums.TournamentType;
@@ -280,6 +279,52 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void aUserCanFindOnlyFinishedTournamentsWithFilters() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        savePublicTournament(owner, "Alpha", State.READY);
+        TournamentDto tournamentAlpha2 = savePrivateTournament(owner, "Alpha2", State.FINISHED);
+        savePrivateTournament(owner, "alPhi$", State.STARTED);
+        savePublicTournament(owner, "Alphabet", State.STARTED);
+        savePublicTournament(owner, "alPhi$$", State.READY);
+        savePublicTournament(owner, "Beta", State.READY);
+        TournamentDto tournamentGamma = savePublicTournament(owner, "Gamma", State.FINISHED);
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .state(State.FINISHED)
+                .userId(owner.getId())
+                .maxResults(100)
+                .pageNumber(1)
+                .build();
+
+        Integer pages = tournamentService.findTournamentsGetTotalPages(filters);
+        List<TournamentDto> tournaments = tournamentService.findTournaments(filters);
+
+        assertThat(tournaments).containsExactlyInAnyOrder(tournamentAlpha2, tournamentGamma);
+        assertEquals(pages, 1);
+    }
+
+    @Test
+    public void aUserCanFindOnlyTotalPagesAtFilterFinishedTournaments() {
+        UserDto owner = getUserDto("mail@mail.com", "usernameTest");
+        savePublicTournament(owner, "Alpha", State.READY);
+        savePrivateTournament(owner, "Alpha2", State.FINISHED);
+        savePrivateTournament(owner, "alPhi$", State.STARTED);
+        savePublicTournament(owner, "Alphabet", State.STARTED);
+        savePublicTournament(owner, "alPhi$$", State.READY);
+        savePublicTournament(owner, "Beta", State.READY);
+        savePublicTournament(owner, "Gamma", State.FINISHED);
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .state(State.FINISHED)
+                .userId(owner.getId())
+                .maxResults(100)
+                .pageNumber(1)
+                .build();
+
+        Integer pages = tournamentService.findTournamentsGetTotalPages(filters);
+
+        assertEquals(pages, 1);
+    }
+
+    @Test
     public void aUserCanFindByTournamentNameWithStartedAndNameFilters() {
         UserDto owner = getUserDto("mail@mail.com", "usernameTest");
         savePublicTournament(owner, "Alpha", State.READY);
@@ -297,8 +342,10 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
                 .build();
 
         List<TournamentDto> tournaments = tournamentService.findTournaments(filters);
+        Integer pages = tournamentService.findTournamentsGetTotalPages(filters);
 
         assertThat(tournaments).containsExactlyInAnyOrder(tournamentAlphis, tournamentAlphabet);
+        assertEquals(pages, 1);
     }
 
     @Test
@@ -829,16 +876,16 @@ public class TournamentServiceIntegrationTest extends AbstractIntegrationTest {
     }
 
     private TournamentDto savePrivateTournament(UserDto owner, String tournamentName, State state) {
-        TournamentDto tournamentDto =  getTournamentDto(owner, tournamentName, state, TournamentType.PRIVATE, Language.ES);
-        TournamentEntity tournamentEntity = tournamentService.mapToEntity(tournamentDto);
-        tournamentRepository.save(tournamentEntity);
+        TournamentDto tournamentDto = getTournamentDto(owner, tournamentName, state, TournamentType.PRIVATE, Language.ES);
+        //TournamentEntity tournamentEntity = tournamentService.mapToEntity(tournamentDto);
+        //tournamentRepository.save(tournamentEntity);
         return tournamentDto;
     }
 
     private TournamentDto savePublicTournament(UserDto owner, String tournamentName, State state) {
         TournamentDto tournamentDto = getTournamentDto(owner, tournamentName, state, TournamentType.PUBLIC, Language.ES);
-        TournamentEntity tournamentEntity = tournamentService.mapToEntity(tournamentDto);
-        tournamentRepository.save(tournamentEntity);
+        //TournamentEntity tournamentEntity = tournamentService.mapToEntity(tournamentDto);
+        //tournamentRepository.save(tournamentEntity);
         return tournamentDto;
     }
 }

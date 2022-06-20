@@ -29,10 +29,9 @@ public class TournamentRepositoryCustomImpl implements TournamentRepositoryCusto
     @Override
     public Integer findTournamentsGetTotalPages(FindTournamentsFilters params){
         cb = entityManager.getCriteriaBuilder();
-        setPredicates(params);
-
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         entityRoot = query.from(TournamentEntity.class);
+        setPredicates(params);
         query.select(cb.count(entityRoot)).where(cb.and(predicates.toArray(new Predicate[0])));
 
         Long totalResults = entityManager.createQuery(query).getSingleResult();
