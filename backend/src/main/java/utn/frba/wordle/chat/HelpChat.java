@@ -25,9 +25,9 @@ public class HelpChat {
     /**
      * Paso hasta el que llegó un usuario dentro del caso de uso.
      */
-    HashMap<Long, Integer> pasoActual = new HashMap<>();
+    final HashMap<Long, Integer> pasoActual = new HashMap<>();
 
-    HashMap<Long, StringBuilder> commandBuilder = new HashMap<>();
+    final HashMap<Long, StringBuilder> commandBuilder = new HashMap<>();
 
     public void processHelp(String[] params, Long chat_id, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
         if(restart){

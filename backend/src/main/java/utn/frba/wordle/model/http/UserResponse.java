@@ -1,7 +1,8 @@
 package utn.frba.wordle.model.http;
 
-import lombok.*;
-import utn.frba.wordle.model.dto.UserDto;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Builder

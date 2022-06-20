@@ -79,10 +79,6 @@ public abstract class AbstractIntegrationTest {
         return getTournamentDto(ownerUser, "Private Tourney", Language.ES);
     }
 
-    protected TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state, Date startDate, Date finishDate) {
-        return getTournamentDto(owner, tournamentName, TournamentType.PUBLIC, Language.ES, startDate, finishDate);
-    }
-
     protected TournamentDto getPublicTournamentDto(UserDto owner, String tournamentName, State state) {
         return getTournamentDto(owner, tournamentName, state, TournamentType.PUBLIC, Language.ES);
     }

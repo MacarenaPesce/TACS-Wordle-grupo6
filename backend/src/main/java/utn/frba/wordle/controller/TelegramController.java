@@ -29,7 +29,7 @@ public class TelegramController {
     @Autowired
     HelpChat helpChat;
 
-    String start = "Wordle ♟\n\n" +
+    final String start = "Wordle ♟\n\n" +
                     "/register - Elija su nombre de usuario\n" +
                     "/help - Generar trampas para Wordle\n" +
                     "/definition - Obtener definicion de una palabra\n" +
@@ -44,7 +44,7 @@ public class TelegramController {
     /**
      * Caso de uso en el que se encuentra el usuario.
      */
-    HashMap<Long, String> casoActual = new HashMap<>(); //todo debe tener algun tipo de proteccion contra concurrencia? esta cache en forma de array
+    final HashMap<Long, String> casoActual = new HashMap<>(); //todo debe tener algun tipo de proteccion contra concurrencia? esta cache en forma de array
 
     @PostMapping("/")
     public ResponseEntity<String> postUpdate(@RequestBody Update update) throws IOException, URISyntaxException {

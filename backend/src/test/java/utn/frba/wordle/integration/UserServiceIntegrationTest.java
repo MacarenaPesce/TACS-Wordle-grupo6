@@ -2,14 +2,12 @@ package utn.frba.wordle.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.service.UserService;
 
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class UserServiceIntegrationTest extends AbstractIntegrationTest {
