@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.HelpDto;
+import utn.frba.wordle.model.enums.ErrorMessages;
 import utn.frba.wordle.model.http.HelpRequest;
 import utn.frba.wordle.model.http.HelpResponse;
 import utn.frba.wordle.model.enums.Language;
@@ -59,7 +60,7 @@ public class HelpController {
         String solution = helpRequestDto.getSolution().replaceAll("[^A-Za-z_]+", "").toLowerCase();
 
         if( !(solution.length() == 5 || solution.length() == 0)){
-            throw new BusinessException("solution '"+solution+"' can not have a length of "+solution.length());
+            throw new BusinessException(String.format(ErrorMessages.INCORRECT_SOLUTION_LENGHT.getDescription(), solution, solution.length()));
         }
 
         //remove duplicates

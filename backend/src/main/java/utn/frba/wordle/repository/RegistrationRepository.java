@@ -24,4 +24,9 @@ public interface RegistrationRepository extends CrudRepository<RegistrationEntit
             "where r.tournament.id = :tourneyId \n" +
             "and r.daysPlayed < :tournamentDuration")
     List<RegistrationEntity> getOutdatedRegistrationsByTournament(Long tourneyId, Long tournamentDuration);
+
+    @Query(value = "select r from RegistrationEntity r \n" +
+            "where r.tournament.id = :tournamentId \n" +
+            "and r.user.id = :userId")
+    RegistrationEntity findByUserIdAndTournamentId(Long userId, Long tournamentId);
 }

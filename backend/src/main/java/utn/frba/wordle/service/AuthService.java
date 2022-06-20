@@ -5,19 +5,20 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.exception.BusinessException;
-import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.UserEntity;
+import utn.frba.wordle.model.enums.ErrorMessages;
+import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.security.UserSession;
 
-import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.Date;
+
+import static utn.frba.wordle.model.enums.ErrorMessages.MAIL_IN_USE;
 
 @Service
 @NoArgsConstructor
@@ -60,7 +61,7 @@ public class AuthService {
 
         userEntity = userService.findUserByEmail(email.toLowerCase());
         if(userEntity != null){
-            throw new BusinessException("El mail ingresado ya se ecuentra en uso");
+            throw new BusinessException(MAIL_IN_USE);
         }
 
         UserDto userDto = userService.createUser(username, password, email);
@@ -74,7 +75,7 @@ public class AuthService {
         } else {
             UserEntity userEntity = userService.findUserByUsernameAndPassword(username.toLowerCase(), password);
             if (userEntity == null) {
-                throw new BusinessException("Combinación de usuario y contraseña inválidos");
+                throw new BusinessException(ErrorMessages.INVALID_USER_AND_PASSWORD);
             }
             //userService.updateLoginDate(userEntity);
             return getSessionDto(userEntity);

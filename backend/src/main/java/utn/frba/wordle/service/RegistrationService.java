@@ -68,6 +68,12 @@ public class RegistrationService {
         registrationRepository.save(entity);
     }
 
+    public boolean theUserIsRegisteredOnTournament(String username, Long tournamentId) {
+        UserEntity userEntity = userRepository.findByUsername(username);
+        RegistrationEntity entity = registrationRepository.findByUserIdAndTournamentId(userEntity.getId(), tournamentId);
+        return entity != null;
+    }
+
     public RegistrationDto mapToDto(RegistrationEntity entity) {
         ArrayList<PunctuationEntity> punctuations = new ArrayList<>();
         if(entity.getPunctuations()!=null){

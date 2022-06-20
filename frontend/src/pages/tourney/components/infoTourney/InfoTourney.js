@@ -10,7 +10,7 @@ import AuthService from "../../../../service/AuthService";
 
 
 export default function InfoTourney() {
-  let { id } = useParams();
+  let { id } = useParams(); //id del torneo
   const [tourney, setTourney] = useState({owner: ""});
   const [ranking, setRanking] = useState({punctuations: []});
   const [members, setMembers] = useState({members: []});
@@ -24,15 +24,18 @@ export default function InfoTourney() {
   const [puntuacion, setPuntuacion] = useState([]);
   const [puntaje, setPuntaje] = useState(0);
 
+  //para validar si el user es parte del torneo
+  let userId = parseInt(localStorage.getItem("userId"));
+  const [inTourney, setInTourney] = useState(false);
+
   const getTourney=() =>{
     TourneyService.getTournamentFromId(id)
     .then(response => {
       setTourney(response.data);
-      console.log('Response de torneo obtenida: ')
-      console.log(response.data)
+      //console.log('Response de torneo obtenida: ')
+      //console.log(response.data)
     })
     .catch(error => {
-      console.log(error)
       Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
     })
   }
@@ -41,11 +44,10 @@ export default function InfoTourney() {
     TourneyService.getRanking(id)
     .then(response => {
       setRanking(response.data);
-      console.log('Response de ranking obtenida: ')
-      console.log(response.data)
+      //console.log('Response de ranking obtenida: ')
+      //console.log(response.data)
     })
     .catch(error => {
-      console.log(error)
       Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
     })
   }
@@ -54,11 +56,14 @@ export default function InfoTourney() {
     TourneyService.getMembers(id)
     .then(response => {
       setMembers(response.data);
-      console.log('Response de Members obtenida: ')
-      console.log(response.data)
+      //console.log('Response de Members obtenida: ', response.data)
+      let usersIds = response.data.members.map((user) => user.id)
+      //console.log("members ids: ",usersIds)
+      //console.log("my user: ", userId);
+      //console.log("members includes: ",usersIds.includes(userId))
+      setInTourney(usersIds.includes(userId));
     })
     .catch(error => {
-      console.log(error)
       Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
     })
   }
@@ -67,11 +72,10 @@ export default function InfoTourney() {
     TourneyService.getMyScore(id)
     .then(response => {
       setMyScore(response.data);
-      console.log('Response de MyScore obtenida: ')
-      console.log(response.data)
+      //console.log('Response de MyScore obtenida: ')
+      //console.log(response.data)
     })
     .catch(error => {
-      console.log(error)
       Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
     })
   }    
@@ -80,13 +84,15 @@ export default function InfoTourney() {
     getTourney();
     getRanking();
     getMember();
-    getMyScore();
+    console.log("esta en el torneo:",inTourney);
+    if(inTourney){
+      getMyScore();
+    }
   }
     
   useEffect(() => {
     loadData();
     setPuntuacion(ranking.punctuations);
-    console.log("torneo actual:",tourney);
     validarToken();
   }, []);
   
@@ -97,7 +103,6 @@ export default function InfoTourney() {
             console.log('Response del ping: ' + response.status)
         })
         .catch(error => {
-            console.log(error)
             Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
         })
     }
@@ -191,10 +196,13 @@ export default function InfoTourney() {
                         <td>Creador: </td>
                         <td>{tourney.owner.username}</td>
                       </tr>
-                      <tr>
-                        <td>Puntaje: {myScore.punctuation}</td>
-                        <td>Puesto: {myScore.position}</td>
-                      </tr>
+                      {inTourney ?
+                        (<tr>
+                            <td>Puntaje: {myScore.punctuation}</td>
+                            <td>Puesto: {myScore.position}</td>
+                          </tr>):
+                        (<div></div>)
+                      }
                       <tr>
                         <td>Integrantes: {members.members.length}</td>
                         <td>
