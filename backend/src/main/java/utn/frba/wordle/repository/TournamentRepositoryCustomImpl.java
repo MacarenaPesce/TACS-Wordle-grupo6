@@ -48,7 +48,6 @@ public class TournamentRepositoryCustomImpl implements TournamentRepositoryCusto
         CriteriaQuery<TournamentEntity> query = cb.createQuery(TournamentEntity.class);
         entityRoot = query.from(TournamentEntity.class);
         setPredicates(params);
-
         query.select(entityRoot).where(cb.and(predicates.toArray(new Predicate[0])));
 
         return entityManager.createQuery(query)
@@ -58,6 +57,9 @@ public class TournamentRepositoryCustomImpl implements TournamentRepositoryCusto
     }
 
     private void setPredicates(FindTournamentsFilters params) {
+        if(entityRoot==null){
+            throw new RuntimeException("EntityRoot not set!");
+        }
         predicates = new ArrayList<>();
 
         addPredicateCaseInsensitive(params.getName());
