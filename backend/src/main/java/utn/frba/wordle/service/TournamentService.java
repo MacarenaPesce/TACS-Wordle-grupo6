@@ -238,7 +238,18 @@ public class TournamentService {
     }
 
     public Punctuation getScoreFromUser(Long tournamentId, String username) {
+        TournamentEntity tournamentEntity = tournamentRepository.findById(tournamentId).orElse(null);
+
+        if (tournamentEntity == null) {
+            throw new BusinessException(TOURNAMENT_DONT_EXISTS);
+        }
+
         updateTournamentScores(tournamentId);
+
+        if(!registrationService.theUserIsRegisteredOnTournament(username, tournamentId)){
+            throw new BusinessException(USER_IS_NOT_MEMBER_OF_TOURNAMENT);
+        }
+
         return mapRankingToDto(rankingRepository.findScore(tournamentId, username));
     }
 
