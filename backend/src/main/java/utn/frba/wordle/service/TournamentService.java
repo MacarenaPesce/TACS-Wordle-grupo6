@@ -1,6 +1,7 @@
 package utn.frba.wordle.service;
 
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,8 @@ import utn.frba.wordle.repository.RankingRepository;
 import utn.frba.wordle.repository.TournamentRepository;
 import utn.frba.wordle.repository.TournamentRepositoryCustomImpl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +48,7 @@ public class TournamentService {
     @Autowired
     PunctuationService punctuationService;
 
+    @SneakyThrows
     @Transactional
     public TournamentDto create(TournamentDto dto, Long userId) {
 
@@ -58,9 +62,14 @@ public class TournamentService {
         if (existingActiveTournament != null) {
             throw new BusinessException("There is already an active Tournament with this name.");
         }
+        Date startDate = parseStartDate(dto.getStart());
+        Date finishDate = parseFinishDate(dto.getFinish());
+
         TournamentEntity newTournament = mapToEntity(dto);
         newTournament.setRegistrations(new HashSet<>());
         newTournament.setOwner(owner);
+        newTournament.setStart(startDate);
+        newTournament.setFinish(finishDate);
         newTournament = tournamentRepository.save(newTournament);
 
         addMember(userId, newTournament.getId(), userId);
@@ -246,6 +255,24 @@ public class TournamentService {
                 .position(entity.getPosition())
                 .submittedScoreToday(scoreSubmittedToday)
                 .build();
+    }
+
+    private Date parseStartDate(Date date) throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return sdf.parse(sdf.format(calendar.getTime()));
+    }
+
+    public Date parseFinishDate(Date date) throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 1);
+        calendar.add(Calendar.SECOND, -1);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return sdf.parse(sdf.format(calendar.getTime()));
     }
 
     private Boolean hasSubmittedScoreToday(RankingEntity rankingEntity) {

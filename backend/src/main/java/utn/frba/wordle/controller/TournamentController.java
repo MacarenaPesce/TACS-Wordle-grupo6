@@ -77,16 +77,13 @@ public class TournamentController {
                                                      @RequestBody CreateTournamentRequest request) {
         logger.info("Method: create - Request: token={}, request={}", token, request);
 
-        Date startDate = parseStartDate(request.getStart());
-        Date finishDate = parseFinishDate(request.getFinish());
-
         Session session = AuthService.getSession(token);
         TournamentDto newTournament = TournamentDto.builder()
                 .language(request.getLanguage())
                 .name(request.getName())
                 .type(request.getType())
-                .start(startDate)
-                .finish(finishDate)
+                .start(request.getStart())
+                .finish(request.getFinish())
                 .build();
 
         TournamentResponse response = buildResponse(tournamentService.create(newTournament, session.getUserId()));
@@ -331,27 +328,6 @@ public class TournamentController {
         logger.info("Method: findUserTournamentsByStateWithPagination - Response: {}", response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-
-    private Date parseStartDate(Date date) throws ParseException {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return sdf.parse(sdf.format(calendar.getTime()));
-    }
-
-    private Date parseFinishDate(Date date) throws ParseException {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 20);
-        calendar.set(Calendar.AM_PM, Calendar.PM);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return sdf.parse(sdf.format(calendar.getTime()));
     }
 
     public TournamentResponse buildResponse(TournamentDto dto) {
