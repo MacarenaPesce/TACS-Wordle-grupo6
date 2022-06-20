@@ -1,5 +1,6 @@
 package utn.frba.wordle.controller;
 
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,9 @@ import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.TournamentService;
 
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -68,18 +71,22 @@ public class TournamentController {
     }
 
 
+    @SneakyThrows
     @PostMapping
     public ResponseEntity<TournamentResponse> create(@RequestHeader("Authorization") String token,
                                                      @RequestBody CreateTournamentRequest request) {
         logger.info("Method: create - Request: token={}, request={}", token, request);
+
+        Date startDate = parseStartDate(request.getStart());
+        Date finishDate = parseFinishDate(request.getFinish());
 
         Session session = AuthService.getSession(token);
         TournamentDto newTournament = TournamentDto.builder()
                 .language(request.getLanguage())
                 .name(request.getName())
                 .type(request.getType())
-                .start(request.getStart())
-                .finish(request.getFinish())
+                .start(startDate)
+                .finish(finishDate)
                 .build();
 
         TournamentResponse response = buildResponse(tournamentService.create(newTournament, session.getUserId()));
@@ -324,6 +331,27 @@ public class TournamentController {
         logger.info("Method: findUserTournamentsByStateWithPagination - Response: {}", response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    private Date parseStartDate(Date date) throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return sdf.parse(sdf.format(calendar.getTime()));
+    }
+
+    private Date parseFinishDate(Date date) throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 20);
+        calendar.set(Calendar.AM_PM, Calendar.PM);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return sdf.parse(sdf.format(calendar.getTime()));
     }
 
     public TournamentResponse buildResponse(TournamentDto dto) {
