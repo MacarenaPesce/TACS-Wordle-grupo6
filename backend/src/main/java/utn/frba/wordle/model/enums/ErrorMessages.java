@@ -14,7 +14,8 @@ public enum ErrorMessages {
     USER_ALREADY_JOINED_TOURNAMENT("El usuario ya se encuentra unido al torneo."),
     CANNOT_JOIN_PRIVATE_TOURNAMENT("Sólo puedes ingresar a un torneo privado si el dueño te agrega."),
     USER_ALREADY_MEMBER_OF_TOURNAMENT("El usuario %s ya se encuentra agregado al torneo %s"),
-    INCORRECT_SOLUTION_LENGHT("La solución %s no puede tener la longitud %s");
+    INCORRECT_SOLUTION_LENGHT("La solución %s no puede tener la longitud %s"),
+    USER_IS_NOT_MEMBER_OF_TOURNAMENT("El usuario no es miembro del torneo solicitado");
     private final String description;
 
     ErrorMessages(String description) {

@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import utn.frba.wordle.model.entity.UserEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
@@ -30,4 +31,7 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     @Query(value = "SELECT count(*) FROM wordle.user u WHERE u.username like %:username%", nativeQuery = true)
     Integer findByNameTotalPages(String username);
+
+    @Query(value = "SELECT * FROM wordle.user u WHERE u.username = :username", nativeQuery = true)
+    UserEntity findByUsername(String username);
 }
