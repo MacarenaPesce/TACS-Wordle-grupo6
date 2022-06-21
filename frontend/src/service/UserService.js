@@ -1,9 +1,9 @@
 import axios from "axios";
 import authHeader from "./AuthHeader";
 
-const API_URL = "http://localhost:8080/api/test/";
-const API_USERS = "http://localhost:8080/api/users/";
-const API = "http://localhost:8080/api/";
+const API_URL = process.env.REACT_APP_API_URL + "test/";
+const API_USERS = process.env.REACT_APP_API_URL + "users/";
+const API = process.env.REACT_APP_API_URL + "";
 
 const getPublicContent = () => {
   return axios.get(API_URL + "all");
