@@ -4,6 +4,18 @@ services:
 #todo cambiar para levantar todo de 0 en lugar de usar los Dockerfile
 #acordarse de usar docker-compose build antes de docker-compose up
 
+
+  mysql:
+    container_name: test-mysql
+    image: mysql:8.0
+    ports:
+      - 3333:3306
+    volumes:
+      - mysql-data-db-01:/var/lib/mysql
+    environment: 
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordle
+
   backend:
     build:
         context: ./backend
@@ -21,22 +33,11 @@ services:
         dockerfile: Dockerfile
     ports:
       - 3000:3000
-
-
-  mysql:
-    container_name: test-mysql
-    image: mysql:8.0
-    ports:
-      - 3333:3306
-    volumes:
-      - mysql-data-db-01:/var/lib/mysql
-    environment: 
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: wordle
-
+    
 
 volumes:
   mysql-data-db-01:
   
+    
   
   
