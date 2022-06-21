@@ -17,7 +17,7 @@ RUN npm install
 COPY . ./
 RUN npm run build
 RUN npm config set registry http://registry.npmjs.org/
-#RUN npm install -g serve
+RUN npm install -g serve
 
 
 # start app
