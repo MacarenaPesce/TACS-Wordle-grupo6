@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.3"
 
 services:
 #todo cambiar para levantar todo de 0 en lugar de usar los Dockerfile
