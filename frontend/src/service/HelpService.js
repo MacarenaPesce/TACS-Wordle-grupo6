@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api/help/";
+const API_URL = process.env.REACT_APP_API_URL + "help/";
 
 export default class HelpService {
 

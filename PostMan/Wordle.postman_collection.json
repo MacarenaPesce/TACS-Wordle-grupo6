@@ -78,7 +78,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/auth/register",
+					"raw": process.env.REACT_APP_API_URL + "auth/register",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -137,7 +137,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/auth/login",
+					"raw": process.env.REACT_APP_API_URL + "auth/login",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -168,7 +168,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/auth/logout",
+					"raw": process.env.REACT_APP_API_URL + "auth/logout",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -571,7 +571,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/help/EN/",
+					"raw": process.env.REACT_APP_API_URL + "help/EN/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -617,7 +617,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/dictionary/EN/tabler",
+					"raw": process.env.REACT_APP_API_URL + "dictionary/EN/tabler",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -642,7 +642,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/dictionary/EN/portfolio",
+					"raw": process.env.REACT_APP_API_URL + "dictionary/EN/portfolio",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -667,7 +667,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/dictionary/ES/portfolio",
+					"raw": process.env.REACT_APP_API_URL + "dictionary/ES/portfolio",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -692,7 +692,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/dictionary/ES/caqui",
+					"raw": process.env.REACT_APP_API_URL + "dictionary/ES/caqui",
 					"protocol": "http",
 					"host": [
 						"localhost"

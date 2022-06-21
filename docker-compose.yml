@@ -7,14 +7,16 @@ services:
 
   mysql:
     container_name: test-mysql
-    image: mysql:8.0
+    image: docker.io/bitnami/mysql:8.0
     ports:
       - 3333:3306
     volumes:
       - mysql-data-db-01:/var/lib/mysql
     environment: 
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: wordle
+      MYSQL_DATABASE: 'wordle'
+      MYSQL_ROOT_PASSWORD: 'root'
+    expose:
+      - '3333'
 
   backend:
     build:
@@ -23,6 +25,8 @@ services:
     ports:
       - 8080:8080
     restart: on-failure
+    expose:
+      - '8080'
     
 #otra opcion para el retry del backend (esperar a que levante la bd para crear las tablas):
 # https://stackoverflow.com/questions/52322800/docker-compose-how-to-wait-for-other-service-to-be-ready/64921431#64921431
