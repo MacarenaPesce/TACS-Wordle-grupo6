@@ -36,3 +36,19 @@ tfoot{
 }
 
 /* TODO: PONER TODOS LOS OTROS CSS ACA POR FAVOR!!!!!!*/
+
+.espiner3{
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    left: 15%;
+    margin-top: 20px;
+}
+
+.espiner4{
+    width: 3rem;
+    height: 3rem;
+    position: fixed;
+    left: 30%;
+    margin-top: 20px;
+}

@@ -18,6 +18,7 @@ export default function InfoTourney() {
   
   const [sessionError, setSessionError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   //se usan para los filtros
   const [username, setUsername] = useState('');
@@ -40,15 +41,18 @@ export default function InfoTourney() {
     })
   }
   
-  const getRanking =() => {      
+  const getRanking =() => {
+    setLoading(true);
     TourneyService.getRanking(id)
     .then(response => {
       setRanking(response.data);
       //console.log('Response de ranking obtenida: ')
       //console.log(response.data)
+      setLoading(false);
     })
     .catch(error => {
       Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
+      setLoading(false);
     })
   }
   
@@ -147,7 +151,16 @@ export default function InfoTourney() {
     let month = (fecha.getMonth() +1)>10?(fecha.getMonth() +1) : '0'+(fecha.getMonth() +1)  ; 
     let year = fecha.getFullYear();
     return day + '/' + month + '/' + year ;
-  };    
+  };
+
+  const spinner = (<React.Fragment>
+                    <div className="spinner-border espiner1" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <div className="spinner-grow espiner2" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  </React.Fragment>);
 
     return (
       <div>
@@ -277,6 +290,10 @@ export default function InfoTourney() {
                               }
                     </tbody>
                   </table>
+
+                  {loading &&
+                      spinner}
+
                 </div>
               </div>
             </div>

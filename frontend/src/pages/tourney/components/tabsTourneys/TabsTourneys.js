@@ -17,6 +17,7 @@ export default class TabsTourneys extends Component{
             sessionError: false,
             errorMessage: '',
             name:'',
+            loading: false
         }
     }
 
@@ -39,6 +40,7 @@ export default class TabsTourneys extends Component{
 
     submitTourneys() {
         console.log("se pide actualizar la lista de torneos")
+        this.setState({loading: true})
         UserService.getMyTourneys(this.props.nombreTabla) //mis torneos es el nombre del metodo, para otra tabla es otro metodo
             .then(response => {
                 if(this.props.nombreTabla == 'Publicos'){
@@ -52,10 +54,12 @@ export default class TabsTourneys extends Component{
                 if(JSON.stringify(this.state.myTourneys[0]) === undefined){
                     //todo: mostrar mensaje de tabla vacia
                 }
+                this.setState({loading: false})
             })
             .catch(error => {
                 console.log(error)
                 Handler.handleSessionError(this, error)
+                this.setState({loading: false})
             })
     }
 
@@ -99,7 +103,51 @@ export default class TabsTourneys extends Component{
                     </td>
                 </tr>
             );
-        }     
+        }
+
+
+        const tabla = (<div className="table-responsive table table-hover table-bordered results">
+                <table className="table table-hover table-bordered">
+                    <thead className="bill-header cs">
+                    <tr>
+                        <th id="trs-hd-1" className="col-lg-1"> N°</th>
+                        <th id="trs-hd-2" className="col-lg-2"> Nombre</th>
+                        <th id="trs-hd-3" className="col-lg-1"> Tipo</th>
+                        <th id="trs-hd-4" className="col-lg-1"> Lenguaje</th>
+                        <th id="trs-hd-8" className="col-lg-1"> Estado</th>
+                        <th id="trs-hd-5" className="col-lg-2"> Inicio</th>
+                        <th id="trs-hd-6" className="col-lg-2"> Fin</th>
+                        <th id="trs-hd-7" className="col-lg-1"> Creador</th>
+                        <th id="trs-hd-8" className="col-lg-1"> Acciones</th>
+                    </tr>
+                    </thead>
+
+                    {<tbody>
+                    {listTourneys}
+                    </tbody>}
+
+                </table>
+            </div>
+        );
+
+
+        const spinner = (
+            <div>
+                <div className="spinner-border espiner3" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+                <div className="spinner-grow espiner4" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        );
+
+        let display;
+        if (this.state.loading) {
+            display = spinner;
+        } else {
+            display = tabla;
+        }
 
         return (
             <div className="col-md-12 search-table-col">
@@ -137,28 +185,9 @@ export default class TabsTourneys extends Component{
                     </div>
                 </div>      
                 {/*------------------------------------------------------------------ */}
-                <div className="table-responsive table table-hover table-bordered results">
-                    <table className="table table-hover table-bordered">
-                        <thead className="bill-header cs">
-                            <tr>
-                                <th id="trs-hd-1" className="col-lg-1"> N°</th>
-                                <th id="trs-hd-2" className="col-lg-2"> Nombre</th>
-                                <th id="trs-hd-3" className="col-lg-1"> Tipo</th>
-                                <th id="trs-hd-4" className="col-lg-1"> Lenguaje</th>
-                                <th id="trs-hd-8" className="col-lg-1"> Estado</th>
-                                <th id="trs-hd-5" className="col-lg-2"> Inicio</th>
-                                <th id="trs-hd-6" className="col-lg-2"> Fin</th>
-                                <th id="trs-hd-7" className="col-lg-1"> Creador</th>
-                                <th id="trs-hd-8" className="col-lg-1"> Acciones</th>
-                            </tr>
-                        </thead>
 
-                        {<tbody >
-                        {listTourneys}
-                        </tbody>}
 
-                    </table>
-                </div>
+                {display}
                 {/*------------------------------------------------------------------ */}
             </div>
         );

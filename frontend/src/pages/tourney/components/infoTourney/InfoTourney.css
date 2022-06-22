@@ -83,3 +83,19 @@
 .searchPunctuation{
   width: 33%;
 }
+
+.espiner1{
+  width: 3rem;
+  height: 3rem;
+  position: fixed;
+  right: 40%;
+  margin-top: 20px;
+}
+
+.espiner2{
+  width: 3rem;
+  height: 3rem;
+  position: fixed;
+  right: 16%;
+  margin-top: 20px;
+}
