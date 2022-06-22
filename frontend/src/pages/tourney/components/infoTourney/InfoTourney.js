@@ -162,6 +162,8 @@ export default function InfoTourney() {
                     </div>
                   </React.Fragment>);
 
+    const noHajugado = <i style={{color: "red", fontSize: 10}}>(no ha cargado sus resultados del dia)</i>
+
     return (
       <div>
         <header className='NavTourney'>
@@ -276,14 +278,14 @@ export default function InfoTourney() {
                                 <tr key={line.user}>
                                     <td> {line.position} </td>
                                     <td> {line.user}</td>
-                                    <td> {line.punctuation}</td>
+                                    <td> {line.punctuation} {!line.submittedScoreToday && noHajugado}</td>
                                 </tr>
                                 ))
                               ):(ranking.punctuations.map((line) =>(
                                 <tr key={line.user}>
                                     <td> {line.position} </td>
                                     <td> {line.user}</td>
-                                    <td> {line.punctuation}</td>
+                                    <td> {line.punctuation} {!line.submittedScoreToday && noHajugado}</td>
                                 </tr>
                                 ))
                               )
