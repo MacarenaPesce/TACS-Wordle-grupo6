@@ -5,11 +5,11 @@
 
 use wordle;
 
--- fecha inicial a partir de la cual cargar puntajes y crear torneos, fecha final hasta la cual crear torneos, y cantidad de usuarios a registrar por torneo
+-- fecha inicial a partir de la cual cargar puntajes y crear torneos, fecha final hasta la cual crear torneos, cantidad de usuarios, cantidad de torneos, y cantidad de usuarios a registrar por torneo
 DROP TABLE IF EXISTS `opciones`;
-CREATE TEMPORARY TABLE opciones(dia_pri date, dia_ulti date, cant_users int);
+CREATE TEMPORARY TABLE opciones(dia_pri date, dia_ulti date, limit_users int, limit_tourneys int, cant_registros int);
 INSERT INTO opciones VALUES 
-(DATE_SUB(curdate(), INTERVAL 1 MONTH), DATE_ADD(curdate(), INTERVAL 1 MONTH), 16);
+(DATE_SUB(curdate(), INTERVAL 1 MONTH), DATE_ADD(curdate(), INTERVAL 1 MONTH), 800, 160, 16);
 
 /*
 GENERAR USUARIOS
@@ -24,10 +24,12 @@ DELIMITER //
 CREATE PROCEDURE generate_users()
 BEGIN
 
+	DECLARE cant_users int DEFAULT (select limit_users from opciones);
+	
 --	IF _username not in (select username from user) THEN
 --  END IF;
 
-	  insert into user(username,password,email) SELECT username, md5(username), concat(username,'@wordle.com') from temp_users;
+	  insert into user(username,password,email) SELECT username, md5(username), concat(username,'@wordle.com') from temp_users limit cant_users;
 
 END //
 DELIMITER ;
@@ -106,7 +108,8 @@ BEGIN
   DECLARE fecha_1 date;
   DECLARE fecha_2 date;
   DECLARE random_user bigint;
-  DECLARE cur CURSOR FOR SELECT * FROM temp_tourneys;
+  DECLARE cant_tourneys int DEFAULT (select limit_tourneys from opciones);
+  DECLARE cur CURSOR FOR SELECT * FROM temp_tourneys limit cant_tourneys;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
   OPEN cur;
@@ -242,7 +245,7 @@ BEGIN
   DECLARE lang char(2);
   DECLARE inicio date;
   DECLARE fin date;
-  DECLARE cant_users int DEFAULT (select cant_users from opciones);
+  DECLARE cant_users int DEFAULT (select cant_registros from opciones);
   DECLARE cur CURSOR FOR SELECT id FROM tournament;
   DECLARE cur2 CURSOR FOR SELECT * FROM torneo_usuario;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
