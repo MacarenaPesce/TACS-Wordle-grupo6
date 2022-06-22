@@ -10,6 +10,7 @@ import utn.frba.wordle.service.HelpService;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,59 +22,142 @@ public class HelpChat {
     @Autowired
     HelpService helpService;
 
-    public void processHelp(String[] params, Long chat_id) throws IOException, URISyntaxException {
-        String sintaxis = "Sintaxis: \n/help es|en _|amarillas _|grises _a_a_";
-        if(params.length != 5 || !params[1].matches("es|en") || !params[2].matches("_|[A-Za-z]+") || !params[3].matches("_|[A-Za-z]+") || !params[4].matches("[A-Za-z_]{5}")){
-            sender.sendMessage(sintaxis, chat_id);
-            return;
+    /**
+     * Paso hasta el que llegó un usuario dentro del caso de uso.
+     */
+    final HashMap<Long, Integer> pasoActual = new HashMap<>();
+
+    final HashMap<Long, StringBuilder> commandBuilder = new HashMap<>();
+
+    public void processHelp(String[] params, Long chat_id, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
+        if(restart){
+            casoActual.put(chat_id, "help");
+            pasoActual.put(chat_id, 0);
+            commandBuilder.remove(chat_id);
         }
 
-        String yellow = params[2].toLowerCase();
-        String grey = params[3].toLowerCase();
-        String solution = params[4].toLowerCase();
+        Integer valor = pasoActual.get(chat_id);
+        if(valor == null || valor == 0){ // comando completo
 
-        if(yellow.equals("_"))
-            yellow = "";
-        if(grey.equals("_"))
-            grey = "";
-
-        //remove duplicates     //todo juntar codigo con helpController
-        yellow = Arrays.stream(yellow.split(""))
-                .distinct()
-                .collect(Collectors.joining());
-        grey = Arrays.stream(grey.split(""))
-                .distinct()
-                .collect(Collectors.joining());
-
-        HelpDto dto = HelpDto.builder()
-                .solution(solution)
-                .grey(grey)
-                .yellow(yellow)
-                .build();
-
-        Language language = null;
-        if(params[1].equals("es"))
-            language = Language.ES;
-        if(params[1].equals("en"))
-            language = Language.EN;
-
-        Set<String> possibleSolutions = helpService.solution(dto, language);
-
-        String str;
-        if(possibleSolutions.size() > 0) {
-            StringBuilder strbul = new StringBuilder();
-            for (String string : possibleSolutions) {
-                strbul.append(string);
-                strbul.append("\n");
+            String sintaxis = "Sintaxis: \n/help es|en _|amarillas _|grises _a_a_";
+            if(params[0].equals("")){
+                pasoActual.put(chat_id, 1);
+                sender.sendMessage("Obtenga ayuda para resolver un wordle.\n\nOpcion 1: vuelva a escribir el comando completo:\n"+sintaxis+"\n\n Opcion 2: envie solo el primer parametro.\n\n En criollo: elija el idioma: es o en", chat_id);
+                return;
             }
-            //just for removing last comma
-            strbul.setLength(strbul.length() - 1);
-            str = strbul.toString();
-        }else {
-            str = "No hay coincidencias";
+
+            if(params.length != 4 || !params[0].matches("es|en") || !params[1].matches("_|[A-Za-z]+") || !params[2].matches("_|[A-Za-z]+") || !params[3].matches("[A-Za-z_]{5}")){
+                sender.sendMessage(sintaxis, chat_id);
+                return;
+            }
+
+            String yellow = params[1].toLowerCase();
+            String grey = params[2].toLowerCase();
+            String solution = params[3].toLowerCase();
+
+            if(yellow.equals("_"))
+                yellow = "";
+            if(grey.equals("_"))
+                grey = "";
+
+            //remove duplicates     //todo juntar codigo con helpController
+            yellow = Arrays.stream(yellow.split(""))
+                    .distinct()
+                    .collect(Collectors.joining());
+            grey = Arrays.stream(grey.split(""))
+                    .distinct()
+                    .collect(Collectors.joining());
+
+            HelpDto dto = HelpDto.builder()
+                    .solution(solution)
+                    .grey(grey)
+                    .yellow(yellow)
+                    .build();
+
+            Language language = null;
+            if(params[0].equals("es"))
+                language = Language.ES;
+            if(params[0].equals("en"))
+                language = Language.EN;
+
+            Set<String> possibleSolutions = helpService.solution(dto, language);
+
+            String str;
+            if(possibleSolutions.size() > 0) {
+                StringBuilder strbul = new StringBuilder();
+                for (String string : possibleSolutions) {
+                    strbul.append(string);
+                    strbul.append("\n");
+                }
+                //just for removing last comma
+                strbul.setLength(strbul.length() - 1);
+                str = strbul.toString();
+            }else {
+                str = "No hay coincidencias";
+            }
+
+            casoActual.remove(chat_id, "help");
+            sender.sendMessage(str, chat_id);
+        }
+        else{ // comando interactive
+            interactive(chat_id, valor, params[0], casoActual);
         }
 
+    }
 
-        sender.sendMessage(str, chat_id);
+    private void interactive(Long chat_id, int step, String message, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
+        String exit = "\n\nEscriba /exit para volver a comenzar";
+        String idioma = "Elija el idioma:\n es|en";
+        String amarillas = "Elija las letras amarillas: _|[A-Za-z]+";
+        String grises = "Elija las letras grises: _|[A-Za-z]+";
+        String solution = "Digame cual es su solucion actual: [A-Za-z_]{5}";
+
+        switch(step){
+            case 1 :    //elegir idioma
+                if(message.equalsIgnoreCase("es") || message.equalsIgnoreCase("en")){
+                    commandBuilder.put(chat_id, new StringBuilder(message.toLowerCase()+" "));
+                    pasoActual.put(chat_id, 2);
+                    sender.sendMessage(amarillas, chat_id);
+                }else{
+                    sender.sendMessage(idioma+exit, chat_id);
+                }
+                break;
+
+            case 2 :    //elegir amarillas
+                if(message.matches("_|[A-Za-z]+")){
+                    commandBuilder.put(chat_id, commandBuilder.get(chat_id).append(message.toLowerCase()).append(" "));
+                    pasoActual.put(chat_id, 3);
+                    sender.sendMessage(grises, chat_id);
+                }else{
+                    sender.sendMessage(amarillas+exit, chat_id);
+                }
+                break;
+
+            case 3 :    //elegir grises
+                if(message.matches("_|[A-Za-z]+")){
+                    commandBuilder.put(chat_id, commandBuilder.get(chat_id).append(message.toLowerCase()).append(" "));
+                    pasoActual.put(chat_id, 4);
+                    sender.sendMessage(solution, chat_id);
+                }else{
+                    sender.sendMessage(grises+exit, chat_id);
+                }
+                break;
+
+            case 4 :    //elegir solution
+                if(message.matches("[A-Za-z_]{5}")){
+                    commandBuilder.put(chat_id, commandBuilder.get(chat_id).append(message.toLowerCase()).append(" "));
+                    //construir mensaje y dar la respuesta
+                    String[] params = commandBuilder.get(chat_id).toString().split("\\s+");
+                    processHelp(params, chat_id, true, casoActual);
+                    sender.sendMessage("Gracias por utilizar Wordle bot 😇🦾", chat_id);
+                }else{
+                    sender.sendMessage(solution+exit, chat_id);
+                }
+                break;
+
+            default :
+                sender.sendMessage("?????????", chat_id);
+        }
+
     }
 }

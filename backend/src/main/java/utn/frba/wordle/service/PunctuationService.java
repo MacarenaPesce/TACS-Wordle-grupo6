@@ -3,12 +3,12 @@ package utn.frba.wordle.service;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.PunctuationEntity;
 import utn.frba.wordle.model.entity.RegistrationEntity;
 import utn.frba.wordle.model.entity.UserEntity;
-import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.repository.PunctuationRepository;
 import utn.frba.wordle.repository.RegistrationRepository;
@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static utn.frba.wordle.model.enums.ErrorMessages.RESULTS_ALREADY_SUBMITTED;
 
 @Service
 @NoArgsConstructor
@@ -44,7 +46,7 @@ public class PunctuationService {
         List<PunctuationEntity> results = punctuationRepository.findTodayResults(userEntity.getId(), now, result.getLanguage());
 
         if(results != null && !results.isEmpty()){
-            throw new BusinessException("The user already submitted his results.");
+            throw new BusinessException(RESULTS_ALREADY_SUBMITTED);
         }
         
         List<RegistrationEntity> registrations = registrationService.getActiveRegistrationsEntityFromUser(userId)

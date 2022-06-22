@@ -1,5 +1,6 @@
 package utn.frba.wordle.controller;
 
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.enums.State;
+import utn.frba.wordle.model.enums.TournamentType;
 import utn.frba.wordle.model.http.*;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.model.pojo.Session;
@@ -20,6 +22,8 @@ import utn.frba.wordle.service.TournamentService;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static utn.frba.wordle.model.enums.ErrorMessages.INVALID_RESULT_VALUE;
 
 @RestController
 @RequestMapping("/api/tournaments")
@@ -31,6 +35,43 @@ public class TournamentController {
 
     private static final Logger logger = LoggerFactory.getLogger(TournamentController.class);
 
+    @GetMapping
+    public ResponseEntity<TournamentsListResponse> findTournaments(@RequestHeader("Authorization") String token,
+                                                                   @RequestParam(required = false) String name,
+                                                                   @RequestParam(required = false) TournamentType type,
+                                                                   @RequestParam(required = false) State state,
+                                                                   @RequestParam(required = false) Integer pageNumber,
+                                                                   @RequestParam(required = false) Integer maxResults){
+
+        logger.info("Method: findTournaments - Request: token={}, " +
+                "name={}, type={}, state={}, pageNumber={}, maxResults={}", token, name, type, state, pageNumber, maxResults);
+        FindTournamentsFilters findTournamentsFilters = FindTournamentsFilters.builder()
+                .name(name)
+                .type(type)
+                .state(state)
+                .pageNumber(pageNumber)
+                .maxResults(maxResults)
+                .build();
+
+        List<TournamentDto> tournamentsDto = tournamentService.findTournaments(findTournamentsFilters);
+        Integer totalPages =  tournamentService.findTournamentsGetTotalPages(findTournamentsFilters);
+
+        List<TournamentResponse> tournaments = tournamentsDto
+                .stream().map(this::buildResponse).collect(Collectors.toList());
+
+        TournamentsListResponse response = TournamentsListResponse.builder()
+                .tournaments(tournaments)
+                .maxResults(maxResults)
+                .pageNumber(pageNumber)
+                .totalPages(totalPages)
+                .build();
+
+        logger.info("Method: findTournaments - Response: {}", response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    @SneakyThrows
     @PostMapping
     public ResponseEntity<TournamentResponse> create(@RequestHeader("Authorization") String token,
                                                      @RequestBody CreateTournamentRequest request) {
@@ -201,7 +242,7 @@ public class TournamentController {
         Session session = AuthService.getSession(token);
 
         if(request.getResult() > 7 || request.getResult() < 1){
-            throw new BusinessException("Solo se pueden cargar resultados del 1 al 7");
+            throw new BusinessException(INVALID_RESULT_VALUE);
         }
 
         ResultDto dto = ResultDto.builder()

@@ -10,7 +10,7 @@ https://docs.google.com/document/d/e/2PACX-1vS850Wxcrs3LThOAQamtTEhG6IEMmebXJxV3
 #### Asociada al proyecto
 https://docs.google.com/document/d/11ClJBshXqy4Gd_h9j42n2G0AOld9yTBFamIOkuuGPr0/edit?usp=sharing
 
-### Deploy
+### Build
 
 #### Requerimientos para buildear el proyecto
 - Tener Docker instalado en su ambiente.
@@ -20,10 +20,10 @@ https://docs.google.com/document/d/11ClJBshXqy4Gd_h9j42n2G0AOld9yTBFamIOkuuGPr0/
 - Ejecutar el siguiente script (de acuerdo a si su ambiente es Windows o Linux)
 
 ###### Entorno Windows:
-Ejecutar script.bat
+- Ejecutar script.bat
 
 ###### Entorno Linux:
-Ejecutar script.sh
+- Ejecutar script.sh
 
 Esperar unos segundos y luego ir a un navegador e ingresar a la dirección: http://localhost:3000
 y la aplicaciòn **Wordle-Helper** se abrirá
@@ -34,20 +34,21 @@ Frontend This project was bootstrapped with [Create React App](https://github.co
 
 http://localhost:3000/
 
+
 ## BACKEND
 ### BD MySQL
 Instancia solo para desarrollo local
 Si aún no tenemos creada la BD localmente:
 
-1- Accedemos a la consola de MySQL (pass: root)
+1. Accedemos a la consola de MySQL (pass: root)
 >mysql -u root
 
-2- Creamos la BD
+2. Creamos la BD
 >CREATE DATABASE wordle;
 
-3- Luego de levantar el proyecto backend, se debe ejecutar el script `backend\src\main\resources\data.sql` sobre la base de datos, en caso de no hacerlo automáticamente.
+3. Luego de levantar el proyecto backend, se debe ejecutar el script `backend\src\main\resources\data.sql` sobre la base de datos, en caso de no hacerlo automáticamente.
 
-4- Cerramos la BD
+4. Cerramos la BD
 >exit;
 
 ### Reporte de Cobertura
@@ -57,36 +58,32 @@ Para ejecutar los tests de la aplicación, y generar el reporte de cobertura, en
 Esto generará el reporte en la carpeta target, el mismo puede verse en el navegador accediendo a:
 > http://localhost:63342/backend/target/site/jacoco-unit-test-coverage-report/index.html
 
-## Telegram
 
-- Crear bot con BotFather y copiar el token
-- Guardar el token en `backend\botToken.txt`
-- Reiniciar el backend
-- Correr ngrok con `ngrok http 8080` y copiar la URL
-- Abrir en el navegador: `https://api.telegram.org/bot<botToken>/setWebhook?url=<URLngrok>/api/telegram/`
-- Escribirle al bot
+## Telegram
+1. Crear bot con BotFather y copiar el token
+2. Guardar el token en `backend\botToken.txt`
+3. Reiniciar el backend
+4. Correr ngrok con `ngrok http 8080` y copiar la URL
+5. Abrir en el navegador: `https://api.telegram.org/bot<botToken>/setWebhook?url=<URLngrok>/api/telegram/`
+6. Escribirle al bot
 
 Hacer visibles los comandos en el menu de comandos del bot:
 - En BotFather, con `/setcommands` crear el `/help` (y los futuros que existan) (o usar el method `setMyCommands` en una request)
 
-## Docker
 
+## Docker
 Las imagenes, redes, volumenes, contenedores necesarios para el despliegue de la aplicación, se generarán automaticamente con la ejecución del script.sh
 
-A continuación algunos comandos básicos: 
+#### Comandos básicos: 
 
-Crear una imagen:
-
+- Crear una imagen:
 docker build -t grupo6/backend .
 docker build -t grupo6/frontend .
 
-Correr la imagen:
-
+- Correr la imagen:
 docker run -d --name backend  -p8080:8080 grupo6/backend
 docker run -d --name frontend -p3000:3000 grupo6/frontend
 
-
-Parar la imagen:
-
+- Parar la imagen:
 docker stop <NAME>
 

@@ -7,7 +7,7 @@
 docker stop test-mysql backend frontend
 docker rm test-mysql backend frontend
 docker network rm mired
-docker volume rm mysql-db-data
+#docker volume rm mysql-db-data		para validar que funciona el script sin tener la bd creada
 
 # Creamos la red mired
 docker network create mired

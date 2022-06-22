@@ -1,6 +1,7 @@
 package utn.frba.wordle.service;
 
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,15 +12,22 @@ import utn.frba.wordle.model.dto.ResultDto;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.*;
+import utn.frba.wordle.model.enums.ErrorMessages;
 import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.model.enums.TournamentType;
+import utn.frba.wordle.model.http.FindTournamentsFilters;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.repository.RankingRepository;
 import utn.frba.wordle.repository.TournamentRepository;
+import utn.frba.wordle.repository.TournamentRepositoryCustomImpl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import static utn.frba.wordle.model.enums.ErrorMessages.*;
 
 @Service
 @NoArgsConstructor
@@ -27,6 +35,9 @@ public class TournamentService {
 
     @Autowired
     TournamentRepository tournamentRepository;
+
+    @Autowired
+    TournamentRepositoryCustomImpl tournamentRepositoryCustom;
 
     @Autowired
     RegistrationService registrationService;
@@ -40,6 +51,7 @@ public class TournamentService {
     @Autowired
     PunctuationService punctuationService;
 
+    @SneakyThrows
     @Transactional
     public TournamentDto create(TournamentDto dto, Long userId) {
 
@@ -51,11 +63,16 @@ public class TournamentService {
         }
         TournamentEntity existingActiveTournament = tournamentRepository.getActiveTournamentsByName(dto.getName());
         if (existingActiveTournament != null) {
-            throw new BusinessException("There is already an active Tournament with this name.");
+            throw new BusinessException(TOURNAMENT_WITH_SAME_NAME_EXISTS);
         }
+        Date startDate = parseStartDate(dto.getStart());
+        Date finishDate = parseFinishDate(dto.getFinish());
+
         TournamentEntity newTournament = mapToEntity(dto);
         newTournament.setRegistrations(new HashSet<>());
         newTournament.setOwner(owner);
+        newTournament.setStart(startDate);
+        newTournament.setFinish(finishDate);
         newTournament = tournamentRepository.save(newTournament);
 
         addMember(userId, newTournament.getId(), userId);
@@ -69,21 +86,21 @@ public class TournamentService {
         TournamentEntity tournamentEntity = tournamentRepository.findById(tourneyID).orElse(null);
 
         if (tournamentEntity == null) {
-            throw new BusinessException("El torneo especificado no existe.");
+            throw new BusinessException(TOURNAMENT_DONT_EXISTS);
         }
         if (!tournamentEntity.getOwner().getId().equals(ownerUserId)) {
-            throw new BusinessException("Solo puedes agregar miembros a un torneo que tu hayas creado.");
+            throw new BusinessException(YOU_ONLY_CAN_ADD_MEMBERS_TO_YOUR_TOURNAMENTS);
         }
 
         UserDto userEntity = userService.findUser(userId);
         if(userEntity == null){
-            throw new BusinessException("El usuario especificado no se encuentra registrado en el sistema");
+            throw new BusinessException(USER_DONT_EXISTS);
         }
 
         List<UserDto> members = userService.getTournamentMembers(tournamentEntity.getId());
         UserDto existingUser = members.stream().filter(member -> member.getUsername().equals(userEntity.getUsername())).findAny().orElse(null); //TODO hacer la busqueda directo en la query a la base de datos?
         if (existingUser != null) {
-            throw new BusinessException("The user '"+userEntity.getUsername()+"' is already a member of the tournament "+tournamentEntity.getName());
+            throw new BusinessException(String.format(ErrorMessages.USER_ALREADY_MEMBER_OF_TOURNAMENT.getDescription(),  userEntity.getUsername(), tournamentEntity.getName()));
         }
 
         RegistrationEntity registrationEntity = registrationService.addMember(tournamentEntity.getId(), userEntity.getId(), new Date());
@@ -101,10 +118,10 @@ public class TournamentService {
         TournamentEntity tournamentEntity = tournamentRepository.findById(tournamentId).orElse(null);
 
         if (tournamentEntity == null) {
-            throw new BusinessException("The specified Tournament doesn't exist.");
+            throw new BusinessException(TOURNAMENT_DONT_EXISTS);
         }
         if (tournamentEntity.getType().equals(TournamentType.PRIVATE)) {
-            throw new BusinessException("You can not join a PRIVATE tournament.");
+            throw new BusinessException(CANNOT_JOIN_PRIVATE_TOURNAMENT);
         }
 
         List<RegistrationDto> registrations = registrationService.getRegistrationsFromUser(userId);
@@ -112,7 +129,7 @@ public class TournamentService {
                             .filter(registrationDto -> registrationDto.getTournamentId().equals(tournamentId))
                             .anyMatch(m -> m.getUser().getId().equals(userId));
         if(userAlreadyJoined){
-            throw new BusinessException("The user already joined the Tournament.");
+            throw new BusinessException(ErrorMessages.USER_ALREADY_JOINED_TOURNAMENT);
         }
 
         RegistrationEntity registrationEntity = registrationService.addMember(tournamentEntity.getId(), userId, new Date());
@@ -127,6 +144,14 @@ public class TournamentService {
         return mapToDto(tournaments);
     }
 
+    public List<TournamentDto> findTournaments(FindTournamentsFilters filters) {
+        List<TournamentEntity> tournaments = tournamentRepositoryCustom.findTournaments(filters);
+        return mapToDto(tournaments);
+    }
+
+    public Integer findTournamentsGetTotalPages(FindTournamentsFilters filters) {
+        return tournamentRepositoryCustom.findTournamentsGetTotalPages(filters);
+    }
 
     public Integer findPublicActiveTournamentsTotalPages(String name, Integer maxResults) {
         Integer totalResults = tournamentRepository.findPublicActiveTournamentsByNameTotalPages(name.toLowerCase());
@@ -184,22 +209,14 @@ public class TournamentService {
     }
 
     public List<TournamentDto> findUserTournamentsByStateWithPagination(Long userId, State state, Integer pageNumber, Integer maxResults) {
-        List<TournamentEntity> entities;
-        Integer offset = (pageNumber - 1) * maxResults;
-        switch (state){
-            case READY:
-                entities = tournamentRepository.findUserReadyTournaments(userId, offset, maxResults);
-                break;
-            case STARTED:
-                entities = tournamentRepository.findUserStartedTournaments(userId, offset, maxResults);
-                break;
-            case FINISHED:
-                entities = tournamentRepository.findUserFinishedTournaments(userId, offset, maxResults);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + state);
-        }
-        return mapToDto(entities);
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .state(state)
+                .userId(userId)
+                .pageNumber(pageNumber)
+                .maxResults(maxResults)
+                .build();
+
+        return findTournaments(filters);
     }
 
     public List<TournamentDto> findActiveTournamentsFromUser(Long userId, String name, Integer pageNumber, Integer maxResults) {
@@ -221,7 +238,18 @@ public class TournamentService {
     }
 
     public Punctuation getScoreFromUser(Long tournamentId, String username) {
+        TournamentEntity tournamentEntity = tournamentRepository.findById(tournamentId).orElse(null);
+
+        if (tournamentEntity == null) {
+            throw new BusinessException(TOURNAMENT_DONT_EXISTS);
+        }
+
         updateTournamentScores(tournamentId);
+
+        if(!registrationService.theUserIsRegisteredOnTournament(username, tournamentId)){
+            throw new BusinessException(USER_IS_NOT_MEMBER_OF_TOURNAMENT);
+        }
+
         return mapRankingToDto(rankingRepository.findScore(tournamentId, username));
     }
 
@@ -241,6 +269,24 @@ public class TournamentService {
                 .position(entity.getPosition())
                 .submittedScoreToday(scoreSubmittedToday)
                 .build();
+    }
+
+    private Date parseStartDate(Date date) throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return sdf.parse(sdf.format(calendar.getTime()));
+    }
+
+    public Date parseFinishDate(Date date) throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 1);
+        calendar.add(Calendar.SECOND, -1);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return sdf.parse(sdf.format(calendar.getTime()));
     }
 
     private Boolean hasSubmittedScoreToday(RankingEntity rankingEntity) {
@@ -336,23 +382,13 @@ public class TournamentService {
     }
 
     public Integer userTournamentsByStateTotalPages(Long userId, State state, Integer maxResults) {
-        Integer totalResults;
-        switch (state){
-            case READY:
-                totalResults = tournamentRepository.userTournamentsReadyTotalPages(userId);
-                break;
-            case STARTED:
-                totalResults = tournamentRepository.userTournamentsStartedTotalPages(userId);
-                break;
-            case FINISHED:
-                totalResults = tournamentRepository.userTournamentsFinishedTotalPages(userId);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + state);
-        }
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .state(state)
+                .userId(userId)
+                .maxResults(maxResults)
+                .build();
 
-        int pages = totalResults / maxResults;
-        return Math.toIntExact(Math.round(Math.ceil(pages)));
+        return findTournamentsGetTotalPages(filters);
     }
 
     public Integer getActiveTournamentsFromUserTotalPages(Long userId, Integer maxResults) {

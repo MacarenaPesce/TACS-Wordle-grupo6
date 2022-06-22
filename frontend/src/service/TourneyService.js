@@ -2,8 +2,8 @@ import axios from "axios";
 import authHeader from "./AuthHeader";
 import AuthService from "./AuthService";
 
-const API_URL = "http://localhost:8080/api/tournaments/";
-const API_PUNCTUATION = "http://localhost:8080/api/punctuation/";
+const API_URL = process.env.REACT_APP_API_URL + "tournaments/";
+const API_PUNCTUATION = process.env.REACT_APP_API_URL + "punctuation/";
 
 const createTourney = (body) => {
 

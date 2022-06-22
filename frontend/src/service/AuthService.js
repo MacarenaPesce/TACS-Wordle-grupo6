@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHeader from "./AuthHeader";
 
-const API_URL = "http://localhost:8080/api/auth/";
+const API_URL = process.env.REACT_APP_API_URL + "auth/";
 
 const registerService = (username, email, password) => {
   return axios.post(API_URL + "register", {
@@ -25,7 +25,7 @@ const logout = () => {
 
 };
 const ping = () => {
-  return axios.post(API_URL+"ping", {}, { headers: authHeader() });
+  return axios.get(API_URL+"ping", { headers: authHeader() });
 };
 
 export default {

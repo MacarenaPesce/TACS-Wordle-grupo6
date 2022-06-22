@@ -3,7 +3,6 @@ package utn.frba.wordle.repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import utn.frba.wordle.model.entity.RegistrationEntity;
-import utn.frba.wordle.model.entity.UserEntity;
 
 import java.util.Date;
 import java.util.List;
@@ -24,4 +23,9 @@ public interface RegistrationRepository extends CrudRepository<RegistrationEntit
             "where r.tournament.id = :tourneyId \n" +
             "and r.daysPlayed < :tournamentDuration")
     List<RegistrationEntity> getOutdatedRegistrationsByTournament(Long tourneyId, Long tournamentDuration);
+
+    @Query(value = "select r from RegistrationEntity r \n" +
+            "where r.tournament.id = :tournamentId \n" +
+            "and r.user.id = :userId")
+    RegistrationEntity findByUserIdAndTournamentId(Long userId, Long tournamentId);
 }
