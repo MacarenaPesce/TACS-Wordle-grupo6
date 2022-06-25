@@ -3,11 +3,14 @@ package utn.frba.wordle.service;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.HelpDto;
+import utn.frba.wordle.model.enums.ErrorMessages;
 import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.utils.WordFileReader;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -124,5 +127,30 @@ public class HelpService {
             wordList = wordList.stream().filter(word -> (word.charAt(4) == letter_5)).collect(Collectors.toSet());
 
         return wordList;
+    }
+
+    public HelpDto normalizeInput(String amarillas, String grises, String solucion){
+        //remove non letters and make lowercase
+        String yellow = amarillas.replaceAll("[^A-Za-z]+", "").toLowerCase();
+        String grey = grises.replaceAll("[^A-Za-z]+", "").toLowerCase();
+        String solution = solucion.replaceAll("[^A-Za-z_]+", "").toLowerCase();
+
+        if( !(solution.length() == 5 || solution.length() == 0)){
+            throw new BusinessException(String.format(ErrorMessages.INCORRECT_SOLUTION_LENGHT.getDescription(), solution, solution.length()));
+        }
+
+        //remove duplicates
+        yellow = Arrays.stream(yellow.split(""))
+                .distinct()
+                .collect(Collectors.joining());
+        grey = Arrays.stream(grey.split(""))
+                .distinct()
+                .collect(Collectors.joining());
+
+        return HelpDto.builder()
+                .solution(solution)
+                .grey(grey)
+                .yellow(yellow)
+                .build();
     }
 }

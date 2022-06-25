@@ -9,10 +9,8 @@ import utn.frba.wordle.service.HelpService;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class HelpChat {
@@ -51,50 +49,8 @@ public class HelpChat {
                 return;
             }
 
-            String yellow = params[1].toLowerCase();
-            String grey = params[2].toLowerCase();
-            String solution = params[3].toLowerCase();
 
-            if(yellow.equals("_"))
-                yellow = "";
-            if(grey.equals("_"))
-                grey = "";
-
-            //remove duplicates     //todo juntar codigo con helpController
-            yellow = Arrays.stream(yellow.split(""))
-                    .distinct()
-                    .collect(Collectors.joining());
-            grey = Arrays.stream(grey.split(""))
-                    .distinct()
-                    .collect(Collectors.joining());
-
-            HelpDto dto = HelpDto.builder()
-                    .solution(solution)
-                    .grey(grey)
-                    .yellow(yellow)
-                    .build();
-
-            Language language = null;
-            if(params[0].equals("es"))
-                language = Language.ES;
-            if(params[0].equals("en"))
-                language = Language.EN;
-
-            Set<String> possibleSolutions = helpService.solution(dto, language);
-
-            String str;
-            if(possibleSolutions.size() > 0) {
-                StringBuilder strbul = new StringBuilder();
-                for (String string : possibleSolutions) {
-                    strbul.append(string);
-                    strbul.append("\n");
-                }
-                //just for removing last comma
-                strbul.setLength(strbul.length() - 1);
-                str = strbul.toString();
-            }else {
-                str = "No hay coincidencias";
-            }
+            String str = buildSolution(params);
 
             casoActual.remove(chat_id, "help");
             sender.sendMessage(str, chat_id);
@@ -103,6 +59,35 @@ public class HelpChat {
             interactive(chat_id, valor, params[0], casoActual);
         }
 
+    }
+
+    private String buildSolution(String[] params){
+        HelpDto dto = helpService.normalizeInput(params[1], params[2], params[3]);
+
+        Language language = null;
+        if(params[0].equals("es"))
+            language = Language.ES;
+        if(params[0].equals("en"))
+            language = Language.EN;
+
+        Set<String> possibleSolutions = helpService.solution(dto, language);
+
+        return setToString(possibleSolutions);
+    }
+
+    private String setToString(Set<String> setOfStrings){
+        if(setOfStrings.size() > 0) {
+            StringBuilder strbul = new StringBuilder();
+            for (String string : setOfStrings) {
+                strbul.append(string);
+                strbul.append("\n");
+            }
+            //just for removing last comma
+            strbul.setLength(strbul.length() - 1);
+            return strbul.toString();
+        }else {
+            return "No hay coincidencias";
+        }
     }
 
     private void interactive(Long chat_id, int step, String message, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
