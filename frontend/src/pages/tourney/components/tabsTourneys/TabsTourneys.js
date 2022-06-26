@@ -75,11 +75,8 @@ export default class TabsTourneys extends Component{
     }
 
     formatDate(start) {
-        let fecha = new Date(start)
-        let day = fecha.getDate()+1 ;
-        let month = (fecha.getMonth() +1)>10?(fecha.getMonth() +1) : '0'+(fecha.getMonth() +1)  ; 
-        let year = fecha.getFullYear();
-        return day+'/'+month + '/' + year ;
+        let fecha = new Date(start).toGMTString();
+        return fecha.substring(0,17);
     }
 
     render() {
