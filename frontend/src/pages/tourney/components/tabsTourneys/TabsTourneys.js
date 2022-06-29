@@ -14,6 +14,8 @@ export default class TabsTourneys extends Component{
         super(props)
         this.state = {
             myTourneys: [],
+            currentPage: 1,
+            maxResults: 2,
             sessionError: false,
             errorMessage: '',
             name:'',
@@ -22,6 +24,25 @@ export default class TabsTourneys extends Component{
         }
     }
 
+    nextPage = () => {
+        console.log("page actual:", this.state.currentPage);
+        this.setState({currentPage: this.state.currentPage+1});
+        this.submitTourneys();
+        console.log("page:",this.state.currentPage, "accion: nextPage");
+    }
+
+    prevPage = () => {
+        console.log("page actual:", this.state.currentPage);
+
+        if( this.state.currentPage > 0){
+            this.setState({currentPage: this.state.currentPage-1});
+            this.submitTourneys();
+        }
+            
+        console.log("page:",this.state.currentPage, ", accion: prevpage");
+    }
+
+    
     componentDidMount() {
         this.submitTourneys()
     }
@@ -36,9 +57,10 @@ export default class TabsTourneys extends Component{
     }
 
     submitTourneys() {
+        //debugger
         console.log("se pide actualizar la lista de torneos")
         this.setState({loading: true, error: false})
-        UserService.getMyTourneys(this.props.nombreTabla) //mis torneos es el nombre del metodo, para otra tabla es otro metodo
+        UserService.getMyTourneys(this.props.nombreTabla, this.state.currentPage,this.state.maxResults) //mis torneos es el nombre del metodo, para otra tabla es otro metodo
             .then(response => {
                 if(this.props.nombreTabla == 'Publicos'){
                     let tourneysResponse = response.data.tournaments.filter(torneo => torneo.state == 'READY');
@@ -47,7 +69,7 @@ export default class TabsTourneys extends Component{
                 else{
                     this.setState({myTourneys: response.data.tournaments});
                 }
-
+                console.log("getMyTourneys response",response);
                 if(JSON.stringify(this.state.myTourneys[0]) === undefined){
                     //todo: mostrar mensaje de tabla vacia
                 }
@@ -148,7 +170,7 @@ export default class TabsTourneys extends Component{
                 {/*todo: sacar este container y habilitar el TabIntro.js*/}
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-2">
+                        <div className="col-md-3">
                             <form className="form-inline">
                                 <input className="form-control " type="search" 
                                        placeholder="Ingrese nombre del torneo"
@@ -165,7 +187,7 @@ export default class TabsTourneys extends Component{
                                 </button>
                             </form>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-2">
                             <TourneyCreate modal={true} min={this.props.min}/>
                         </div>
                         <div className="col-md-3">
@@ -199,6 +221,14 @@ export default class TabsTourneys extends Component{
                     {display}
 
                 </div>
+
+                <button className='btn btn-primary' onClick={this.prevPage}>
+                    Anterior
+                </button>
+                &nbsp;
+                <button className='btn btn-primary' onClick={this.nextPage}> 
+                    Siguiente
+                </button>
 
                 {/*------------------------------------------------------------------ */}
             </div>

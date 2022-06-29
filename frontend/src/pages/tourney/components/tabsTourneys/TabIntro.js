@@ -1,4 +1,4 @@
-import TourneyCreate from './TourneyCreate'
+import TourneyCreate from '../createTourney/TourneyCreate'
 import React from 'react';
 
 export default function TabIntro(){
@@ -21,7 +21,7 @@ export default function TabIntro(){
                     </form>
                 </div>
                 
-                <div class="col-md-3"> {/*todo: poner esta columna a la derecha */}
+                <div class="col-md-2"> {/*todo: poner esta columna a la derecha */}
                     <TourneyCreate />
                 </div>
             </div>

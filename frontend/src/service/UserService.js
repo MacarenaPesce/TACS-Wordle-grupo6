@@ -25,28 +25,28 @@ const getTodaysResult = (language) => {
   return axios.get(API + "punctuation/todaysResult/" + language, { headers: authHeader() });
 };
 
-const getMyTourneys = (nombreTabla) => {
+const getMyTourneys = (nombreTabla, pageNumber, maxResults) => {
   if(nombreTabla === 'Mis torneos'){
-    return getMyTourneysActive();
+    return getMyTourneysActive(pageNumber,maxResults);
   }
   else if(nombreTabla === 'Publicos'){
-    return getTourneysPublic();
+    return getTourneysPublic(pageNumber,maxResults);
   }
   else{
-    return getTourneysFinished();
+    return getTourneysFinished(pageNumber,maxResults);
   }  
 };
 
-const getMyTourneysActive = () => {
-  return axios.get(API + "tournaments/myTournaments", { headers: authHeader() });
+const getMyTourneysActive = (pageNumber,maxResults) => {
+  return axios.get(API + "tournaments/myTournaments"+'?'+"pageNumber="+pageNumber+ "&maxResults="+maxResults, { headers: authHeader() });
 };
 
-const getTourneysPublic = () => {
-  return axios.get(API + "tournaments/public", { headers: authHeader() });
+const getTourneysPublic = (pageNumber,maxResults) => {
+  return axios.get(API + "tournaments/public"+'?'+"pageNumber="+pageNumber+ "&maxResults="+maxResults, { headers: authHeader() });
 };
 
-const getTourneysFinished = () => {
-  return axios.get(API + "tournaments/FINISHED", { headers: authHeader() });
+const getTourneysFinished = (pageNumber,maxResults) => {
+  return axios.get(API + "tournaments/FINISHED"+'?'+"pageNumber="+pageNumber+ "&maxResults="+maxResults, { headers: authHeader() });
 };
 
 const getUsers = (userSearch) => {
