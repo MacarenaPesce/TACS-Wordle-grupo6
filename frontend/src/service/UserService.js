@@ -49,6 +49,11 @@ const getTourneysFinished = (pageNumber,maxResults) => {
   return axios.get(API + "tournaments/FINISHED"+'?'+"pageNumber="+pageNumber+ "&maxResults="+maxResults, { headers: authHeader() });
 };
 
+const getMyTourneysActiveForId = () => {
+  return axios.get(API + "tournaments/myTournaments", { headers: authHeader() });
+};
+
+
 const getUsers = (userSearch) => {
   return axios.get(API_USERS +'?'+ 'username='+userSearch, { headers: authHeader() });
 };
@@ -62,5 +67,6 @@ export default {
   getMyTourneysActive,
   getTourneysPublic,
   getUsers,
-  getTodaysResult
+  getTodaysResult,
+  getMyTourneysActiveForId
 };
