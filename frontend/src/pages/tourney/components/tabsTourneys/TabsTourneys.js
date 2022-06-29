@@ -14,6 +14,7 @@ export default class TabsTourneys extends Component{
         super(props)
         this.state = {
             myTourneys: [],
+            myTourneysTotal: [],
             currentPage: 1,
             maxResults: 2,
             sessionError: false,
@@ -34,7 +35,7 @@ export default class TabsTourneys extends Component{
     prevPage = () => {
         console.log("page actual:", this.state.currentPage);
 
-        if( this.state.currentPage > 0){
+        if( this.state.currentPage > 1){
             this.setState({currentPage: this.state.currentPage-1});
             this.submitTourneys();
         }
@@ -57,8 +58,7 @@ export default class TabsTourneys extends Component{
     }
 
     submitTourneys() {
-        //debugger
-        console.log("se pide actualizar la lista de torneos")
+        console.log("se pide actualizar la lista de torneos por pagina")
         this.setState({loading: true, error: false})
         UserService.getMyTourneys(this.props.nombreTabla, this.state.currentPage,this.state.maxResults) //mis torneos es el nombre del metodo, para otra tabla es otro metodo
             .then(response => {
@@ -82,6 +82,13 @@ export default class TabsTourneys extends Component{
             })
     }
 
+    /*todo: 
+    - terminar esta funcion que traiga el total de los torneos segun la tabla
+    - implementar en el userservice la nueva funcion de get para no duplicar codigo a la otra de traer el 
+    total de torneos sin pagina
+    - y ver demas cosas en el chat de naza
+    */
+
     filtro =(e) =>{
         const keyword = e.target.value;
 
@@ -91,7 +98,7 @@ export default class TabsTourneys extends Component{
             });
             this.setState({myTourneys: result});
         } else {
-            this.submitTourneys();
+            this.submitTourneys();  //todo modificar esto
         }
         this.setState({name:keyword});
     }

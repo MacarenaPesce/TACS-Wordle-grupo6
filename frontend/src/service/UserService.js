@@ -25,37 +25,40 @@ const getTodaysResult = (language) => {
   return axios.get(API + "punctuation/todaysResult/" + language, { headers: authHeader() });
 };
 
-const getMyTourneys = (nombreTabla, pageNumber, maxResults) => {
-  if(nombreTabla === 'Mis torneos'){
-    return getMyTourneysActive(pageNumber,maxResults);
-  }
-  else if(nombreTabla === 'Publicos'){
-    return getTourneysPublic(pageNumber,maxResults);
-  }
-  else{
-    return getTourneysFinished(pageNumber,maxResults);
-  }  
+const getUsers = (userSearch) => {
+  return axios.get(API_USERS +'?'+ 'username='+userSearch, { headers: authHeader() });
 };
 
-const getMyTourneysActive = (pageNumber,maxResults) => {
-  return axios.get(API + "tournaments/myTournaments"+'?'+"pageNumber="+pageNumber+ "&maxResults="+maxResults, { headers: authHeader() });
-};
-
-const getTourneysPublic = (pageNumber,maxResults) => {
-  return axios.get(API + "tournaments/public"+'?'+"pageNumber="+pageNumber+ "&maxResults="+maxResults, { headers: authHeader() });
-};
-
-const getTourneysFinished = (pageNumber,maxResults) => {
-  return axios.get(API + "tournaments/FINISHED"+'?'+"pageNumber="+pageNumber+ "&maxResults="+maxResults, { headers: authHeader() });
-};
-
+//id de todos los torneos de un usuario -- FALTA
 const getMyTourneysActiveForId = () => {
   return axios.get(API + "tournaments/myTournaments", { headers: authHeader() });
 };
 
+const getMyTourneys = (nombreTabla, pageNumber, maxResults) => {
+  if(nombreTabla === 'Mis torneos'){
+    return getMyTourneysActive(pageNumber,maxResults); //modificar
+  }
+  else if(nombreTabla === 'Publicos'){
+    return getTourneysType(pageNumber,maxResults,'PUBLIC');
+  }
+  else{
+    return getTourneysState(pageNumber,maxResults,'FINISHED');
+  }  
+};
 
-const getUsers = (userSearch) => {
-  return axios.get(API_USERS +'?'+ 'username='+userSearch, { headers: authHeader() });
+//es ready y started? o como vienen? para unificar de ultima con los otros dos
+const getMyTourneysActive = (pageNumber,maxResults) => {
+  return axios.get(API + "tournaments/myTournaments"+'?'+"pageNumber="+pageNumber+ "&maxResults="+maxResults, { headers: authHeader() });
+};
+
+//torneos por tipo (publico o privado)
+const getTourneysType = (pageNumber, maxResults, type) => {
+  return axios.get(API + "tournaments"+ '?' + "pageNumber="+ pageNumber + "&maxResults="+ maxResults + "&type=" + type, { headers: authHeader() });
+};
+
+//torneos por estado (ready - started - finished)
+const getTourneysState = (pageNumber, maxResults, state) => {
+  return axios.get(API + "tournaments"+ '?' + "pageNumber="+ pageNumber + "&maxResults="+ maxResults + "&state=" + state, { headers: authHeader() });
 };
 
 export default {
@@ -65,8 +68,7 @@ export default {
   getAdminBoard,
   getMyTourneys,
   getMyTourneysActive,
-  getTourneysPublic,
   getUsers,
   getTodaysResult,
-  getMyTourneysActiveForId
+  getMyTourneysActiveForId,
 };

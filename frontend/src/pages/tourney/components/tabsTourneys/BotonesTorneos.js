@@ -46,7 +46,7 @@ export default function BotonesTorneos(data){
     }
 
     const getTourneysId = () =>{
-        UserService.getMyTourneysActiveForId()
+        UserService.getMyTourneysActiveForId() //todo: hacer esta funcion en back
         .then(response => {
             let ids = response.data.tournaments.map((torneo)=>torneo.tourneyId)
             setTourneysId(ids);
