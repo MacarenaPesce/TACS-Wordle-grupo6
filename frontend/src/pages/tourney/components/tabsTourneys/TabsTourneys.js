@@ -14,9 +14,8 @@ export default class TabsTourneys extends Component{
         super(props)
         this.state = {
             myTourneys: [],
-            myTourneysTotal: [],
             currentPage: 1,
-            maxResults: 2,
+            maxResults: 4,
             sessionError: false,
             errorMessage: '',
             name:'',
@@ -44,13 +43,13 @@ export default class TabsTourneys extends Component{
         //console.log("accion: prevpage, ","page:",this.state.currentPage);
     }
 
-    /*
     componentDidMount() {
-        this.submitTourneys()
-    }*/
+        this.submitTourneysPage(1)
+    }
 
-    /*componentDidUpdate() {
-        console.log("did update")
+    /*
+    componentDidUpdate() {
+        this.submitTourneysPage(1)
     }*/
     
     submitHandler = e => {
@@ -71,7 +70,7 @@ export default class TabsTourneys extends Component{
                 this.setState({loading: false})
             })
             .catch(error => {
-                Handler.handleSessionError(this, error)
+                Handler.handleSessionError(this.state.sessionError, this.state.errorMessage, error)
                 this.setState({loading: false, error: true})
             })
     }
@@ -89,7 +88,7 @@ export default class TabsTourneys extends Component{
                 this.setState({loading: false})
             })
             .catch(error => {
-                Handler.handleSessionError(this, error)
+                Handler.handleSessionError(this.state.sessionError, this.state.errorMessage, error);
                 this.setState({loading: false, error: true})
             })        
     }
@@ -97,13 +96,15 @@ export default class TabsTourneys extends Component{
     filtro =(e) =>{
         const keyword = e.target.value;
 
+        this.setState({currentPage: 1}); //mando a la primera pagina
+
         if(keyword !==''){
             const result = this.state.myTourneys.filter((tourney) =>{
                 return tourney.name.toLowerCase().startsWith(keyword.toLowerCase());
             });
             this.setState({myTourneys: result});
         } else {
-            this.submitTourneys();  //todo modificar esto , TIENE QUE USAR EL GET TOURNEY GENERICO
+            this.submitTourneysPage(1);  //todo modificar esto , TIENE QUE USAR EL GET TOURNEY GENERICO
         }
         this.setState({name:keyword});
     }
