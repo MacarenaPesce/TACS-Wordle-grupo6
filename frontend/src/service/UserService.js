@@ -44,7 +44,7 @@ const getMyTourneys = (nombreTabla, pageNumber, maxResults) => {
     return getMyTourneysActive(pageNumber,maxResults); 
   }
   else if(nombreTabla === 'Publicos'){
-    return getTourneysType(pageNumber,maxResults,'PUBLIC');
+    return getTourneysStateAndType(pageNumber,maxResults,'READY','PUBLIC');
   }
   else{
     return getTourneysState(pageNumber,maxResults,'FINISHED');
@@ -66,6 +66,11 @@ const getTourneysState = (pageNumber, maxResults, state) => {
   return axios.get(API + "tournaments"+"?pageNumber="+ pageNumber + "&maxResults="+ maxResults + "&state=" + state, { headers: authHeader() });
 };
 
+//torneos por estado (ready - started - finished) y tipo
+const getTourneysStateAndType = (pageNumber, maxResults, state, type) => {
+  return axios.get(API + "tournaments"+"?pageNumber="+ pageNumber + "&maxResults="+ maxResults + "&state=" + state  + "&type=" + type, { headers: authHeader() });
+};
+
 export default {
   getPublicContent,
   getUserBoard,
@@ -77,4 +82,5 @@ export default {
   getTodaysResult,
   getMyTourneysGeneric,
   getMyTourneysId,
+  getTourneysStateAndType
 };

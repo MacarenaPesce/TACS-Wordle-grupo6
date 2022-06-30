@@ -26,27 +26,28 @@ export default class TabsTourneys extends Component{
     }
 
     nextPage = () => {
-        console.log("page actual:", this.state.currentPage);
-        this.setState({currentPage: this.state.currentPage+1});
-        this.submitTourneys();
-        console.log("page:",this.state.currentPage, "accion: nextPage");
+        //console.log("page actual:", this.state.currentPage);
+        let page = this.state.currentPage + 1;
+        this.setState({currentPage: page});
+        this.submitTourneysPage(page);
+        //console.log("accion: nextPage, ","page:",this.state.currentPage, );
     }
 
     prevPage = () => {
-        console.log("page actual:", this.state.currentPage);
+        //console.log("page actual:", this.state.currentPage);
 
         if( this.state.currentPage > 1){
-            this.setState({currentPage: this.state.currentPage-1});
-            this.submitTourneys();
-        }
-            
-        console.log("page:",this.state.currentPage, ", accion: prevpage");
+            let page = this.state.currentPage - 1;
+            this.setState({currentPage: page});
+            this.submitTourneysPage(page);
+        }  
+        //console.log("accion: prevpage, ","page:",this.state.currentPage);
     }
 
-    
+    /*
     componentDidMount() {
         this.submitTourneys()
-    }
+    }*/
 
     /*componentDidUpdate() {
         console.log("did update")
@@ -62,32 +63,36 @@ export default class TabsTourneys extends Component{
         this.setState({loading: true, error: false})
         UserService.getMyTourneys(this.props.nombreTabla, this.state.currentPage,this.state.maxResults) //mis torneos es el nombre del metodo, para otra tabla es otro metodo
             .then(response => {
-                if(this.props.nombreTabla == 'Publicos'){
-                    let tourneysResponse = response.data.tournaments.filter(torneo => torneo.state == 'READY');
-                    this.setState({myTourneys: tourneysResponse});
-                }
-                else{
-                    this.setState({myTourneys: response.data.tournaments});
-                }
-                console.log("getMyTourneys response",response);
+                this.setState({myTourneys: response.data.tournaments});
+                
                 if(JSON.stringify(this.state.myTourneys[0]) === undefined){
                     //todo: mostrar mensaje de tabla vacia
                 }
                 this.setState({loading: false})
             })
             .catch(error => {
-                console.log(error)
                 Handler.handleSessionError(this, error)
                 this.setState({loading: false, error: true})
             })
     }
 
-    /*todo: 
-    - terminar esta funcion que traiga el total de los torneos segun la tabla
-    - implementar en el userservice la nueva funcion de get para no duplicar codigo a la otra de traer el 
-    total de torneos sin pagina
-    - y ver demas cosas en el chat de naza
-    */
+    //duplico esta parte para que se actualice la lista de torneos cuando toco un boton de paginacion
+    submitTourneysPage(page){
+        this.setState({loading: true, error: false})
+        UserService.getMyTourneys(this.props.nombreTabla, page,this.state.maxResults)
+            .then(response => {
+                this.setState({myTourneys: response.data.tournaments});
+                
+                if(JSON.stringify(this.state.myTourneys[0]) === undefined){
+                    //todo: mostrar mensaje de tabla vacia
+                }
+                this.setState({loading: false})
+            })
+            .catch(error => {
+                Handler.handleSessionError(this, error)
+                this.setState({loading: false, error: true})
+            })        
+    }
 
     filtro =(e) =>{
         const keyword = e.target.value;
@@ -98,7 +103,7 @@ export default class TabsTourneys extends Component{
             });
             this.setState({myTourneys: result});
         } else {
-            this.submitTourneys();  //todo modificar esto
+            this.submitTourneys();  //todo modificar esto , TIENE QUE USAR EL GET TOURNEY GENERICO
         }
         this.setState({name:keyword});
     }
