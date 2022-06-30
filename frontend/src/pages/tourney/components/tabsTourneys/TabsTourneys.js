@@ -26,9 +26,11 @@ export default class TabsTourneys extends Component{
 
     nextPage = () => {
         //console.log("page actual:", this.state.currentPage);
-        let page = this.state.currentPage + 1;
-        this.setState({currentPage: page});
-        this.submitTourneysPage(page);
+        if ( this.state.myTourneys.filter( torneo => torneo.name.includes( this.state.name ) ).length >= this.state.currentPage + 1 ){
+            let page = this.state.currentPage + 1;
+            this.setState({currentPage: page});
+            this.submitTourneysPage(page);
+        }
         //console.log("accion: nextPage, ","page:",this.state.currentPage, );
     }
 
@@ -99,12 +101,12 @@ export default class TabsTourneys extends Component{
         this.setState({currentPage: 1}); //mando a la primera pagina
 
         if(keyword !==''){
-            const result = this.state.myTourneys.filter((tourney) =>{
+            const result = this.state.myTourneys.filter((tourney) =>{  //aca deberia ser de todos los torneos, mytourneys solo tiene los de dicha pagina
                 return tourney.name.toLowerCase().startsWith(keyword.toLowerCase());
             });
-            this.setState({myTourneys: result});
+            this.setState({myTourneys: result});                        //aca deberia setear la pagina???
         } else {
-            this.submitTourneysPage(1);  //todo modificar esto , TIENE QUE USAR EL GET TOURNEY GENERICO
+            this.submitTourneys();  //todo modificar esto , TIENE QUE USAR EL GET TOURNEY GENERICO ??? 
         }
         this.setState({name:keyword});
     }
