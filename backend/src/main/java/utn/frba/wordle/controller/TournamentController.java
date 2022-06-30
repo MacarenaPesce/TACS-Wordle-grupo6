@@ -45,10 +45,12 @@ public class TournamentController {
 
         logger.info("Method: findTournaments - Request: token={}, " +
                 "name={}, type={}, state={}, pageNumber={}, maxResults={}", token, name, type, state, pageNumber, maxResults);
+        Session session = AuthService.getSession(token);
         FindTournamentsFilters findTournamentsFilters = FindTournamentsFilters.builder()
                 .name(name)
                 .type(type)
                 .state(state)
+                .userId(session.getUserId())
                 .pageNumber(pageNumber)
                 .maxResults(maxResults)
                 .build();
