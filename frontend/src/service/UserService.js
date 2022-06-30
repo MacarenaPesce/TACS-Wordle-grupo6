@@ -29,9 +29,14 @@ const getUsers = (userSearch) => {
   return axios.get(API_USERS +'?'+ 'username='+userSearch, { headers: authHeader() });
 };
 
-//id de todos los torneos de un usuario -- FALTA
-const getMyTourneysActiveForId = () => {
-  return axios.get(API + "tournaments/myTournaments", { headers: authHeader() });
+//id de todos los torneos de un usuario
+const getMyTourneysId = () => {
+  return axios.get(API + "tournaments/ids", { headers: authHeader() } );
+};
+
+//Generico sin paginacion para todos los torneos
+const getMyTourneysGeneric = () => {
+  return axios.get(API + "tournaments", { headers: authHeader() });
 };
 
 const getMyTourneys = (nombreTabla, pageNumber, maxResults) => {
@@ -46,7 +51,7 @@ const getMyTourneys = (nombreTabla, pageNumber, maxResults) => {
   }  
 };
 
-//es ready y started? o como vienen? para unificar de ultima con los otros dos
+//es ready o started
 const getMyTourneysActive = (pageNumber,maxResults) => {
   return axios.get(API + "tournaments/myTournaments"+'?'+"pageNumber="+pageNumber+ "&maxResults="+maxResults, { headers: authHeader() });
 };
@@ -70,5 +75,6 @@ export default {
   getMyTourneysActive,
   getUsers,
   getTodaysResult,
-  getMyTourneysActiveForId,
+  getMyTourneysGeneric,
+  getMyTourneysId,
 };

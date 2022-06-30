@@ -408,4 +408,8 @@ public class TournamentService {
         int pages = totalResults / maxResults;
         return Math.toIntExact(Math.round(Math.ceil(pages)));
     }
+
+    public List<Long> findIdTournamentsFromUser(Long userId){
+        return tournamentRepository.findIdTournamentsFromUser(userId);
+    }
 }
