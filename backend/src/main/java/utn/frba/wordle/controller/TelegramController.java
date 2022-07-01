@@ -29,17 +29,28 @@ public class TelegramController {
     @Autowired
     HelpChat helpChat;
 
-    final String start = "Wordle ♟\n\n" +
-                    "/register - Elija su nombre de usuario\n" +
+    final String start = "Wordle ♟ - Bienvenida\n\n" +
                     "/help - Generar trampas para Wordle\n" +
                     "/definition - Obtener definicion de una palabra\n" +
                     "/submit - Cargar los resultados del dia\n" +
-                    "/create - Crear un torneo\n" +
-                    "/addmember - Agregar un usuario a uno de mis torneos\n" +
-                    "/join - Unirme a un torneo publico pendiente de empezar\n" +
-                    "/ranking - Visualizar el ranking de un torneo\n" +
-                    "/tournaments - Obtener listas de torneos existentes\n" +
-                    "/tournament - Obtener informacion de un torneo";
+                    "/users - Administrar usuarios\n" +
+                    "/tournaments - Administrar torneos\n";
+
+    final String users = "Wordle ♟ - Usuario\n\n" +
+            "/register - Elija su nombre de usuario\n" +
+            "/users_list - Lista todos los usuarios existentes\n" +
+            "/myCredentials - Mostrar mis credenciales para entrar desde la app web";
+
+    final String tournaments = "Wordle ♟ - Torneos\n\n" +
+            "/myTournaments - Ver mis torneos creados\n" +
+            "/publicTournaments - Ver lista de torneos publicos a punto de comenzar\n" +
+            "/finalizedTournaments - Ver torneos finalizados en los que fui participe\n" +
+            "/tournament - Obtener informacion de un torneo\n" +
+            "/create - Crear un torneo\n" +
+            "/addmember - Agregar un usuario a uno de mis torneos\n" +
+            "/join - Unirme a un torneo publico pendiente de empezar\n" +
+            "/ranking - Visualizar el ranking de un torneo";
+
 
     /**
      * Caso de uso en el que se encuentra el usuario.
@@ -103,12 +114,52 @@ public class TelegramController {
                 sender.sendMessage("Cargar los resultados del dia", chat_id);
                 break;
 
-            case "create" :
-                sender.sendMessage("Crear un torneo", chat_id);
+            case "users" :
+                sender.sendMessage(users, chat_id);
+                break;
+
+            case "tournaments" :
+                sender.sendMessage(tournaments, chat_id);
                 break;
 
             case "start" :
                 sender.sendMessage(start, chat_id);
+                break;
+
+            //----------- users -------------------------------------------------
+
+            case "register" :
+                sender.sendMessage("Elija su nombre de usuario", chat_id);
+                break;
+
+            case "users_list" :
+                sender.sendMessage("Lista todos los usuarios existentes", chat_id);
+                break;
+
+            case "myCredentials" :
+                sender.sendMessage("Mostrar mis credenciales para entrar desde la app web", chat_id);
+                break;
+
+            //----------- tournaments -------------------------------------------------
+
+            case "myTournaments" :
+                sender.sendMessage("Ver mis torneos creados", chat_id);
+                break;
+
+            case "publicTournaments" :
+                sender.sendMessage("Ver lista de torneos publicos a punto de comenzar", chat_id);
+                break;
+
+            case "finalizedTournaments" :
+                sender.sendMessage("Ver torneos finalizados en los que fui participe", chat_id);
+                break;
+
+            case "tournament" :
+                sender.sendMessage("Obtener informacion de un torneo", chat_id);
+                break;
+
+            case "create" :
+                sender.sendMessage("Crear un torneo", chat_id);
                 break;
 
             case "addmember" :
@@ -123,20 +174,9 @@ public class TelegramController {
                 sender.sendMessage("Visualizar el ranking de un torneo", chat_id);
                 break;
 
-            case "tournaments" :
-                sender.sendMessage("Obtener listas de torneos existentes", chat_id);
-                break;
-
-            case "tournament" :
-                sender.sendMessage("Obtener informacion de un torneo", chat_id);
-                break;
-
-            case "register" :
-                sender.sendMessage("Elija su nombre de usuario", chat_id);
-                break;
 
             default :
-                sender.sendMessage("Comando no reconocido: \n"+params[0], chat_id);
+                sender.sendMessage("Comando no reconocido: \n"+caso, chat_id);
         }
     }
 
