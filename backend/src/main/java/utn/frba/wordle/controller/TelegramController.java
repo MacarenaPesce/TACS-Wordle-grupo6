@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.chat.HelpChat;
+import utn.frba.wordle.chat.UserChat;
 import utn.frba.wordle.client.TeleSender;
 
 import utn.frba.wordle.model.tele.Update;
@@ -29,6 +30,9 @@ public class TelegramController {
     @Autowired
     HelpChat helpChat;
 
+    @Autowired
+    UserChat userChat;
+
     final String start = "Wordle ♟ - Bienvenida\n\n" +
                     "/help - Generar trampas para Wordle\n" +
                     "/definition - Obtener definicion de una palabra\n" +
@@ -42,10 +46,12 @@ public class TelegramController {
             "/myCredentials - Mostrar mis credenciales para entrar desde la app web";
 
     final String tournaments = "Wordle ♟ - Torneos\n\n" +
-            "/myTournaments - Ver mis torneos creados\n" +
-            "/publicTournaments - Ver lista de torneos publicos a punto de comenzar\n" +
-            "/finalizedTournaments - Ver torneos finalizados en los que fui participe\n" +
-            "/tournament - Obtener informacion de un torneo\n" +
+            "/myCreatedTournaments - Ver mis torneos creados\n" +
+            "/myTournaments - Ver torneos en los que estoy participando\n" +
+            "/publicTournaments - Ver lista de torneos publicos a punto de comenzar, a los cuales unirme\n" +
+            "/publicStarted - Ver torneos publicos en juego, para poder consultar rankings\n" +
+            "/finalizedTournaments - Ver torneos finalizados en los que fui participe\n\n" +
+            "/tournament - Obtener informacion de un torneo\n\n" +
             "/create - Crear un torneo\n" +
             "/addmember - Agregar un usuario a uno de mis torneos\n" +
             "/join - Unirme a un torneo publico pendiente de empezar\n" +
@@ -69,23 +75,28 @@ public class TelegramController {
         //interpretar mensaje
         if(text.matches("/[^ ](.*)")){  //es comando
 
+            //separar la primera palabra del resto de parametros
             String[] arr = text.substring(1).split(" ", 2);
-            String caso = arr[0];   //help
+            String caso = arr[0];
             String params_string;
             if(arr.length > 1){
-                params_string = arr[1];    //es amarillas grises _a_a_
+                params_string = arr[1];
             }else{
                 params_string = "";
             }
 
+            //meter los parametros en un array
             String[] params = params_string.split("\\s+");
+            //procesar
             processCommand(caso, params, chat_id, true);
 
         }else { //no es comando
             if(!casoActual.containsKey(chat_id)){
+                // mensaje generico
                 String mensajeEnvio = update.getMessage().getFrom().getFirst_name()+", su mensaje "+update.getMessage().getMessage_id()+" dice: \n"+text;
                 sender.sendMessage(mensajeEnvio, chat_id);
-            }else{  // si el usuario se encuentra dentro de un mensaje interactivo
+            }else{
+                // si el usuario se encuentra dentro de un mensaje interactivo
                 String[] params = text.split("\\s+");
                 processCommand(casoActual.get(chat_id), params, chat_id, false);
             }
@@ -126,6 +137,15 @@ public class TelegramController {
                 sender.sendMessage(start, chat_id);
                 break;
 
+            case "mas" :        // para ir a la siguiente pagina de una lista
+                String casoGuardado = casoActual.get(chat_id);
+                if(casoGuardado == null || !casoGuardado.equals("users_list")){
+                    sender.sendMessage("No hay nada mas para mostrar", chat_id);
+                    return;
+                }
+                processCommand(casoGuardado, null, chat_id, false);
+                break;
+
             //----------- users -------------------------------------------------
 
             case "register" :
@@ -133,7 +153,7 @@ public class TelegramController {
                 break;
 
             case "users_list" :
-                sender.sendMessage("Lista todos los usuarios existentes", chat_id);
+                userChat.processUsersList(chat_id, restart, casoActual);
                 break;
 
             case "myCredentials" :
@@ -142,12 +162,20 @@ public class TelegramController {
 
             //----------- tournaments -------------------------------------------------
 
-            case "myTournaments" :
+            case "myCreatedTournaments" :
                 sender.sendMessage("Ver mis torneos creados", chat_id);
                 break;
 
+            case "myTournaments" :
+                sender.sendMessage("Ver torneos en los que estoy participando", chat_id);
+                break;
+
             case "publicTournaments" :
-                sender.sendMessage("Ver lista de torneos publicos a punto de comenzar", chat_id);
+                sender.sendMessage("Ver lista de torneos publicos a punto de comenzar, a los cuales unirme", chat_id);
+                break;
+
+            case "publicStarted" :
+                sender.sendMessage("Ver torneos publicos en juego, para poder consultar rankings", chat_id);
                 break;
 
             case "finalizedTournaments" :

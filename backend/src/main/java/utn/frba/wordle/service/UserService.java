@@ -71,6 +71,12 @@ public class UserService {
         return mapToDto(users);
     }
 
+    public List<UserDto> getAllWithPagination(Integer maxResults, Integer actualPage) {
+        Integer offset = (actualPage - 1) * maxResults;
+        List<UserEntity> users = userRepository.getAllWithPagination(offset, maxResults);
+        return mapToDto(users);
+    }
+
     public Integer findByNameTotalPages(String username, Integer maxResults) {
         Integer totalResults = userRepository.findByNameTotalPages(username);
         int pages = totalResults / maxResults;

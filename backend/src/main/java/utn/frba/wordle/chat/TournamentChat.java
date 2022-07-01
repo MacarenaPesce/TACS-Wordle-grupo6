@@ -1,5 +1,10 @@
 package utn.frba.wordle.chat;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import utn.frba.wordle.client.TeleSender;
+
+@Service
 public class TournamentChat {
     //cargar mis resultados del dia, y poder revisar si ya habia cargado
     //poder crear un torneo
@@ -12,5 +17,8 @@ public class TournamentChat {
     //poder obtener informacion de un torneo
     //poder consultar el ranking de un torneo started o finalized
     //poder consultar lista de torneos finalizados
+
+    @Autowired
+    TeleSender sender;
 
 }

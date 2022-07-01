@@ -28,6 +28,9 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     @Query(value = "SELECT * FROM wordle.user u WHERE u.username like %:username% order by username asc LIMIT :offset,:maxResults", nativeQuery = true)
     List<UserEntity> findByPartialUsernameWithPagination(String username, Integer offset, Integer maxResults);
 
+    @Query(value = "SELECT * FROM wordle.user u order by id asc LIMIT :offset,:maxResults", nativeQuery = true)
+    List<UserEntity> getAllWithPagination(Integer offset, Integer maxResults);
+
     @Query(value = "SELECT count(*) FROM wordle.user u WHERE u.username like %:username%", nativeQuery = true)
     Integer findByNameTotalPages(String username);
 
