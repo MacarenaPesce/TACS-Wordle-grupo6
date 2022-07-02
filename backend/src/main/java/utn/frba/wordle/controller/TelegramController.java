@@ -147,11 +147,11 @@ public class TelegramController {
                 break;
 
             case "submitES" :
-                userChat.processSubmitES(chat_id, restart, params[0], casoActual);
+                userChat.processSubmitFull(chat_id, restart, params[0], casoActual, true);
                 break;
 
             case "submitEN" :
-                userChat.processSubmitEN(chat_id, restart, params[0], casoActual);
+                userChat.processSubmitFull(chat_id, restart, params[0], casoActual, false);
                 break;
 
             //-------------------------------------------------------------------

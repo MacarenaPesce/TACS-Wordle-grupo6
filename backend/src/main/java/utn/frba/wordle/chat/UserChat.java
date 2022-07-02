@@ -170,14 +170,7 @@ public class UserChat {
         //sender.sendMessage("Cargar los resultados del día: \n\n/submitES - Español\n\n/submitEN - English", chat_id);
     }
 
-    public void processSubmitES(Long chat_id, boolean restart, String message, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
-        processSubmitFull(chat_id, restart, message, casoActual, true);
-    }
-    public void processSubmitEN(Long chat_id, boolean restart, String message, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
-        processSubmitFull(chat_id, restart, message, casoActual, false);
-    }
-
-    private void processSubmitFull(Long chat_id, boolean restart, String message, HashMap<Long, String> casoActual, boolean spanish) throws IOException, URISyntaxException {
+    public void processSubmitFull(Long chat_id, boolean restart, String message, HashMap<Long, String> casoActual, boolean spanish) throws IOException, URISyntaxException {
         if(restart){
             if(spanish)
                 casoActual.put(chat_id, "submitES");
