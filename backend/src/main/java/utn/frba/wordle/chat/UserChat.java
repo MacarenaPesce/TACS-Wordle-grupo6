@@ -3,7 +3,6 @@ package utn.frba.wordle.chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.client.TeleSender;
-import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.service.UserService;
@@ -14,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static utn.frba.wordle.model.enums.ErrorMessages.MAIL_IN_USE;
 
 @Service
 public class UserChat {
@@ -45,12 +43,15 @@ public class UserChat {
         List<UserDto> users = userService.getAllWithPagination(25, pag);
         String usersString = users.stream().map(UserDto::toStringTelegram).collect(Collectors.joining("\n"));
 
+        String mas = "\n\n/mas para mostrar más resultados";
+        String exit = "\n\n/exit para salir";
+
         if(users.isEmpty()){
             casoActual.remove(chat_id, "users_list");
             sender.sendMessage("No hay mas resultados", chat_id);
         }else {
             pasoActual.put(chat_id, pag+1);
-            sender.sendMessage("Lista de usuarios - Página "+pag+"\n\n"+usersString+"\n\n/mas para mostrar más resultados", chat_id);
+            sender.sendMessage("Lista de usuarios - Página "+pag+"\n\n"+usersString+mas+exit, chat_id);
         }
 
     }

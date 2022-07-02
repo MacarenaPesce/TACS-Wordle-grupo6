@@ -113,32 +113,49 @@ public class TelegramController {
     private void processCommand(String caso, String[] params, Long chat_id, boolean restart, String humanName) throws IOException, URISyntaxException {
         switch(caso)
         {
-            case "help" :
-                helpChat.processHelp(params, chat_id, restart, casoActual);
-                break;
-
-            case "definition" :
-                sender.sendMessage("Obtener definicion de una palabra", chat_id);
-                //todo separar en comandos para español e ingles
-                break;
-
-            case "exit" :
-                casoActual.remove(chat_id);
-                sender.sendMessage(start, chat_id);
-                break;
-
-            case "submit" :
-                sender.sendMessage("Cargar los resultados del dia", chat_id);
-                //todo separar en comandos para español e ingles
-                //todo programar mensaje para que el usuario recuerde volver a cargar al dia siguiente
-                break;
-
             case "users" :
                 sender.sendMessage(users, chat_id);
                 break;
 
             case "tournaments" :
                 sender.sendMessage(tournaments, chat_id);
+                break;
+
+            case "help" :
+                helpChat.processHelp(params, chat_id, restart, casoActual);
+                break;
+
+            case "definition" :
+                sender.sendMessage("Obtener definicion de una palabra: \n\n/definitionES - Español\n\n/definitionEN - English", chat_id);
+                break;
+
+            case "submit" :
+                sender.sendMessage("Puntajes del día: \n\nEspañol: puntaje\n\nEnglish: puntaje", chat_id);
+                sender.sendMessage("Cargar los resultados del día: \n\n/submitES - Español\n\n/submitEN - English", chat_id);
+                //todo programar mensaje para que el usuario recuerde volver a cargar al dia siguiente
+                break;
+
+            case "definitionES" :
+                sender.sendMessage("Obtener definicion en español", chat_id);
+                break;
+
+            case "definitionEN" :
+                sender.sendMessage("Obtener definicion en english", chat_id);
+                break;
+
+            case "submitES" :
+                sender.sendMessage("Cargar los resultados del dia en español", chat_id);
+                break;
+
+            case "submitEN" :
+                sender.sendMessage("Cargar los resultados del dia en english", chat_id);
+                break;
+
+            //-------------------------------------------------------------------
+
+            case "exit" :
+                casoActual.remove(chat_id);
+                sender.sendMessage(start, chat_id);
                 break;
 
             case "start" :
@@ -176,7 +193,7 @@ public class TelegramController {
                 sender.sendMessage("Crear nueva contraseña para entrar desde la app web\ntodo 501", chat_id);
                 break;
 
-            //----------- tournaments -------------------------------------------------
+            //----------- tournaments -------------------------------------------
 
             case "myCreatedTournaments" :
                 sender.sendMessage("Ver mis torneos creados", chat_id);
