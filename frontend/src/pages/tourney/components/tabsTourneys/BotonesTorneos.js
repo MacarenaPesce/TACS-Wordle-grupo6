@@ -46,9 +46,10 @@ export default function BotonesTorneos(data){
     }
 
     const getTourneysId = () =>{
-        UserService.getMyTourneysActive()
+        UserService.getMyTourneysId() 
         .then(response => {
-            let ids = response.data.tournaments.map((torneo)=>torneo.tourneyId)
+            let ids = response.data;
+            //let ids = response.data.tournaments.map((torneo)=>torneo.tourneyId)
             setTourneysId(ids);
         })
         .catch(error => {

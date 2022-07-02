@@ -14,6 +14,9 @@ export default class TabsTourneys extends Component{
         super(props)
         this.state = {
             myTourneys: [],
+            currentPage: 1,
+            maxResults: 4,
+            totalPages: 100,
             sessionError: false,
             errorMessage: '',
             name:'',
@@ -22,40 +25,56 @@ export default class TabsTourneys extends Component{
         }
     }
 
-    componentDidMount() {
-        this.submitTourneys()
+    nextPage = () => {
+        //console.log("page actual:", this.state.currentPage);
+        if ( this.state.myTourneys.filter( torneo => torneo.name.includes( this.state.name ) ).length >= this.state.currentPage + 1 ){
+            let page = this.state.currentPage + 1;
+            this.setState({currentPage: page});
+            this.submitTourneys(page);
+        }
+        //console.log("accion: nextPage, ","page:",this.state.currentPage, );
     }
 
-    /*componentDidUpdate() {
-        console.log("did update")
+    prevPage = () => {
+        //console.log("page actual:", this.state.currentPage);
+
+        if( this.state.currentPage > 1){
+            let page = this.state.currentPage - 1;
+            this.setState({currentPage: page});
+            this.submitTourneys(page);
+        }  
+        //console.log("accion: prevpage, ","page:",this.state.currentPage);
+    }
+
+    componentDidMount() {
+        this.submitTourneys(1)
+    }
+
+    /*
+    componentDidUpdate() {
+        this.submitTourneys(1)
     }*/
     
     submitHandler = e => {
         e.preventDefault()
-        this.submitTourneys()
+        this.submitTourneys(1)
     }
 
-    submitTourneys() {
-        console.log("se pide actualizar la lista de torneos")
+    submitTourneys(page) {
+        console.log("se pide actualizar la lista de torneos por pagina")
         this.setState({loading: true, error: false})
-        UserService.getMyTourneys(this.props.nombreTabla) //mis torneos es el nombre del metodo, para otra tabla es otro metodo
+        UserService.getMyTourneys(this.props.nombreTabla, page,this.state.maxResults)
             .then(response => {
-                if(this.props.nombreTabla == 'Publicos'){
-                    let tourneysResponse = response.data.tournaments.filter(torneo => torneo.state == 'READY');
-                    this.setState({myTourneys: tourneysResponse});
-                }
-                else{
-                    this.setState({myTourneys: response.data.tournaments});
-                }
-
+                this.setState({myTourneys: response.data.tournaments});
+                this.setState({totalPages: response.data.totalPages})
+                
                 if(JSON.stringify(this.state.myTourneys[0]) === undefined){
                     //todo: mostrar mensaje de tabla vacia
                 }
                 this.setState({loading: false})
             })
             .catch(error => {
-                console.log(error)
-                Handler.handleSessionError(this, error)
+                Handler.handleSessionError(this.state.sessionError, this.state.errorMessage, error)
                 this.setState({loading: false, error: true})
             })
     }
@@ -63,13 +82,15 @@ export default class TabsTourneys extends Component{
     filtro =(e) =>{
         const keyword = e.target.value;
 
+        this.setState({currentPage: 1}); //mando a la primera pagina
+
         if(keyword !==''){
-            const result = this.state.myTourneys.filter((tourney) =>{
+            const result = this.state.myTourneys.filter((tourney) =>{  //aca deberia ser de todos los torneos, mytourneys solo tiene los de dicha pagina
                 return tourney.name.toLowerCase().startsWith(keyword.toLowerCase());
             });
-            this.setState({myTourneys: result});
+            this.setState({myTourneys: result});                        //aca deberia setear la pagina???
         } else {
-            this.submitTourneys();
+            this.submitTourneys();  //todo modificar esto , TIENE QUE USAR EL GET TOURNEY GENERICO ??? 
         }
         this.setState({name:keyword});
     }
@@ -145,7 +166,7 @@ export default class TabsTourneys extends Component{
                 {/*todo: sacar este container y habilitar el TabIntro.js*/}
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-2">
+                        <div className="col-md-3">
                             <form className="form-inline">
                                 <input className="form-control " type="search" 
                                        placeholder="Ingrese nombre del torneo"
@@ -162,7 +183,7 @@ export default class TabsTourneys extends Component{
                                 </button>
                             </form>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-2">
                             <TourneyCreate modal={true} min={this.props.min}/>
                         </div>
                         <div className="col-md-3">
@@ -196,6 +217,14 @@ export default class TabsTourneys extends Component{
                     {display}
 
                 </div>
+
+                <button className='btn btn-primary' onClick={this.prevPage}>
+                    Anterior
+                </button>
+                &nbsp;
+                <button className='btn btn-primary' onClick={this.nextPage}> 
+                    Siguiente
+                </button>
 
                 {/*------------------------------------------------------------------ */}
             </div>
