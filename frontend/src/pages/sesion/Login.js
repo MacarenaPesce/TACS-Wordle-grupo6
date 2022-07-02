@@ -8,6 +8,9 @@ import Input from '../../components/input/Input'
 import {ContenedorBotonCentrado, MensajeError, MensajeExito } from "./Formulario";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import NotificationBar from "../../components/notificationBar/NotificationBar";
+import {Toaster, toast} from 'react-hot-toast';
+
 
 export default function Login({onLogin}) {
   const [username, setUsername] = useState({campo:'', valido:null});
@@ -29,7 +32,6 @@ export default function Login({onLogin}) {
   }, [isLogged, navigate])
 
   const handleSubmit = (e) => {
-    //debugger;
     e.preventDefault();
     
     if(
@@ -40,10 +42,18 @@ export default function Login({onLogin}) {
     } else {
       cambiarFormularioValido(false);
     }
-    console.log('Boton loggin presionado con los datos: ')
+    //console.log('Boton loggin presionado con los datos: ')
 
     login(username.campo, password.campo)
   };
+
+  function chequeo(){
+    if(formularioValido === true)
+      toast.success("Formulario enviado exitosamente!");
+
+    if (hasLoginError)
+      toast.error("Error: Por favor rellena el formulario correctamente. Fallaron tus credenciales.")                                   
+    }
 
   let spinner = (<div className="spinner-border text-light" role="status">
                     <span className="visually-hidden">Loading...</span>
@@ -55,7 +65,7 @@ export default function Login({onLogin}) {
                 <NavbarAut />
             </header>
             
-            {isLoginLoading && <div>{spinner}<strong>Checking credentials...{/*todo: tiene que ser un modal */}</strong>{spinner}</div>}
+            {isLoginLoading && <div>{spinner}<strong>Chequeando credenciales... Aguarde un momento...</strong>{spinner}</div>/*todo: esto tendria que ir con un toast.loading('... ') */} 
             {!isLoginLoading &&
 
             <div className="forms">
@@ -85,19 +95,15 @@ export default function Login({onLogin}) {
 				            />   
 
                     <ContenedorBotonCentrado>
-                            <button type="submit" className="btn btn-dark btn-lg btn-block">Sign in</button>
-                            {formularioValido === true && <MensajeExito>Formulario enviado exitosamente!</MensajeExito>}
+                            <button type="submit" className="btn btn-dark btn-lg btn-block" onClick={chequeo()}>Sign in</button>
+                            
                     </ContenedorBotonCentrado>
-
+                    
                 </form>
+
+                <NotificationBar />
             </div>    
             }
-            {   hasLoginError &&  <MensajeError>
-                    <p>
-                        <FontAwesomeIcon icon={faExclamationTriangle}/>
-                        <b>Error:</b> Por favor rellena el formulario correctamente.                        
-                    </p>
-                </MensajeError> }
 
         <Footer />
     </div>
