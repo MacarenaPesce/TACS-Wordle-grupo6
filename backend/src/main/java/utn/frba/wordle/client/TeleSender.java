@@ -28,6 +28,7 @@ public class TeleSender {
         URI uri = new URIBuilder(request.getURI())
                 .addParameter("chat_id", chat_id.toString())
                 .addParameter("text", mensaje)
+                .addParameter("parse_mode", "Markdown")
                 .build();
         request.setURI(uri);
 

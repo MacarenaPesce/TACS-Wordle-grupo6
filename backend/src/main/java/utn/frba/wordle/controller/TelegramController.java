@@ -129,10 +129,13 @@ public class TelegramController {
                 sender.sendMessage("Obtener definicion de una palabra: \n\n/definitionES - Español\n\n/definitionEN - English", chat_id);
                 break;
 
+            case "checkScores" :
+                userChat.processCheckScores(chat_id, humanName);
+                break;
+
             case "submit" :
-                sender.sendMessage("Puntajes del día: \n\nEspañol: puntaje\n\nEnglish: puntaje", chat_id);
-                sender.sendMessage("Cargar los resultados del día: \n\n/submitES - Español\n\n/submitEN - English", chat_id);
-                //todo programar mensaje para que el usuario recuerde volver a cargar al dia siguiente
+                userChat.processSubmit(chat_id, humanName);
+                //programar mensaje para que el usuario recuerde volver a cargar al dia siguiente. --> no se puede de la api de bots, solo del cliente de telegram. Habria que hacer el schedule manualmente.
                 break;
 
             case "definitionES" :
@@ -144,11 +147,11 @@ public class TelegramController {
                 break;
 
             case "submitES" :
-                sender.sendMessage("Cargar los resultados del dia en español", chat_id);
+                userChat.processSubmitES(chat_id, restart, params[0], casoActual);
                 break;
 
             case "submitEN" :
-                sender.sendMessage("Cargar los resultados del dia en english", chat_id);
+                userChat.processSubmitEN(chat_id, restart, params[0], casoActual);
                 break;
 
             //-------------------------------------------------------------------
