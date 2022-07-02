@@ -16,6 +16,7 @@ export default class TabsTourneys extends Component{
             myTourneys: [],
             currentPage: 1,
             maxResults: 4,
+            totalPages: 100,
             sessionError: false,
             errorMessage: '',
             name:'',
@@ -29,7 +30,7 @@ export default class TabsTourneys extends Component{
         if ( this.state.myTourneys.filter( torneo => torneo.name.includes( this.state.name ) ).length >= this.state.currentPage + 1 ){
             let page = this.state.currentPage + 1;
             this.setState({currentPage: page});
-            this.submitTourneysPage(page);
+            this.submitTourneys(page);
         }
         //console.log("accion: nextPage, ","page:",this.state.currentPage, );
     }
@@ -40,31 +41,32 @@ export default class TabsTourneys extends Component{
         if( this.state.currentPage > 1){
             let page = this.state.currentPage - 1;
             this.setState({currentPage: page});
-            this.submitTourneysPage(page);
+            this.submitTourneys(page);
         }  
         //console.log("accion: prevpage, ","page:",this.state.currentPage);
     }
 
     componentDidMount() {
-        this.submitTourneysPage(1)
+        this.submitTourneys(1)
     }
 
     /*
     componentDidUpdate() {
-        this.submitTourneysPage(1)
+        this.submitTourneys(1)
     }*/
     
     submitHandler = e => {
         e.preventDefault()
-        this.submitTourneys()
+        this.submitTourneys(1)
     }
 
-    submitTourneys() {
+    submitTourneys(page) {
         console.log("se pide actualizar la lista de torneos por pagina")
         this.setState({loading: true, error: false})
-        UserService.getMyTourneys(this.props.nombreTabla, this.state.currentPage,this.state.maxResults) //mis torneos es el nombre del metodo, para otra tabla es otro metodo
+        UserService.getMyTourneys(this.props.nombreTabla, page,this.state.maxResults)
             .then(response => {
                 this.setState({myTourneys: response.data.tournaments});
+                this.setState({totalPages: response.data.totalPages})
                 
                 if(JSON.stringify(this.state.myTourneys[0]) === undefined){
                     //todo: mostrar mensaje de tabla vacia
@@ -75,24 +77,6 @@ export default class TabsTourneys extends Component{
                 Handler.handleSessionError(this.state.sessionError, this.state.errorMessage, error)
                 this.setState({loading: false, error: true})
             })
-    }
-
-    //duplico esta parte para que se actualice la lista de torneos cuando toco un boton de paginacion
-    submitTourneysPage(page){
-        this.setState({loading: true, error: false})
-        UserService.getMyTourneys(this.props.nombreTabla, page,this.state.maxResults)
-            .then(response => {
-                this.setState({myTourneys: response.data.tournaments});
-                
-                if(JSON.stringify(this.state.myTourneys[0]) === undefined){
-                    //todo: mostrar mensaje de tabla vacia
-                }
-                this.setState({loading: false})
-            })
-            .catch(error => {
-                Handler.handleSessionError(this.state.sessionError, this.state.errorMessage, error);
-                this.setState({loading: false, error: true})
-            })        
     }
 
     filtro =(e) =>{
