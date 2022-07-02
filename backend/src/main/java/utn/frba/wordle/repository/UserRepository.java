@@ -11,6 +11,12 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     @Query(value = "SELECT * FROM wordle.user u WHERE u.username = :username and u.password = :password", nativeQuery = true)
     UserEntity findByUsernameAndPassword(String username, String password);
 
+    @Query(value = "SELECT id FROM wordle.user u WHERE u.telegram_userid = :teleid", nativeQuery = true)
+    Long findUseridByTelegramId(Long teleid);
+
+    @Query(value = "SELECT username FROM wordle.user u WHERE u.telegram_userid = :teleid", nativeQuery = true)
+    String findUsernameByTelegramId(Long teleid);
+
     @Query(value = "SELECT * FROM wordle.user u WHERE u.username = :username", nativeQuery = true)
     UserEntity getByUsername(String username);
 

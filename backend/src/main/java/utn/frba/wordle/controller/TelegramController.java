@@ -10,6 +10,7 @@ import utn.frba.wordle.chat.UserChat;
 import utn.frba.wordle.client.TeleSender;
 
 import utn.frba.wordle.model.tele.Update;
+import utn.frba.wordle.service.UserService;
 
 
 import java.io.IOException;
@@ -32,6 +33,8 @@ public class TelegramController {
 
     @Autowired
     UserChat userChat;
+    @Autowired
+    UserService userService;
 
     final String start = "Wordle ♟ - Bienvenida\n\n" +
                     "/help - Generar trampas para Wordle\n" +
@@ -43,7 +46,7 @@ public class TelegramController {
     final String users = "Wordle ♟ - Usuario\n\n" +
             "/register - Elija su nombre de usuario\n" +
             "/users_list - Lista todos los usuarios existentes\n" +
-            "/myCredentials - Mostrar mis credenciales para entrar desde la app web";
+            "/resetPass - Crear nueva contraseña para entrar desde la app web";
 
     final String tournaments = "Wordle ♟ - Torneos\n\n" +
             "/myCreatedTournaments - Ver mis torneos creados\n" +
@@ -51,11 +54,12 @@ public class TelegramController {
             "/publicTournaments - Ver lista de torneos publicos a punto de comenzar, a los cuales unirme\n" +
             "/publicStarted - Ver torneos publicos en juego, para poder consultar rankings\n" +
             "/finalizedTournaments - Ver torneos finalizados en los que fui participe\n\n" +
-            "/tournament - Obtener informacion de un torneo\n\n" +
+            "/tournament - Obtener informacion de un torneo\n" +
+            "/ranking - Visualizar el ranking de un torneo\n\n" +
             "/create - Crear un torneo\n" +
             "/addmember - Agregar un usuario a uno de mis torneos\n" +
-            "/join - Unirme a un torneo publico pendiente de empezar\n" +
-            "/ranking - Visualizar el ranking de un torneo";
+            "/join - Unirme a un torneo publico pendiente de comenzar";
+
 
 
     /**
@@ -71,6 +75,7 @@ public class TelegramController {
 
         String text = update.getMessage().getText();
         Long chat_id = update.getMessage().getChat().getId();
+        String humanName = update.getMessage().getFrom().getFirst_name();
 
         //interpretar mensaje
         if(text.matches("/[^ ](.*)")){  //es comando
@@ -88,24 +93,24 @@ public class TelegramController {
             //meter los parametros en un array
             String[] params = params_string.split("\\s+");
             //procesar
-            processCommand(caso, params, chat_id, true);
+            processCommand(caso, params, chat_id, true, humanName);
 
         }else { //no es comando
             if(!casoActual.containsKey(chat_id)){
                 // mensaje generico
-                String mensajeEnvio = update.getMessage().getFrom().getFirst_name()+", su mensaje "+update.getMessage().getMessage_id()+" dice: \n"+text;
+                String mensajeEnvio = humanName+", su mensaje "+update.getMessage().getMessage_id()+" dice: \n"+text;
                 sender.sendMessage(mensajeEnvio, chat_id);
             }else{
                 // si el usuario se encuentra dentro de un mensaje interactivo
                 String[] params = text.split("\\s+");
-                processCommand(casoActual.get(chat_id), params, chat_id, false);
+                processCommand(casoActual.get(chat_id), params, chat_id, false, humanName);
             }
         }
 
         return new ResponseEntity<>(myString, HttpStatus.OK);
     }
 
-    private void processCommand(String caso, String[] params, Long chat_id, boolean restart) throws IOException, URISyntaxException {
+    private void processCommand(String caso, String[] params, Long chat_id, boolean restart, String humanName) throws IOException, URISyntaxException {
         switch(caso)
         {
             case "help" :
@@ -114,6 +119,7 @@ public class TelegramController {
 
             case "definition" :
                 sender.sendMessage("Obtener definicion de una palabra", chat_id);
+                //todo separar en comandos para español e ingles
                 break;
 
             case "exit" :
@@ -123,6 +129,8 @@ public class TelegramController {
 
             case "submit" :
                 sender.sendMessage("Cargar los resultados del dia", chat_id);
+                //todo separar en comandos para español e ingles
+                //todo programar mensaje para que el usuario recuerde volver a cargar al dia siguiente
                 break;
 
             case "users" :
@@ -134,6 +142,14 @@ public class TelegramController {
                 break;
 
             case "start" :
+                sender.sendMessage("Buenas tardes/días/noches "+humanName+"! <3", chat_id);
+
+                String user = userService.findUsernameByTelegramID(chat_id);
+                if(user == null)
+                    sender.sendMessage("Usted no se encuentra registrado/a.\n\nHaga /register para poder utilizar torneos", chat_id);
+                else
+                    sender.sendMessage("Usted se encuentra registrado/a para siempre bajo el usuario: "+user, chat_id);
+
                 sender.sendMessage(start, chat_id);
                 break;
 
@@ -143,21 +159,21 @@ public class TelegramController {
                     sender.sendMessage("No hay nada mas para mostrar", chat_id);
                     return;
                 }
-                processCommand(casoGuardado, null, chat_id, false);
+                processCommand(casoGuardado, null, chat_id, false, humanName);
                 break;
 
             //----------- users -------------------------------------------------
 
             case "register" :
-                sender.sendMessage("Elija su nombre de usuario", chat_id);
+                userChat.processRegister(chat_id, restart, params[0], casoActual);
                 break;
 
             case "users_list" :
                 userChat.processUsersList(chat_id, restart, casoActual);
                 break;
 
-            case "myCredentials" :
-                sender.sendMessage("Mostrar mis credenciales para entrar desde la app web", chat_id);
+            case "resetPass" :
+                sender.sendMessage("Crear nueva contraseña para entrar desde la app web\ntodo 501", chat_id);
                 break;
 
             //----------- tournaments -------------------------------------------------
@@ -186,6 +202,10 @@ public class TelegramController {
                 sender.sendMessage("Obtener informacion de un torneo", chat_id);
                 break;
 
+            case "ranking" :
+                sender.sendMessage("Visualizar el ranking de un torneo", chat_id);
+                break;
+
             case "create" :
                 sender.sendMessage("Crear un torneo", chat_id);
                 break;
@@ -196,10 +216,6 @@ public class TelegramController {
 
             case "join" :
                 sender.sendMessage("Unirme a un torneo publico pendiente de empezar", chat_id);
-                break;
-
-            case "ranking" :
-                sender.sendMessage("Visualizar el ranking de un torneo", chat_id);
                 break;
 
 
