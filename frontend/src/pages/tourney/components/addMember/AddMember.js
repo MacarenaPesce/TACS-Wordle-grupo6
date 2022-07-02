@@ -11,6 +11,7 @@ import AuthService from "../../../../service/AuthService";
 import Tourney from "../../Tourney";
 import Handler from "../../../sesion/Handler";
 
+
 export default class AddMember extends Component  {
 
     constructor(props){
@@ -56,13 +57,13 @@ export default class AddMember extends Component  {
         TourneyService.addMember(tourneyid,id)
             .then(response => {
                 this.setState({successVisible: true, nameDisplay: this.state.name, loading: false})
-                console.log("se agregó el usuario: "+id+ " al torneo 1")
                 console.log(response)
             })
             .catch(error => {
                 console.log(error)
                 this.setState({errorVisible: true, errorMessage: error.response.data.message, loading: false});
                 Handler.handleSessionError(this, error)
+
         })
     }
 

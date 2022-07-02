@@ -66,6 +66,7 @@ export default function Login({onLogin}) {
             </header>
             
             {isLoginLoading && <div>{spinner}<strong>Chequeando credenciales... Aguarde un momento...</strong>{spinner}</div>/*todo: esto tendria que ir con un toast.loading('... ') */} 
+            
             {!isLoginLoading &&
 
             <div className="forms">
