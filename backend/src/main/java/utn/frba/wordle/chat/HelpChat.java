@@ -40,12 +40,12 @@ public class HelpChat {
             String sintaxis = "Sintaxis: \n/help es|en _|amarillas _|grises _a_a_";
             if(params[0].equals("")){
                 pasoActual.put(chat_id, 1);
-                sender.sendMessage("Obtenga ayuda para resolver un wordle.\n\nOpcion 1: vuelva a escribir el comando completo:\n"+sintaxis+"\n\n Opcion 2: envie solo el primer parametro.\n\n En criollo: elija el idioma: es o en", chat_id);
+                sender.sendMessage("Obtenga ayuda para resolver un wordle.\n\nOpcion 1: vuelva a escribir el comando completo:\n"+sintaxis+"\n\n Opcion 2: envie solo el primer parametro.\n\n En criollo: elija el idioma: es o en", chat_id, "");
                 return;
             }
 
             if(params.length != 4 || !params[0].matches("es|en") || !params[1].matches("_|[A-Za-z]+") || !params[2].matches("_|[A-Za-z]+") || !params[3].matches("[A-Za-z_]{5}")){
-                sender.sendMessage(sintaxis, chat_id);
+                sender.sendMessage(sintaxis, chat_id, "");
                 return;
             }
 
@@ -53,7 +53,7 @@ public class HelpChat {
             String str = buildSolution(params);
 
             casoActual.remove(chat_id, "help");
-            sender.sendMessage(str, chat_id);
+            sender.sendMessage(str, chat_id, "");
         }
         else{ // comando interactive
             interactive(chat_id, valor, params[0], casoActual);
@@ -102,9 +102,9 @@ public class HelpChat {
                 if(message.equalsIgnoreCase("es") || message.equalsIgnoreCase("en")){
                     commandBuilder.put(chat_id, new StringBuilder(message.toLowerCase()+" "));
                     pasoActual.put(chat_id, 2);
-                    sender.sendMessage(amarillas, chat_id);
+                    sender.sendMessage(amarillas, chat_id, "");
                 }else{
-                    sender.sendMessage(idioma+exit, chat_id);
+                    sender.sendMessage(idioma+exit, chat_id, "");
                 }
                 break;
 
@@ -112,9 +112,9 @@ public class HelpChat {
                 if(message.matches("_|[A-Za-z]+")){
                     commandBuilder.put(chat_id, commandBuilder.get(chat_id).append(message.toLowerCase()).append(" "));
                     pasoActual.put(chat_id, 3);
-                    sender.sendMessage(grises, chat_id);
+                    sender.sendMessage(grises, chat_id, "");
                 }else{
-                    sender.sendMessage(amarillas+exit, chat_id);
+                    sender.sendMessage(amarillas+exit, chat_id, "");
                 }
                 break;
 
@@ -122,9 +122,9 @@ public class HelpChat {
                 if(message.matches("_|[A-Za-z]+")){
                     commandBuilder.put(chat_id, commandBuilder.get(chat_id).append(message.toLowerCase()).append(" "));
                     pasoActual.put(chat_id, 4);
-                    sender.sendMessage(solution, chat_id);
+                    sender.sendMessage(solution, chat_id, "");
                 }else{
-                    sender.sendMessage(grises+exit, chat_id);
+                    sender.sendMessage(grises+exit, chat_id, "");
                 }
                 break;
 
@@ -134,14 +134,14 @@ public class HelpChat {
                     //construir mensaje y dar la respuesta
                     String[] params = commandBuilder.get(chat_id).toString().split("\\s+");
                     processHelp(params, chat_id, true, casoActual);
-                    sender.sendMessage("Gracias por utilizar Wordle bot 😇🦾", chat_id);
+                    sender.sendMessage("Gracias por utilizar Wordle bot 😇🦾", chat_id, "");
                 }else{
-                    sender.sendMessage(solution+exit, chat_id);
+                    sender.sendMessage(solution+exit, chat_id, "");
                 }
                 break;
 
             default :
-                sender.sendMessage("?????????", chat_id);
+                sender.sendMessage("?????????", chat_id, "");
         }
 
     }

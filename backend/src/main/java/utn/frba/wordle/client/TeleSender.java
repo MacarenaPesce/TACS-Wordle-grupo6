@@ -20,7 +20,7 @@ public class TeleSender {
 
     private static final String API_URL = "https://api.telegram.org/bot";
 
-    public void sendMessage(String mensaje, Long chat_id) throws IOException, URISyntaxException {
+    public void sendMessage(String mensaje, Long chat_id, String parse_mode) throws IOException, URISyntaxException {
         String destinationUrl = API_URL + TOKEN + "/sendMessage";
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
@@ -28,7 +28,7 @@ public class TeleSender {
         URI uri = new URIBuilder(request.getURI())
                 .addParameter("chat_id", chat_id.toString())
                 .addParameter("text", mensaje)
-                .addParameter("parse_mode", "Markdown")
+                .addParameter("parse_mode", parse_mode)
                 .build();
         request.setURI(uri);
 
@@ -46,7 +46,7 @@ public class TeleSender {
     private void handleErrors(String response, Long chat_id) throws IOException, URISyntaxException {
 
         if(response.equals("{\"ok\":false,\"error_code\":400,\"description\":\"Bad Request: message is too long\"}")){
-            sendMessage(response, chat_id);
+            sendMessage(response, chat_id, "");
         }
 
     }

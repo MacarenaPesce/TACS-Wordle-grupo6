@@ -18,8 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static utn.frba.wordle.model.enums.ErrorMessages.INVALID_RESULT_VALUE;
-
 
 @Service
 public class UserChat {
@@ -59,10 +57,10 @@ public class UserChat {
 
         if(users.isEmpty()){
             casoActual.remove(chat_id, "users_list");
-            sender.sendMessage("No hay mas resultados", chat_id);
+            sender.sendMessage("No hay mas resultados", chat_id, "");
         }else {
             pasoActual.put(chat_id, pag+1);
-            sender.sendMessage("Lista de usuarios - Página "+pag+"\n\n"+usersString+mas+exit, chat_id);
+            sender.sendMessage("Lista de usuarios - Página "+pag+"\n\n"+usersString+mas+exit, chat_id, "");
         }
 
     }
@@ -84,10 +82,10 @@ public class UserChat {
                 String user = userService.findUsernameByTelegramID(chat_id);
                 if(user == null){
                     pasoActual.put(chat_id, 2);
-                    sender.sendMessage(usuario, chat_id);
+                    sender.sendMessage(usuario, chat_id, "");
                 }else {
                     casoActual.remove(chat_id, "register");
-                    sender.sendMessage("Usted ya se encuentra registrado bajo el usuario: "+user, chat_id);
+                    sender.sendMessage("Usted ya se encuentra registrado bajo el usuario: "+user, chat_id, "");
                 }
                 break;
 
@@ -96,15 +94,15 @@ public class UserChat {
                     //todo verificar que el username no este en el hashmap temporal de otro usuario
                     UserEntity userEntity = userService.getUserByUsername(message.toLowerCase());
                     if(userEntity != null){
-                        sender.sendMessage("El usuario "+message+" ya esta en uso, elija otro."+exit, chat_id);
+                        sender.sendMessage("El usuario "+message+" ya esta en uso, elija otro."+exit, chat_id, "");
                         return;
                     }
 
                     username.put(chat_id, message);
                     pasoActual.put(chat_id, 3);
-                    sender.sendMessage(contrasenia, chat_id);
+                    sender.sendMessage(contrasenia, chat_id, "");
                 }else{
-                    sender.sendMessage(usuario+exit, chat_id);
+                    sender.sendMessage(usuario+exit, chat_id, "");
                 }
                 break;
 
@@ -112,14 +110,14 @@ public class UserChat {
                 //todo hacer alguna verificacion regex
                 password.put(chat_id, message);
                 pasoActual.put(chat_id, 4);
-                sender.sendMessage(email, chat_id);
+                sender.sendMessage(email, chat_id, "");
                 break;
 
             case 4:     //verificar email y registrar usuario
                 //todo hacer alguna verificacion regex
                 UserEntity userEntity = userService.findUserByEmail(message.toLowerCase());
                 if(userEntity != null){
-                    sender.sendMessage("El email ya esta en uso, elija otro."+exit, chat_id);
+                    sender.sendMessage("El email ya esta en uso, elija otro."+exit, chat_id, "");
                     return;
                 }
 
@@ -128,7 +126,7 @@ public class UserChat {
                 String name = username.get(chat_id);
                 userService.createUserTelegram(name, password.get(chat_id), message, chat_id);
 
-                sender.sendMessage("Ahora eres para siempre: "+name, chat_id);
+                sender.sendMessage("Ahora eres para siempre: "+name, chat_id, "");
 
                 username.remove(chat_id);
                 password.remove(chat_id);
@@ -137,7 +135,7 @@ public class UserChat {
 
 
             default :
-                sender.sendMessage("?????????", chat_id);
+                sender.sendMessage("?????????", chat_id, "");
         }
 
     }
@@ -159,15 +157,15 @@ public class UserChat {
         else
             english = englishScore.toString();
 
-        sender.sendMessage("_Puntajes del día para "+humanName+"_: \n\n*Español*: "+spanish+"\n\n*English*: "+english+"\n\n*Importante*: recuerde jugar todos los dias a Wordle y cargar aquí sus resultados. Viva para nosotros!", chat_id);
+        sender.sendMessage("_Puntajes del día para "+humanName+"_: \n\n*Español*: "+spanish+"\n\n*English*: "+english+"\n\n*Importante*: recuerde jugar todos los dias a Wordle y cargar aquí sus resultados. Viva para nosotros!", chat_id, "Markdown");
     }
 
     public void processSubmit(Long chat_id, String humanName) throws IOException, URISyntaxException {
 
         processCheckScores(chat_id,humanName);
-        sender.sendMessage("[Jugar a Wordle en Español](https://wordle.danielfrg.com/)", chat_id);
-        sender.sendMessage("[Play Wordle in English](https://www.nytimes.com/games/wordle/index.html)", chat_id);
-        //sender.sendMessage("Cargar los resultados del día: \n\n/submitES - Español\n\n/submitEN - English", chat_id);
+        sender.sendMessage("[Jugar a Wordle en Español](https://wordle.danielfrg.com/)", chat_id, "Markdown");
+        sender.sendMessage("[Play Wordle in English](https://www.nytimes.com/games/wordle/index.html)", chat_id, "Markdown");
+        //sender.sendMessage("Cargar los resultados del día: \n\n/submitES - Español\n\n/submitEN - English", chat_id, "");
     }
 
     public void processSubmitFull(Long chat_id, boolean restart, String message, HashMap<Long, String> casoActual, boolean spanish) throws IOException, URISyntaxException {
@@ -189,7 +187,7 @@ public class UserChat {
 
         Long score = punctuationService.getTodaysResult(userid, lang);
         if(score != 0){
-            sender.sendMessage("Ya cargó hoy, espere hasta mañana, no sea ansioso", chat_id);
+            sender.sendMessage("Ya cargó hoy, espere hasta mañana, no sea ansioso", chat_id, "");
             return;
         }
 
@@ -197,7 +195,7 @@ public class UserChat {
         switch (step){
             case 1 :
                 pasoActual.put(chat_id, 2);
-                sender.sendMessage("Indique el puntaje obtenido del 1 al 7 (sin mentir ni equivocarse sin querer)", chat_id);
+                sender.sendMessage("Indique el puntaje obtenido del 1 al 7 (sin mentir ni equivocarse sin querer)", chat_id, "");
                 break;
 
             case 2 :
@@ -208,7 +206,7 @@ public class UserChat {
                     new_score = 99L;
                 }
                 if(new_score > 7 || new_score < 1){
-                    sender.sendMessage("Intente con un puntaje válido por favor", chat_id);
+                    sender.sendMessage("Intente con un puntaje válido por favor", chat_id, "");
                     return;
                 }
 
@@ -220,18 +218,18 @@ public class UserChat {
                 try {
                     tournamentService.submitResults(userid, dto);
                 }catch (BusinessException e){
-                    sender.sendMessage("Alguien estuvo manipulando mis resultados desde que inicie el comando", chat_id);
+                    sender.sendMessage("Alguien estuvo manipulando mis resultados desde que inicie el comando", chat_id, "");
                 } finally {
                     if(spanish)
                         casoActual.remove(chat_id, "submitES");
                     else
                         casoActual.remove(chat_id, "submitEN");
                 }
-                sender.sendMessage("Exitos!!!! No olvide cargar también el otro idioma y volver mañana\n\n/checkScores - revisar mis puntajes del dia de la fecha", chat_id);
+                sender.sendMessage("Exitos!!!! No olvide cargar también el otro idioma y volver mañana\n\n/checkScores - revisar mis puntajes del dia de la fecha", chat_id, "");
                 break;
 
             default :
-                sender.sendMessage("?????????", chat_id);
+                sender.sendMessage("?????????", chat_id, "");
         }
 
     }
