@@ -32,11 +32,11 @@ public class TelegramController {
     final String start = "Wordle ♟\n\n" +
                     "/register - Elija su nombre de usuario\n" +
                     "/help - Generar trampas para Wordle\n" +
-                    "/definition - Obtener definicion de una palabra\n" +
-                    "/submit - Cargar los resultados del dia\n" +
-                    "/create - Crear un torneo\n" +
+                    "/definition - Obtener definicion de una palabra en inglés o español\n" +
+                    "/submit - Cargar los resultados obtenidos del dia\n" +
+                    "/create - Crear un torneo nuevo\n" +
                     "/addmember - Agregar un usuario a uno de mis torneos\n" +
-                    "/join - Unirme a un torneo publico pendiente de empezar\n" +
+                    "/join - Unirme a un torneo publico antes de empezar\n" +
                     "/ranking - Visualizar el ranking de un torneo\n" +
                     "/tournaments - Obtener listas de torneos existentes\n" +
                     "/tournament - Obtener informacion de un torneo";
