@@ -11,6 +11,12 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     @Query(value = "SELECT * FROM wordle.user u WHERE u.username = :username and u.password = :password", nativeQuery = true)
     UserEntity findByUsernameAndPassword(String username, String password);
 
+    @Query(value = "SELECT id FROM wordle.user u WHERE u.telegram_userid = :teleid", nativeQuery = true)
+    Long findUseridByTelegramId(Long teleid);
+
+    @Query(value = "SELECT username FROM wordle.user u WHERE u.telegram_userid = :teleid", nativeQuery = true)
+    String findUsernameByTelegramId(Long teleid);
+
     @Query(value = "SELECT * FROM wordle.user u WHERE u.username = :username", nativeQuery = true)
     UserEntity getByUsername(String username);
 
@@ -27,6 +33,9 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     @Query(value = "SELECT * FROM wordle.user u WHERE u.username like %:username% order by username asc LIMIT :offset,:maxResults", nativeQuery = true)
     List<UserEntity> findByPartialUsernameWithPagination(String username, Integer offset, Integer maxResults);
+
+    @Query(value = "SELECT * FROM wordle.user u order by id asc LIMIT :offset,:maxResults", nativeQuery = true)
+    List<UserEntity> getAllWithPagination(Integer offset, Integer maxResults);
 
     @Query(value = "SELECT count(*) FROM wordle.user u WHERE u.username like %:username%", nativeQuery = true)
     Integer findByNameTotalPages(String username);

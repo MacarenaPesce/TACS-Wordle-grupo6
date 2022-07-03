@@ -133,43 +133,6 @@ public class TournamentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("public")
-    public ResponseEntity<TournamentsListResponse> listPublicActiveTournaments(
-            @RequestHeader("Authorization") String token,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) Integer pageNumber,
-            @RequestParam(required = false) Integer maxResults){
-        logger.info("Method: listPublicTournaments - Request: token={}, pageNumber={}, maxResults={}", token, pageNumber, maxResults);
-        List<TournamentDto> tournamentsDto;
-
-        if(pageNumber == null || maxResults == null){
-            pageNumber = 1;
-            maxResults = 100;
-        }
-        Integer totalPages;
-        if(name == null) {
-            tournamentsDto = tournamentService.listPublicActiveTournaments(pageNumber, maxResults);
-            totalPages =  tournamentService.listPublicActiveTournamentsTotalPages(maxResults);
-        }
-        else {
-            tournamentsDto = tournamentService.findPublicActiveTournaments(name, pageNumber, maxResults);
-            totalPages =  tournamentService.findPublicActiveTournamentsTotalPages(name, maxResults);
-        }
-
-        List<TournamentResponse> tournaments = tournamentsDto
-                .stream().map(this::buildResponse).collect(Collectors.toList());
-
-        TournamentsListResponse response = TournamentsListResponse.builder()
-                .tournaments(tournaments)
-                .maxResults(maxResults)
-                .pageNumber(pageNumber)
-                .totalPages(totalPages)
-                .build();
-
-        logger.info("Method: listPublicTournaments - Response: {}", response);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
     @GetMapping("/info/{tournamentId}")
     public ResponseEntity<TournamentResponse> getTournamentFromId(@RequestHeader("Authorization") String token,
                                                                   @PathVariable Long tournamentId) {
@@ -299,7 +262,19 @@ public class TournamentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{state}")
+    @GetMapping("/ids")
+    public ResponseEntity<List<Long>> getIdsTournaments(
+            @RequestHeader("Authorization") String token){
+        logger.info("Method: getIdsTournaments - Request: token={}", token);
+
+        Session session = AuthService.getSession(token);
+        List<Long> response = tournamentService.findIdTournamentsFromUser(session.getUserId());
+
+        logger.info("Method: getTournamentsFromlisto grUser - Response: {}", response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Deprecated
     public ResponseEntity<TournamentsListResponse> findUserTournamentsByStateWithPagination(@RequestHeader("Authorization") String token,
                                                                                             @PathVariable State state,
                                                                                             @RequestParam(required = false) Integer pageNumber,
@@ -327,6 +302,43 @@ public class TournamentController {
 
         logger.info("Method: findUserTournamentsByStateWithPagination - Response: {}", response);
 
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Deprecated
+    public ResponseEntity<TournamentsListResponse> listPublicActiveTournaments(
+            @RequestHeader("Authorization") String token,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer pageNumber,
+            @RequestParam(required = false) Integer maxResults){
+        logger.info("Method: listPublicTournaments - Request: token={}, pageNumber={}, maxResults={}", token, pageNumber, maxResults);
+        List<TournamentDto> tournamentsDto;
+
+        if(pageNumber == null || maxResults == null){
+            pageNumber = 1;
+            maxResults = 100;
+        }
+        Integer totalPages;
+        if(name == null) {
+            tournamentsDto = tournamentService.listPublicActiveTournaments(pageNumber, maxResults);
+            totalPages =  tournamentService.listPublicActiveTournamentsTotalPages(maxResults);
+        }
+        else {
+            tournamentsDto = tournamentService.findPublicActiveTournaments(name, pageNumber, maxResults);
+            totalPages =  tournamentService.findPublicActiveTournamentsTotalPages(name, maxResults);
+        }
+
+        List<TournamentResponse> tournaments = tournamentsDto
+                .stream().map(this::buildResponse).collect(Collectors.toList());
+
+        TournamentsListResponse response = TournamentsListResponse.builder()
+                .tournaments(tournaments)
+                .maxResults(maxResults)
+                .pageNumber(pageNumber)
+                .totalPages(totalPages)
+                .build();
+
+        logger.info("Method: listPublicTournaments - Response: {}", response);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

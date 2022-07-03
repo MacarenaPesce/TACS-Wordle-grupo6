@@ -32,8 +32,8 @@ const getTournamentFromId = (tournamentId) => {
     return axios.get(API_URL+"info/"+tournamentId, { headers: authHeader() });
 };
 
-const getRanking = (tournamentId) => {
-    return axios.get(API_URL+tournamentId+"/ranking", { headers: authHeader() });
+const getRanking = (tournamentId, pageNumber, maxResults) => {
+    return axios.get(API_URL+tournamentId+"/ranking"+ "?pageNumber="+ pageNumber + "&maxResults="+ maxResults, { headers: authHeader() });
 };
 
 const getEndOfTheDay = () => {

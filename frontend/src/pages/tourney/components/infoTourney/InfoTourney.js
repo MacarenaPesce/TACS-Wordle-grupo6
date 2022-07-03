@@ -29,6 +29,11 @@ export default function InfoTourney() {
   let userId = parseInt(localStorage.getItem("userId"));
   const [inTourney, setInTourney] = useState(false);
 
+  //para la pagina
+  const [currentPage, setCurrentPage] = useState(1);
+  const [maxResults, setMaxResults] = useState(7);
+  const [totalPages, setTotalPages] = useState(0);
+
   const getTourney=() =>{
     TourneyService.getTournamentFromId(id)
     .then(response => {
@@ -41,14 +46,16 @@ export default function InfoTourney() {
     })
   }
   
-  const getRanking =() => {
+  const getRanking =(page) => {
     setLoading(true);
-    TourneyService.getRanking(id)
+    TourneyService.getRanking(id, page, maxResults)
     .then(response => {
       setRanking(response.data);
       //console.log('Response de ranking obtenida: ')
       //console.log(response.data)
       setLoading(false);
+      setTotalPages(response.data.totalPages);
+      console.log(response.data);
     })
     .catch(error => {
       Handler.handleSessionErrorFunc(setSessionError, setErrorMessage, error)
@@ -86,7 +93,7 @@ export default function InfoTourney() {
 
   function loadData(){
     getTourney();
-    getRanking();
+    getRanking(currentPage);
     getMember();
     console.log("esta en el torneo:",inTourney);
     if(inTourney){
@@ -99,6 +106,26 @@ export default function InfoTourney() {
     setPuntuacion(ranking.punctuations);
     validarToken();
   }, []);
+
+  function nextPage() {
+    //console.log("page actual:", this.state.currentPage);
+    if ( totalPages > currentPage ){
+        let page = currentPage + 1;
+        setCurrentPage(page);
+        getRanking(page);
+    }
+    //console.log("accion: nextPage, ","page:",this.state.currentPage, );
+  }
+
+  function prevPage() {
+      //console.log("page actual:", this.state.currentPage);
+      if( currentPage > 1){
+          let page = currentPage - 1;
+          setCurrentPage(page);
+          getRanking(page);
+      }  
+      //console.log("accion: prevpage, ","page:",this.state.currentPage);
+  }
   
   function validarToken() {
     console.log('Ping del token en el store...')
@@ -295,8 +322,19 @@ export default function InfoTourney() {
 
                   {loading &&
                       spinner}
+                  
+                  <button className='btn btn-primary' onClick={prevPage}>
+                    Anterior
+                  </button>
+                  &nbsp;
+                  <button className='btn btn-primary' onClick={nextPage}> 
+                      Siguiente
+                  </button>
 
                 </div>
+
+
+
               </div>
             </div>
           </div>

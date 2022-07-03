@@ -64,4 +64,9 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
             "and curdate() < finish \n" +
             "and LOWER(name) like %:name%", nativeQuery = true)
     Integer findPublicActiveTournamentsByNameTotalPages(String name);
+
+    @Query(value = "select t.id from wordle.registration r, wordle.tournament t \n" +
+            "where r.id_user = :userId \n" +
+            "and r.id_tournament = t.id", nativeQuery = true)
+    List<Long> findIdTournamentsFromUser(Long userId);
 }

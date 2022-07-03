@@ -31,6 +31,18 @@ public class UserService {
         return mapToDto(newUser);
     }
 
+    public void createUserTelegram(String username, String password, String mail, Long tele_id) {
+        UserEntity newUser = UserEntity.builder()
+                .email(mail.toLowerCase())
+                .password(hashPassword(password))
+                .username(username.toLowerCase())
+                .telegram_userid(tele_id)
+                .build();
+
+        userRepository.save(newUser);
+        return;
+    }
+
     public UserEntity findUserByUsernameAndPassword(String username, String password) {
         return userRepository.findByUsernameAndPassword(username.toLowerCase(), hashPassword(password));
     }
@@ -39,9 +51,15 @@ public class UserService {
         return mapToDto(findUserEntity(userId));
     }
 
-
     public UserEntity findUserEntity(Long userId) {
         return userRepository.findById(userId).orElseThrow();
+    }
+
+    public Long findUseridByTelegramID(Long userId) {
+        return userRepository.findUseridByTelegramId(userId);
+    }
+    public String findUsernameByTelegramID(Long userId) {
+        return userRepository.findUsernameByTelegramId(userId);
     }
 
     public UserEntity getUserByUsername(String username) {
@@ -68,6 +86,12 @@ public class UserService {
     public List<UserDto> findByNameWithPagination(String username, Integer maxResults, Integer actualPage) {
         Integer offset = (actualPage - 1) * maxResults;
         List<UserEntity> users = userRepository.findByPartialUsernameWithPagination(username.toLowerCase(), offset, maxResults);
+        return mapToDto(users);
+    }
+
+    public List<UserDto> getAllWithPagination(Integer maxResults, Integer actualPage) {
+        Integer offset = (actualPage - 1) * maxResults;
+        List<UserEntity> users = userRepository.getAllWithPagination(offset, maxResults);
         return mapToDto(users);
     }
 

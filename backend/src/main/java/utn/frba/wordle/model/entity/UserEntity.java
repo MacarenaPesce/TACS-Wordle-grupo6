@@ -26,6 +26,9 @@ public class UserEntity {
     @Column
     private String password;
 
+    @Column
+    private Long telegram_userid;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<RegistrationEntity> registrations;
 

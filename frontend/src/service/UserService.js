@@ -25,32 +25,50 @@ const getTodaysResult = (language) => {
   return axios.get(API + "punctuation/todaysResult/" + language, { headers: authHeader() });
 };
 
-const getMyTourneys = (nombreTabla) => {
+const getUsers = (userSearch) => {
+  return axios.get(API_USERS +'?'+ 'username='+userSearch, { headers: authHeader() });
+};
+
+//id de todos los torneos de un usuario
+const getMyTourneysId = () => {
+  return axios.get(API + "tournaments/ids", { headers: authHeader() } );
+};
+
+//Generico sin paginacion para todos los torneos
+const getMyTourneysGeneric = () => {
+  return axios.get(API + "tournaments", { headers: authHeader() });
+};
+
+const getMyTourneys = (nombreTabla, pageNumber, maxResults) => {
   if(nombreTabla === 'Mis torneos'){
-    return getMyTourneysActive();
+    return getMyTourneysActive(pageNumber,maxResults); 
   }
   else if(nombreTabla === 'Publicos'){
-    return getTourneysPublic();
+    return getTourneysStateAndType(pageNumber,maxResults,'READY','PUBLIC');
   }
   else{
-    return getTourneysFinished();
+    return getTourneysState(pageNumber,maxResults,'FINISHED');
   }  
 };
 
-const getMyTourneysActive = () => {
-  return axios.get(API + "tournaments/myTournaments", { headers: authHeader() });
+//es ready o started
+const getMyTourneysActive = (pageNumber,maxResults) => {
+  return axios.get(API + "tournaments/myTournaments"+"?pageNumber="+pageNumber+ "&maxResults="+maxResults, { headers: authHeader() });
 };
 
-const getTourneysPublic = () => {
-  return axios.get(API + "tournaments/public", { headers: authHeader() });
+//torneos por tipo (publico o privado)
+const getTourneysType = (pageNumber, maxResults, type) => {
+  return axios.get(API + "tournaments"+ "?pageNumber="+ pageNumber + "&maxResults="+ maxResults + "&type=" + type, { headers: authHeader() });
 };
 
-const getTourneysFinished = () => {
-  return axios.get(API + "tournaments/FINISHED", { headers: authHeader() });
+//torneos por estado (ready - started - finished)
+const getTourneysState = (pageNumber, maxResults, state) => {
+  return axios.get(API + "tournaments"+"?pageNumber="+ pageNumber + "&maxResults="+ maxResults + "&state=" + state, { headers: authHeader() });
 };
 
-const getUsers = (userSearch) => {
-  return axios.get(API_USERS +'?'+ 'username='+userSearch, { headers: authHeader() });
+//torneos por estado (ready - started - finished) y tipo
+const getTourneysStateAndType = (pageNumber, maxResults, state, type) => {
+  return axios.get(API + "tournaments"+"?pageNumber="+ pageNumber + "&maxResults="+ maxResults + "&state=" + state  + "&type=" + type, { headers: authHeader() });
 };
 
 export default {
@@ -60,7 +78,9 @@ export default {
   getAdminBoard,
   getMyTourneys,
   getMyTourneysActive,
-  getTourneysPublic,
   getUsers,
-  getTodaysResult
+  getTodaysResult,
+  getMyTourneysGeneric,
+  getMyTourneysId,
+  getTourneysStateAndType
 };

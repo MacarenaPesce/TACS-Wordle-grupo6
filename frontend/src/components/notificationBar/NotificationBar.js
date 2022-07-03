@@ -1,28 +1,39 @@
-import React, { Component , useState} from "react";
+import React from "react";
 import './NotificationBar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Button from 'react-bootstrap/Button';
+import {Toaster, toast} from 'react-hot-toast';
 
-function NotificationBar(props) {
+function NotificationBar() {
 
   return (
-    <div>
-        {/* Info message */}
-        <a class="btn btn-info" onclick="toastr.info('Hi! I am info message.');">Info message</a>
-        {/* Warning message */}
-        <a class="btn btn-warning" onclick="toastr.warning('Hi! I am warning message.');">Warning message</a>
-        {/* Success message */}
-        <a class="btn btn-success" onclick="toastr.success('Hi! I am success message.');">Success message</a>
-        {/* Error message */}
-        <a class="btn btn-danger" onclick="toastr.error('Hi! I am error message.');">Error message</a>          
-    </div>
+      <Toaster 
+        position="top-right"
+        reverseOrder={true}
+        toastOptions={{
+          duration: 3000,
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          }
+        }}/>          
   );
 }
 
 export default NotificationBar;
- 
- 
- 
- 
- 
- 
+
+/* Pasos: 
+  1- importar en el archivo js:
+  import {Toaster, toast} from 'react-hot-toast';
+  2- colocar el toast en el boton donde suceden los cambios:
+  onClick....
+  3- Colocar debajo <NotificationBar /> e importarlo (mirar ejemplo de login)
+
+Tipos de toast
+Confirmacion -> toast.success('mensaje');
+Error -> toast.error('mensaje');
+Cargando con spinner -> toast.loading('mensaje');
+Con iconos -> toast('Buen Trabajo!', { icon: '👏', });
+
+Pagina donde hay mas info: https://react-hot-toast.com/
+*/

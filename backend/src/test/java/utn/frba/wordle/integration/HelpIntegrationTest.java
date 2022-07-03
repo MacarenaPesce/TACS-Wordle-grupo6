@@ -2,7 +2,6 @@ package utn.frba.wordle.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import utn.frba.wordle.controller.HelpController;
 import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.HelpDto;
 import utn.frba.wordle.model.http.HelpRequest;
@@ -95,7 +94,7 @@ public class HelpIntegrationTest extends AbstractIntegrationTest{
                 .build();
 
 
-        HelpDto normalized = new HelpController().normalizeInput(helpRequest); //TODO por que repetir el codigo del controller, no puedo llamar directo al controller?
+        HelpDto normalized = new HelpService().normalizeInput(helpRequest.getYellow(), helpRequest.getGrey(), helpRequest.getSolution());
         HelpResponse helpSolution = buildSolutionDto(normalized, Language.ES);
 
         assertThat(helpSolution).hasNoNullFieldsOrProperties();
@@ -110,7 +109,7 @@ public class HelpIntegrationTest extends AbstractIntegrationTest{
                 .solution("o____largo")
                 .build();
 
-        assertThrows(BusinessException.class, () -> new HelpController().solution(helpRequest, Language.EN)); //TODO aca si puedo llamar directo al controller, ya que no necesito el dto respuesta
+        assertThrows(BusinessException.class, () -> new HelpService().normalizeInput(helpRequest.getYellow(), helpRequest.getGrey(), helpRequest.getSolution()));
     }
 
 }
