@@ -42,19 +42,19 @@ public class DictionaryChat {
             String sintaxis = "Sintaxis: \n/dictionary es|en _|word";
             if(params[0].equals("")){
                 pasoActual.put(chat_id, 1);
-                sender.sendMessage("Obtenga ayuda para resolver un wordle.\n\nOpcion 1: vuelva a escribir el comando completo:\n"+sintaxis+"\n\n Opcion 2: envie solo el primer parametro.\n\n En criollo: elija el idioma: es o en", chat_id);
+                sender.sendMessage("Obtenga ayuda para resolver un wordle.\n\nOpcion 1: vuelva a escribir el comando completo:\n"+sintaxis+"\n\n Opcion 2: envie solo el primer parametro.\n\n En criollo: elija el idioma: es o en", chat_id, "");
                 return;
             }
 
             if(params.length != 2 || !params[0].matches("es|en") || !params[1].matches("_|[A-Za-z]")){
-                sender.sendMessage(sintaxis, chat_id);
+                sender.sendMessage(sintaxis, chat_id, "");
                 return;
             }
 
             String str = buildSolution(params);
 
             casoActual.remove(chat_id, "help");
-            sender.sendMessage(str, chat_id);
+            sender.sendMessage(str, chat_id, "");
         }
         else{ // comando interactive
             interactive(chat_id, valor, params[0], casoActual);
@@ -102,9 +102,9 @@ public class DictionaryChat {
                 if(message.equalsIgnoreCase("es") || message.equalsIgnoreCase("en")){
                     commandBuilder.put(chat_id, new StringBuilder(message.toLowerCase()+" "));
                     pasoActual.put(chat_id, 2);
-                    sender.sendMessage(word, chat_id);
+                    sender.sendMessage(word, chat_id, "");
                 }else{
-                    sender.sendMessage(idioma+exit, chat_id);
+                    sender.sendMessage(idioma+exit, chat_id, "");
                 }
                 break;
 
@@ -114,14 +114,14 @@ public class DictionaryChat {
                     //construir mensaje y dar la respuesta
                     String[] params = commandBuilder.get(chat_id).toString().split("\\s+");
                     processDictionary(params, chat_id, true, casoActual);
-                    sender.sendMessage("Gracias por utilizar Wordle bot 😇🦾", chat_id);
+                    sender.sendMessage("Gracias por utilizar Wordle bot 😇🦾", chat_id, "");
                 }else{
-                    sender.sendMessage(word+exit, chat_id);
+                    sender.sendMessage(word+exit, chat_id, "");
                 }
                 break;
 
             default :
-                sender.sendMessage("?????????", chat_id);
+                sender.sendMessage("?????????", chat_id, "");
         }
 
     }
