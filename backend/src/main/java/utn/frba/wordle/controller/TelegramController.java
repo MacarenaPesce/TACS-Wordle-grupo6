@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import utn.frba.wordle.chat.DictionaryChat;
 import utn.frba.wordle.chat.HelpChat;
 import utn.frba.wordle.chat.UserChat;
 import utn.frba.wordle.client.TeleSender;
@@ -30,6 +31,8 @@ public class TelegramController {
     TeleSender sender;
     @Autowired
     HelpChat helpChat;
+    @Autowired
+    DictionaryChat dictionaryChat;
 
     @Autowired
     UserChat userChat;
@@ -54,7 +57,7 @@ public class TelegramController {
 
     final String tournaments = "Wordle ♟ - Torneos\n\n" +
             "/myCreatedTournaments - Ver mis torneos creados\n" +
-            "/myTournaments - Ver torneos en los que estoy participando\n" +
+            "/myTournaments - Ver torneos activos en los que estoy participando\n" +
             "/publicTournaments - Ver lista de torneos publicos a punto de comenzar, a los cuales unirme\n" +
             "/publicStarted - Ver torneos publicos en juego, para poder consultar rankings\n" +
             "/finalizedTournaments - Ver torneos finalizados en los que fui participe\n\n" +
@@ -128,7 +131,7 @@ public class TelegramController {
                 break;
 
             case "definition" :
-                sender.sendMessage("Obtener definicion de una palabra: \n\n/definitionES - Español\n\n/definitionEN - English", chat_id);
+                dictionaryChat.processDictionary(params, chat_id, restart, casoActual);
                 break;
 
             case "checkScores" :
