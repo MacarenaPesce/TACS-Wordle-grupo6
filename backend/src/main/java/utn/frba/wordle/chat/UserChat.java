@@ -162,9 +162,9 @@ public class UserChat {
 
     public void processSubmit(Long chat_id, String humanName) throws IOException, URISyntaxException {
 
-        processCheckScores(chat_id,humanName);
         sender.sendMessage("[Jugar a Wordle en Español](https://wordle.danielfrg.com/)", chat_id, "Markdown");
         sender.sendMessage("[Play Wordle in English](https://www.nytimes.com/games/wordle/index.html)", chat_id, "Markdown");
+        processCheckScores(chat_id,humanName);
         //sender.sendMessage("Cargar los resultados del día: \n\n/submitES - Español\n\n/submitEN - English", chat_id, "");
     }
 

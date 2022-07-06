@@ -7,15 +7,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utn.frba.wordle.chat.DictionaryChat;
 import utn.frba.wordle.chat.HelpChat;
+import utn.frba.wordle.chat.TournamentChat;
 import utn.frba.wordle.chat.UserChat;
 import utn.frba.wordle.client.TeleSender;
 
 import utn.frba.wordle.model.tele.Update;
+import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.service.UserService;
 
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 
@@ -37,6 +40,8 @@ public class TelegramController {
     @Autowired
     UserChat userChat;
     @Autowired
+    TournamentChat tournamentChat;
+    @Autowired
     UserService userService;
 
     final String start = "Wordle ♟ - Bienvenida\n\n" +
@@ -57,9 +62,9 @@ public class TelegramController {
             "/resetPass - Crear nueva contraseña para entrar desde la app web";
 
     final String tournaments = "Wordle ♟ - Torneos\n\n" +
-            "/myCreatedTournaments - Ver mis torneos creados (probar despues de create)\n" +
+            //"/myCreatedTournaments - Ver mis torneos creados (probar despues de create)\n" +
             "/publicTournaments - Ver lista de torneos publicos a punto de comenzar, a los cuales unirme (probar antes de join)\n" +
-            "/myTournaments - Ver torneos en los que estoy participando (probar despues de join)\n" +
+            "/myTournaments - Ver torneos en los que estoy participando (probar despues de join o create)\n" +
             "/publicStarted - Ver torneos publicos en juego, para poder consultar rankings (hay torneos ya generados con rankings en juego)\n" +
             "/finalizedTournaments - Ver torneos finalizados en los que fui participe\n\n" +
             "/tournament - Obtener informacion de un torneo cualquiera\n" +
@@ -182,8 +187,8 @@ public class TelegramController {
 
             case "mas" :        // para ir a la siguiente pagina de una lista
                 String casoGuardado = casoActual.get(chat_id);
-                if(casoGuardado == null || !casoGuardado.equals("users_list")){
-                    sender.sendMessage("No hay nada mas para mostrar", chat_id, "");
+                if(casoGuardado == null || !Arrays.asList("users_list", "myCreatedTournaments", "myTournaments", "publicTournaments", "publicStarted", "finalizedTournaments").contains(casoGuardado)){
+                    sender.sendMessage("Comando no valido aquí", chat_id, "");
                     return;
                 }
                 processCommand(casoGuardado, null, chat_id, false, humanName);
@@ -206,23 +211,23 @@ public class TelegramController {
             //----------- tournaments -------------------------------------------
 
             case "myCreatedTournaments" :
-                sender.sendMessage("Ver mis torneos creados"+todo, chat_id, "");
+                sender.sendMessage("Ver mis torneos creados\nno existe endpoint"+todo, chat_id, "");
                 break;
 
             case "myTournaments" :
-                sender.sendMessage("Ver torneos en los que estoy participando"+todo, chat_id, "");
+                tournamentChat.processMyTournaments(chat_id, restart, casoActual);
                 break;
 
             case "publicTournaments" :
-                sender.sendMessage("Ver lista de torneos publicos a punto de comenzar, a los cuales unirme"+todo, chat_id, "");
+                tournamentChat.processPublicTournaments(chat_id, restart, casoActual);
                 break;
 
             case "publicStarted" :
-                sender.sendMessage("Ver torneos publicos en juego, para poder consultar rankings"+todo, chat_id, "");
+                tournamentChat.processPublicStarted(chat_id, restart, casoActual);
                 break;
 
             case "finalizedTournaments" :
-                sender.sendMessage("Ver torneos finalizados en los que fui participe"+todo, chat_id, "");
+                tournamentChat.processFinalizedTournaments(chat_id, restart, casoActual);
                 break;
 
             case "tournament" :
