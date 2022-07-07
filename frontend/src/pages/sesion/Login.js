@@ -5,11 +5,9 @@ import Footer from "../../components/footer/Footer";
 import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 import Input from '../../components/input/Input'
-import {ContenedorBotonCentrado, MensajeError, MensajeExito } from "./Formulario";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import {ContenedorBotonCentrado } from "./Formulario";
 import NotificationBar from "../../components/notificationBar/NotificationBar";
-import {Toaster, toast} from 'react-hot-toast';
+import {toast} from 'react-hot-toast';
 
 
 export default function Login({onLogin}) {

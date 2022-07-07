@@ -16,9 +16,6 @@ export default function useUser () {
           localStorage.setItem("token", JSON.stringify(response.data.token));
           localStorage.setItem("username", JSON.stringify(response.data.username));
           localStorage.setItem("userId", JSON.stringify(response.data.userId));
-          {/*
-           localStorage.setItem("email", JSON.stringify(response.data.email));
-           */}
           setState({loading: false, error: false })
         }
       })
