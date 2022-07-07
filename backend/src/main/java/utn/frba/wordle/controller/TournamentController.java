@@ -20,6 +20,8 @@ import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.service.AuthService;
 import utn.frba.wordle.service.TournamentService;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +48,11 @@ public class TournamentController {
         logger.info("Method: findTournaments - Request: token={}, " +
                 "name={}, type={}, state={}, pageNumber={}, maxResults={}", token, name, type, state, pageNumber, maxResults);
         Session session = AuthService.getSession(token);
+        if(pageNumber == null || maxResults == null){
+            pageNumber = 1;
+            maxResults = 100;
+        }
+
         FindTournamentsFilters findTournamentsFilters = FindTournamentsFilters.builder()
                 .name(name)
                 .type(type)
@@ -80,12 +87,15 @@ public class TournamentController {
         logger.info("Method: create - Request: token={}, request={}", token, request);
 
         Session session = AuthService.getSession(token);
+        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getStart());
+        Date finishDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getFinish());
+
         TournamentDto newTournament = TournamentDto.builder()
                 .language(request.getLanguage())
                 .name(request.getName())
                 .type(request.getType())
-                .start(request.getStart())
-                .finish(request.getFinish())
+                .start(startDate)
+                .finish(finishDate)
                 .build();
 
         TournamentResponse response = buildResponse(tournamentService.create(newTournament, session.getUserId()));

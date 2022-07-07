@@ -13,6 +13,7 @@ import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.model.enums.TournamentType;
 import utn.frba.wordle.model.http.CreateTournamentRequest;
+import utn.frba.wordle.model.http.FindTournamentsFilters;
 import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
@@ -255,28 +256,42 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
     @Test
     public void aUserCanGetTheListOfFinishedTournaments() {
         Session session = TestUtils.getMockSession();
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .userId(session.getUserId())
+                .state(State.FINISHED)
+                .maxResults(100)
+                .pageNumber(1)
+                .build();
 
-        String urlController = "/api/tournaments/FINISHED";
+        String urlController = "/api/tournaments?state=FINISHED";
         mvc.perform(get(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).findUserTournamentsByStateWithPagination(session.getUserId(), State.FINISHED, 1, 100);
+        verify(tournamentService).findTournamentsGetTotalPages(filters);
+        verify(tournamentService).findTournaments(filters);
     }
 
     @SneakyThrows
     @Test
     public void aUserCanGetTheListOfReadyTournamentsWithPagination() {
         Session session = TestUtils.getMockSession();
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .userId(session.getUserId())
+                .state(State.READY)
+                .maxResults(7)
+                .pageNumber(3)
+                .build();
 
-        String urlController = "/api/tournaments/READY?pageNumber=3&maxResults=7";
+        String urlController = "/api/tournaments?state=READY&pageNumber=3&maxResults=7";
         mvc.perform(get(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).findUserTournamentsByStateWithPagination(session.getUserId(), State.READY, 3, 7);
+        verify(tournamentService).findTournamentsGetTotalPages(filters);
+        verify(tournamentService).findTournaments(filters);
     }
 
     @SneakyThrows
