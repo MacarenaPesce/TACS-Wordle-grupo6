@@ -41,7 +41,7 @@ const getMyTourneysGeneric = () => {
 
 const getMyTourneys = (nombreTabla, pageNumber, maxResults) => {
   if(nombreTabla === 'Mis torneos'){
-    return getMyTourneysActive(pageNumber,maxResults); 
+    return getTourneysState(pageNumber,maxResults,'ACTIVE');
   }
   else if(nombreTabla === 'Publicos'){
     return getTourneysStateAndType(pageNumber,maxResults,'READY','PUBLIC');
@@ -53,7 +53,7 @@ const getMyTourneys = (nombreTabla, pageNumber, maxResults) => {
 
 //es ready o started
 const getMyTourneysActive = (pageNumber,maxResults) => {
-  return axios.get(API + "tournaments/myTournaments"+"?pageNumber="+pageNumber+ "&maxResults="+maxResults, { headers: authHeader() });
+  return getTourneysState(pageNumber,maxResults,'ACTIVE');
 };
 
 //torneos por tipo (publico o privado)
