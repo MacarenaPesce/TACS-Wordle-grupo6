@@ -103,6 +103,10 @@ public class TournamentRepositoryCustomImpl implements TournamentRepositoryCusto
                 );
                 predicates.add(date);
                 break;
+            case ACTIVE:
+                date = cb.greaterThan(entityRoot.get("finish"), new Date());
+                predicates.add(date);
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + statePattern);
         }
