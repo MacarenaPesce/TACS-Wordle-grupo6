@@ -1,7 +1,7 @@
 import React from "react";
 import './NotificationBar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Toaster, toast} from 'react-hot-toast';
+import {Toaster} from 'react-hot-toast';
 
 function NotificationBar() {
 
