@@ -12,6 +12,9 @@ import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.UserDto;
 import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.model.enums.ErrorMessages;
+import utn.frba.wordle.model.enums.State;
+import utn.frba.wordle.model.enums.TournamentType;
+import utn.frba.wordle.model.http.FindTournamentsFilters;
 import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.security.UserSession;
 
@@ -38,6 +41,9 @@ public class AuthService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    TournamentService tournamentService;
 
     public static Session getSession(String token) {
         token = token.replace("Bearer", "");
@@ -94,6 +100,7 @@ public class AuthService {
     }
 
     private Session getSessionDto(UserEntity userEntity) {
+        doWarmup();
         return getSessionDto(UserService.mapToDto(userEntity));
     }
 
@@ -140,6 +147,20 @@ public class AuthService {
 
     public String refreshAccessToken(UserSession userSession) {
         return getJWTToken(userSession.getUsername(), userSession.getEmail(), userSession.getUserId(), jwtAccessExpiration);
+    }
 
+    private void doWarmup() {
+        FindTournamentsFilters findTournamentsFilters = FindTournamentsFilters.builder()
+                .type(TournamentType.PUBLIC)
+                .state(State.READY)
+                .userId(1L)
+                .pageNumber(1)
+                .maxResults(1)
+                .build();
+        try {
+            tournamentService.findTournaments(findTournamentsFilters);
+        } catch (Exception e){
+            //warmup! :D
+        }
     }
 }

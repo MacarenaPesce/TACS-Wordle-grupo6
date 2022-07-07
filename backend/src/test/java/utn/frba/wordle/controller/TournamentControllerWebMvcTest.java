@@ -18,7 +18,9 @@ import utn.frba.wordle.model.pojo.Session;
 import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.utils.TestUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -40,13 +42,19 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
         CreateTournamentRequest request = CreateTournamentRequest.builder()
                 .language(Language.ES)
                 .type(TournamentType.PUBLIC)
+                .start("2024-08-01")
+                .finish("2024-08-02")
                 .name("name")
                 .build();
 
+        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getStart());
+        Date finishDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getFinish());
         TournamentDto serviceDto = TournamentDto.builder()
                 .language(request.getLanguage())
                 .type(request.getType())
                 .name(request.getName())
+                .start(startDate)
+                .finish(finishDate)
                 .build();
 
         when(tournamentService.create(any(), any())).thenReturn(serviceDto);
@@ -107,56 +115,86 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
     @Test
     public void iCanListPublicTournaments() {
         Session session = TestUtils.getMockSession();
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .userId(session.getUserId())
+                .type(TournamentType.PUBLIC)
+                .maxResults(100)
+                .pageNumber(1)
+                .build();
 
-        String urlController = "/api/tournaments/public";
+        String urlController = "/api/tournaments?type=PUBLIC";
         mvc.perform(get(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).listPublicActiveTournaments(1, 100);
+        verify(tournamentService).findTournamentsGetTotalPages(filters);
+        verify(tournamentService).findTournaments(filters);
     }
 
     @SneakyThrows
     @Test
     public void iCanListPublicTournamentsWithPagination() {
         Session session = TestUtils.getMockSession();
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .userId(session.getUserId())
+                .type(TournamentType.PUBLIC)
+                .maxResults(7)
+                .pageNumber(3)
+                .build();
 
-        String urlController = "/api/tournaments/public?pageNumber=3&maxResults=7";
+        String urlController = "/api/tournaments?type=PUBLIC&pageNumber=3&maxResults=7";
         mvc.perform(get(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).listPublicActiveTournaments(3, 7);
+        verify(tournamentService).findTournamentsGetTotalPages(filters);
+        verify(tournamentService).findTournaments(filters);
     }
 
     @SneakyThrows
     @Test
     public void iCanFindPublicTournaments() {
         Session session = TestUtils.getMockSession();
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .userId(session.getUserId())
+                .name("eaea")
+                .type(TournamentType.PUBLIC)
+                .maxResults(100)
+                .pageNumber(1)
+                .build();
 
-        String urlController = "/api/tournaments/public?name=eaea";
+        String urlController = "/api/tournaments?type=PUBLIC&name=eaea";
         mvc.perform(get(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).findPublicActiveTournaments("eaea", 1, 100);
+        verify(tournamentService).findTournamentsGetTotalPages(filters);
+        verify(tournamentService).findTournaments(filters);
     }
 
     @SneakyThrows
     @Test
     public void iCanFindPublicTournamentsWithPagination() {
         Session session = TestUtils.getMockSession();
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .userId(session.getUserId())
+                .name("eaea")
+                .type(TournamentType.PUBLIC)
+                .maxResults(7)
+                .pageNumber(3)
+                .build();
 
-        String urlController = "/api/tournaments/public?name=eaea&pageNumber=3&maxResults=7";
+        String urlController = "/api/tournaments?type=PUBLIC&name=eaea&pageNumber=3&maxResults=7";
         mvc.perform(get(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).findPublicActiveTournaments("eaea", 3, 7);
+        verify(tournamentService).findTournamentsGetTotalPages(filters);
+        verify(tournamentService).findTournaments(filters);
     }
 
     @SneakyThrows
@@ -228,28 +266,42 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
     @Test
     public void aUserCanGetTheListOfReadyTournaments() {
         Session session = TestUtils.getMockSession();
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .userId(session.getUserId())
+                .state(State.READY)
+                .maxResults(100)
+                .pageNumber(1)
+                .build();
 
-        String urlController = "/api/tournaments/READY";
+        String urlController = "/api/tournaments?state=READY";
         mvc.perform(get(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).findUserTournamentsByStateWithPagination(session.getUserId(), State.READY, 1, 100);
+        verify(tournamentService).findTournamentsGetTotalPages(filters);
+        verify(tournamentService).findTournaments(filters);
     }
 
     @SneakyThrows
     @Test
     public void aUserCanGetTheListOfStartedTournaments() {
         Session session = TestUtils.getMockSession();
+        FindTournamentsFilters filters = FindTournamentsFilters.builder()
+                .userId(session.getUserId())
+                .state(State.STARTED)
+                .maxResults(100)
+                .pageNumber(1)
+                .build();
 
-        String urlController = "/api/tournaments/STARTED";
+        String urlController = "/api/tournaments?state=STARTED";
         mvc.perform(get(urlController)
                 .header(AUTHORIZATION_HEADER_NAME, session.getToken())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(tournamentService).findUserTournamentsByStateWithPagination(session.getUserId(), State.STARTED, 1, 100);
+        verify(tournamentService).findTournamentsGetTotalPages(filters);
+        verify(tournamentService).findTournaments(filters);
     }
 
     @SneakyThrows
