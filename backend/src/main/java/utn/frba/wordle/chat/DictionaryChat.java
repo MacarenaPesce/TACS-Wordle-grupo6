@@ -74,22 +74,7 @@ public class DictionaryChat {
 
         List<String> definitions = dictionaryService.getDefinitions(language, word);
 
-        return setToString(definitions);
-    }
-
-    private String setToString(List<String> setOfStrings){
-        if(setOfStrings.size() > 0) {
-            StringBuilder strbul = new StringBuilder();
-            for (String string : setOfStrings) {
-                strbul.append(string);
-                strbul.append("\n");
-            }
-            //just for removing last comma
-            strbul.setLength(strbul.length() - 1);
-            return strbul.toString();
-        }else {
-            return "No hay coincidencias";
-        }
+        return definitions.toString();
     }
 
     private void interactive(Long chat_id, int step, String message, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
