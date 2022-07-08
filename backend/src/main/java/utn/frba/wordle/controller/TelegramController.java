@@ -58,8 +58,7 @@ public class TelegramController {
 
     final String users = "Wordle ♟ - Usuario\n\n" +
             "/register - Elija su nombre de usuario\n" +
-            "/users_list - Lista todos los usuarios existentes\n" +
-            "/resetPass - Crear nueva contraseña para entrar desde la app web";
+            "/users_list - Lista todos los usuarios existentes\n";
 
     final String tournaments = "Wordle ♟ - Torneos\n\n" +
             //"/myCreatedTournaments - Ver mis torneos creados (probar despues de create)\n" +
@@ -202,10 +201,6 @@ public class TelegramController {
 
             case "users_list" :
                 userChat.processUsersList(chat_id, restart, casoActual);
-                break;
-
-            case "resetPass" :
-                sender.sendMessage("Crear nueva contraseña para entrar desde la app web"+todo, chat_id, "");
                 break;
 
             //----------- tournaments -------------------------------------------
