@@ -27,7 +27,10 @@ export default class TabsTourneys extends Component{
 
     nextPage = () => {
         //console.log("page actual:", this.state.currentPage);
-        if ( this.state.myTourneys.filter( torneo => torneo.name.includes( this.state.name ) ).length >= this.state.currentPage + 1 ){
+       // console.log(this.state.name);
+        //console.log(this.state.myTourneys.filter( torneo => torneo.name.includes( this.state.name ) ).length);
+       // if ( this.state.myTourneys.filter( torneo => torneo.name.includes( this.state.name ) ).length >= this.state.currentPage + 1 ){
+          if( this.state.currentPage < this.state.totalPages){
             let page = this.state.currentPage + 1;
             this.setState({currentPage: page});
             this.submitTourneys(page);
@@ -61,13 +64,15 @@ export default class TabsTourneys extends Component{
     }
 
     submitTourneys(page) {
-        console.log("se pide actualizar la lista de torneos por pagina")
+        console.log("se pide actualizar la lista de torneos por pagina, con pag= ", page);
+        console.log("con nombre tabla: ", this.props.nombreTabla)
+        console.log("name:=", this.state.name)
         this.setState({loading: true, error: false})
-        UserService.getMyTourneys(this.props.nombreTabla, page,this.state.maxResults)
-            .then(response => {
+         UserService.getMyTourneys(this.props.nombreTabla, page,this.state.maxResults, this.state.name)
+            .then(response =>  { 
                 this.setState({myTourneys: response.data.tournaments});
                 this.setState({totalPages: response.data.totalPages})
-                
+                console.log("respuesta del server: ",response.data.tournaments)
                 if(JSON.stringify(this.state.myTourneys[0]) === undefined){
                     //todo: mostrar mensaje de tabla vacia
                 }
@@ -80,19 +85,11 @@ export default class TabsTourneys extends Component{
     }
 
     filtro =(e) =>{
-        const keyword = e.target.value;
-
+        e.preventDefault()
         this.setState({currentPage: 1}); //mando a la primera pagina
-
-        if(keyword !==''){
-            const result = this.state.myTourneys.filter((tourney) =>{  //aca deberia ser de todos los torneos, mytourneys solo tiene los de dicha pagina
-                return tourney.name.toLowerCase().startsWith(keyword.toLowerCase());
-            });
-            this.setState({myTourneys: result});                        //aca deberia setear la pagina???
-        } else {
-            this.submitTourneys();  //todo modificar esto , TIENE QUE USAR EL GET TOURNEY GENERICO ??? 
-        }
-        this.setState({name:keyword});
+        this.setState({name:e.target.value});
+        console.log("name desde filtro= ", this.state.name);
+        this.submitTourneys(this.state.currentPage);
     }
 
     formatDate(start) {
@@ -102,7 +99,7 @@ export default class TabsTourneys extends Component{
 
     render() {
         let listTourneys = []
-      if(this.state.myTourneys){
+      if(this.state.myTourneys.length >0){
         listTourneys = this.state.myTourneys.map((tourney) =>
                 <tr key={tourney.tourneyId}>
                     <td> {tourney.tourneyId}</td>
@@ -170,7 +167,7 @@ export default class TabsTourneys extends Component{
                             <form className="form-inline">
                                 <input className="form-control " type="search" 
                                        placeholder="Ingrese nombre del torneo"
-                                       value={this.name}
+                                       value={this.state.name}
                                        onChange={this.filtro}
                                        aria-label="Search"/>
                             </form>
