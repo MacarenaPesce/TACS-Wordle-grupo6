@@ -11,7 +11,7 @@ services:
     ports:
       - 3333:3306
     volumes:
-      - mysql-data-db-01:/var/lib/mysql
+      - mysql-data-db-01:/bitnami/mysql/data
     environment: 
       MYSQL_DATABASE: 'wordle'
       MYSQL_ROOT_PASSWORD: 'root'

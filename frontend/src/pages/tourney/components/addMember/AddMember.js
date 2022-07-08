@@ -2,13 +2,10 @@ import React, { Component } from 'react';
 import ReactModal from 'react-modal-resizable-draggable';
 import "./AddMember.css"
 import UserService from "../../../../service/UserService";
-import StatusCheck from "../../../sesion/StatusCheck";
 import Not from "../../../../components/not/Not";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import Member from './Member.js';
 import TourneyService from '../../../../service/TourneyService';
-import AuthService from "../../../../service/AuthService";
-import Tourney from "../../Tourney";
 import Handler from "../../../sesion/Handler";
 
 

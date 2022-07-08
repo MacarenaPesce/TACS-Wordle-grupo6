@@ -46,4 +46,8 @@ public class TournamentDto {
     public int hashCode() {
         return Objects.hash(tourneyId, name, language, type, owner);
     }
+
+    public String toStringTelegram(){
+        return tourneyId+" - "+name+" - "+state;
+    }
 }

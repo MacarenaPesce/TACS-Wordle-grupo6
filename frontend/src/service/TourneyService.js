@@ -1,6 +1,5 @@
 import axios from "axios";
 import authHeader from "./AuthHeader";
-import AuthService from "./AuthService";
 
 const API_URL = process.env.REACT_APP_API_URL + "tournaments/";
 const API_PUNCTUATION = process.env.REACT_APP_API_URL + "punctuation/";
@@ -17,11 +16,11 @@ const createTourney = (body) => {
 };
 
 const addMember = (tournamentId, userId) => {
-    return axios.post(API_URL+tournamentId+"/members/"+userId, {}, { headers: authHeader() });
+    return axios.post(API_URL + tournamentId + "/members/"+userId, {}, { headers: authHeader() });
 };
 
 const join = (tournamentId) => {
-    return axios.post(API_URL+tournamentId+"/join", {}, { headers: authHeader() });
+    return axios.post(API_URL + tournamentId+"/join", {}, { headers: authHeader() });
 };
 
 const submitResults = (body) => {
@@ -29,11 +28,11 @@ const submitResults = (body) => {
 };
 
 const getTournamentFromId = (tournamentId) => {
-    return axios.get(API_URL+"info/"+tournamentId, { headers: authHeader() });
+    return axios.get(API_URL + "info/" + tournamentId, { headers: authHeader() });
 };
 
 const getRanking = (tournamentId, pageNumber, maxResults) => {
-    return axios.get(API_URL+tournamentId+"/ranking"+ "?pageNumber="+ pageNumber + "&maxResults="+ maxResults, { headers: authHeader() });
+    return axios.get(API_URL + tournamentId + "/ranking?pageNumber=" + pageNumber + "&maxResults=" + maxResults, { headers: authHeader() });
 };
 
 const getEndOfTheDay = () => {
@@ -45,13 +44,14 @@ const getDayOfTheDate = () => {
 };
 
 const getMembers = (tournamentId) => {
-    return axios.get(API_URL+tournamentId+"/members", { headers: authHeader() });
+    return axios.get(API_URL + tournamentId + "/members", { headers: authHeader() });
 }
 
 const getMyScore = (tournamentId) => {
-    return axios.get(API_URL+tournamentId+"/ranking/myScore", { headers: authHeader() })
+    return axios.get(API_URL + tournamentId + "/ranking/myScore", { headers: authHeader() })
 }
 
+/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
     submitResults,
     createTourney,

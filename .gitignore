@@ -4,6 +4,7 @@ backend/target
 backend/*.iml
 backend/logs
 backend/botToken.txt
+backend/src/main/java/utn/frba/wordle/utils/Main.java
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
