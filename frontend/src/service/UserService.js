@@ -66,8 +66,6 @@ const getTourneysState = (pageNumber, maxResults, state,name) => {
   return axios.get(API + "tournaments?pageNumber="+ pageNumber + "&maxResults="+ maxResults + "&state=" + state +"&name=" +name, { headers: authHeader() });
 };
 
-
-
 //torneos por estado (ready - started - finished) y tipo
 const getTourneysStateAndType = (pageNumber, maxResults, state, type, name) => {
   return axios.get(API + "tournaments?pageNumber=" + pageNumber + "&maxResults=" + maxResults + "&state=" + state  + "&type=" + type +"&name=" +name, { headers: authHeader() });
@@ -85,5 +83,6 @@ export default {
   getTodaysResult,
   getMyTourneysGeneric,
   getMyTourneysId,
-  getTourneysStateAndType
+  getTourneysStateAndType,
+  getTourneysType
 };
