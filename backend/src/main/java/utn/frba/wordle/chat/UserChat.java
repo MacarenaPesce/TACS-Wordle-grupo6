@@ -72,7 +72,7 @@ public class UserChat {
         }
 
         String exit = "\n\nEscriba /exit para volver a comenzar";
-        String usuario = "Indique su nombre de usuario deseado: [A-Za-z0-9_]+"; // [A-Za-z0-9_] equals \w
+        String usuario = "Indique su nombre de usuario deseado:"; // [A-Za-z0-9_] equals \w
         String contrasenia = "indique su nueva contraseña (para iniciar sesion desde la pagina web): ";
         String email = "Indique su email: ";
 
@@ -229,7 +229,7 @@ public class UserChat {
                 break;
 
             default :
-                sender.sendMessage("?????????", chat_id, "");
+                sender.sendMessage("Disculpame pero no te entendi", chat_id, "");
         }
 
     }

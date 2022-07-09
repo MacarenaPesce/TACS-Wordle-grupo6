@@ -141,7 +141,7 @@ public class HelpChat {
                 break;
 
             default :
-                sender.sendMessage("?????????", chat_id, "");
+                sender.sendMessage("Disculpame pero no te entendi", chat_id, "");
         }
 
     }
