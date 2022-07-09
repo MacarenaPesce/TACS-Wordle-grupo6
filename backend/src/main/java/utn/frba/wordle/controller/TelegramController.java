@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.frba.wordle.chat.DictionaryChat;
-import utn.frba.wordle.chat.HelpChat;
-import utn.frba.wordle.chat.TournamentChat;
-import utn.frba.wordle.chat.UserChat;
+import utn.frba.wordle.chat.*;
 import utn.frba.wordle.client.TeleSender;
 
 import utn.frba.wordle.model.tele.Update;
@@ -36,6 +33,8 @@ public class TelegramController {
     HelpChat helpChat;
     @Autowired
     DictionaryChat dictionaryChat;
+    @Autowired
+    RankingChat rankingChat;
 
     @Autowired
     UserChat userChat;
@@ -230,7 +229,7 @@ public class TelegramController {
                 break;
 
             case "ranking" :
-                sender.sendMessage("Visualizar el ranking de un torneo"+todo, chat_id, "");
+                rankingChat.processRanking(chat_id, params[0],restart, casoActual);
                 break;
 
             case "create" :
