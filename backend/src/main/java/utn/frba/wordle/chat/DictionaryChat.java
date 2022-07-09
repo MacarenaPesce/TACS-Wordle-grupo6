@@ -31,7 +31,7 @@ public class DictionaryChat {
 
     public void processDictionary(String[] params, Long chat_id, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
         if(restart){
-            casoActual.put(chat_id, "dictionary");
+            casoActual.put(chat_id, "definition");
             pasoActual.put(chat_id, 0);
             commandBuilder.remove(chat_id);
         }
@@ -39,14 +39,14 @@ public class DictionaryChat {
         Integer valor = pasoActual.get(chat_id);
         if(valor == null || valor == 0){ // comando completo
 
-            String sintaxis = "Sintaxis: \n/definition es|en _|word";
+            String sintaxis = "Sintaxis: \n/definition es|en word";
             if(params[0].equals("")){
                 pasoActual.put(chat_id, 1);
                 sender.sendMessage("Obtenga ayuda para resolver un wordle.\n\nOpcion 1: vuelva a escribir el comando completo:\n"+sintaxis+"\n\n Opcion 2: envie solo el primer parametro.\n\n En criollo: elija el idioma: es o en", chat_id, "");
                 return;
             }
 
-            if(params.length != 2 || !params[0].matches("es|en") || !params[1].matches("_|[A-Za-z]")){
+            if(params.length != 2 || !params[0].matches("es|en") || !params[1].matches("[A-Za-z]+")){
                 sender.sendMessage(sintaxis, chat_id, "");
                 return;
             }
@@ -94,7 +94,7 @@ public class DictionaryChat {
                 break;
 
             case 2 :    //escribir palabra
-                if(message.matches("_|[A-Za-z]")){
+                if(message.matches("[A-Za-z]+")){
                     commandBuilder.put(chat_id, commandBuilder.get(chat_id).append(message.toLowerCase()).append(" "));
                     //construir mensaje y dar la respuesta
                     String[] params = commandBuilder.get(chat_id).toString().split("\\s+");
