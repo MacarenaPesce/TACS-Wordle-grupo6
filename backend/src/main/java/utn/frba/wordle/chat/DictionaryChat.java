@@ -39,7 +39,7 @@ public class DictionaryChat {
         Integer valor = pasoActual.get(chat_id);
         if(valor == null || valor == 0){ // comando completo
 
-            String sintaxis = "Sintaxis: \n/dictionary es|en _|word";
+            String sintaxis = "Sintaxis: \n/definition es|en _|word";
             if(params[0].equals("")){
                 pasoActual.put(chat_id, 1);
                 sender.sendMessage("Obtenga ayuda para resolver un wordle.\n\nOpcion 1: vuelva a escribir el comando completo:\n"+sintaxis+"\n\n Opcion 2: envie solo el primer parametro.\n\n En criollo: elija el idioma: es o en", chat_id, "");
