@@ -48,6 +48,9 @@ public class TournamentController {
         logger.info("Method: findTournaments - Request: token={}, " +
                 "name={}, type={}, state={}, pageNumber={}, maxResults={}", token, name, type, state, pageNumber, maxResults);
         Session session = AuthService.getSession(token);
+        if(name.equals("")){
+            name = null;
+        }
         if(pageNumber == null || maxResults == null){
             pageNumber = 1;
             maxResults = 100;

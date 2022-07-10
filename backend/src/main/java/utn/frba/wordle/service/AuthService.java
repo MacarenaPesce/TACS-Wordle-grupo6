@@ -89,6 +89,7 @@ public class AuthService {
     }
 
     private Session getSessionDto(UserDto userDto) {
+        doWarmup();
         String accessToken = getJWTToken(userDto.getUsername(), userDto.getEmail(), userDto.getId(), jwtAccessExpiration);
 
         return Session.builder()
@@ -100,7 +101,6 @@ public class AuthService {
     }
 
     private Session getSessionDto(UserEntity userEntity) {
-        doWarmup();
         return getSessionDto(UserService.mapToDto(userEntity));
     }
 
@@ -149,13 +149,14 @@ public class AuthService {
         return getJWTToken(userSession.getUsername(), userSession.getEmail(), userSession.getUserId(), jwtAccessExpiration);
     }
 
-    private void doWarmup() {
+    private synchronized void doWarmup() {
         FindTournamentsFilters findTournamentsFilters = FindTournamentsFilters.builder()
                 .type(TournamentType.PUBLIC)
                 .state(State.READY)
                 .userId(1L)
                 .pageNumber(1)
-                .maxResults(1)
+                .maxResults(4)
+                .name("warmup")
                 .build();
         try {
             tournamentService.findTournaments(findTournamentsFilters);
