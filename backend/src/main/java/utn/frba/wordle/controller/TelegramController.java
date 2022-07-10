@@ -225,11 +225,11 @@ public class TelegramController {
                 break;
 
             case "tournament" :
-                sender.sendMessage("Obtener informacion de un torneo"+todo, chat_id, "");
+                tournamentChat.processInfo(chat_id, params[0], restart, casoActual);
                 break;
 
             case "ranking" :
-                rankingChat.processRanking(chat_id, params[0],restart, casoActual);
+                rankingChat.processRanking(chat_id, params[0], restart, casoActual);
                 break;
 
             case "create" :

@@ -29,7 +29,7 @@ public class RankingChat {
 
     final HashMap<Long, StringBuilder> commandBuilder = new HashMap<>();
 
-    public void processRanking(Long chat_id, String message ,boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
+    public void processRanking(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
         if(restart){
             casoActual.put(chat_id, "ranking");
             pasoActual.put(chat_id, 1);
@@ -40,7 +40,7 @@ public class RankingChat {
 
         Integer step = pasoActual.get(chat_id);
         switch (step){
-            case 1 :    //validar que este en el torneo y validar que lo que envia es un numero
+            case 1 :
                 sender.sendMessage("Ingresa el id de torneo ", chat_id, "");
                 pasoActual.put(chat_id, 2);
                 /*
@@ -55,10 +55,19 @@ public class RankingChat {
                 break;
 
             case 2 :    //buscar ranking
+                //verificar que se recibió un id
+                if(!message.matches("\\d+")){
+                    sender.sendMessage("Envie algo que tenga reminiscencia a un id", chat_id, "");
+                    return;
+                }
+
+                //verificar que exista el torneo //todo copiar de get info
                 if(message.matches("\\w+")) {
-                    //todo verificar que el username no este en el hashmap temporal de otro usuario
+                    //verificar que el username no este en el hashmap temporal de otro usuario
                     //UserEntity userEntity = userService.getUserByUsername(message.toLowerCase());
                 }
+
+                //verificar si es privado, que sea miembro del torneo //todo copiar de get info
 
                 List<Punctuation> ranking = tournamentService.getRanking(Long.parseLong(message),1,100);
 

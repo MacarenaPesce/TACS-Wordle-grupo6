@@ -20,6 +20,11 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
     Integer listPublicActiveTournamentsTotalPages();
 
     @Query(value = "select * from wordle.tournament \n" +
+            "where id = :id \n" +
+            "and curdate() < finish \n", nativeQuery = true)
+    TournamentEntity getActiveTournamentsById(Long id);
+
+    @Query(value = "select * from wordle.tournament \n" +
             "where name = :name \n" +
             "and curdate() < finish \n", nativeQuery = true)
     TournamentEntity getActiveTournamentsByName(String name);

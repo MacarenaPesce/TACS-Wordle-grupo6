@@ -47,7 +47,20 @@ public class TournamentDto {
         return Objects.hash(tourneyId, name, language, type, owner);
     }
 
-    public String toStringTelegram(){
+    public String toStringTelegramList(){
         return tourneyId+" - "+name+" - "+state;
+    }
+
+    public String toStringInfoMarkdownV1(){
+        return "_Presentamos la info del torneo número "+tourneyId+"_\n\n"+
+                "*Llamado*: \n"+name+"\n\n"+
+                "*Creado por*: "+owner.toStringTelegram()+"\n\n"+
+                "*Idioma*: "+language+"\n"+
+                "*Tipo*: "+type+"\n\n"+
+                "*Estado actual*: "+state+"\n\n"+
+                "*Inicio*: "+start+"\n"+
+                "*Fin*: "+finish+"\n"
+                //+"*Duración*: "+tournamentDuration*(-1)+" días\n"
+                ;
     }
 }

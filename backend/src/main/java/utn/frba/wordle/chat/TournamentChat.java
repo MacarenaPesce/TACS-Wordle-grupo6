@@ -3,7 +3,10 @@ package utn.frba.wordle.chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.client.TeleSender;
+import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.TournamentDto;
+import utn.frba.wordle.model.entity.TournamentEntity;
+import utn.frba.wordle.model.entity.UserEntity;
 import utn.frba.wordle.model.enums.State;
 import utn.frba.wordle.model.enums.TournamentType;
 import utn.frba.wordle.model.http.FindTournamentsFilters;
@@ -15,6 +18,8 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static utn.frba.wordle.model.enums.ErrorMessages.TOURNAMENT_WITH_SAME_NAME_EXISTS;
 
 @Service
 public class TournamentChat {
@@ -41,7 +46,7 @@ public class TournamentChat {
 
     private void processTourneyList(Long chat_id, HashMap<Long, String> casoActual, String command, List<TournamentDto> tourneys, String title, Integer pag) throws IOException, URISyntaxException {
 
-        String tourneysString = tourneys.stream().map(TournamentDto::toStringTelegram).collect(Collectors.joining("\n\n"));
+        String tourneysString = tourneys.stream().map(TournamentDto::toStringTelegramList).collect(Collectors.joining("\n\n"));
 
         String mas = "\n\n/mas para mostrar más resultados";
         String exit = "\n\n/exit para salir";
@@ -141,5 +146,60 @@ public class TournamentChat {
         List<TournamentDto> tourneys = tournamentService.findTournaments(findTournamentsFilters);
 
         processTourneyList(chat_id, casoActual, command, tourneys, "Todos los torneos finalizados", pag);
+    }
+
+    public void processInfo(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
+        if(restart){
+            casoActual.put(chat_id, "tournament");
+            pasoActual.put(chat_id, 1);
+        }
+
+
+        Integer step = pasoActual.get(chat_id);
+        switch (step){
+            case 1 :
+                pasoActual.put(chat_id, 2);
+                sender.sendMessage("Inserte el id del torneo a consultar info detallada", chat_id, "");
+                break;
+
+            case 2 :
+                //verificar que se recibió un id
+                if(!message.matches("\\d+")){
+                    sender.sendMessage("Envie algo que tenga reminiscencia a un id", chat_id, "");
+                    return;
+                }
+
+                //verificar que exista el torneo
+                Long tourneyid = Long.parseLong(message);
+                TournamentDto tourney;
+                try {
+                    tourney = tournamentService.getActiveTournamentById(tourneyid);
+                }catch (BusinessException e){
+                    sender.sendMessage("No existe torneo activo con ese id, elija otro id", chat_id, "");
+                    return;
+                }
+
+                //verificar si es privado, que sea miembro del torneo
+                if(tourney.getType() == TournamentType.PRIVATE){
+                    Long userid = userService.findUseridByTelegramID(chat_id);
+                    if(!userService.memberOfTournament(userid, tourneyid)){
+                        sender.sendMessage("Usted no forma parte del torneo privado "+tourneyid+", elija otro id", chat_id, "");
+                        return;
+                    }
+                }
+
+                //crar string con la info del torneo y enviar
+                String info = tourney.toStringInfoMarkdownV1();
+
+                sender.sendMessage(info, chat_id, "Markdown");
+                casoActual.remove(chat_id, "tournament");
+                break;
+
+            default :
+                sender.sendMessage("?????????", chat_id, "");
+        }
+    }
+
+    public void processRanking(Long chat_id, boolean restart, HashMap<Long, String> casoActual) {
     }
 }

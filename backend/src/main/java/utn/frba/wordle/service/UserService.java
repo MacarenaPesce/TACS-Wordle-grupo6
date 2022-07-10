@@ -11,6 +11,7 @@ import utn.frba.wordle.repository.UserRepository;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @NoArgsConstructor
@@ -72,6 +73,16 @@ public class UserService {
 
     public List<UserDto> getTournamentMembers(Long tournamentId) {
         return mapToDto(userRepository.getTournamentMembers(tournamentId));
+    }
+
+    public List<Long> getTournamentMembersId(Long tournamentId) {
+        List<UserDto> users = getTournamentMembers(tournamentId);
+        return users.stream().map(UserDto::getId).collect(Collectors.toList());
+    }
+
+    public boolean memberOfTournament(Long userid, Long tourneyid){
+        List<Long> ids = getTournamentMembersId(tourneyid);
+        return ids.contains(userid);
     }
 
     public List<UserDto> findAll() {
