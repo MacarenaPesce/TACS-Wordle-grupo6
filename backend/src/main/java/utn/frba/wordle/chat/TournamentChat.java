@@ -200,6 +200,4 @@ public class TournamentChat {
         }
     }
 
-    public void processRanking(Long chat_id, boolean restart, HashMap<Long, String> casoActual) {
-    }
 }

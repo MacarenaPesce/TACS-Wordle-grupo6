@@ -57,6 +57,7 @@ public class TelegramController {
 
     final String users = "Wordle ♟ - Usuario\n\n" +
             "/register - Elija su nombre de usuario\n" +
+            "/profile - Consultar datos del usuario\n" +
             "/users_list - Lista todos los usuarios existentes\n";
 
     final String tournaments = "Wordle ♟ - Torneos\n\n" +
@@ -196,6 +197,10 @@ public class TelegramController {
 
             case "register" :
                 userChat.processRegister(chat_id, restart, params[0], casoActual);
+                break;
+
+            case "profile" :
+                userChat.processProfile(chat_id);
                 break;
 
             case "users_list" :

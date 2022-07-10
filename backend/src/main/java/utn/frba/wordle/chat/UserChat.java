@@ -14,6 +14,7 @@ import utn.frba.wordle.service.UserService;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -137,6 +138,21 @@ public class UserChat {
             default :
                 sender.sendMessage("Disculpame pero no te entendi", chat_id, "");
         }
+
+    }
+
+    public void processProfile(Long chat_id) throws IOException, URISyntaxException {
+        Long userid = userService.findUseridByTelegramID(chat_id);
+        if(userid == null){
+            sender.sendMessage("Debe registrarse primero - /register", chat_id, "");
+            return;
+        }
+
+        UserDto user = userService.findUser(userid);
+
+        String info = user.toStringInfoMarkdownV1();
+
+        sender.sendMessage(info, chat_id, "Markdown");
 
     }
 

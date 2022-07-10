@@ -15,4 +15,10 @@ public class UserDto {
     public String toStringTelegram(){
         return id+" - "+username;
     }
+
+    public String toStringInfoMarkdownV1(){
+        return "_Presentamos la info del usuario número "+id+"_\n\n"+
+                "*username*: "+username+"\n\n"+
+                "*email*: "+email;
+    }
 }
