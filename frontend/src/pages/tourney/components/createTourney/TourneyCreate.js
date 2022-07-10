@@ -3,7 +3,6 @@ import ReactModal from 'react-modal-resizable-draggable';
 import './TourneyCreate.css'
 import TourneyService from "../../../../service/TourneyService";
 import Not from "../../../../components/not/Not";
-import Button from "react-bootstrap/Button";
 import Collapse from "react-bootstrap/Collapse";
 import Handler from "../../../sesion/Handler";
 
@@ -83,7 +82,7 @@ export default class TourneyCreate extends Component{
                     <div className="opciones">
                         <div className="">
                             <label><h5>Nombre</h5></label>
-                            <input type="text" className="form-control" placeholder="Nombre del torneo..." name="name" onChange={this.changeHandler} />
+                            <input type="text" className="form-control" placeholder="Nombre del torneo..." name="name" onChange={this.changeHandler} required/>
                         </div>
                     </div>
 
@@ -100,14 +99,14 @@ export default class TourneyCreate extends Component{
                     <div className="opciones">
                         <div className="">
                             <label><h5>Inicio</h5></label>
-                            <input type="date" min={this.props.min} className="form-control" placeholder="HRS" name="start" onChange={this.changeHandler} />
+                            <input type="date" min={this.props.min} className="form-control" placeholder="HRS" name="start" onChange={this.changeHandler} required/>
                         </div>
                     </div>
 
                     <div className="opciones">
                         <div className="">
                             <label><h5>Fin</h5></label>
-                            <input type="date" min={this.props.min} className="form-control" placeholder="HRS" name="finish" onChange={this.changeHandler} />
+                            <input type="date" min={this.props.min} className="form-control" placeholder="HRS" name="finish" onChange={this.changeHandler} required/>
                         </div>
                     </div>
 

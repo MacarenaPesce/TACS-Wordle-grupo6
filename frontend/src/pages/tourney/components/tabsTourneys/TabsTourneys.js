@@ -1,5 +1,4 @@
 import React, {Component, useState} from 'react'
-import Tab from 'react-bootstrap/Tab';
 import UserService from "../../../../service/UserService"
 import TourneyCreate from './../createTourney/TourneyCreate'
 import './../../Tourney.css'
@@ -79,7 +78,8 @@ export default class TabsTourneys extends Component{
                 this.setState({loading: false})
             })
             .catch(error => {
-                Handler.handleSessionError(this.state.sessionError, this.state.errorMessage, error)
+
+                Handler.handleSessionError(this, error)
                 this.setState({loading: false, error: true})
             })
     }
