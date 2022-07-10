@@ -67,8 +67,12 @@ Esto generará el reporte en la carpeta target, el mismo puede verse en el naveg
 5. Abrir en el navegador: `https://api.telegram.org/bot<botToken>/setWebhook?url=<URLngrok>/api/telegram/`
 6. Escribirle al bot
 
+Cerrar el webhook al cerrar ngrok:
+- `https://api.telegram.org/bot<botToken>/deleteWebhook`
+
 Hacer visibles los comandos en el menu de comandos del bot:
-- En BotFather, con `/setcommands` crear el `/help` (y los futuros que existan) (o usar el method `setMyCommands` en una request)
+- Se pueden crear desde BotFather
+- Otra opción entrar al siguiente link: `https://api.telegram.org/bot<botToken>/setMyCommands?commands=[{"command":"start","description":"Reiniciar"},{"command":"users","description":"Administrar usuarios"},{"command":"tournaments","description":"Administrar torneos"}]`
 
 
 ## Docker

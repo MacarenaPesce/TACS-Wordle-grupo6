@@ -234,14 +234,29 @@ public class TelegramController {
 
             case "create" :
                 sender.sendMessage("Crear un torneo"+todo, chat_id, "");
+                /*
+                pedir nombre, verificar que no exista previamente
+                pedir idioma, mostrar botones es y en
+                pedir privacidad, mostrar botones privado y publico
+                pedir fecha de inicio, opcionalmente verificar que sea a partir de mañana. Setear la hora en 00hs
+                pedir fecha de fin, verificar que sea mayor o igual a la de inicio. Setear la hora en 23:59:59.99
+                sacar el user id a partir del telegram id
+                crear torneo y notificar exito
+                 */
                 break;
 
             case "addmember" :
                 sender.sendMessage("Agregar un usuario a uno de mis torneos"+todo, chat_id, "");
+                //pedir id torneo a agregar, verificar que exista y sea propio. Opcionalmente verificar que el torneo no esté empezado
+                //pedir id usuario a agregar. Agregarlo si aun no lo está. Notificar la situación
+                //dar la opcion de seguir agregando miembros al mismo torneo, o finalizar
                 break;
 
             case "join" :
                 sender.sendMessage("Unirme a un torneo publico pendiente de empezar"+todo, chat_id, "");
+                //pedir id torneo a sumarse
+                //verificar que sea un torneo publico sin comenzar
+                //agregarse y notificar
                 break;
 
 
