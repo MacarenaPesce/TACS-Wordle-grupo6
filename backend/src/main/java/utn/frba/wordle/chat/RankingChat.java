@@ -63,9 +63,9 @@ public class RankingChat {
                 Long tourneyid = Long.parseLong(message);
                 TournamentDto tourney;
                 try {
-                    tourney = tournamentService.getActiveTournamentById(tourneyid);
+                    tourney = tournamentService.findById(tourneyid);
                 }catch (BusinessException e){
-                    sender.sendMessage("No existe torneo activo con ese id, elija otro id", chat_id, "");
+                    sender.sendMessage("No existe torneo con ese id, elija otro id", chat_id, "");
                     return;
                 }
 

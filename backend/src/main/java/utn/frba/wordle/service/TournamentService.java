@@ -87,6 +87,14 @@ public class TournamentService {
         return mapToDto(existingActiveTournament);
     }
 
+    public TournamentDto findById(Long id){
+        TournamentEntity existingTournament = tournamentRepository.findById(id).orElse(null);
+        if (existingTournament == null) {
+            throw new BusinessException(TOURNAMENT_DONT_EXISTS);
+        }
+        return mapToDto(existingTournament);
+    }
+
     @Transactional
     public RegistrationDto addMember(Long userId, Long tourneyID, Long ownerUserId) {
 

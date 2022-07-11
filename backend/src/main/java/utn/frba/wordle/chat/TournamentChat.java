@@ -150,15 +150,17 @@ public class TournamentChat {
         }
 
         Integer pag = pasoActual.get(chat_id);
+        String username = userService.findUsernameByTelegramID(chat_id);
 
         FindTournamentsFilters findTournamentsFilters = FindTournamentsFilters.builder()
+                .name(username)
                 .state(State.FINISHED)
                 .pageNumber(pag)
                 .maxResults(10)
                 .build();
         List<TournamentDto> tourneys = tournamentService.findTournaments(findTournamentsFilters);
 
-        processTourneyList(chat_id, casoActual, command, tourneys, "Todos los torneos finalizados", pag, "");
+        processTourneyList(chat_id, casoActual, command, tourneys, "Torneos finalizados en los que estuve registrado", pag, "");
     }
 
     public void processInfo(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
@@ -185,9 +187,9 @@ public class TournamentChat {
                 Long tourneyid = Long.parseLong(message);
                 TournamentDto tourney;
                 try {
-                    tourney = tournamentService.getActiveTournamentById(tourneyid);
+                    tourney = tournamentService.findById(tourneyid);
                 } catch (BusinessException e) {
-                    sender.sendMessage("No existe torneo activo con ese id, elija otro id", chat_id, "");
+                    sender.sendMessage("No existe torneo con ese id, elija otro id", chat_id, "");
                     return;
                 }
 
@@ -233,7 +235,7 @@ public class TournamentChat {
                     return;
                 }
 
-                //verificar que exista el torneo
+                //verificar que exista el torneo activo?
                 Long tourneyid = Long.parseLong(message);
                 TournamentDto tourney;
                 try {
@@ -315,7 +317,7 @@ public class TournamentChat {
                     return;
                 }
 
-                //verificar que exista el torneo
+                //verificar que exista el torneo activo?
                 Long tourneyid = Long.parseLong(message);
                 TournamentDto tourney;
                 try {
