@@ -47,11 +47,6 @@ public class TelegramController {
                     "/help - Generar trampas para Wordle\n" +
                     "/definition - Obtener definicion de una palabra en inglés o español\n" +
                     "/submit - Cargar los resultados obtenidos del dia\n" +
-                    /*"/create - Crear un torneo nuevo\n" +
-                    "/addmember - Agregar un usuario a uno de mis torneos\n" +
-                    "/join - Unirme a un torneo publico antes de empezar\n" +
-                    "/ranking - Visualizar el ranking de un torneo\n" +
-                    "/tournament - Obtener informacion de un torneo\n" +*/
                     "/users - Administrar usuarios\n" +
                     "/tournaments - Administrar torneos";
 
@@ -68,7 +63,7 @@ public class TelegramController {
             "/finalizedTournaments - Ver torneos finalizados en los que fui participe\n\n" +
             "/tournament - Obtener informacion de un torneo cualquiera\n" +
             "/ranking - Mostrar todos los participantes de un torneo cualquiera (probar despues de addmember), ordenados por ranking actual\n\n" +
-            "/create - Crear un torneo\n" +
+            "/create - Crear un torneo nuevo\n" +
             "/addmember - Agregar un usuario a uno de mis torneos\n" +
             "/join - Unirme a un torneo publico pendiente de comenzar";
 
@@ -140,6 +135,14 @@ public class TelegramController {
                 dictionaryChat.processDictionary(params, chat_id, restart, casoActual);
                 break;
 
+            case "definitionES" : //todo: falta hacer
+                sender.sendMessage("Obtener definicion en español"+todo, chat_id, "");
+                break;
+
+            case "definitionEN" : //todo: falta hacer
+                sender.sendMessage("Obtener definicion en english"+todo, chat_id, "");
+                break;
+
             case "checkScores" :
                 userChat.processCheckScores(chat_id, humanName);
                 break;
@@ -147,14 +150,6 @@ public class TelegramController {
             case "submit" :
                 userChat.processSubmit(chat_id, humanName);
                 //programar mensaje para que el usuario recuerde volver a cargar al dia siguiente. --> no se puede de la api de bots, solo del cliente de telegram. Habria que hacer el schedule manualmente.
-                break;
-
-            case "definitionES" :
-                sender.sendMessage("Obtener definicion en español"+todo, chat_id, "");
-                break;
-
-            case "definitionEN" :
-                sender.sendMessage("Obtener definicion en english"+todo, chat_id, "");
                 break;
 
             case "submitES" :
@@ -209,7 +204,7 @@ public class TelegramController {
 
             //----------- tournaments -------------------------------------------
 
-            case "myCreatedTournaments" :
+            case "myCreatedTournaments" : //todo: falta hacer
                 sender.sendMessage("Ver mis torneos creados\nno existe endpoint"+todo, chat_id, "");
                 break;
 
@@ -237,7 +232,7 @@ public class TelegramController {
                 rankingChat.processRanking(chat_id, params[0], restart, casoActual);
                 break;
 
-            case "create" :
+            case "create" : //todo: falta hacer
                 sender.sendMessage("Crear un torneo"+todo, chat_id, "");
                 /*
                 pedir nombre, verificar que no exista previamente
@@ -250,14 +245,14 @@ public class TelegramController {
                  */
                 break;
 
-            case "addmember" :
+            case "addmember" : //todo: falta hacer
                 sender.sendMessage("Agregar un usuario a uno de mis torneos"+todo, chat_id, "");
                 //pedir id torneo a agregar, verificar que exista y sea propio. Opcionalmente verificar que el torneo no esté empezado
                 //pedir id usuario a agregar. Agregarlo si aun no lo está. Notificar la situación
                 //dar la opcion de seguir agregando miembros al mismo torneo, o finalizar
                 break;
 
-            case "join" :
+            case "join" : //todo: falta hacer
                 sender.sendMessage("Unirme a un torneo publico pendiente de empezar"+todo, chat_id, "");
                 //pedir id torneo a sumarse
                 //verificar que sea un torneo publico sin comenzar
