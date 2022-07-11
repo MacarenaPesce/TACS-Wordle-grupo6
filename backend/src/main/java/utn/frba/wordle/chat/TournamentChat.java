@@ -360,6 +360,7 @@ public class TournamentChat {
         }
     }
 
+    //TODO: FALTA AGREGAR EL EXIT EN CUALQUIER PASO POR SI QUIERE SALIR
     public void processCreateTourney(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException{
         if (restart) {
             casoActual.put(chat_id, "create");
@@ -370,20 +371,27 @@ public class TournamentChat {
         switch (step) {
             case 1:
                 //pedir nombre, verificar que no exista previamente
+                pasoActual.put(chat_id, 2);
                 sender.sendMessage("Inserte el nombre del torneo que quiere crear", chat_id, "");
                 name = message;
+
+                break;
+
+            case 2:
+                //verifico que el nombre no exista previamente
                 if( !tournamentService.activeTournamentExists(message) ){
-                    pasoActual.put(chat_id, 2);
+                    pasoActual.put(chat_id, 3);
+                    //pedir idioma, TODO:mostrar botones es y en
                     sender.sendMessage("Ingrese idioma del torneo: ES (español) - EN (Ingles)", chat_id, "");
                 }else {
                     casoActual.remove(chat_id, "create");
                     sender.sendMessage("El torneo ya existe, cree uno nuevo con otro nombre", chat_id, "");
                 }
+
                 break;
 
-            case 2:
-                //pedir idioma, mostrar botones es y en
-
+            case 3:
+                //verifico que sea un idioma existente
                 try {
                     idioma = Language.valueOf(message);
                 } catch (IllegalArgumentException e) {
@@ -391,13 +399,14 @@ public class TournamentChat {
                     return;
                 }
 
-                pasoActual.put(chat_id, 3);
+                pasoActual.put(chat_id, 4);
+                //pedir privacidad, TODO: mostrar botones privado y publico
                 sender.sendMessage("Ingrese tipo el tipo: PUBLIC - PRIVATE", chat_id, "");
+
                 break;
 
-            case 3:
-                //pedir privacidad, mostrar botones privado y publico
-
+            case 4:
+                //verifico que sea una privacidad posible
                 try {
                     tipo = TournamentType.valueOf(message);
                 } catch (IllegalArgumentException e) {
@@ -405,13 +414,14 @@ public class TournamentChat {
                     return;
                 }
 
-                pasoActual.put(chat_id, 4);
-                sender.sendMessage("Ingrese fecha de inicio: yyyy MM dd", chat_id, "");
+                pasoActual.put(chat_id, 5);
+                //pedir fecha de inicio, todo: opcionalmente verificar que sea a partir de mañana. Setear la hora en 00hs
+                sender.sendMessage("Ingrese fecha de inicio: yyyy-MM-dd", chat_id, "");
+
                 break;
 
-            case 4:
-                //pedir fecha de inicio, opcionalmente verificar que sea a partir de mañana. Setear la hora en 00hs
-
+            case 5:
+                //verificar formato de fecha inicio
                 try {
                     start = new SimpleDateFormat("yyyy-MM-dd").parse(message);
                 } catch (ParseException e) {
@@ -419,22 +429,21 @@ public class TournamentChat {
                     return;
                 }
 
-                pasoActual.put(chat_id, 5);
+                pasoActual.put(chat_id, 6);
+                //pedir fecha fin
                 sender.sendMessage("Ingrese fecha de fin: yyyy-MM-dd", chat_id, "");
                 break;
 
-            case 5:
-                //pedir fecha de fin, verificar que sea mayor o igual a la de inicio. Setear la hora en 23:59:59.99
+            case 6:
+                //todo: verificar que sea mayor o igual a la de inicio. Setear la hora en 23:59:59.99
 
+                //verificar formato de fecha fin
                 try {
                     finish = new SimpleDateFormat("yyyy-MM-dd").parse(message);
                 } catch (ParseException e) {
                     sender.sendMessage("Ingresaste mal la fecha", chat_id, "");
                     return;
                 }
-
-                pasoActual.put(chat_id, 5);
-                sender.sendMessage("Ingrese fecha de fin: yyyy-MM-dd", chat_id, "");
 
                 //sacar el user id a partir del telegram id
                 Long userid = userService.findUseridByTelegramID(chat_id);
@@ -449,7 +458,7 @@ public class TournamentChat {
                         .build();
                 tournamentService.create(tourney, userid);
 
-                sender.sendMessage("Ya se creo el torneo", chat_id, "");
+                sender.sendMessage("Ya se creo el torneo ", chat_id, "");
 
                 casoActual.remove(chat_id, "create");
                 break;
@@ -457,7 +466,6 @@ public class TournamentChat {
             default:
                 sender.sendMessage("Disculpame pero no te entendi", chat_id, "");
         }
-
 
     }
 
