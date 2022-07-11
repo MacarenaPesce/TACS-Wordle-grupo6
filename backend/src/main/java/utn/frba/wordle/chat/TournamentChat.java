@@ -154,7 +154,6 @@ public class TournamentChat {
             pasoActual.put(chat_id, 1);
         }
 
-
         Integer step = pasoActual.get(chat_id);
         switch (step){
             case 1 :
@@ -188,7 +187,7 @@ public class TournamentChat {
                     }
                 }
 
-                //crar string con la info del torneo y enviar
+                //crear string con la info del torneo y enviar
                 String info = tourney.toStringInfoMarkdownV1();
 
                 sender.sendMessage(info, chat_id, "Markdown");
@@ -196,7 +195,7 @@ public class TournamentChat {
                 break;
 
             default :
-                sender.sendMessage("?????????", chat_id, "");
+                sender.sendMessage("Disculpame pero no te entendi", chat_id, "");
         }
     }
 

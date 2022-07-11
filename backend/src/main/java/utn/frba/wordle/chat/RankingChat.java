@@ -3,12 +3,15 @@ package utn.frba.wordle.chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.client.TeleSender;
+import utn.frba.wordle.exception.BusinessException;
 import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.entity.PunctuationEntity;
 import utn.frba.wordle.model.entity.RankingEntity;
 import utn.frba.wordle.model.entity.UserEntity;
+import utn.frba.wordle.model.enums.TournamentType;
 import utn.frba.wordle.model.pojo.Punctuation;
 import utn.frba.wordle.service.TournamentService;
+import utn.frba.wordle.service.UserService;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -24,6 +27,9 @@ public class RankingChat {
 
     @Autowired
     TournamentService tournamentService;
+
+    @Autowired
+    UserService userService;
 
     final HashMap<Long, Integer> pasoActual = new HashMap<>();
 
@@ -43,36 +49,40 @@ public class RankingChat {
             case 1 :
                 sender.sendMessage("Ingresa el id de torneo ", chat_id, "");
                 pasoActual.put(chat_id, 2);
-                /*
-                String user = userService.findUsernameByTelegramID(chat_id);
-                if(user == null){
-                    pasoActual.put(chat_id, 2);
-                    sender.sendMessage(usuario, chat_id, "");
-                }else {
-                    casoActual.remove(chat_id, "register");
-                    sender.sendMessage("Usted ya se encuentra registrado bajo el usuario: "+user, chat_id, "");
-                }*/
+
                 break;
 
-            case 2 :    //buscar ranking
+            case 2 :    //buscar ranking previas validaciones
                 //verificar que se recibió un id
                 if(!message.matches("\\d+")){
                     sender.sendMessage("Envie algo que tenga reminiscencia a un id", chat_id, "");
                     return;
                 }
 
-                //verificar que exista el torneo //todo copiar de get info
-                if(message.matches("\\w+")) {
-                    //verificar que el username no este en el hashmap temporal de otro usuario
-                    //UserEntity userEntity = userService.getUserByUsername(message.toLowerCase());
+                //verificar que exista el torneo
+                Long tourneyid = Long.parseLong(message);
+                TournamentDto tourney;
+                try {
+                    tourney = tournamentService.getActiveTournamentById(tourneyid);
+                }catch (BusinessException e){
+                    sender.sendMessage("No existe torneo activo con ese id, elija otro id", chat_id, "");
+                    return;
                 }
 
-                //verificar si es privado, que sea miembro del torneo //todo copiar de get info
+                //verificar si es privado, que sea miembro del torneo
+                if(tourney.getType() == TournamentType.PRIVATE){
+                    Long userid = userService.findUseridByTelegramID(chat_id);
+                    if(!userService.memberOfTournament(userid, tourneyid)){
+                        sender.sendMessage("Usted no forma parte del torneo privado "+tourneyid+", elija otro id", chat_id, "");
+                        return;
+                    }
+                }
 
+                //obtener ranking
                 List<Punctuation> ranking = tournamentService.getRanking(Long.parseLong(message),1,100);
 
+                //parsear ranking en string
                 String rankingString = ranking.stream().map(Punctuation::toStringTelegram).collect(Collectors.joining("\n\n"));
-
 
                 sender.sendMessage(rankingString, chat_id, "");
                 break;
