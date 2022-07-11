@@ -249,11 +249,9 @@ public class TelegramController {
                 tournamentChat.processAddMember(chat_id, params[0], restart, casoActual);
                 break;
 
-            case "join" : //todo: falta hacer
+            case "join" :
+                tournamentChat.processJoin(chat_id, params[0], restart, casoActual);
                 sender.sendMessage("Unirme a un torneo publico pendiente de empezar"+todo, chat_id, "");
-                //pedir id torneo a sumarse
-                //verificar que sea un torneo publico sin comenzar
-                //agregarse y notificar
                 break;
 
 
