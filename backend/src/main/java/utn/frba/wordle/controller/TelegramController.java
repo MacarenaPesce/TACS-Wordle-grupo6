@@ -9,7 +9,6 @@ import utn.frba.wordle.chat.*;
 import utn.frba.wordle.client.TeleSender;
 
 import utn.frba.wordle.model.tele.Update;
-import utn.frba.wordle.service.TournamentService;
 import utn.frba.wordle.service.UserService;
 
 
@@ -34,12 +33,13 @@ public class TelegramController {
     @Autowired
     DictionaryChat dictionaryChat;
     @Autowired
-    RankingChat rankingChat;
-
+    InfoChat infoChat;
     @Autowired
     UserChat userChat;
     @Autowired
     TournamentChat tournamentChat;
+    @Autowired
+    TourneyListChat tourneyListChat;
     @Autowired
     UserService userService;
 
@@ -209,27 +209,27 @@ public class TelegramController {
                 break;
 
             case "myTournaments" :
-                tournamentChat.processMyTournaments(chat_id, restart, casoActual);
+                tourneyListChat.processMyTournaments(chat_id, restart, casoActual);
                 break;
 
             case "publicTournaments" :
-                tournamentChat.processPublicTournaments(chat_id, restart, casoActual);
+                tourneyListChat.processPublicTournaments(chat_id, restart, casoActual);
                 break;
 
             case "publicStarted" :
-                tournamentChat.processPublicStarted(chat_id, restart, casoActual);
+                tourneyListChat.processPublicStarted(chat_id, restart, casoActual);
                 break;
 
             case "finalizedTournaments" :
-                tournamentChat.processFinalizedTournaments(chat_id, restart, casoActual);
+                tourneyListChat.processFinalizedTournaments(chat_id, restart, casoActual);
                 break;
 
             case "info" :
-                tournamentChat.processInfo(chat_id, params[0], restart, casoActual);
+                infoChat.processInfo(chat_id, params[0], restart, casoActual);
                 break;
 
             case "ranking" :
-                rankingChat.processRanking(chat_id, params[0], restart, casoActual);
+                infoChat.processRanking(chat_id, params[0], restart, casoActual);
                 break;
 
             case "create" :
