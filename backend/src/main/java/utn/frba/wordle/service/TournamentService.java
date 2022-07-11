@@ -61,8 +61,7 @@ public class TournamentService {
         } catch (NoSuchElementException e) {
             throw new SessionJWTException("El token de sesion jwt enviado, no coincide con usuarios existentes");
         }
-        TournamentEntity existingActiveTournament = tournamentRepository.getActiveTournamentsByName(dto.getName());
-        if (existingActiveTournament != null) {
+        if (activeTournamentExists(dto.getName())) {
             throw new BusinessException(TOURNAMENT_WITH_SAME_NAME_EXISTS);
         }
         Date startDate = parseStartDate(dto.getStart());
@@ -148,6 +147,11 @@ public class TournamentService {
         tournamentRepository.save(tournamentEntity);
 
         return registrationService.mapToDto(registrationEntity);
+    }
+
+    public Boolean activeTournamentExists(String tournamentName){
+        TournamentEntity existingActiveTournament = tournamentRepository.getActiveTournamentsByName(tournamentName);
+        return existingActiveTournament != null;
     }
 
     public List<TournamentDto> findPublicActiveTournaments(String name, Integer pageNumber, Integer maxResults) {

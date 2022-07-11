@@ -25,7 +25,7 @@ public interface TournamentRepository extends CrudRepository<TournamentEntity, L
     TournamentEntity getActiveTournamentsById(Long id);
 
     @Query(value = "select * from wordle.tournament \n" +
-            "where name = :name \n" +
+            "where lower(name) = lower(:name) \n" +
             "and curdate() < finish \n", nativeQuery = true)
     TournamentEntity getActiveTournamentsByName(String name);
 
