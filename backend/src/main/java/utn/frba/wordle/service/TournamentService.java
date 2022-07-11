@@ -141,6 +141,11 @@ public class TournamentService {
         }
 
         RegistrationEntity registrationEntity = registrationService.addMember(tournamentEntity.getId(), userId, new Date());
+        if(tournamentEntity.getRegistrations() == null){
+            tournamentEntity.setRegistrations(new HashSet<>());
+        }
+        tournamentEntity.getRegistrations().add(registrationEntity);
+        tournamentRepository.save(tournamentEntity);
 
         return registrationService.mapToDto(registrationEntity);
     }
