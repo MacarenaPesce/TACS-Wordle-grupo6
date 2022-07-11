@@ -61,7 +61,7 @@ public class TelegramController {
             "/myTournaments - Ver torneos en los que estoy participando (probar despues de join o create)\n" +
             "/publicStarted - Ver torneos publicos en juego, para poder consultar rankings (hay torneos ya generados con rankings en juego)\n" +
             "/finalizedTournaments - Ver torneos finalizados en los que fui participe\n\n" +
-            "/tournament - Obtener informacion de un torneo cualquiera\n" +
+            "/info - Obtener informacion de un torneo cualquiera\n" +
             "/ranking - Mostrar todos los participantes de un torneo cualquiera (probar despues de addmember), ordenados por ranking actual\n\n" +
             "/create - Crear un torneo nuevo\n" +
             "/addmember - Agregar un usuario a uno de mis torneos\n" +
@@ -224,7 +224,7 @@ public class TelegramController {
                 tournamentChat.processFinalizedTournaments(chat_id, restart, casoActual);
                 break;
 
-            case "tournament" :
+            case "info" :
                 tournamentChat.processInfo(chat_id, params[0], restart, casoActual);
                 break;
 

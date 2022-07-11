@@ -54,7 +54,7 @@ public class TournamentDto {
     public String toStringInfoMarkdownV1(){
         return "_Presentamos la info del torneo número "+tourneyId+"_\n\n"+
                 "*Llamado*: \n"+name+"\n\n"+
-                "*Creado por*: "+owner.toStringTelegram()+"\n\n"+
+                "*Creado por*: "+owner.toStringTelegram().replace('_', ' ')+"\n\n"+
                 "*Idioma*: "+language+"\n"+
                 "*Tipo*: "+type+"\n\n"+
                 "*Estado actual*: "+state+"\n\n"+

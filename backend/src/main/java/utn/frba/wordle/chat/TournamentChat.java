@@ -139,7 +139,7 @@ public class TournamentChat {
                 .build();
         List<TournamentDto> tourneys = tournamentService.findTournaments(findTournamentsFilters);
 
-        processTourneyList(chat_id, casoActual, command, tourneys, "Torneos públicos en juego", pag, "[\"/tournament\",\"/ranking\"]");
+        processTourneyList(chat_id, casoActual, command, tourneys, "Torneos públicos en juego", pag, "[\"/info\",\"/ranking\"]");
     }
 
     public void processFinalizedTournaments(Long chat_id, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
@@ -163,7 +163,7 @@ public class TournamentChat {
 
     public void processInfo(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
         if (restart) {
-            casoActual.put(chat_id, "tournament");
+            casoActual.put(chat_id, "info");
             pasoActual.put(chat_id, 1);
         }
 
@@ -204,7 +204,7 @@ public class TournamentChat {
                 String info = tourney.toStringInfoMarkdownV1();
 
                 sender.sendMessage(info, chat_id, "Markdown");
-                casoActual.remove(chat_id, "tournament");
+                casoActual.remove(chat_id, "info");
                 break;
 
             default:
