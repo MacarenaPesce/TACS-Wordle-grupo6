@@ -48,8 +48,12 @@ public class TournamentController {
         logger.info("Method: findTournaments - Request: token={}, " +
                 "name={}, type={}, state={}, pageNumber={}, maxResults={}", token, name, type, state, pageNumber, maxResults);
         Session session = AuthService.getSession(token);
-        if(name.equals("")){
+        if(name != null && name.equals("")){
             name = null;
+        }
+        Long userId = session.getUserId();
+        if(type != null && type.equals(TournamentType.PUBLIC)){
+            userId = null;
         }
         if(pageNumber == null || maxResults == null){
             pageNumber = 1;
@@ -60,7 +64,7 @@ public class TournamentController {
                 .name(name)
                 .type(type)
                 .state(state)
-                .userId(session.getUserId())
+                .userId(userId)
                 .pageNumber(pageNumber)
                 .maxResults(maxResults)
                 .build();
