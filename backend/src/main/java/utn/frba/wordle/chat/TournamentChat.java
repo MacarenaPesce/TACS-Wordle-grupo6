@@ -216,7 +216,7 @@ public class TournamentChat {
 
     public void processAddMember(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
         if (restart) {
-            casoActual.put(chat_id, "addMember");
+            casoActual.put(chat_id, "addmember");
             pasoActual.put(chat_id, 1);
         }
 
@@ -235,7 +235,7 @@ public class TournamentChat {
                     return;
                 }
 
-                //verificar que exista el torneo activo?
+                //verificar que exista el torneo activo? //todo pedir aca al service un torneo ready directamente
                 Long tourneyid = Long.parseLong(message);
                 TournamentDto tourney;
                 try {
@@ -272,23 +272,20 @@ public class TournamentChat {
                 }
 
                 //verificar  que aun no este en el torneo
-                Long idUser = userService.findUseridByTelegramID(chat_id);
-
                 TournamentDto tournament = torneo.get(chat_id);
+                Long id_new_user = Long.parseLong(message);
 
-                if (userService.memberOfTournament(idUser, tournament.getTourneyId())) {
-                    sender.sendMessage("El usuario ya forma parte del torneo , elija otro id", chat_id, "");
+                if (userService.memberOfTournament(id_new_user, tournament.getTourneyId())) {
+                    sender.sendMessage("El usuario ya forma parte del torneo, elija otro id", chat_id, "");
                     return;
                 }
 
                 //agregar al torneo
-                tournamentService.addMember(idUser, tournament.getTourneyId(), tournament.getOwner().getId());
-                sender.sendMessage("Ya agrego al usuario al torneo", chat_id, "");
-
-                //todo: preguntar si quiere agregar mas o exit
                 //dar la opcion de seguir agregando miembros al mismo torneo, o finalizar
+                tournamentService.addMember(id_new_user, tournament.getTourneyId(), tournament.getOwner().getId());
+                sender.sendMessage(id_new_user+" agregado 👍 - Ingrese más o /exit", chat_id, "");
 
-                casoActual.remove(chat_id, "addMember");
+
                 break;
 
             default:
@@ -317,7 +314,7 @@ public class TournamentChat {
                     return;
                 }
 
-                //verificar que exista el torneo activo?
+                //verificar que exista el torneo activo? //todo pedir aca al service un torneo ready directamente
                 Long tourneyid = Long.parseLong(message);
                 TournamentDto tourney;
                 try {
