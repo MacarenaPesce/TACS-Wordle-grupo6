@@ -40,6 +40,7 @@ public class TournamentChat {
 
     @Autowired
     UserService userService;
+
     @Autowired
     TournamentService tournamentService;
 
@@ -263,19 +264,18 @@ public class TournamentChat {
                 //verificar  que aun no este en el torneo
                 Long idUser = userService.findUseridByTelegramID(chat_id);
 
-                if(userService.memberOfTournament(idUser, torneo.get(chat_id).getTourneyId())){
+                TournamentDto tournament = torneo.get(chat_id);
+
+                if(userService.memberOfTournament(idUser, tournament.getTourneyId())){
                     sender.sendMessage("El usuario ya forma parte del torneo , elija otro id", chat_id, "");
                     return;
                 }
 
                 //agregar al torneo
+                tournamentService.addMember(idUser,tournament.getTourneyId(),tournament.getOwner().getId());
 
+                //todo: preguntar si quiere agregar mas o exit
 
-                //preguntar si quiere agregar mas o exit
-
-                break;
-
-            case 4:
                 casoActual.remove(chat_id, "tournament");
                 break;
 
