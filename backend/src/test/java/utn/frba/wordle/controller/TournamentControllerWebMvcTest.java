@@ -116,7 +116,7 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
     public void iCanListPublicTournaments() {
         Session session = TestUtils.getMockSession();
         FindTournamentsFilters filters = FindTournamentsFilters.builder()
-                .userId(session.getUserId())
+                .userId(null)
                 .type(TournamentType.PUBLIC)
                 .maxResults(100)
                 .pageNumber(1)
@@ -137,7 +137,7 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
     public void iCanListPublicTournamentsWithPagination() {
         Session session = TestUtils.getMockSession();
         FindTournamentsFilters filters = FindTournamentsFilters.builder()
-                .userId(session.getUserId())
+                .userId(null)
                 .type(TournamentType.PUBLIC)
                 .maxResults(7)
                 .pageNumber(3)
@@ -158,7 +158,7 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
     public void iCanFindPublicTournaments() {
         Session session = TestUtils.getMockSession();
         FindTournamentsFilters filters = FindTournamentsFilters.builder()
-                .userId(session.getUserId())
+                .userId(null)
                 .name("eaea")
                 .type(TournamentType.PUBLIC)
                 .maxResults(100)
@@ -180,7 +180,7 @@ public class TournamentControllerWebMvcTest extends AbstractWebMvcTest {
     public void iCanFindPublicTournamentsWithPagination() {
         Session session = TestUtils.getMockSession();
         FindTournamentsFilters filters = FindTournamentsFilters.builder()
-                .userId(session.getUserId())
+                .userId(null)
                 .name("eaea")
                 .type(TournamentType.PUBLIC)
                 .maxResults(7)
