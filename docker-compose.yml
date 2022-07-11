@@ -1,9 +1,8 @@
 version: "3.3"
 
 services:
-#todo cambiar para levantar todo de 0 en lugar de usar los Dockerfile
+#cambiar para levantar todo de 0 en lugar de usar los Dockerfile --> nadie lo pidió
 #acordarse de usar docker-compose build antes de docker-compose up
-
 
   mysql:
     container_name: test-mysql
@@ -34,7 +33,7 @@ services:
   frontend:
     build:
         context: ./frontend
-        dockerfile: Dockerfile
+        dockerfile: Dockerfile-local
     ports:
       - 3000:3000
     

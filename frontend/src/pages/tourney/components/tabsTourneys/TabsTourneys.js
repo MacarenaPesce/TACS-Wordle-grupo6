@@ -14,7 +14,7 @@ export default class TabsTourneys extends Component{
         this.state = {
             myTourneys: [],
             currentPage: 1,
-            maxResults: 4,
+            maxResults: 10,
             totalPages: 100,
             sessionError: false,
             errorMessage: '',
@@ -154,7 +154,7 @@ export default class TabsTourneys extends Component{
         }
 
         return (
-            <div className="col-md-12 search-table-col">
+            <div className="col-md-12 search-table-col" style={{marginBottom: "70px"}}>
 
                 {this.state.sessionError &&
                     <Not message={this.state.errorMessage}/>}

@@ -142,7 +142,7 @@ export default class TourneySubmit extends Component{
 
                 {/*TODO: hacer css propios en vez de ser tomados de TourneyCreate, para los flexible-modal*/}
                 {/*TODO: hacer css propios en vez de ser tomados de help, para: form-help, opciones, selectidioma, form-control*/}
-                <form onSubmit={this.submitHandler} className="form-help">
+                <form onSubmit={this.submitHandler} className="form-tourney">
 
                     <div className="opciones">
                         <div className="">
@@ -197,7 +197,7 @@ export default class TourneySubmit extends Component{
                     <button type="submit" className="btn btn-outline-success my-2 my-sm-0" onClick={this.openModal}><h6>Cargar Resultados</h6></button>
                     <ReactModal
                     initWidth={520}
-                    initHeight={666}
+                    initHeight={677}
                     top={200}
                     left={300}
                     onFocus={() => console.log("Modal is clicked")}
