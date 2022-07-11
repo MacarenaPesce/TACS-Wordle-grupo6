@@ -77,7 +77,7 @@ export default class TourneyCreate extends Component{
 
                 {/*TODO: hacer css propios en vez de ser tomados de help, para:
                             form-help, opciones, selectidioma, form-control*/}
-                <form onSubmit={this.submitHandler} className="form-help">
+                <form onSubmit={this.submitHandler} className="form-tourney">
 
                     <div className="opciones">
                         <div className="">

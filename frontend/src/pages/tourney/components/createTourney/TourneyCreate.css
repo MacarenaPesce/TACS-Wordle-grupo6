@@ -39,3 +39,12 @@
 .flexible-modal-drag-area-left{
     position:absolute;
 }
+
+.form-tourney{
+    width: auto;
+    height: auto;
+    margin: 2%;
+    margin-top: 10%;
+    text-align: center;
+    margin-bottom: 15px;
+}

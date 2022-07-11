@@ -1,7 +1,15 @@
-import React, { useState} from "react";
+import React, { Component , useState} from "react";
 import './Toast.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Home from './../../pages/Home'
 import Toast from 'react-bootstrap/Toast';
+import ToastHeader from 'react-bootstrap/ToastHeader'
+import ToastBody from 'react-bootstrap/ToastBody'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import { Container, Row, Col } from 'react-bootstrap';
+import {Toaster, toast} from 'react-hot-toast'
 
 function ToastComponent(props) {
 
