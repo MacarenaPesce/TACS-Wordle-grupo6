@@ -232,17 +232,8 @@ public class TelegramController {
                 rankingChat.processRanking(chat_id, params[0], restart, casoActual);
                 break;
 
-            case "create" : //todo: falta hacer
-                sender.sendMessage("Crear un torneo"+todo, chat_id, "");
-                /*
-                pedir nombre, verificar que no exista previamente
-                pedir idioma, mostrar botones es y en
-                pedir privacidad, mostrar botones privado y publico
-                pedir fecha de inicio, opcionalmente verificar que sea a partir de mañana. Setear la hora en 00hs
-                pedir fecha de fin, verificar que sea mayor o igual a la de inicio. Setear la hora en 23:59:59.99
-                sacar el user id a partir del telegram id
-                crear torneo y notificar exito
-                 */
+            case "create" :
+                tournamentChat.processCreateTourney(chat_id, params[0], restart, casoActual);
                 break;
 
             case "addmember" :

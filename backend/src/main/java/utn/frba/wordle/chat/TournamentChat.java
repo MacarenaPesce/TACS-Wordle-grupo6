@@ -274,7 +274,6 @@ public class TournamentChat {
                 tournamentService.addMember(idUser, tournament.getTourneyId(), tournament.getOwner().getId());
                 sender.sendMessage("Ya agrego al usuario al torneo", chat_id, "");
 
-
                 //todo: preguntar si quiere agregar mas o exit
                 //dar la opcion de seguir agregando miembros al mismo torneo, o finalizar
 
@@ -286,8 +285,6 @@ public class TournamentChat {
         }
     }
 
-
-    //agregarse y notificar
     public void processJoin(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
         if (restart) {
             casoActual.put(chat_id, "join");
@@ -352,6 +349,19 @@ public class TournamentChat {
                 sender.sendMessage("Disculpame pero no te entendi", chat_id, "");
 
         }
+    }
+
+    /*
+        pedir nombre, verificar que no exista previamente
+        pedir idioma, mostrar botones es y en
+        pedir privacidad, mostrar botones privado y publico
+        pedir fecha de inicio, opcionalmente verificar que sea a partir de mañana. Setear la hora en 00hs
+        pedir fecha de fin, verificar que sea mayor o igual a la de inicio. Setear la hora en 23:59:59.99
+        sacar el user id a partir del telegram id
+        crear torneo y notificar exito
+    */
+    public void processCreateTourney(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException{
+        
     }
 
 }
