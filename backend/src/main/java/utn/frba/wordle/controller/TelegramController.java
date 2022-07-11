@@ -245,11 +245,8 @@ public class TelegramController {
                  */
                 break;
 
-            case "addmember" : //todo: falta hacer
-                sender.sendMessage("Agregar un usuario a uno de mis torneos"+todo, chat_id, "");
-                //pedir id torneo a agregar, verificar que exista y sea propio. Opcionalmente verificar que el torneo no esté empezado
-                //pedir id usuario a agregar. Agregarlo si aun no lo está. Notificar la situación
-                //dar la opcion de seguir agregando miembros al mismo torneo, o finalizar
+            case "addmember" :
+                tournamentChat.processAddMember(chat_id, params[0], restart, casoActual);
                 break;
 
             case "join" : //todo: falta hacer

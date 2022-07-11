@@ -42,7 +42,10 @@ public class TournamentChat {
     UserService userService;
     @Autowired
     TournamentService tournamentService;
+
     final HashMap<Long, Integer> pasoActual = new HashMap<>();
+
+    final HashMap<Long, TournamentDto> torneo = new HashMap<>();
 
     private void processTourneyList(Long chat_id, HashMap<Long, String> casoActual, String command, List<TournamentDto> tourneys, String title, Integer pag) throws IOException, URISyntaxException {
 
@@ -199,4 +202,85 @@ public class TournamentChat {
         }
     }
 
+    public void processAddMember(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException{
+        if(restart){
+            casoActual.put(chat_id, "addMember");
+            pasoActual.put(chat_id, 1);
+        }
+
+        //dar la opcion de seguir agregando miembros al mismo torneo, o finalizar
+        Integer step = pasoActual.get(chat_id);
+        switch (step){
+            case 1 :
+                //pedir id torneo a agregar
+                pasoActual.put(chat_id, 2);
+                sender.sendMessage("Inserte el id del torneo al que quiere agregar un usuario", chat_id, "");
+                break;
+
+            case 2 :
+                //verificar que se recibió un id
+                if(!message.matches("\\d+")){
+                    sender.sendMessage("Envie algo que tenga reminiscencia a un id", chat_id, "");
+                    return;
+                }
+
+                //verificar que exista el torneo
+                Long tourneyid = Long.parseLong(message);
+                TournamentDto tourney;
+                try {
+                    tourney = tournamentService.getActiveTournamentById(tourneyid);
+                }catch (BusinessException e){
+                    sender.sendMessage("No existe torneo activo con ese id, elija otro id", chat_id, "");
+                    return;
+                }
+                torneo.put(chat_id,tourney);
+
+                //verificar que el torneo sea propio
+                Long userid = userService.findUseridByTelegramID(chat_id);
+
+                if(!tourney.getOwner().getId().equals(userid)) {
+                    sender.sendMessage("Usted no es propietario del torneo elegido, elija otro torneo", chat_id, "");
+                    return;
+                }
+
+                //verificar que el torneo no este empezado
+                if(!tourney.getState().equals(State.READY)){
+                    sender.sendMessage("El torneo al que intenta agregar a un usuario, ya esta empezado, elija otro torneo", chat_id, "");
+                    return;
+                }
+
+                pasoActual.put(chat_id, 3);
+                sender.sendMessage("Inserte el id del usuario al que quiere agregar", chat_id, "");
+                break;
+
+            case 3: //Agregarlo si aun no lo está. Notificar la situación
+                //verificar que se recibió un id
+                if(!message.matches("\\d+")){
+                    sender.sendMessage("Envie algo que tenga reminiscencia a un id", chat_id, "");
+                    return;
+                }
+
+                //verificar  que aun no este en el torneo
+                Long idUser = userService.findUseridByTelegramID(chat_id);
+
+                if(userService.memberOfTournament(idUser, torneo.get(chat_id).getTourneyId())){
+                    sender.sendMessage("El usuario ya forma parte del torneo , elija otro id", chat_id, "");
+                    return;
+                }
+
+                //agregar al torneo
+
+
+                //preguntar si quiere agregar mas o exit
+
+                break;
+
+            case 4:
+                casoActual.remove(chat_id, "tournament");
+                break;
+
+            default :
+                sender.sendMessage("Disculpame pero no te entendi", chat_id, "");
+        }
+    }
 }
