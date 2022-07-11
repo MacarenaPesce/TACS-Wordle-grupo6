@@ -1,15 +1,20 @@
--- todo tomar el ultimo id actual de todas las tablas, para poder crear sin afectar los datos existentes, en caso de ejecutar sin la bd vacia
--- todo poner un random mas performante en generate_registrations para elegir usuarios	https://stackoverflow.com/questions/4329396/mysql-select-10-random-rows-from-600k-rows-fast
+-- todo opciones old_users y old_tourneys
+-- todo probar un random mas performante en generate_registrations para elegir usuarios	https://stackoverflow.com/questions/4329396/mysql-select-10-random-rows-from-600k-rows-fast
 
--- configurar mysql para que no haga timeout a los 30 segundos de query
+-- configurar el cliente workbench mysql para que no haga timeout a los 30 segundos de query
 
 use wordle;
 
--- fecha inicial a partir de la cual cargar puntajes y crear torneos, fecha final hasta la cual crear torneos, cantidad de usuarios, cantidad de torneos, y cantidad de usuarios a registrar por torneo
+-- fecha inicial a partir de la cual cargar puntajes (para usuarios nuevos) y crear torneos, fecha final hasta la cual crear torneos, cantidad de usuarios a crear, cantidad de torneos a crear, cantidad de usuarios a registrar por torneo,
+	-- y en el caso de ejecutar todo una segunda vez: boolean old_users si registrar o no usuarios viejos en torneos, boolean old_tourneys si volver a generar o no mas registraciones para los torneos viejos
 DROP TABLE IF EXISTS `opciones`;
 CREATE TEMPORARY TABLE opciones(dia_pri date, dia_ulti date, limit_users int, limit_tourneys int, cant_registros int);
 INSERT INTO opciones VALUES 
-(DATE_SUB(curdate(), INTERVAL 1 MONTH), DATE_ADD(curdate(), INTERVAL 1 MONTH), 800, 160, 16);
+(DATE_SUB(curdate(), INTERVAL 1 MONTH), DATE_ADD(curdate(), INTERVAL 1 MONTH), 480, 160, 16);
+
+-- tabla para no afectar datos existentes, en caso de la bd no estar vacia
+DROP TABLE IF EXISTS `offset`;
+CREATE TEMPORARY TABLE offset(user int, tourney int);
 
 /*
 GENERAR USUARIOS
@@ -26,15 +31,17 @@ BEGIN
 
 	DECLARE cant_users int DEFAULT (select limit_users from opciones);
 	
---	IF _username not in (select username from user) THEN
---  END IF;
+	insert into offset(user) select id from user 
+	order by id desc limit 1;
 
-	  insert into user(username,password,email) SELECT username, md5(username), concat(username,'@wordle.com') from temp_users limit cant_users;
+	  insert into user(username,password,email) SELECT username, md5(username), concat(username,'@wordle.com') from temp_users 
+	  where username not in (select username from user)
+	  limit cant_users;
+
 
 END //
 DELIMITER ;
 
-CALL generate_users();
 
 
 /*
@@ -59,13 +66,13 @@ BEGIN
   DECLARE start_date date DEFAULT (select dia_pri from opciones);
   DECLARE end_date date DEFAULT DATE_SUB(curdate(), INTERVAL 1 DAY);
   DECLARE date_counter date DEFAULT start_date;
-  
+  DECLARE last_id int DEFAULT (IFNULL((select user from offset where user is not null), 0));
+
 	-- todo generar IQ para cada usuario para que no queden tan parejos los resultados
-	-- WARNING no ejecutar dos veces porque esto no tiene unique constraint
 
 	while date_counter < DATE_ADD(end_date, INTERVAL 1 DAY) DO
-		insert into punctuation(id_user,date,language,punctuation) SELECT id, date_counter, 'ES', score() from user;
-		insert into punctuation(id_user,date,language,punctuation) SELECT id, date_counter, 'EN', score() from user;
+		insert into punctuation(id_user,date,language,punctuation) SELECT id, date_counter, 'ES', score() from user where id > last_id;
+		insert into punctuation(id_user,date,language,punctuation) SELECT id, date_counter, 'EN', score() from user where id > last_id;
 		set date_counter=DATE_ADD(date_counter, INTERVAL 1 DAY);
 	end while;
 	
@@ -74,7 +81,6 @@ BEGIN
 END //
 DELIMITER ;
 
-call generate_scores();
 
 
 /*
@@ -98,19 +104,29 @@ BEGIN
 END //
 DELIMITER ;
 
--- WARNING no ejecutar dos veces porque el name del tournament no tiene unique constraint
+DROP TABLE IF EXISTS `esquivo_un_bug`;
+CREATE TEMPORARY TABLE esquivo_un_bug(nombre varchar(80));
+INSERT INTO esquivo_un_bug SELECT * FROM temp_tourneys 
+		 where tourneyname not in (select name from tournament);
+
+
 DROP PROCEDURE IF EXISTS `generate_tourneys`;
 DELIMITER //
 CREATE PROCEDURE generate_tourneys()
 BEGIN
+
+  DECLARE cant_tourneys int DEFAULT (select limit_tourneys from opciones);
   DECLARE done INT DEFAULT FALSE;
   DECLARE tourneyname varchar(60);
   DECLARE fecha_1 date;
   DECLARE fecha_2 date;
   DECLARE random_user bigint;
-  DECLARE cant_tourneys int DEFAULT (select limit_tourneys from opciones);
-  DECLARE cur CURSOR FOR SELECT * FROM temp_tourneys limit cant_tourneys;
+  DECLARE cur CURSOR FOR SELECT * FROM esquivo_un_bug limit cant_tourneys;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+	  insert into offset(tourney) select id from tournament 
+	  order by id desc limit 1;
+
 
   OPEN cur;
 
@@ -120,7 +136,9 @@ BEGIN
       LEAVE read_loop;
     END IF;
 		
-	SET random_user = (select id from user order by rand() limit 1);
+	SET random_user = (select id from user
+						-- where id > (IFNULL((select user from offset where user is not null), 0)) --  linea opcional para no registrar usuarios viejos en torneos nuevos
+						order by rand() limit 1);
 	
 	SET fecha_1 = tourdate();
 	SET fecha_2 = tourdate();	
@@ -144,7 +162,6 @@ BEGIN
 END //
 DELIMITER ;
 
-call generate_tourneys();
 
 
 /*
@@ -235,6 +252,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 DROP PROCEDURE IF EXISTS `generate_registrations`;
 DELIMITER //
 CREATE PROCEDURE generate_registrations()
@@ -246,7 +264,7 @@ BEGIN
   DECLARE inicio date;
   DECLARE fin date;
   DECLARE cant_users int DEFAULT (select cant_registros from opciones);
-  DECLARE cur CURSOR FOR SELECT id FROM tournament;
+  DECLARE cur CURSOR FOR SELECT id FROM tournament where id > (IFNULL((select tourney from offset where tourney is not null), 0));
   DECLARE cur2 CURSOR FOR SELECT * FROM torneo_usuario;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
@@ -254,6 +272,7 @@ BEGIN
   -- crear tabla que tenga todos los torneos, y para cada uno, una cantidad random de usuarios distintos
   DROP TABLE IF EXISTS `torneo_usuario`;
   CREATE TEMPORARY TABLE torneo_usuario(tourneyid bigint, userid bigint);
+  
 	
   OPEN cur;
 
@@ -263,13 +282,15 @@ BEGIN
       LEAVE read_loop;
     END IF;
 	
-	INSERT INTO torneo_usuario(tourneyid, userid) SELECT id_tourney, id FROM user order by rand() limit cant_users;
+	INSERT INTO torneo_usuario(tourneyid, userid) SELECT id_tourney, id FROM user
+	-- where id > (IFNULL((select user from offset where user is not null), 0)) -- linea opcional para no registrar usuarios viejos en torneos nuevos
+	order by rand() limit cant_users;
   
   END LOOP;
 
   CLOSE cur;
   SET done=0;
-    
+      
 	
   -- iterar la tabla anterior para crear registraciones y sus tablas intermedias
   OPEN cur2;
@@ -301,9 +322,14 @@ BEGIN
 END //
 DELIMITER ;
 
+
+
+START TRANSACTION;
+call generate_users();
+call generate_scores();
+call generate_tourneys();
 call generate_registrations();
-
-
+COMMIT;
 
 -- cursor doble
 /*
