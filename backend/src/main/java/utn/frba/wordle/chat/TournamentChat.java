@@ -324,14 +324,6 @@ public class TournamentChat {
                     return;
                 }
 
-                //verificar que el torneo no sea propio
-                Long userid = userService.findUseridByTelegramID(chat_id);
-
-                if (tourney.getOwner().getId().equals(userid)) {
-                    sender.sendMessage("Usted es propietario del torneo elegido, elija otro torneo", chat_id, "");
-                    return;
-                }
-
                 //verificar que el torneo no este empezado
                 if (!tourney.getState().equals(State.READY)) {
                     sender.sendMessage("El torneo al que intenta agregarse, ya esta empezado, elija otro torneo", chat_id, "");
@@ -344,13 +336,19 @@ public class TournamentChat {
                     return;
                 }
 
+                //verificar que aun no este participando del torneo
+                Long userid = userService.findUseridByTelegramID(chat_id);
+                if (userService.memberOfTournament(userid, tourneyid)) {
+                    sender.sendMessage("Usted ya forma parte de ese torneo, elija otro id", chat_id, "");
+                    return;
+                }
+
                 //agregarse al torneo
                 Long idUser = userService.findUseridByTelegramID(chat_id);
 
-                tournamentService.join(idUser, tourney.getTourneyId());
-                sender.sendMessage("Ya se agrego al torneo", chat_id, "");
+                tournamentService.join(idUser, tourneyid);
+                sender.sendMessage("Ahora participa de "+tourneyid+" 👍 \nElija mas torneos o /exit", chat_id, "");
 
-                casoActual.remove(chat_id, "join");
                 break;
 
             default:
