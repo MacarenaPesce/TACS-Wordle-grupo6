@@ -168,7 +168,7 @@ public class TelegramController {
                 break;
 
             case "start" :
-                sender.sendMessage("Buenas tardes/días/noches "+humanName+"! <3", chat_id, "");
+                sender.sendMessage("Hola "+humanName+"! <3", chat_id, "");
 
                 String user = userService.findUsernameByTelegramID(chat_id);
                 if(user == null)
