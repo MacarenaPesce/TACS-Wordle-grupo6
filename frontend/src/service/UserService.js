@@ -71,7 +71,6 @@ const getTourneysStateAndType = (pageNumber, maxResults, state, type, name) => {
   return axios.get(API + "tournaments?pageNumber=" + pageNumber + "&maxResults=" + maxResults + "&state=" + state  + "&type=" + type +"&name=" +name, { headers: authHeader() });
 };
 
-/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
   getPublicContent,
   getUserBoard,
@@ -83,6 +82,5 @@ export default {
   getTodaysResult,
   getMyTourneysGeneric,
   getMyTourneysId,
-  getTourneysStateAndType,
-  getTourneysType
+  getTourneysStateAndType
 };

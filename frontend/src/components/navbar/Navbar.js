@@ -4,6 +4,9 @@ import Nav from 'react-bootstrap/Nav'
 import Container from 'react-bootstrap/Container'
 import './Navbar.css';
 import useUser from '../../hooks/useUser';
+import IconButton from '@mui/material/IconButton'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import NotificationBar from '../notificationBar/NotificationBar';
 
 export default function NavbarAut() {
    

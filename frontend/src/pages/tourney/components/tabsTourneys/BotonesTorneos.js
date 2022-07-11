@@ -7,7 +7,7 @@ import TourneyService from "../../../../service/TourneyService";
 import UserService from '../../../../service/UserService';
 
 export default function BotonesTorneos(data){
-    const [tourney] = useState(data.tourney);
+    const [tourney,setTourney] = useState(data.tourney);
     const [myTourneysid, setTourneysId] = useState([]); 
 
     let userId = localStorage.getItem("userId");
@@ -20,7 +20,7 @@ export default function BotonesTorneos(data){
     }
 
     const disableButtons= () =>{
-        if(tourney.owner.id === userId){ //es mi torneo
+        if(tourney.owner.id == userId){ //es mi torneo
             if(tourney.state === 'READY'){  // esta por empezar
                 setDisButAddMember(false); //si sos el creador agregas personas ya sea publico o privado SI NO ESTA EMPEZADO
             }
@@ -29,7 +29,7 @@ export default function BotonesTorneos(data){
             }
             setDisButUserAdd(true); //no puedo agregarme porque es mi torneo
         }
-        else if(tourney.owner.id !== userId){
+        else if(tourney.owner.id != userId){
             setDisButAddMember(true); //No es mi torneo, no puedo agregar a nadie
             if(tourney.state === 'READY' && tourney.type === 'PUBLIC'){ // esta en ready y no empezado, y es publico
                 if(myTourneysid.includes(tourney.tourneyId)){
