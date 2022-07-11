@@ -20,17 +20,9 @@ public class TeleSender {
 
     private static final String API_URL = "https://api.telegram.org/bot";
 
-    public void sendMessage(String mensaje, Long chat_id, String parse_mode) throws IOException, URISyntaxException {
-        String destinationUrl = API_URL + TOKEN + "/sendMessage";
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+    private void sendMessageFull(String mensaje, Long chat_id, String parse_mode, HttpGet request) throws IOException, URISyntaxException {
 
-        HttpGet request = new HttpGet(destinationUrl);
-        URI uri = new URIBuilder(request.getURI())
-                .addParameter("chat_id", chat_id.toString())
-                .addParameter("text", mensaje)
-                .addParameter("parse_mode", parse_mode)
-                .build();
-        request.setURI(uri);
+        CloseableHttpClient httpClient = HttpClients.createDefault();
 
         CloseableHttpResponse responseHttp = httpClient.execute(request);
 
@@ -43,9 +35,47 @@ public class TeleSender {
 
     }
 
+    public void sendMessage(String mensaje, Long chat_id, String parse_mode) throws IOException, URISyntaxException {
+        String destinationUrl = API_URL + TOKEN + "/sendMessage";
+        HttpGet request = new HttpGet(destinationUrl);
+        URI uri = new URIBuilder(request.getURI())
+                .addParameter("chat_id", chat_id.toString())
+                .addParameter("text", mensaje)
+                .addParameter("parse_mode", parse_mode)
+                .build();
+        request.setURI(uri);
+        sendMessageFull(mensaje, chat_id, parse_mode, request);
+    }
+
+    public void sendMessageWithKB(String mensaje, Long chat_id, String parse_mode, String KB) throws IOException, URISyntaxException {
+        String destinationUrl = API_URL + TOKEN + "/sendMessage";
+        HttpGet request = new HttpGet(destinationUrl);
+        URI uri = new URIBuilder(request.getURI())
+                .addParameter("chat_id", chat_id.toString())
+                .addParameter("text", mensaje)
+                .addParameter("parse_mode", parse_mode)
+                .addParameter("reply_markup", "{\"resize_keyboard\":true,\"one_time_keyboard\":true,\"keyboard\":"+KB+"}")
+                .build();
+        request.setURI(uri);
+        sendMessageFull(mensaje, chat_id, parse_mode, request);
+    }
+
+    public void sendMessageDelKB(String mensaje, Long chat_id, String parse_mode) throws IOException, URISyntaxException {
+        String destinationUrl = API_URL + TOKEN + "/sendMessage";
+        HttpGet request = new HttpGet(destinationUrl);
+        URI uri = new URIBuilder(request.getURI())
+                .addParameter("chat_id", chat_id.toString())
+                .addParameter("text", mensaje)
+                .addParameter("parse_mode", parse_mode)
+                .addParameter("reply_markup", "{\"remove_keyboard\":true}")
+                .build();
+        request.setURI(uri);
+        sendMessageFull(mensaje, chat_id, parse_mode, request);
+    }
+
     private void handleErrors(String response, Long chat_id) throws IOException, URISyntaxException {
 
-        if(response.equals("{\"ok\":false,\"error_code\":400,\"description\":\"Bad Request: message is too long\"}")){
+        if(response.startsWith("{\"ok\":false")){
             sendMessage(response, chat_id, "");
         }
 

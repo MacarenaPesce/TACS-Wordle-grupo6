@@ -50,7 +50,7 @@ public class UserChat {
         }
 
         Integer pag = pasoActual.get(chat_id);
-        List<UserDto> users = userService.getAllWithPagination(25, pag);
+        List<UserDto> users = userService.getAllWithPagination(22, pag);
         String usersString = users.stream().map(UserDto::toStringTelegram).collect(Collectors.joining("\n"));
 
         String mas = "\n\n/mas para mostrar más resultados";
@@ -58,10 +58,10 @@ public class UserChat {
 
         if(users.isEmpty()){
             casoActual.remove(chat_id, "users_list");
-            sender.sendMessage("No hay mas resultados", chat_id, "");
+            sender.sendMessageDelKB("No hay mas resultados", chat_id, "");
         }else {
             pasoActual.put(chat_id, pag+1);
-            sender.sendMessage("Lista de usuarios - Página "+pag+"\n\n"+usersString+mas+exit, chat_id, "");
+            sender.sendMessageWithKB("Lista de usuarios - Página "+pag+"\n\n"+usersString/*+mas+exit*/, chat_id, "", "[[\"/mas\"],[\"/exit\"]]");
         }
 
     }
@@ -101,7 +101,7 @@ public class UserChat {
 
                     username.put(chat_id, message);
                     pasoActual.put(chat_id, 3);
-                    sender.sendMessage(contrasenia, chat_id, "");
+                    sender.sendMessageWithKB(contrasenia, chat_id, "", "[[\""+message+"\"],[\"1234\"],[\"la casa de papel\"]]");
                 }else{
                     sender.sendMessage(usuario+exit, chat_id, "");
                 }
@@ -111,14 +111,14 @@ public class UserChat {
                 //todo hacer alguna verificacion regex
                 password.put(chat_id, message);
                 pasoActual.put(chat_id, 4);
-                sender.sendMessage(email, chat_id, "");
+                sender.sendMessageWithKB(email, chat_id, "", "[[\""+username.get(chat_id)+"@wordle.com\"]]");
                 break;
 
             case 4:     //verificar email y registrar usuario
                 //todo hacer alguna verificacion regex
                 UserEntity userEntity = userService.findUserByEmail(message.toLowerCase());
                 if(userEntity != null){
-                    sender.sendMessage("El email ya esta en uso, elija otro."+exit, chat_id, "");
+                    sender.sendMessageDelKB("El email ya esta en uso, elija otro."+exit, chat_id, "");
                     return;
                 }
 
@@ -127,7 +127,7 @@ public class UserChat {
                 String name = username.get(chat_id);
                 userService.createUserTelegram(name, password.get(chat_id), message, chat_id);
 
-                sender.sendMessage("Ahora eres para siempre: "+name, chat_id, "");
+                sender.sendMessageDelKB("Ahora eres para siempre: "+name, chat_id, "");
 
                 username.remove(chat_id);
                 password.remove(chat_id);
@@ -211,7 +211,7 @@ public class UserChat {
         switch (step){
             case 1 :
                 pasoActual.put(chat_id, 2);
-                sender.sendMessage("Indique el puntaje obtenido del 1 al 7 (sin mentir ni equivocarse sin querer)", chat_id, "");
+                sender.sendMessageWithKB("Indique el puntaje obtenido del 1 al 7 (sin mentir ni equivocarse sin querer)", chat_id, "", "[[\"1\",\"2\",\"3\"],[\"4\",\"5\",\"6\"],[\"7\"]]");
                 break;
 
             case 2 :
@@ -234,14 +234,14 @@ public class UserChat {
                 try {
                     tournamentService.submitResults(userid, dto);
                 }catch (BusinessException e){
-                    sender.sendMessage("Alguien estuvo manipulando mis resultados desde que inicie el comando", chat_id, "");
+                    sender.sendMessageDelKB("Alguien estuvo manipulando mis resultados desde que inicie el comando", chat_id, "");
                 } finally {
                     if(spanish)
                         casoActual.remove(chat_id, "submitES");
                     else
                         casoActual.remove(chat_id, "submitEN");
                 }
-                sender.sendMessage("Exitos!!!! No olvide cargar también el otro idioma y volver mañana\n\n/checkScores - revisar mis puntajes del dia de la fecha", chat_id, "");
+                sender.sendMessageDelKB("Exitos!!!! No olvide cargar también el otro idioma y volver mañana\n\n/checkScores - revisar mis puntajes del dia de la fecha", chat_id, "");
                 break;
 
             default :

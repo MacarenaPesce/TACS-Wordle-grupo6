@@ -39,10 +39,11 @@ public class DictionaryChat {
         Integer valor = pasoActual.get(chat_id);
         if(valor == null || valor == 0){ // comando completo
 
-            String sintaxis = "Sintaxis: \n/definition es|en word";
+            String comando = "/definition es|en word";
+            String sintaxis = "Sintaxis: \n"+comando;
             if(params[0].equals("")){
                 pasoActual.put(chat_id, 1);
-                sender.sendMessage("Obtenga ayuda para resolver un wordle.\n\nOpcion 1: vuelva a escribir el comando completo:\n"+sintaxis+"\n\n Opcion 2: envie solo el primer parametro.\n\n En criollo: elija el idioma: es o en", chat_id, "");
+                sender.sendMessageWithKB(comando+"\nObtenga la definición de una palabra a su antojo.\n\nElija el idioma: es o en", chat_id, "", "[[\"/definition en bot\"],[\"ES\",\"EN\"]]");
                 return;
             }
 
@@ -53,7 +54,7 @@ public class DictionaryChat {
 
             String str = buildSolution(params);
 
-            casoActual.remove(chat_id, "help");
+            casoActual.remove(chat_id, "definition");
             sender.sendMessage(str, chat_id, "");
         }
         else{ // comando interactive
@@ -62,7 +63,7 @@ public class DictionaryChat {
 
     }
 
-    private String buildSolution(String[] params){
+    private String buildSolution(String[] params){              //todo separar las distintas definiciones con saltos de linea aunque sea
 
         Language language = null;
         if(params[0].equals("es"))
@@ -87,7 +88,7 @@ public class DictionaryChat {
                 if(message.equalsIgnoreCase("es") || message.equalsIgnoreCase("en")){
                     commandBuilder.put(chat_id, new StringBuilder(message.toLowerCase()+" "));
                     pasoActual.put(chat_id, 2);
-                    sender.sendMessage(word, chat_id, "");
+                    sender.sendMessageDelKB(word, chat_id, "");
                 }else{
                     sender.sendMessage(idioma+exit, chat_id, "");
                 }

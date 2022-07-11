@@ -120,11 +120,11 @@ public class TelegramController {
         switch(caso)
         {
             case "users" :
-                sender.sendMessage(users, chat_id, "");
+                sender.sendMessageDelKB(users, chat_id, "");
                 break;
 
             case "tournaments" :
-                sender.sendMessage(tournaments, chat_id, "");
+                sender.sendMessageDelKB(tournaments, chat_id, "");
                 break;
 
             case "help" :
@@ -164,11 +164,11 @@ public class TelegramController {
 
             case "exit" :
                 casoActual.remove(chat_id);
-                sender.sendMessage(start, chat_id, "");
+                sender.sendMessageDelKB(start, chat_id, "");
                 break;
 
             case "start" :
-                sender.sendMessage("Hola "+humanName+"! <3", chat_id, "");
+                sender.sendMessageDelKB("Hola "+humanName+"! <3", chat_id, "");
 
                 String user = userService.findUsernameByTelegramID(chat_id);
                 if(user == null)
@@ -204,7 +204,7 @@ public class TelegramController {
 
             //----------- tournaments -------------------------------------------
 
-            case "myCreatedTournaments" : //todo: falta hacer
+            case "myCreatedTournaments" : //para hacer opcionalmente
                 sender.sendMessage("Ver mis torneos creados\nno existe endpoint"+todo, chat_id, "");
                 break;
 

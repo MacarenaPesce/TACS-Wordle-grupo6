@@ -47,7 +47,7 @@ public class RankingChat {
         Integer step = pasoActual.get(chat_id);
         switch (step){
             case 1 :
-                sender.sendMessage("Ingresa el id de torneo ", chat_id, "");
+                sender.sendMessageWithKB("Ingresa el id de torneo ", chat_id, "", "[[\"/publicStarted\"]]");
                 pasoActual.put(chat_id, 2);
 
                 break;
@@ -84,7 +84,7 @@ public class RankingChat {
                 //parsear ranking en string
                 String rankingString = ranking.stream().map(Punctuation::toStringTelegram).collect(Collectors.joining("\n\n"));
 
-                sender.sendMessage(rankingString, chat_id, "");
+                sender.sendMessageDelKB(rankingString, chat_id, "");
                 break;
 
             default :

@@ -57,7 +57,7 @@ public class TournamentChat {
     TournamentType tipo;
     Date start, finish;
 
-    private void processTourneyList(Long chat_id, HashMap<Long, String> casoActual, String command, List<TournamentDto> tourneys, String title, Integer pag) throws IOException, URISyntaxException {
+    private void processTourneyList(Long chat_id, HashMap<Long, String> casoActual, String command, List<TournamentDto> tourneys, String title, Integer pag, String KB) throws IOException, URISyntaxException {
 
         String tourneysString = tourneys.stream().map(TournamentDto::toStringTelegramList).collect(Collectors.joining("\n\n"));
 
@@ -66,10 +66,10 @@ public class TournamentChat {
 
         if (tourneys.isEmpty()) {
             casoActual.remove(chat_id, command);
-            sender.sendMessage("No hay mas resultados", chat_id, "");
+            sender.sendMessageDelKB("No hay mas resultados", chat_id, "");
         } else {
             pasoActual.put(chat_id, pag + 1);
-            sender.sendMessage(title + " - Página " + pag + "\n\n" + tourneysString + mas + exit, chat_id, "");
+            sender.sendMessageWithKB(title + " - Página " + pag + "\n\n" + tourneysString + mas + exit, chat_id, "", "["+KB+"]");
         }
     }
 
@@ -99,7 +99,7 @@ public class TournamentChat {
         Integer pag = pasoActual.get(chat_id);
         List<TournamentDto> tourneys = tournamentService.getActiveTournamentsFromUser(userid, pag, 10);
 
-        processTourneyList(chat_id, casoActual, command, tourneys, "Torneos participando", pag);
+        processTourneyList(chat_id, casoActual, command, tourneys, "Torneos participando", pag, "");
     }
 
     public void processPublicTournaments(Long chat_id, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
@@ -119,7 +119,7 @@ public class TournamentChat {
                 .build();
         List<TournamentDto> tourneys = tournamentService.findTournaments(findTournamentsFilters);
 
-        processTourneyList(chat_id, casoActual, command, tourneys, "Torneos públicos por comenzar", pag);
+        processTourneyList(chat_id, casoActual, command, tourneys, "Torneos públicos por comenzar", pag, "");
     }
 
     public void processPublicStarted(Long chat_id, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
@@ -139,7 +139,7 @@ public class TournamentChat {
                 .build();
         List<TournamentDto> tourneys = tournamentService.findTournaments(findTournamentsFilters);
 
-        processTourneyList(chat_id, casoActual, command, tourneys, "Torneos públicos en juego", pag);
+        processTourneyList(chat_id, casoActual, command, tourneys, "Torneos públicos en juego", pag, "[\"/tournament\",\"/ranking\"]");
     }
 
     public void processFinalizedTournaments(Long chat_id, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
@@ -158,7 +158,7 @@ public class TournamentChat {
                 .build();
         List<TournamentDto> tourneys = tournamentService.findTournaments(findTournamentsFilters);
 
-        processTourneyList(chat_id, casoActual, command, tourneys, "Todos los torneos finalizados", pag);
+        processTourneyList(chat_id, casoActual, command, tourneys, "Todos los torneos finalizados", pag, "");
     }
 
     public void processInfo(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
@@ -395,7 +395,7 @@ public class TournamentChat {
                 try {
                     idioma = Language.valueOf(message);
                 } catch (IllegalArgumentException e) {
-                    sender.sendMessage("No existe ese lenguaje", chat_id, "");
+                    sender.sendMessage("No existe ese lenguaje, elija otro", chat_id, "");
                     return;
                 }
 
@@ -410,7 +410,7 @@ public class TournamentChat {
                 try {
                     tipo = TournamentType.valueOf(message);
                 } catch (IllegalArgumentException e) {
-                    sender.sendMessage("No existe ese tipo", chat_id, "");
+                    sender.sendMessage("No existe ese tipo, elija otro", chat_id, "");
                     return;
                 }
 
