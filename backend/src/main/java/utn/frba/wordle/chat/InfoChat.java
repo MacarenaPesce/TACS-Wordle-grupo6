@@ -30,7 +30,6 @@ public class InfoChat {
 
     final HashMap<Long, Integer> pasoActual = new HashMap<>();
 
-    final HashMap<Long, StringBuilder> commandBuilder = new HashMap<>();
 
     public void processInfo(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
         if (restart) {
@@ -65,6 +64,11 @@ public class InfoChat {
                 //verificar si es privado, que sea miembro del torneo
                 if (tourney.getType() == TournamentType.PRIVATE) {
                     Long userid = userService.findUseridByTelegramID(chat_id);
+                    if(userid == null){
+                        sender.sendMessage("Debe estar registrado para consultar torneos privados - /register", chat_id, "");
+                        casoActual.remove(chat_id, "info");
+                        return;
+                    }
                     if (!userService.memberOfTournament(userid, tourneyid)) {
                         sender.sendMessage("Usted no forma parte del torneo privado " + tourneyid + ", elija otro id", chat_id, "");
                         return;
@@ -120,6 +124,11 @@ public class InfoChat {
                 //verificar si es privado, que sea miembro del torneo
                 if(tourney.getType() == TournamentType.PRIVATE){
                     Long userid = userService.findUseridByTelegramID(chat_id);
+                    if(userid == null){
+                        sender.sendMessage("Debe estar registrado para consultar torneos privados - /register", chat_id, "");
+                        casoActual.remove(chat_id, "ranking");
+                        return;
+                    }
                     if(!userService.memberOfTournament(userid, tourneyid)){
                         sender.sendMessage("Usted no forma parte del torneo privado "+tourneyid+", elija otro id", chat_id, "");
                         return;
@@ -133,6 +142,7 @@ public class InfoChat {
                 String rankingString = ranking.stream().map(Punctuation::toStringTelegram).collect(Collectors.joining("\n\n"));
 
                 sender.sendMessageDelKB(rankingString, chat_id, "");
+                casoActual.remove(chat_id, "ranking");
                 break;
 
             default :

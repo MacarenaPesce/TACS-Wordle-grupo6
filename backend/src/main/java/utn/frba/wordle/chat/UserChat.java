@@ -185,6 +185,12 @@ public class UserChat {
     }
 
     public void processSubmitFull(Long chat_id, boolean restart, String message, HashMap<Long, String> casoActual, boolean spanish) throws IOException, URISyntaxException {
+        Long userid = userService.findUseridByTelegramID(chat_id);
+        if(userid == null){
+            sender.sendMessage("Debe estar registrado para usar esta función - /register", chat_id, "");
+            return;
+        }
+
         if(restart){
             if(spanish)
                 casoActual.put(chat_id, "submitES");
@@ -198,8 +204,6 @@ public class UserChat {
             lang = Language.ES;
         else
             lang = Language.EN;
-
-        Long userid = userService.findUseridByTelegramID(chat_id);
 
         Long score = punctuationService.getTodaysResult(userid, lang);
         if(score != 0){

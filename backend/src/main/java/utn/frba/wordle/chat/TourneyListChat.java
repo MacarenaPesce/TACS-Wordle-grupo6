@@ -46,13 +46,17 @@ public class TourneyListChat {
     }
 
     public void processMyCreatedTournaments(Long chat_id, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
+        Long userid = userService.findUseridByTelegramID(chat_id);
+        if(userid == null){
+            sender.sendMessage("Debe estar registrado para consultar sus torneos - /register", chat_id, "");
+            return;
+        }
         String command = "myCreatedTournaments";
         if (restart) {
             casoActual.put(chat_id, command);
             pasoActual.put(chat_id, 1);
         }
 
-        Long userid = userService.findUseridByTelegramID(chat_id);
         Integer pag = pasoActual.get(chat_id);
         //List<TournamentDto> tourneys = tournamentService.
 
@@ -61,13 +65,17 @@ public class TourneyListChat {
     }
 
     public void processMyTournaments(Long chat_id, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
+        Long userid = userService.findUseridByTelegramID(chat_id);
+        if(userid == null){
+            sender.sendMessage("Debe estar registrado para consultar sus torneos - /register", chat_id, "");
+            return;
+        }
         String command = "myTournaments";
         if (restart) {
             casoActual.put(chat_id, command);
             pasoActual.put(chat_id, 1);
         }
 
-        Long userid = userService.findUseridByTelegramID(chat_id);
         Integer pag = pasoActual.get(chat_id);
         List<TournamentDto> tourneys = tournamentService.getActiveTournamentsFromUser(userid, pag, 10);
 
@@ -115,6 +123,11 @@ public class TourneyListChat {
     }
 
     public void processFinalizedTournaments(Long chat_id, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
+        String username = userService.findUsernameByTelegramID(chat_id);
+        if(username == null){
+            sender.sendMessage("Debe estar registrado para consultar sus torneos - /register", chat_id, "");
+            return;
+        }
         String command = "finalizedTournaments";
         if (restart) {
             casoActual.put(chat_id, command);
@@ -122,7 +135,6 @@ public class TourneyListChat {
         }
 
         Integer pag = pasoActual.get(chat_id);
-        String username = userService.findUsernameByTelegramID(chat_id);
 
         FindTournamentsFilters findTournamentsFilters = FindTournamentsFilters.builder()
                 .name(username)

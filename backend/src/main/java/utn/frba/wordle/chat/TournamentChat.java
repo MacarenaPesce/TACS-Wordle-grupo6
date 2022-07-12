@@ -52,6 +52,12 @@ public class TournamentChat {
     Date start, finish;
 
     public void processAddMember(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
+        Long userid = userService.findUseridByTelegramID(chat_id);
+        if(userid == null){
+            sender.sendMessage("Debe estar registrado para usar esta función - /register", chat_id, "");
+            return;
+        }
+
         if (restart) {
             casoActual.put(chat_id, "addmember");
             pasoActual.put(chat_id, 1);
@@ -84,8 +90,6 @@ public class TournamentChat {
                 torneo.put(chat_id, tourney);
 
                 //verificar que el torneo sea propio
-                Long userid = userService.findUseridByTelegramID(chat_id);
-
                 if (!tourney.getOwner().getId().equals(userid)) {
                     sender.sendMessage("Usted no es propietario del torneo elegido, elija otro torneo", chat_id, "");
                     return;
@@ -131,6 +135,12 @@ public class TournamentChat {
     }
 
     public void processJoin(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
+        Long userid = userService.findUseridByTelegramID(chat_id);
+        if(userid == null){
+            sender.sendMessage("Debe estar registrado para usar esta función - /register", chat_id, "");
+            return;
+        }
+
         if (restart) {
             casoActual.put(chat_id, "join");
             pasoActual.put(chat_id, 1);
@@ -174,7 +184,6 @@ public class TournamentChat {
                 }
 
                 //verificar que aun no este participando del torneo
-                Long userid = userService.findUseridByTelegramID(chat_id);
                 if (userService.memberOfTournament(userid, tourneyid)) {
                     sender.sendMessage("Usted ya forma parte de ese torneo, elija otro id", chat_id, "");
                     return;
@@ -195,6 +204,12 @@ public class TournamentChat {
 
     //TODO: FALTA AGREGAR EL EXIT EN CUALQUIER PASO POR SI QUIERE SALIR
     public void processCreateTourney(Long chat_id, String message, boolean restart, HashMap<Long, String> casoActual) throws IOException, URISyntaxException{
+        Long userid = userService.findUseridByTelegramID(chat_id);
+        if(userid == null){
+            sender.sendMessage("Debe estar registrado para usar esta función - /register", chat_id, "");
+            return;
+        }
+
         if (restart) {
             casoActual.put(chat_id, "create");
             pasoActual.put(chat_id, 1);
@@ -278,8 +293,6 @@ public class TournamentChat {
                     return;
                 }
 
-                //sacar el user id a partir del telegram id
-                Long userid = userService.findUseridByTelegramID(chat_id);
 
                 //crear torneo y notificar exito
                 TournamentDto tourney = TournamentDto.builder()
