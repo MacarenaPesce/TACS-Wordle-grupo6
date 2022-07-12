@@ -1,4 +1,3 @@
--- todo opciones old_users y old_tourneys
 -- todo probar un random mas performante en generate_registrations para elegir usuarios	https://stackoverflow.com/questions/4329396/mysql-select-10-random-rows-from-600k-rows-fast
 
 -- configurar el cliente workbench mysql para que no haga timeout a los 30 segundos de query
@@ -6,11 +5,11 @@
 use wordle;
 
 -- fecha inicial a partir de la cual cargar puntajes (para usuarios nuevos) y crear torneos, fecha final hasta la cual crear torneos, cantidad de usuarios a crear, cantidad de torneos a crear, cantidad de usuarios a registrar por torneo,
-	-- y en el caso de ejecutar todo una segunda vez: boolean old_users si registrar o no usuarios viejos en torneos, boolean old_tourneys si volver a generar o no mas registraciones para los torneos viejos
+	-- y: boolean old_users si registrar o no usuarios viejos (existentes de antes de esta query) en torneos (solo readys), boolean old_tourneys si volver a generar o no mas registraciones para los torneos viejos (solo en ready)
 DROP TABLE IF EXISTS `opciones`;
-CREATE TEMPORARY TABLE opciones(dia_pri date, dia_ulti date, limit_users int, limit_tourneys int, cant_registros int);
+CREATE TEMPORARY TABLE opciones(dia_pri date, dia_ulti date, limit_users int, limit_tourneys int, cant_registros int, old_users boolean, old_tourneys boolean);
 INSERT INTO opciones VALUES 
-(DATE_SUB(curdate(), INTERVAL 1 MONTH), DATE_ADD(curdate(), INTERVAL 1 MONTH), 480, 160, 16);
+(DATE_SUB(curdate(), INTERVAL 1 MONTH), DATE_ADD(curdate(), INTERVAL 1 MONTH), 160, 160, 16, true, true);
 
 -- tabla para no afectar datos existentes, en caso de la bd no estar vacia
 DROP TABLE IF EXISTS `offset`;
@@ -116,6 +115,7 @@ CREATE PROCEDURE generate_tourneys()
 BEGIN
 
   DECLARE cant_tourneys int DEFAULT (select limit_tourneys from opciones);
+  DECLARE old_users boolean DEFAULT (select old_users from opciones);
   DECLARE done INT DEFAULT FALSE;
   DECLARE tourneyname varchar(60);
   DECLARE fecha_1 date;
@@ -127,22 +127,26 @@ BEGIN
 	  insert into offset(tourney) select id from tournament 
 	  order by id desc limit 1;
 
-
   OPEN cur;
-
   read_loop: LOOP
     FETCH cur INTO tourneyname;
     IF done THEN
       LEAVE read_loop;
     END IF;
-		
-	SET random_user = (select id from user
-						-- where id > (IFNULL((select user from offset where user is not null), 0)) --  linea opcional para no registrar usuarios viejos en torneos nuevos
-						order by rand() limit 1);
 	
 	SET fecha_1 = tourdate();
 	SET fecha_2 = tourdate();	
-		
+	
+	-- seleccionar un usuario random para ser el creador del torneo. Solo considerar old_users si esta activada la opcion, y si es un torneo en ready
+	IF (old_users and curdate() < fecha_1 and curdate() < fecha_2) THEN
+		SET random_user = (select id from user order by rand() limit 1);
+	ELSE
+		SET random_user = (select id from user
+						 where id > (IFNULL((select user from offset where user is not null), 0)) --  linea opcional para no registrar usuarios viejos en torneos nuevos
+						order by rand() limit 1);
+	END IF;
+
+	-- insertar el nuevo torneo
 	IF fecha_1 < fecha_2 THEN
 		insert into tournament(name,type,language, id_user, start, finish) VALUES (tourneyname, IF(ROUND(RAND()), 'PUBLIC', 'PRIVATE'), IF(ROUND(RAND()), 'ES', 'EN'), random_user, 
 																					ADDTIME(CONVERT(fecha_1, DATETIME), '00:00:00'), ADDTIME(CONVERT(fecha_2, DATETIME), '23:59:59.99'));
@@ -259,38 +263,75 @@ CREATE PROCEDURE generate_registrations()
 BEGIN
   DECLARE done INT DEFAULT FALSE;
   DECLARE id_tourney bigint;
+  DECLARE start_tourney date;
   DECLARE userid bigint;
   DECLARE lang char(2);
   DECLARE inicio date;
   DECLARE fin date;
   DECLARE cant_users int DEFAULT (select cant_registros from opciones);
-  DECLARE cur CURSOR FOR SELECT id FROM tournament where id > (IFNULL((select tourney from offset where tourney is not null), 0));
+  DECLARE old_users boolean DEFAULT (select old_users from opciones);
+  DECLARE old_tourneys boolean DEFAULT (select old_tourneys from opciones);
+  DECLARE cur CURSOR FOR SELECT id, start FROM tournament where id > (IFNULL((select tourney from offset where tourney is not null), 0));
+  DECLARE cur_old CURSOR FOR SELECT id FROM tournament where id <= (IFNULL((select tourney from offset where tourney is not null), 0)) and curdate() < start;
   DECLARE cur2 CURSOR FOR SELECT * FROM torneo_usuario;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
 
-  -- crear tabla que tenga todos los torneos, y para cada uno, una cantidad random de usuarios distintos
+  -- crear tabla que tenga todos los torneos, y para cada uno, una cantidad cant_users de usuarios random
   DROP TABLE IF EXISTS `torneo_usuario`;
   CREATE TEMPORARY TABLE torneo_usuario(tourneyid bigint, userid bigint);
-  
 	
   OPEN cur;
-
   read_loop: LOOP
-    FETCH cur INTO id_tourney;
+    FETCH cur INTO id_tourney, start_tourney;
     IF done THEN
       LEAVE read_loop;
     END IF;
 	
-	INSERT INTO torneo_usuario(tourneyid, userid) SELECT id_tourney, id FROM user
-	-- where id > (IFNULL((select user from offset where user is not null), 0)) -- linea opcional para no registrar usuarios viejos en torneos nuevos
-	order by rand() limit cant_users;
+	-- insertar en el torneo, cant_users de usuarios random. Solo considerar old_users si esta activada la opcion, y si es un torneo en ready
+	-- se podria comparar una sola vez por old_users sacandolo afuera del cursor, pero duplicando otro cursor en el else
+	IF (old_users and curdate() < start_tourney) THEN
+		INSERT INTO torneo_usuario(tourneyid, userid) SELECT id_tourney, id FROM user
+		order by rand() limit cant_users;
+	ELSE
+		INSERT INTO torneo_usuario(tourneyid, userid) SELECT id_tourney, id FROM user
+		where id > (IFNULL((select user from offset where user is not null), 0)) -- linea opcional para no registrar usuarios viejos en torneos nuevos
+		order by rand() limit cant_users;
+	END IF;
   
   END LOOP;
 
   CLOSE cur;
   SET done=0;
-      
+
+  -- repetir lo mismo pero para torneos viejos (con registraciones anteriores existentes) en ready
+  if old_tourneys THEN
+	
+	  OPEN cur_old;
+	  read_loop: LOOP
+		FETCH cur_old INTO id_tourney;
+		IF done THEN
+		  LEAVE read_loop;
+		END IF;
+		
+		IF (old_users) THEN
+			INSERT INTO torneo_usuario(tourneyid, userid) SELECT id_tourney, id FROM user
+			where id not in (select id_user from registration where id_tournament = id_tourney)
+			order by rand() limit cant_users;
+		ELSE
+			INSERT INTO torneo_usuario(tourneyid, userid) SELECT id_tourney, id FROM user
+			where id not in (select id_user from registration where id_tournament = id_tourney)
+			and id > (IFNULL((select user from offset where user is not null), 0)) -- linea opcional para no registrar usuarios viejos en torneos nuevos
+			order by rand() limit cant_users;
+		END IF;
+	  
+	  END LOOP;
+
+	  CLOSE cur_old;
+	  SET done=0;
+
+  END IF;
+	
 	
   -- iterar la tabla anterior para crear registraciones y sus tablas intermedias
   OPEN cur2;
