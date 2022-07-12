@@ -233,7 +233,7 @@ public class TelegramController {
                 break;
 
             case "create" :
-                tournamentChat.processCreateTourney(chat_id, params[0], restart, casoActual);
+                tournamentChat.processCreateTourney(chat_id, params, restart, casoActual);
                 break;
 
             case "addmember" :

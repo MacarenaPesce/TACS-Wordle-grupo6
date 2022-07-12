@@ -2,6 +2,7 @@ package utn.frba.wordle.model.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.model.enums.State;
@@ -16,19 +17,33 @@ import java.util.Objects;
 public class TournamentDto {
 
     private final Long tourneyId;
-    private final String name;
-    private final Language language;
-    private final TournamentType type;
+    private String name;
+    private Language language;
+    private TournamentType type;
+    private State state;
+    private Date start;
+    private Date finish;
+    private final UserDto owner;
+    private final Long tournamentDuration;
 
     public void setState(State state) {
         this.state = state;
     }
-
-    private State state;
-    private final Date start;
-    private final Date finish;
-    private final UserDto owner;
-    private final Long tournamentDuration;
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+    public void setType(TournamentType type) {
+        this.type = type;
+    }
+    public void setStart(Date start) {
+        this.start = start;
+    }
+    public void setFinish(Date finish) {
+        this.finish = finish;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -101,7 +101,7 @@ public class UserChat {
 
                     username.put(chat_id, message);
                     pasoActual.put(chat_id, 3);
-                    sender.sendMessageWithKB(contrasenia, chat_id, "", "[[\""+message+"\"],[\"1234\"],[\"la casa de papel\"]]");
+                    sender.sendMessageWithKB(contrasenia, chat_id, "", "[[\""+message.toLowerCase()+"\"],[\"1234\"],[\"la casa de papel\"]]");
                 }else{
                     sender.sendMessage(usuario+exit, chat_id, "");
                 }
