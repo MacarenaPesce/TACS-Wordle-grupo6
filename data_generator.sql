@@ -29,6 +29,7 @@ CREATE PROCEDURE generate_users()
 BEGIN
 
 	DECLARE cant_users int DEFAULT (select limit_users from opciones);
+	DECLARE creados int;
 	
 	insert into offset(user) select id from user 
 	order by id desc limit 1;
@@ -36,7 +37,13 @@ BEGIN
 	  insert into user(username,password,email) SELECT username, md5(username), concat(username,'@wordle.com') from temp_users 
 	  where username not in (select username from user)
 	  limit cant_users;
-
+	  
+	  
+	SET creados = (select count(*) from user where id > (IFNULL((select user from offset), 0)));
+	select creados 'cantidad de usuarios creados:';
+	IF (creados < cant_users) THEN
+		select 'se agotaron los nombres disponibles para crear usuarios' as 'notice';
+	END IF;
 
 END //
 DELIMITER ;
@@ -76,6 +83,9 @@ BEGIN
 	end while;
 	
 	set date_counter=start_date;
+	
+	
+	select DATEDIFF(curdate(),start_date) 'dias de puntuaciones cargadas para todos los usuarios nuevos:', DATEDIFF(curdate(),start_date) * 2 * (select count(*) from user where id > (IFNULL((select user from offset), 0))) 'total filas';
 
 END //
 DELIMITER ;
@@ -121,6 +131,10 @@ BEGIN
   DECLARE fecha_1 date;
   DECLARE fecha_2 date;
   DECLARE random_user bigint;
+  DECLARE offset_user int DEFAULT (IFNULL((select user from offset where user is not null), 0));
+  DECLARE offset_tourney int;
+  DECLARE creadosg int;
+  DECLARE creadose int;
   DECLARE cur CURSOR FOR SELECT * FROM esquivo_un_bug limit cant_tourneys;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
@@ -142,7 +156,7 @@ BEGIN
 		SET random_user = (select id from user order by rand() limit 1);
 	ELSE
 		SET random_user = (select id from user
-						 where id > (IFNULL((select user from offset where user is not null), 0)) --  linea opcional para no registrar usuarios viejos en torneos nuevos
+						 where id > offset_user --  linea opcional para no registrar usuarios viejos en torneos nuevos
 						order by rand() limit 1);
 	END IF;
 
@@ -162,6 +176,15 @@ BEGIN
   END LOOP;
 
   CLOSE cur;
+  
+  
+	SET offset_tourney = (IFNULL((select tourney from offset where tourney is not null), 0));
+  	SET creadosg = (select count(*) from tournament where id > offset_tourney and id_user > offset_user);
+	SET creadose = (select count(*) from tournament where id > offset_tourney and id_user <= offset_user);
+	select creadosg 'torneos creados con usuarios generados como owner:', creadose 'torneos creados con usuarios existentes como owner:', creadosg+creadose 'total';
+	IF (creadosg+creadose < cant_tourneys) THEN
+		select 'se agotaron los nombres disponibles para crear torneos' as 'notice';
+	END IF;
 
 END //
 DELIMITER ;
@@ -271,6 +294,15 @@ BEGIN
   DECLARE cant_users int DEFAULT (select cant_registros from opciones);
   DECLARE old_users boolean DEFAULT (select old_users from opciones);
   DECLARE old_tourneys boolean DEFAULT (select old_tourneys from opciones);
+  DECLARE offset_user int DEFAULT (IFNULL((select user from offset where user is not null), 0));
+  DECLARE offset_tourney int DEFAULT (IFNULL((select tourney from offset where tourney is not null), 0));
+  DECLARE offset_register int DEFAULT (IFNULL((select id from registration order by id desc limit 1), 0));
+  DECLARE reg_usr_new int;
+  DECLARE reg_usr_old int;
+  DECLARE reg_tour_new int;
+  DECLARE reg_tour_old int;
+  DECLARE reg_total int;
+  DECLARE reg_punctuation int;
   DECLARE cur CURSOR FOR SELECT id, start FROM tournament where id > (IFNULL((select tourney from offset where tourney is not null), 0));
   DECLARE cur_old CURSOR FOR SELECT id FROM tournament where id <= (IFNULL((select tourney from offset where tourney is not null), 0)) and curdate() < start;
   DECLARE cur2 CURSOR FOR SELECT * FROM torneo_usuario;
@@ -359,6 +391,23 @@ BEGIN
   END LOOP;
 
   CLOSE cur2;
+  
+  
+  -- indicar cantidad de datos
+	SET reg_tour_new = (select count(DISTINCT(tourneyid)) from torneo_usuario where tourneyid > offset_tourney);
+	SET reg_tour_old = (select count(DISTINCT(tourneyid)) from torneo_usuario where tourneyid <= offset_tourney);
+  	SET reg_usr_new = (select count(*) from torneo_usuario where torneo_usuario.userid > offset_user);
+	SET reg_usr_old = (select count(*) from torneo_usuario where torneo_usuario.userid <= offset_user);
+	SET reg_total = (select count(*) from torneo_usuario);
+	SET reg_punctuation = (select count(*) from registration_punctuation where id_registration > offset_register);
+
+	select cant_users 'usr x tour',
+			reg_tour_new 'cant de torneos nuevos a popular',
+			reg_tour_old 'cant de torneos viejos a popular',
+			reg_usr_new 'veces usuarios nuevos registrados',
+			reg_usr_old 'veces usuarios viejos registrados',
+			reg_total 'total registraciones',
+			reg_punctuation 'filas registration_punctuation';
 
 END //
 DELIMITER ;
