@@ -135,54 +135,71 @@ BEGIN
   DECLARE offset_tourney int;
   DECLARE creadosg int;
   DECLARE creadose int;
+  DECLARE new_users boolean DEFAULT (offset_user != (IFNULL((select id from user order by id desc limit 1), 0)));
+  DECLARE ready boolean;
   DECLARE cur CURSOR FOR SELECT * FROM esquivo_un_bug limit cant_tourneys;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
 	  insert into offset(tourney) select id from tournament 
 	  order by id desc limit 1;
+		
+	-- crear torneos
+  IF ((select id from user limit 1) is not null) THEN -- fuera: !old !new ready // !old !new !ready
+	  OPEN cur;
+	  read_loop: LOOP
+		FETCH cur INTO tourneyname;
+		IF done THEN
+		  LEAVE read_loop;
+		END IF;
+		
+		SET fecha_1 = tourdate();
+		SET fecha_2 = tourdate();	
+		
+		
+				SET ready = curdate() < fecha_1 and curdate() < fecha_2;
+				SET random_user = null;
+				
+				-- seleccionar un usuario random para ser el creador del torneo. Solo considerar old_users si esta activada la opcion, y si es un torneo en ready
+				-- old new ready // old !new ready
+				IF (old_users and ready) THEN
+					SET random_user = (select id from user order by rand() limit 1); -- sin filtro, se incluyen old_users
+				END IF;
+				-- considerar solo usuarios generados, si esta desactivada old_users, o si el torneo tocó distinto de ready
+				-- !old new ready // !old new !ready // old new !ready
+				IF (!old_users or (old_users and new_users and !ready)) THEN
+					SET random_user = (select id from user
+									 where id > offset_user
+									order by rand() limit 1);
+				END IF;
+				-- si old !new !ready, queda en null sin poder asignar un owner
 
-  OPEN cur;
-  read_loop: LOOP
-    FETCH cur INTO tourneyname;
-    IF done THEN
-      LEAVE read_loop;
-    END IF;
-	
-	SET fecha_1 = tourdate();
-	SET fecha_2 = tourdate();	
-	
-	-- seleccionar un usuario random para ser el creador del torneo. Solo considerar old_users si esta activada la opcion, y si es un torneo en ready
-	IF (old_users and curdate() < fecha_1 and curdate() < fecha_2) THEN
-		SET random_user = (select id from user order by rand() limit 1);
-	ELSE
-		SET random_user = (select id from user
-						 where id > offset_user --  linea opcional para no registrar usuarios viejos en torneos nuevos
-						order by rand() limit 1);
-	END IF;
 
-	-- insertar el nuevo torneo
-	IF fecha_1 < fecha_2 THEN
-		insert into tournament(name,type,language, id_user, start, finish) VALUES (tourneyname, IF(ROUND(RAND()), 'PUBLIC', 'PRIVATE'), IF(ROUND(RAND()), 'ES', 'EN'), random_user, 
-																					ADDTIME(CONVERT(fecha_1, DATETIME), '00:00:00'), ADDTIME(CONVERT(fecha_2, DATETIME), '23:59:59.99'));
-	ELSE
-		insert into tournament(name,type,language, id_user, start, finish) VALUES (tourneyname, IF(ROUND(RAND()), 'PUBLIC', 'PRIVATE'), IF(ROUND(RAND()), 'ES', 'EN'), random_user, 
-																					ADDTIME(CONVERT(fecha_2, DATETIME), '00:00:00'), ADDTIME(CONVERT(fecha_1, DATETIME), '23:59:59.99'));
-	END IF;
-	
+		-- insertar el nuevo torneo
+		IF random_user is not null THEN
+			IF fecha_1 < fecha_2 THEN
+				insert into tournament(name,type,language, id_user, start, finish) VALUES (tourneyname, IF(ROUND(RAND()), 'PUBLIC', 'PRIVATE'), IF(ROUND(RAND()), 'ES', 'EN'), random_user, 
+																							ADDTIME(CONVERT(fecha_1, DATETIME), '00:00:00'), ADDTIME(CONVERT(fecha_2, DATETIME), '23:59:59.99'));
+			ELSE
+				insert into tournament(name,type,language, id_user, start, finish) VALUES (tourneyname, IF(ROUND(RAND()), 'PUBLIC', 'PRIVATE'), IF(ROUND(RAND()), 'ES', 'EN'), random_user, 
+																							ADDTIME(CONVERT(fecha_2, DATETIME), '00:00:00'), ADDTIME(CONVERT(fecha_1, DATETIME), '23:59:59.99'));
+			END IF;
+		END IF;	
 
-	-- se podria cambiar a la siguiente query, pero no se como hacer la comparacion de fechas sin cursor. Igual este procedure no tiene mala performance para solo 1000 torneos.
-	-- insert into tournament(name,type,language, id_user, start, finish) SELECT tourneyname, IF(ROUND(RAND()), 'PUBLIC', 'PRIVATE'), IF(ROUND(RAND()), 'ES', 'EN'), random_user, ____, ____ from temp_tourneys;
-	
-  END LOOP;
+		-- se podria cambiar a la siguiente query, pero no se como hacer la comparacion de fechas sin cursor. Igual este procedure no tiene mala performance para solo 1000 torneos.
+		-- insert into tournament(name,type,language, id_user, start, finish) SELECT tourneyname, IF(ROUND(RAND()), 'PUBLIC', 'PRIVATE'), IF(ROUND(RAND()), 'ES', 'EN'), random_user, ____, ____ from temp_tourneys;
+		
+	  END LOOP;
 
-  CLOSE cur;
-  
+	  CLOSE cur;
+  ELSE
+	select 'no existen usuarios para generar torneos' as 'notice';
+  END IF;
   
 	SET offset_tourney = (IFNULL((select tourney from offset where tourney is not null), 0));
   	SET creadosg = (select count(*) from tournament where id > offset_tourney and id_user > offset_user);
 	SET creadose = (select count(*) from tournament where id > offset_tourney and id_user <= offset_user);
-	select creadosg 'torneos creados con usuarios generados como owner:', creadose 'torneos creados con usuarios existentes como owner:', creadosg+creadose 'total';
-	IF (creadosg+creadose < cant_tourneys) THEN
+	select creadosg 'torneos creados con usuarios generados como owner:', creadose 'torneos ready creados con usuarios existentes como owner:', creadosg+creadose 'total';
+	IF (creadosg+creadose < cant_tourneys and new_users) THEN
 		select 'se agotaron los nombres disponibles para crear torneos' as 'notice';
 	END IF;
 
