@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.frba.wordle.client.TeleSender;
 import utn.frba.wordle.model.dto.HelpDto;
+import utn.frba.wordle.model.dto.TournamentDto;
 import utn.frba.wordle.model.enums.Language;
 import utn.frba.wordle.service.DictionaryService;
 
@@ -12,6 +13,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class DictionaryChat {
@@ -75,7 +77,7 @@ public class DictionaryChat {
 
         List<String> definitions = dictionaryService.getDefinitions(language, word);
 
-        return definitions.toString();
+        return String.join("\n\n", definitions);
     }
 
     private void interactive(Long chat_id, int step, String message, HashMap<Long, String> casoActual) throws IOException, URISyntaxException {
