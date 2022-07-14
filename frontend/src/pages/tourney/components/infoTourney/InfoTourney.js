@@ -109,7 +109,7 @@ export default function InfoTourney() {
 
   function nextPage() {
     //console.log("page actual:", this.state.currentPage);
-    if ( totalPages > currentPage ){
+    if ( totalPages >= currentPage ){
         let page = currentPage + 1;
         setCurrentPage(page);
         getRanking(page);

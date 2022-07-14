@@ -154,7 +154,7 @@ export default class TabsTourneys extends Component{
         }
 
         return (
-            <div className="col-md-12 search-table-col" style={{marginBottom: "70px"}}>
+            <div className="col-md-12 search-table-col" style={{paddingBottom: "70px"}}>
 
                 {this.state.sessionError &&
                     <Not message={this.state.errorMessage}/>}
