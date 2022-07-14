@@ -49,7 +49,7 @@ export default class TabsTourneys extends Component{
     }
 
     componentDidMount() {
-        //this.submitTourneys(1)
+        //this.submitTourneys(1)    //TODO volver a habilitar la actualización automática
     }
 
     /*

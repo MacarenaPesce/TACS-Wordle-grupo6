@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>utn.frba</groupId>
 	<artifactId>wordle-backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>wordle-backend</name>
 	<description>Worlde Backend Project</description>
 	<properties>
