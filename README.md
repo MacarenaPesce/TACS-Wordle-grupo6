@@ -15,51 +15,25 @@ https://docs.google.com/document/d/11ClJBshXqy4Gd_h9j42n2G0AOld9yTBFamIOkuuGPr0/
 #### Requerimientos para buildear el proyecto
 - Tener Docker instalado en su ambiente.
 
-##### Pasos: 
-- Clonar el proyecto
-- Ejecutar el siguiente script (de acuerdo a si su ambiente es Windows o Linux)
+## Docker
+Levantar el proyecto localmente:
+- `docker compose up`
+- Esperar a que el backend reintente un par de veces, hasta que levante la base de datos.
 
-###### Entorno Windows:
-- Ejecutar script.bat
-
-###### Entorno Linux:
-- Ejecutar script.sh
-
-Esperar unos segundos y luego ir a un navegador e ingresar a la dirección: http://localhost:3000
-y la aplicaciòn **Wordle-Helper** se abrirá
+Config para deployar:
+- Dentro de `docker-compose.yml`, cambiar el dockerfile de frontend de `Dockerfile-local` a `Dockerfile`
+- Configure su IP en `frontend/.env.production`
 
 
 ## FRONTEND
+Esperar unos segundos y luego ir a un navegador e ingresar a la dirección: http://localhost:3000
+y la aplicaciòn **Wordle-Helper** se abrirá
+
 Frontend This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-http://localhost:3000/
-
-
-## BACKEND
-### BD MySQL
-Instancia solo para desarrollo local
-Si aún no tenemos creada la BD localmente:
-
-1. Accedemos a la consola de MySQL (pass: root)
->mysql -u root
-
-2. Creamos la BD
->CREATE DATABASE wordle;
-
-3. Luego de levantar el proyecto backend, se debe ejecutar el script `backend\src\main\resources\data.sql` sobre la base de datos, en caso de no hacerlo automáticamente.
-
-4. Cerramos la BD
->exit;
-
-### Reporte de Cobertura
-Para ejecutar los tests de la aplicación, y generar el reporte de cobertura, en la carpeta backend ejecutar
->mvn clean verify
-
-Esto generará el reporte en la carpeta target, el mismo puede verse en el navegador accediendo a:
-> http://localhost:63342/backend/target/site/jacoco-unit-test-coverage-report/index.html
 
 
 ## Telegram
+Aplicación alternativa al frontend, en forma de servidor de Telegram. Se comparte backend entre ambas.
 1. Crear bot con BotFather y copiar el token
 2. Guardar el token en `backend\botToken.txt`
 3. Reiniciar el backend
@@ -71,23 +45,41 @@ Cerrar el webhook al cerrar ngrok:
 - `https://api.telegram.org/bot<botToken>/deleteWebhook`
 
 Hacer visibles los comandos en el menu de comandos del bot:
-- Se pueden crear desde BotFather
-- Otra opción entrar al siguiente link: `https://api.telegram.org/bot<botToken>/setMyCommands?commands=[{"command":"start","description":"Reiniciar"},{"command":"users","description":"Administrar usuarios"},{"command":"tournaments","description":"Administrar torneos"}]`
+- Entrar al siguiente link: `https://api.telegram.org/bot<botToken>/setMyCommands?commands=[{"command":"start","description":"Reiniciar"},{"command":"users","description":"Administrar usuarios"},{"command":"tournaments","description":"Administrar torneos"}]`
 
 
-## Docker
-Las imagenes, redes, volumenes, contenedores necesarios para el despliegue de la aplicación, se generarán automaticamente con la ejecución del script.sh
+## Generar datos extra
+- Se generan usuarios, puntajes diarios de usuarios, torneos, y registraciones de usuarios a torneos.
+- Configurar datos a generar en la temp table opciones dentro de `data_generator.sql`
 
-#### Comandos básicos: 
+Desde MySQL Workbench:
+- Ejecutar `data__names.sql` y luego `data_generator.sql`
 
-- Crear una imagen:
-docker build -t grupo6/backend .
-docker build -t grupo6/frontend .
+Desde Linux:
+- `cat *.sql | docker exec -i test-mysql sh -c "exec mysql -uroot -proot -t"`
 
-- Correr la imagen:
-docker run -d --name backend  -p8080:8080 grupo6/backend
-docker run -d --name frontend -p3000:3000 grupo6/frontend
+Desde Windows:
+- `type data__names.sql data_generator.sql | docker exec -i test-mysql sh -c "exec mysql -uroot -proot -t"`
 
-- Parar la imagen:
-docker stop <NAME>
+
+## BACKEND
+### Reporte de Cobertura
+Para ejecutar los tests de la aplicación, y generar el reporte de cobertura, en la carpeta backend ejecutar
+>mvn clean verify
+
+Esto generará el reporte en la carpeta target, el mismo puede verse en el navegador accediendo a:
+> http://localhost:63342/backend/target/site/jacoco-unit-test-coverage-report/index.html
+
+### BD MySQL
+Instancia solo para desarrollo local
+
+Si aún no tenemos creada la BD localmente:
+
+1. Accedemos a la consola de MySQL (pass: root)
+>mysql -u root
+
+2. Creamos la BD
+>CREATE DATABASE wordle;
+
+3. Configurar string de conexión en `backend\src\main\resources\application.properties`.
 
